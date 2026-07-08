@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Web build and test output
+dist/
+coverage/
+
+# Local environment and editor state
+.DS_Store
+.env
+.env.*
+!.env.example
+*.local
+.claude/
+.idea/
+.vscode/
+
+# Credentials and signing material
+*.jks
+*.keystore
+*.p8
+*.mobileprovision
+android/release-signing.properties
+
+# Capacitor / iOS generated state
+ios/App/Pods/
+ios/App/App/public/
+ios/App/DerivedData/
+ios/App/build/
+ios/App/output/
+ios/App/App/capacitor.config.json
+ios/App/App/config.xml
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+ios/capacitor-cordova-ios-plugins/
+
+# Capacitor / Android generated state
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/src/main/res/xml/config.xml
+
+# Local plugin generated state
+plugins/*/android/build/
+!plugins/capacitor-course-live-activity/dist/
+!plugins/capacitor-course-live-activity/dist/**

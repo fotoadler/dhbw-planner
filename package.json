@@ -1,0 +1,47 @@
+{
+  "name": "dhbw-planner",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Schlanke DHBW-App für Rapla-Stundenpläne, Dualis, Kalenderexport und lokale Benachrichtigungen.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "sync": "npm run build && npx cap sync"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fotoadler/dhbw-planner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fotoadler/dhbw-planner/issues"
+  },
+  "homepage": "https://github.com/fotoadler/dhbw-planner#readme",
+  "dependencies": {
+    "@capacitor/android": "^7.6.7",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/ios": "^7.6.7",
+    "@capacitor/local-notifications": "^7.0.0",
+    "@capacitor/preferences": "^7.0.0",
+    "@capacitor/share": "^7.0.0",
+    "@dhbw/capacitor-course-live-activity": "file:plugins/capacitor-course-live-activity",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  }
+}

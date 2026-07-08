@@ -1,0 +1,1120 @@
+/*
+ * Ruhiges, reduziertes UI: viel Weißraum, klare Typografie-Hierarchie,
+ * eine einzige Akzentfarbe (DHBW-Rot), keine unnötigen Icons oder Badges.
+ */
+
+:root {
+  --accent: #e2001a;
+  --ink: #1a1a1a;
+  --ink-2: #555;
+  --ink-3: #9a9a9a;
+  --line: #ececec;
+  --bg: #ffffff;
+  --bg-soft: #f7f7f7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.splash {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+}
+
+/* --- Grundlayout --- */
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+}
+
+.app__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 74px;
+  padding: 16px 20px 4px;
+}
+
+.app__date {
+  flex: 1;
+  min-width: 0;
+}
+
+.app__day {
+  min-height: 28px;
+  overflow: hidden;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app__subtitle {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 18px;
+  min-height: 18px;
+  color: var(--ink-3);
+}
+
+.app__subtitle.is-placeholder {
+  visibility: hidden;
+}
+
+.app__backbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: -6px 0 0 -8px;
+  color: var(--accent);
+  border-radius: 8px;
+}
+
+.app__backbtn:active {
+  background: var(--bg-soft);
+}
+
+.app__actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.app__todaybtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 6px 10px;
+}
+
+.iconbtn {
+  padding: 8px;
+  color: var(--ink-2);
+  border-radius: 8px;
+}
+
+.iconbtn:active {
+  background: var(--bg-soft);
+}
+
+.app__offline {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 7px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.app-tabs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  margin: 0 20px 10px;
+  padding: 3px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+}
+
+.app-tabs button,
+.segmented button {
+  min-height: 34px;
+  border-radius: 8px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.app-tabs button.is-active,
+.segmented button.is-active {
+  color: #fff;
+  background: var(--ink);
+}
+
+/* --- Wochenleiste --- */
+
+.weekstrip {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 4px 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.weekstrip__arrow {
+  font-size: 22px;
+  color: var(--ink-3);
+  padding: 0 6px;
+}
+
+.weekstrip__day {
+  flex: 1;
+  min-width: 0;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0 4px;
+  border-radius: 10px;
+}
+
+.weekstrip__wd {
+  font-size: 11px;
+  line-height: 13px;
+  color: var(--ink-3);
+}
+
+.weekstrip__num {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekstrip__dot {
+  flex: 0 0 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.weekstrip__dot.is-busy {
+  background: var(--accent);
+}
+
+.weekstrip__day.is-today .weekstrip__num {
+  color: var(--accent);
+}
+
+.weekstrip__day.is-selected {
+  background: var(--ink);
+}
+
+.weekstrip__day.is-selected .weekstrip__wd,
+.weekstrip__day.is-selected .weekstrip__num {
+  color: #fff;
+}
+
+.weekstrip__day.is-selected .weekstrip__dot.is-busy {
+  background: #fff;
+}
+
+/* --- Tagesansicht --- */
+
+.dayview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.dayview__pull {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  height: 0;
+  transition: height 0.15s ease-out;
+}
+
+.dayview__pull .spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dayview__empty {
+  margin-top: 48px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+/* --- Termin-Karte: Uhrzeit, Titel, Dozent, Raum klar gestaffelt --- */
+
+.entry {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.entry--button {
+  cursor: pointer;
+}
+
+.entry--button:active {
+  background: var(--bg-soft);
+}
+
+.entry__time {
+  display: flex;
+  flex-direction: column;
+  min-width: 48px;
+  text-align: right;
+}
+
+.entry__start {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry__end {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry__title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.entry__badge {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: 2px;
+}
+
+.entry__lecturers {
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.entry__meta {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* --- Wochenübersicht: Zeitraster in ruhiger Optik statt roter Block-Wall --- */
+
+.weekview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.weekview__header {
+  display: flex;
+  padding: 0 12px 0 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.weekview__gutter {
+  flex: 0 0 44px;
+}
+
+.weekview__dayhead {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 0 8px;
+}
+
+.weekview__wd {
+  font-size: 11px;
+  line-height: 13px;
+  color: var(--ink-3);
+}
+
+.weekview__num {
+  font-size: 15px;
+  line-height: 19px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__dayhead.is-today .weekview__num {
+  color: var(--accent);
+}
+
+.weekview__scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 12px calc(24px + env(safe-area-inset-bottom)) 0;
+}
+
+.weekview__grid {
+  position: relative;
+  display: flex;
+  /* Feine Stundenlinien über die ganze Breite */
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--line) 0 1px,
+    transparent 1px 56px
+  );
+}
+
+.weekview__times {
+  position: relative;
+  flex: 0 0 44px;
+}
+
+.weekview__hour {
+  position: absolute;
+  right: 8px;
+  transform: translateY(3px);
+  font-size: 10px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  background: var(--bg);
+  padding: 0 2px;
+}
+
+.weekview__col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--line);
+}
+
+.weekview__col.is-today {
+  background: rgba(226, 0, 26, 0.03);
+}
+
+.weekview__event {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  overflow: hidden;
+  padding: 4px 5px 4px 7px;
+  background: var(--bg-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  outline: 2px solid var(--bg);
+  text-align: left;
+}
+
+.weekview__event--holiday {
+  border-left-color: var(--ink-3);
+}
+
+.weekview__etime {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__etitle {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.weekview__emeta {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--ink-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* --- Kursübersicht --- */
+
+.courseview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.coursesection + .coursesection {
+  margin-top: 24px;
+}
+
+.coursesection__title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 6px 0 8px;
+  background: var(--bg);
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.courseitem {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.courseitem__date {
+  display: flex;
+  flex: 0 0 88px;
+  flex-direction: column;
+  text-align: right;
+}
+
+.courseitem__date span:first-child {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.courseitem__date span:last-child {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.courseitem__main {
+  min-width: 0;
+}
+
+.courseitem__lecturers {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.courseitem__meta {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+
+/* --- Dualis --- */
+
+.dualis {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.dualis--login {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.dualis-login {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 24px;
+}
+
+.dualis-login h2 {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.dualis-login p {
+  margin-bottom: 8px;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.dualis-login__check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.dualis-login__check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.dualis__toolbar,
+.dualis__sectionhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dualis__toolbar {
+  margin-bottom: 18px;
+}
+
+.dualis__sectionhead {
+  margin-top: 24px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dualis__sectionhead h2 {
+  font-size: 17px;
+}
+
+.segmented {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+}
+
+.dualis__textbtn {
+  flex: 0 0 auto;
+  padding: 8px 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dualis__textbtn:disabled {
+  color: var(--ink-3);
+}
+
+.dualis__notice {
+  margin-bottom: 12px;
+  padding: 9px 11px;
+  color: var(--ink-2);
+  background: var(--bg-soft);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.dualis-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.dualis-metric {
+  min-width: 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--line);
+}
+
+.dualis-metric strong {
+  display: block;
+  overflow: hidden;
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dualis-metric span {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.dualis-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dualis-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.dualis-row--compact {
+  padding: 13px 0;
+}
+
+.dualis-row__main {
+  min-width: 0;
+}
+
+.dualis-row__main h3 {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.dualis-row__main p {
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.dualis-row__grade {
+  flex: 0 0 74px;
+  text-align: right;
+}
+
+.dualis-row__grade strong {
+  display: block;
+  font-size: 16px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dualis-row__grade span {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.dualis-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.dualis-select select {
+  min-width: 160px;
+  max-width: 70%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+.dualis-module__button {
+  width: 100%;
+}
+
+.dualis-module__button:disabled {
+  color: inherit;
+  cursor: default;
+}
+
+.dualis-exams {
+  padding: 4px 0 12px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dualis-exams p {
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.dualis-exam {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.dualis-exam span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dualis-exam span:nth-child(2) {
+  color: var(--ink-3);
+}
+
+.dualis-exam strong {
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Erststart: nur ein Eingabefeld --- */
+
+.setup {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.setup__title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.setup__hint {
+  color: var(--ink-2);
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.setup__input,
+.sheet__input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  outline: none;
+}
+
+.setup__input:focus,
+.sheet__input:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+
+.setup__error {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.setup__button,
+.sheet__save {
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+.setup__button:disabled {
+  opacity: 0.4;
+}
+
+/* --- Einstellungen (Sheet) --- */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+.sheet {
+  width: 100%;
+  max-height: 85%;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+.sheet__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sheet__header h2 {
+  font-size: 20px;
+}
+
+.sheet__close {
+  color: var(--ink-3);
+  font-size: 16px;
+  padding: 6px;
+}
+
+.sheet__section {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sheet__label {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.sheet__save {
+  padding: 10px;
+}
+
+.sheet__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  min-height: 32px;
+}
+
+.sheet__row--sub {
+  color: var(--ink-2);
+  font-size: 14px;
+  padding-left: 12px;
+}
+
+.sheet__row input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.sheet__row input[type='time'],
+.sheet__row input[type='number'] {
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 90px;
+  text-align: center;
+}
+
+.sheet__footer {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* --- Feste Bereichsnavigation unten (Kalender / Dualis) --- */
+
+.tabbar {
+  display: flex;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 0 6px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tabbar__item.is-active {
+  color: var(--accent);
+}
+
+/* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */
+
+.app__viewbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -2px 20px 6px;
+}
+
+.segmented--top {
+  flex: 0 0 auto;
+  width: 260px;
+  max-width: calc(100% - 150px);
+  margin: 0;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.segmented--top button {
+  min-height: 34px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.dualis__subnav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 20px 10px;
+}
+
+.dualis__logoutbtn {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+/* --- Dualis-Modultabelle (kompakt, wie die alte App) --- */
+
+.dualis-table {
+  padding-top: 2px;
+}
+
+.dualis-table__head,
+.dualis-mrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px 46px 22px;
+  align-items: center;
+  gap: 10px;
+}
+
+.dualis-table__head {
+  padding: 6px 0 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dualis-table__head span:nth-child(2),
+.dualis-table__head span:nth-child(3),
+.dualis-mrow__credits,
+.dualis-mrow__grade {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dualis-mrow {
+  min-height: 30px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.dualis-mrow__name {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.dualis-mrow__credits {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.dualis-mrow__grade {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dualis-mrow__status {
+  display: flex;
+  justify-content: center;
+  color: #16a34a;
+}
+
+.dualis-module__button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+}
+
+.dualis-mrow--tap .dualis-mrow__name::after {
+  content: '›';
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--ink-3);
+  font-weight: 400;
+  transition: transform 0.15s ease;
+}
+
+.dualis-mrow--tap.is-expanded .dualis-mrow__name::after {
+  transform: rotate(90deg);
+}

@@ -1,0 +1,65 @@
+PODS:
+  - Capacitor (7.6.7):
+    - CapacitorCordova
+  - CapacitorApp (7.1.2):
+    - Capacitor
+  - CapacitorCordova (7.6.7)
+  - CapacitorFilesystem (7.1.8):
+    - Capacitor
+    - IONFilesystemLib (~> 1.1.1)
+  - CapacitorLocalNotifications (7.0.7):
+    - Capacitor
+  - CapacitorPreferences (7.0.4):
+    - Capacitor
+  - CapacitorShare (7.0.4):
+    - Capacitor
+  - DhbwCapacitorCourseLiveActivity (0.1.0):
+    - Capacitor
+  - IONFilesystemLib (1.1.2)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
+  - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
+  - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
+
+SPEC REPOS:
+  trunk:
+    - IONFilesystemLib
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorLocalNotifications:
+    :path: "../../node_modules/@capacitor/local-notifications"
+  CapacitorPreferences:
+    :path: "../../node_modules/@capacitor/preferences"
+  CapacitorShare:
+    :path: "../../node_modules/@capacitor/share"
+  DhbwCapacitorCourseLiveActivity:
+    :path: "../../plugins/capacitor-course-live-activity"
+
+SPEC CHECKSUMS:
+  Capacitor: 8ef25ba872436d2c5ac2a4791f7255529bdcd93b
+  CapacitorApp: f01a913211780e0718dae9750442c3e23f96e106
+  CapacitorCordova: 139e2ed3d91c54b5aeae7941135c9f9aefc6da1d
+  CapacitorFilesystem: c63fc54df41e5a6761785a7f3c49dc696c22e296
+  CapacitorLocalNotifications: 71124afe526ac00585314bff34651bd023f86e37
+  CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
+  CapacitorShare: 25f7fc5dd0e4edbde5d6801c6de5d14a8b450a41
+  DhbwCapacitorCourseLiveActivity: 4a6f8601a753b0afcbaf7b9783996c64802a65bd
+  IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
+
+PODFILE CHECKSUM: 9940c12dda4437d41ef5c1113601f7e79c788071
+
+COCOAPODS: 1.16.2

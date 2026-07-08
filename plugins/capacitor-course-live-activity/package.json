@@ -1,0 +1,31 @@
+{
+  "name": "@dhbw/capacitor-course-live-activity",
+  "version": "0.1.0",
+  "description": "Reusable Capacitor bridge for course live activities on iOS and Android.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "android",
+    "ios",
+    "dist",
+    "DhbwCapacitorCourseLiveActivity.podspec"
+  ],
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fotoadler/dhbw-planner.git"
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=7.0.0"
+  }
+}

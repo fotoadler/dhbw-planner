@@ -14,6 +14,13 @@ import { ScheduleEntry } from '../types';
 import { addDaysYmd, mondayOf, mondayOfYmd, parseYmdKey, ymdKey } from '../lib/berlinTime';
 import { fetchWeek, fetchWeeks } from '../rapla/client';
 import { AppSettings, loadCache, loadSettings, saveCache, saveSettings } from '../store/preferences';
+import {
+  applyLecturerDirectory,
+  LecturerDirectory,
+  loadLecturerDirectory,
+  saveLecturerDirectory,
+  updateLecturerDirectory,
+} from '../store/lecturerDirectory';
 import { initNotifications, syncNotifications } from '../notifications/scheduler';
 import { syncCourseLiveActivity } from '../liveActivity/scheduler';
 
@@ -81,6 +88,7 @@ function prune(weeks: WeekMap): WeekMap {
 export function useSchedule() {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [weeks, setWeeks] = useState<WeekMap>({});
+  const [directory, setDirectory] = useState<LecturerDirectory>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [offline, setOffline] = useState(false);
@@ -90,10 +98,17 @@ export function useSchedule() {
   settingsRef.current = settings;
   const weeksRef = useRef(weeks);
   weeksRef.current = weeks;
+  const directoryRef = useRef(directory);
+  directoryRef.current = directory;
   const updatedAtRef = useRef(updatedAt);
   updatedAtRef.current = updatedAt;
 
-  const entries = useMemo(() => flatten(weeks), [weeks]);
+  // Fehlende Dozenten aus dem dauerhaften Verzeichnis ergänzen (Abruf außerhalb
+  // des Campus liefert nur Kurse). In-Netz-Termine mit Dozenten bleiben unberührt.
+  const entries = useMemo(
+    () => applyLecturerDirectory(flatten(weeks), directory),
+    [weeks, directory],
+  );
 
   /** Lädt das Kursdetail-Fenster, merged, persistiert, plant Notifications. */
   const refresh = useCallback(async (): Promise<void> => {
@@ -103,19 +118,35 @@ export function useSchedule() {
     try {
       const firstMonday = mondayOfYmd(addDaysYmd(mondayOf(new Date()), -WINDOW_RADIUS_DAYS));
       const fresh = await fetchWeeks(s.rapla, firstMonday, WINDOW_WEEKS);
+      // Verzeichnis mit frisch geladenen Dozenten aktualisieren (nur im Hochschulnetz nicht leer).
+      const { directory: nextDir, changed } = updateLecturerDirectory(
+        directoryRef.current,
+        [...fresh.values()].flat(),
+      );
+      directoryRef.current = nextDir;
       const merged = prune({ ...weeksRef.current, ...Object.fromEntries(fresh) });
       const now = new Date();
       setWeeks(merged);
+      if (changed) {
+        setDirectory(nextDir);
+        await saveLecturerDirectory(nextDir);
+      }
       setUpdatedAt(now);
       setOffline(false);
       await saveCache(merged, now);
-      await syncNotifications(flatten(merged), s);
-      await syncCourseLiveActivity(flatten(merged), s, now);
+      const filled = applyLecturerDirectory(flatten(merged), nextDir);
+      await syncNotifications(filled, s);
+      await syncCourseLiveActivity(filled, s, now);
     } catch {
       // Offline/Netzwerkfehler: letzter Cache bleibt sichtbar, Notifications
       // bleiben auf Basis des Caches geplant.
       setOffline(true);
-      if (s) await syncCourseLiveActivity(flatten(weeksRef.current), s);
+      if (s) {
+        await syncCourseLiveActivity(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          s,
+        );
+      }
     } finally {
       setRefreshing(false);
     }
@@ -127,8 +158,17 @@ export function useSchedule() {
     const key = canonicalWeekKey(mondayKey);
     if (!s?.rapla || weeksRef.current[key]) return;
     try {
-      const entries = await fetchWeek(s.rapla, parseYmdKey(key));
-      setWeeks((prev) => normalizeWeeks({ ...prev, [key]: entries }));
+      const weekEntries = await fetchWeek(s.rapla, parseYmdKey(key));
+      const { directory: nextDir, changed } = updateLecturerDirectory(
+        directoryRef.current,
+        weekEntries,
+      );
+      setWeeks((prev) => normalizeWeeks({ ...prev, [key]: weekEntries }));
+      if (changed) {
+        directoryRef.current = nextDir;
+        setDirectory(nextDir);
+        void saveLecturerDirectory(nextDir);
+      }
     } catch {
       /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
     }
@@ -138,7 +178,8 @@ export function useSchedule() {
   const applySettings = useCallback(
     async (next: AppSettings): Promise<void> => {
       const prev = settingsRef.current;
-      const linkChanged = prev?.rapla?.user !== next.rapla?.user || prev?.rapla?.file !== next.rapla?.file;
+      const linkChanged =
+        prev?.rapla?.user !== next.rapla?.user || prev?.rapla?.file !== next.rapla?.file;
       setSettings(next);
       settingsRef.current = next;
       await saveSettings(next);
@@ -148,8 +189,9 @@ export function useSchedule() {
         await refresh();
       } else {
         // Nur Benachrichtigungsoptionen geaendert: mit vorhandenen Daten neu planen/synchronisieren.
-        await syncNotifications(flatten(weeksRef.current), next);
-        await syncCourseLiveActivity(flatten(weeksRef.current), next);
+        const filled = applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current);
+        await syncNotifications(filled, next);
+        await syncCourseLiveActivity(filled, next);
       }
     },
     [refresh],
@@ -160,12 +202,14 @@ export function useSchedule() {
     void (async () => {
       await initNotifications();
       const s = await loadSettings();
-      const cache = await loadCache();
+      const [cache, dir] = await Promise.all([loadCache(), loadLecturerDirectory()]);
+      directoryRef.current = dir;
+      setDirectory(dir);
       if (cache) {
         const pruned = prune(cache.weeks);
         setWeeks(pruned);
         setUpdatedAt(cache.updatedAt);
-        await syncCourseLiveActivity(flatten(pruned), s);
+        await syncCourseLiveActivity(applyLecturerDirectory(flatten(pruned), dir), s);
       }
       setSettings(s);
       settingsRef.current = s;
@@ -177,7 +221,12 @@ export function useSchedule() {
   useEffect(() => {
     const listener = CapApp.addListener('resume', () => {
       const s = settingsRef.current;
-      if (s) void syncCourseLiveActivity(flatten(weeksRef.current), s);
+      if (s) {
+        void syncCourseLiveActivity(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          s,
+        );
+      }
       const age = updatedAtRef.current ? Date.now() - updatedAtRef.current.getTime() : Infinity;
       if (s?.rapla && age > STALE_MS) void refresh();
     });
@@ -190,7 +239,12 @@ export function useSchedule() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       const s = settingsRef.current;
-      if (s) void syncCourseLiveActivity(flatten(weeksRef.current), s);
+      if (s) {
+        void syncCourseLiveActivity(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          s,
+        );
+      }
     }, 60_000);
     return () => window.clearInterval(timer);
   }, []);

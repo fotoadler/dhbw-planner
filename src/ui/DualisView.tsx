@@ -69,7 +69,10 @@ function DualisLogin({ initialUsername, initialRememberUsername, loading, error,
     <div className="dualis dualis--login">
       <div className="dualis-login">
         <h2>Dualis anmelden</h2>
-        <p>Prüfungsleistungen und Modulnoten werden direkt von Dualis geladen.</p>
+        <p>
+          Prüfungsleistungen und Modulnoten werden direkt von Dualis geladen. Du kannst dein Kürzel
+          eingeben; die Ravensburger Dualis-Adresse wird automatisch ergänzt.
+        </p>
 
         <label className="sheet__label" htmlFor="dualis-user">
           Benutzername

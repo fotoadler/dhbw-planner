@@ -1,12 +1,13 @@
 /**
  * Einstellungen als einfaches Sheet — bewusst minimal (Design-Philosophie):
- * Rapla-Link, Morgen-Benachrichtigung (an/aus + Uhrzeit), Live-Aktivitaeten,
- * Vorab-Erinnerung (an/aus + Minuten). Keine weiteren Optionen.
+ * Rapla-Link, Mensa-Speiseplan (an/aus + Mensa-Auswahl), Morgen-Benachrichtigung
+ * (an/aus + Uhrzeit), Live-Aktivitaeten, Vorab-Erinnerung (an/aus + Minuten).
  */
 
 import { useState } from 'react';
 import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
+import { Mensa, MENSA_LABELS } from '../seezeit/types';
 
 interface Props {
   settings: AppSettings;
@@ -60,6 +61,27 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
               Link übernehmen
             </button>
           )}
+        </section>
+
+        <section className="sheet__section">
+          <div className="sheet__row">
+            <span>Mensa-Speiseplan</span>
+            <select
+              value={settings.mensaEnabled ? settings.mensa : 'off'}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === 'off') set({ mensaEnabled: false });
+                else set({ mensaEnabled: true, mensa: value as Mensa });
+              }}
+            >
+              <option value="off">Aus</option>
+              {(Object.keys(MENSA_LABELS) as Mensa[]).map((m) => (
+                <option key={m} value={m}>
+                  {MENSA_LABELS[m]}
+                </option>
+              ))}
+            </select>
+          </div>
         </section>
 
         <section className="sheet__section">

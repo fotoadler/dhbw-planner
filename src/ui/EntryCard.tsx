@@ -19,6 +19,7 @@ interface Props {
 
 export function EntryCard({ entry, onSelect }: Props) {
   const badge = TYPE_LABEL[entry.type];
+  const lecturers = entry.lecturers.join(', ');
   const content = (
     <>
       <div className="entry__time">
@@ -30,15 +31,9 @@ export function EntryCard({ entry, onSelect }: Props) {
           {entry.title}
           {badge && <span className="entry__badge">{badge}</span>}
         </h3>
-        {entry.lecturers.length > 0 && (
-          <p className="entry__lecturers">{entry.lecturers.join(', ')}</p>
-        )}
-        {(entry.rooms.length > 0 || entry.course) && (
-          <p className="entry__meta">
-            {[entry.rooms.join(', '), entry.course].filter(Boolean).join(' · ')}
-          </p>
-        )}
-        {entry.extra && entry.rooms.length === 0 && <p className="entry__meta">{entry.extra}</p>}
+        {lecturers && <p className="entry__lecturers">{lecturers}</p>}
+        {entry.rooms.length > 0 && <p className="entry__meta">{entry.rooms.join(', ')}</p>}
+        {entry.extra && <p className="entry__meta">{entry.extra}</p>}
       </div>
     </>
   );

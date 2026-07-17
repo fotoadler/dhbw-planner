@@ -11,7 +11,9 @@ import { useRef } from 'react';
 import { ScheduleEntry } from '../types';
 import { berlinParts, formatTime, parseYmdKey } from '../lib/berlinTime';
 
-const HOUR_PX = 56;
+// Etwas großzügiger als eine reine Tabellenansicht: Lange Kurstitel bleiben
+// dadurch auch bei fünf sichtbaren Wochentagen lesbar.
+const HOUR_PX = 64;
 const SWIPE_THRESHOLD = 60;
 const WEEKDAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
@@ -132,10 +134,24 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                   28,
                   ((entry.end.getTime() - entry.start.getTime()) / 3_600_000) * HOUR_PX,
                 );
+                const lecturers = entry.lecturers.join(', ');
+                const isCompact = height < 52;
+                const density = height >= 176 ? 'is-roomy' : height >= 112 ? 'is-tall' : 'is-regular';
+                // Der Titel ist die wichtigste Information. Namen erscheinen
+                // nur dann in der Karte, wenn sie ihm keinen Leseraum nehmen.
+                const showLecturers = Boolean(lecturers) && height >= 176;
                 return (
                   <button
                     key={i}
-                    className={`weekview__event weekview__event--${entry.type}`}
+                    className={[
+                      'weekview__event',
+                      `weekview__event--${entry.type}`,
+                      showLecturers ? 'has-lecturers' : '',
+                      isCompact ? 'is-compact' : '',
+                      density,
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
                     style={{
                       top,
                       height,
@@ -143,11 +159,15 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                       width: `${100 / laneCount}%`,
                     }}
                     onClick={() => onOpenDay(day)}
+                    aria-label={`${entry.title}, ${formatTime(entry.start)} bis ${formatTime(entry.end)}${lecturers ? `, ${lecturers}` : ''}`}
                   >
                     <span className="weekview__etime">{formatTime(entry.start)}</span>
-                    <span className="weekview__etitle">{entry.title}</span>
-                    {entry.lecturers.length > 0 && height >= 56 && (
-                      <span className="weekview__emeta">{entry.lecturers.join(', ')}</span>
+                    <span className="weekview__etitle">
+                      {entry.title}
+                      {lecturers && isCompact ? ` · ${lecturers}` : ''}
+                    </span>
+                    {showLecturers && (
+                      <span className="weekview__emeta">{lecturers}</span>
                     )}
                   </button>
                 );

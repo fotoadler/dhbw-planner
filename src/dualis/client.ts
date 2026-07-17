@@ -48,14 +48,20 @@ export class DualisClient {
   }
 
   async login(credentials: DualisCredentials): Promise<void> {
-    this.credentials = credentials;
+    // Dualis Ravensburg expects the complete student address. Accepting the
+    // short account name here avoids a very common, otherwise opaque failure.
+    const normalizedCredentials = {
+      ...credentials,
+      username: normalizeDualisUsername(credentials.username),
+    };
+    this.credentials = normalizedCredentials;
     this.cookies.clear();
     this.urls = { semesters: {} };
     this.accessToken = null;
 
     const loginResponse = await this.request('POST', `${DUALIS_ENDPOINT}/scripts/mgrqispi.dll`, {
-      usrname: credentials.username,
-      pass: credentials.password,
+      usrname: normalizedCredentials.username,
+      pass: normalizedCredentials.password,
       APPNAME: 'CampusNet',
       PRGNAME: 'LOGINCHECK',
       ARGUMENTS: 'clino,usrname,pass,menuno,menu_type,browser,platform',
@@ -70,13 +76,21 @@ export class DualisClient {
       throw new DualisError('Dualis hat den Login abgelehnt.', 'login-failed');
     }
 
-    const redirectUrl = extractRefreshUrl(header(loginResponse.headers, 'refresh'));
+    // CampusNet has returned both a Refresh header and an HTML/JavaScript
+    // redirect over time. Supporting both variants keeps native logins from
+    // failing merely because the redirect transport changed.
+    const redirectUrl =
+      extractRefreshUrl(header(loginResponse.headers, 'refresh')) ?? extractRedirectUrl(loginResponse.data);
     if (!redirectUrl) {
-      throw new DualisError('Dualis hat keine Login-Weiterleitung geliefert.', 'login-failed');
+      throw new DualisError(
+        'Anmeldung abgelehnt. Für Ravensburg bitte den vollständigen Dualis-Benutzernamen verwenden.',
+        'login-failed',
+      );
     }
 
     const redirectPage = await this.request('GET', redirectUrl);
-    const mainUrl = extractRedirectUrl(redirectPage.data);
+    const mainUrl = extractRedirectUrl(redirectPage.data) ??
+      (extractAccessToken(redirectUrl) ? redirectUrl : null);
     if (!mainUrl) {
       throw new DualisError('Dualis-Hauptseite konnte nach dem Login nicht gefunden werden.', 'login-failed');
     }
@@ -230,6 +244,11 @@ export class DualisClient {
       this.cookies.set(cookie.slice(0, separator), cookie.slice(separator + 1));
     }
   }
+}
+
+export function normalizeDualisUsername(username: string): string {
+  const value = username.trim();
+  return value.includes('@') ? value : `${value}@stud.dhbw-ravensburg.de`;
 }
 
 function requireUrl(url: string | undefined, message: string): string {

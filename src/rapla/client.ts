@@ -19,17 +19,18 @@ export interface RaplaConfig {
   baseUrl: string;
 }
 
-/**
- * Übernimmt `user` und `file` aus dem normalen Rapla-Link des Nutzers, z. B.
- * https://rapla.dhbw.de/rapla/internal_calendar?user=…&file=DH-WINF24A+4.+Semester
- */
 export function parseRaplaLink(link: string): RaplaConfig | null {
   try {
     const url = new URL(link.trim());
     const user = url.searchParams.get('user');
     const file = url.searchParams.get('file');
     if (!user || !file) return null;
-    return { user, file, baseUrl: normalizeBaseUrl(`${url.origin}${url.pathname}`) };
+
+    return {
+      user,
+      file,
+      baseUrl: 'https://rapla.dhbw.de/rapla/calendar',
+    };
   } catch {
     return null;
   }
@@ -65,9 +66,10 @@ async function fetchHtml(url: string): Promise<string> {
     if (res.status >= 400) throw new Error(`Rapla antwortete mit HTTP ${res.status}`);
     return typeof res.data === 'string' ? res.data : String(res.data);
   }
+
   // Web/Dev: relativer Pfad → Vite-Proxy übernimmt (siehe vite.config.ts).
   const u = new URL(url);
-  const res = await fetch(`${u.pathname}${u.search}`);
+  const res = await fetch(`${u.pathname}${u.search}`, { headers: { Accept: 'text/html' } });
   if (!res.ok) throw new Error(`Rapla antwortete mit HTTP ${res.status}`);
   return res.text();
 }

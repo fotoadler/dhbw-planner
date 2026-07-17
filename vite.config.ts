@@ -13,12 +13,22 @@ export default defineConfig({
         target: 'https://rapla.dhbw.de',
         changeOrigin: true,
         secure: true,
+        // Rapla leitet /calendar → /internal_calendar (307). Nativ folgt
+        // CapacitorHttp automatisch; im Dev-Proxy müssen wir dem Redirect
+        // serverseitig folgen, sonst käme er cross-origin beim Browser an (CORS).
+        followRedirects: true,
       },
       '/dualis': {
         target: 'https://dualis.dhbw.de',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/dualis/, ''),
+      },
+      '/seezeit': {
+        target: 'https://seezeit.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/seezeit/, ''),
       },
     },
   },

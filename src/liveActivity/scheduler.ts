@@ -2,8 +2,6 @@ import { CourseLiveActivity, CourseLiveActivityPayload } from '@dhbw/capacitor-c
 import { AppSettings } from '../store/preferences';
 import { ScheduleEntry } from '../types';
 
-const UPDATE_LEEWAY_MS = 60_000;
-
 function activityId(entry: ScheduleEntry): string {
   return [entry.start.toISOString(), entry.end.toISOString(), entry.title.trim()].join('|');
 }
@@ -12,11 +10,11 @@ function text(values: string[]): string {
   return values.map((value) => value.trim()).filter(Boolean).join(', ');
 }
 
-function currentAndNext(entries: ScheduleEntry[], now: Date): [ScheduleEntry | null, ScheduleEntry | undefined] {
+export function currentAndNext(entries: ScheduleEntry[], now: Date): [ScheduleEntry | null, ScheduleEntry | undefined] {
   const sorted = [...entries].sort((a, b) => a.start.getTime() - b.start.getTime());
   const current = sorted.find(
     (entry) =>
-      entry.start.getTime() - UPDATE_LEEWAY_MS <= now.getTime() &&
+      entry.start.getTime() <= now.getTime() &&
       entry.end.getTime() > now.getTime(),
   );
   if (!current) return [null, undefined];

@@ -13,6 +13,8 @@ PODS:
     - Capacitor
   - CapacitorShare (7.0.4):
     - Capacitor
+  - CordovaPlugins (7.6.7):
+    - CapacitorCordova
   - DhbwCapacitorCourseLiveActivity (0.1.0):
     - Capacitor
   - IONFilesystemLib (1.1.2)
@@ -25,6 +27,7 @@ DEPENDENCIES:
   - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
 
 SPEC REPOS:
@@ -46,6 +49,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/preferences"
   CapacitorShare:
     :path: "../../node_modules/@capacitor/share"
+  CordovaPlugins:
+    :path: "../capacitor-cordova-ios-plugins"
   DhbwCapacitorCourseLiveActivity:
     :path: "../../plugins/capacitor-course-live-activity"
 
@@ -57,9 +62,10 @@ SPEC CHECKSUMS:
   CapacitorLocalNotifications: 71124afe526ac00585314bff34651bd023f86e37
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
   CapacitorShare: 25f7fc5dd0e4edbde5d6801c6de5d14a8b450a41
+  CordovaPlugins: 16b2fa62044634b3e1d5284ee81bacb6da158705
   DhbwCapacitorCourseLiveActivity: 4a6f8601a753b0afcbaf7b9783996c64802a65bd
   IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
 
-PODFILE CHECKSUM: 9940c12dda4437d41ef5c1113601f7e79c788071
+PODFILE CHECKSUM: 88d4c475d08bab44f5e7843223d2439317d2aaed
 
 COCOAPODS: 1.16.2

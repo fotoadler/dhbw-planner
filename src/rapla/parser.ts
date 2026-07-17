@@ -65,6 +65,55 @@ function detectType(text: string): EntryType {
   return 'unknown';
 }
 
+const NON_LECTURER_WORDS = /\b(online|bbb|zoom|teams|moodle|hybrid|raum|link|http|www|deadline|klausur|prüfung|pruefung|einsicht|selbststudium)\b/i;
+
+function isLecturerName(name: string): boolean {
+  const text = name.trim();
+  if (!text || text.length > 60 || /\d/.test(text)) return false;
+  if (NON_LECTURER_WORDS.test(text)) return false;
+
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return false;
+
+  const firstWord = words[0];
+  const isTitle = /^(prof\.?|dr\.?)$/i.test(firstWord);
+  const isPrefix = /^(von|van|de|der|zu)$/i.test(firstWord);
+  const startsWithCapital = /^[A-ZÄÖÜ]/.test(firstWord);
+
+  return isTitle || isPrefix || startsWithCapital;
+}
+
+function extractLecturersFromExtra(extra: string): string[] {
+  const parenMatch = extra.match(/\(([^)]+)\)/);
+  const candidateText = parenMatch ? parenMatch[1] : extra;
+
+  const candidates = candidateText
+    .split(/\s*[/,&]\s*|\s+und\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const lecturers: string[] = [];
+  for (const cand of candidates) {
+    if (isLecturerName(cand)) {
+      lecturers.push(cand);
+    }
+  }
+
+  if (lecturers.length === 0 && parenMatch) {
+    const fallbackCandidates = extra
+      .split(/\s*[/,&]\s*|\s+und\s+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    for (const cand of fallbackCandidates) {
+      if (isLecturerName(cand)) {
+        lecturers.push(cand);
+      }
+    }
+  }
+
+  return lecturers;
+}
+
 /** Parst einen einzelnen week_block. Gibt null zurück, wenn Zeit/Titel fehlen. */
 function parseBlock(cell: Element, y: number, m: number, d: number): ScheduleEntry | null {
   const anchor = cell.querySelector('a');
@@ -85,23 +134,50 @@ function parseBlock(cell: Element, y: number, m: number, d: number): ScheduleEnt
   const [, sh, sm, eh, em] = match;
   let title = match[5].trim();
 
-  // Zusatz in spitzen Klammern am Titelende abtrennen (z. B. "<Maximilian Zorg>"
+  // Zusatz in spitzen Klammern am Titel abtrennen (z. B. "<Maximilian Zorg>"
   // oder "<Online über BBB (Prof. Dr. Hopf)>").
   let extra: string | undefined;
-  const extraMatch = title.match(/^(.*?)\s*<([^<>]*)>$/s);
+  const extraMatch = title.match(/^(.*?)\s*<([^<>]*)>(.*)$/s);
   if (extraMatch) {
-    title = extraMatch[1].trim();
+    title = `${extraMatch[1]} ${extraMatch[3]}`.replace(/\s+/g, ' ').trim();
     extra = extraMatch[2].trim() || undefined;
   }
 
   // Fallback-Verhalten: fehlen .person/.resource-Spans, bleiben die Listen
   // einfach leer — Zeit/Titel aus dem <a> sind trotzdem gültig.
-  const lecturers = Array.from(cell.querySelectorAll('span.person'))
+  let lecturers = Array.from(cell.querySelectorAll('span.person'))
     .map((s) => s.textContent?.trim() ?? '')
     .filter(Boolean);
   const resources = Array.from(cell.querySelectorAll('span.resource'))
     .map((s) => s.textContent?.trim() ?? '')
     .filter(Boolean);
+
+  if (lecturers.length === 0 && extra) {
+    const extracted = extractLecturersFromExtra(extra);
+    if (extracted.length > 0) {
+      lecturers = extracted;
+
+      // Clean up extra to remove the parsed lecturer names & empty parentheses
+      let cleanedExtra = extra;
+      for (const name of extracted) {
+        cleanedExtra = cleanedExtra.replace(name, '');
+      }
+      cleanedExtra = cleanedExtra
+        .replace(/\(\s*\)/g, '')
+        .replace(/\[\s*\]/g, '')
+        .replace(/\s*[/,&-]\s*/g, ' ')
+        .replace(/\s+und\s+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const remains = cleanedExtra.replace(/[(),.\[\]\s]/g, '');
+      if (remains.length === 0) {
+        extra = undefined;
+      } else {
+        extra = cleanedExtra;
+      }
+    }
+  }
 
   const course = resources.find(isCourseCode);
   const rooms = resources.filter((r) => r !== course);

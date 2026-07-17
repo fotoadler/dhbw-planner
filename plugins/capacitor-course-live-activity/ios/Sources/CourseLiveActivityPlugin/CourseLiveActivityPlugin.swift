@@ -17,6 +17,14 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "endAll", returnType: CAPPluginReturnPromise)
     ]
 
+    /// A best-effort safety net while the app process is still running. The
+    /// JavaScript scheduler also ends the activity on every resume, so a
+    /// suspended process cannot leave an already finished course visible when
+    /// the app becomes active again.
+    #if canImport(ActivityKit)
+    private var automaticEndIds = Set<String>()
+    #endif
+
     @objc func isAvailable(_ call: CAPPluginCall) {
         #if canImport(ActivityKit)
         if #available(iOS 16.1, *) {
@@ -52,6 +60,10 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         #if canImport(ActivityKit)
+        automaticEndIds.remove(id)
+        #endif
+
+        #if canImport(ActivityKit)
         if #available(iOS 16.1, *) {
             Task {
                 for activity in Activity<CourseLectureAttributes>.activities where activity.attributes.id == id {
@@ -68,6 +80,7 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
 
     @objc func endAll(_ call: CAPPluginCall) {
         #if canImport(ActivityKit)
+        automaticEndIds.removeAll()
         if #available(iOS 16.1, *) {
             Task {
                 for activity in Activity<CourseLectureAttributes>.activities {
@@ -99,6 +112,20 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
+        // Do not recreate an activity from cached data after its course has
+        // already finished. This also closes a race with the web scheduler at
+        // the exact end time.
+        guard payload.state.endTime > Date() else {
+            automaticEndIds.remove(payload.id)
+            Task {
+                for activity in Activity<CourseLectureAttributes>.activities where activity.attributes.id == payload.id {
+                    await activity.end(using: nil, dismissalPolicy: .immediate)
+                }
+                call.resolve()
+            }
+            return
+        }
+
         Task {
             do {
                 if let existing = Activity<CourseLectureAttributes>.activities.first(where: { $0.attributes.id == payload.id }) {
@@ -115,6 +142,8 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
                     await activity.end(using: nil, dismissalPolicy: .immediate)
                 }
 
+                scheduleAutomaticEnd(for: payload)
+
                 call.resolve()
             } catch {
                 call.reject("Unable to update Live Activity", nil, error)
@@ -123,6 +152,26 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         #else
         call.resolve()
         #endif
+    }
+
+    @available(iOS 16.1, *)
+    private func scheduleAutomaticEnd(for payload: (id: String, state: CourseLectureAttributes.ContentState)) {
+        // `Text(timerInterval:pauseTime:)` keeps the countdown at zero even
+        // when iOS suspends the app. This task removes the whole activity on
+        // time whenever the process is allowed to run (for example while the
+        // app is foregrounded).
+        guard automaticEndIds.insert(payload.id).inserted else { return }
+        let delay = payload.state.endTime.timeIntervalSinceNow
+        guard delay > 0 else { return }
+
+        Task {
+            let nanoseconds = UInt64(delay * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: nanoseconds)
+            guard !Task.isCancelled else { return }
+            for activity in Activity<CourseLectureAttributes>.activities where activity.attributes.id == payload.id {
+                await activity.end(using: nil, dismissalPolicy: .immediate)
+            }
+        }
     }
 
     #if canImport(ActivityKit)

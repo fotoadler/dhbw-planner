@@ -12,7 +12,9 @@
 
 import { useMemo, useState } from 'react';
 import { useSchedule } from './useSchedule';
+import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
+import { MENSA_LABELS } from '../seezeit/types';
 import { LinkSetup } from './LinkSetup';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
@@ -41,6 +43,10 @@ type DualisPage = 'overview' | 'exams';
 export function App() {
   const { settings, entries, updatedAt, refreshing, offline, refresh, ensureWeek, applySettings } =
     useSchedule();
+  const { plan: mensaPlan } = useMensa(
+    settings?.mensa ?? 'ravensburg',
+    (settings?.mensaEnabled ?? true) && !!settings?.rapla,
+  );
   const dualis = useDualis();
 
   const today = berlinDayKey(new Date());
@@ -236,6 +242,8 @@ export function App() {
           />
           <DayView
             entries={dayEntries}
+            meals={settings.mensaEnabled ? mensaPlan[selectedDay] ?? [] : []}
+            mensaLabel={MENSA_LABELS[settings.mensa]}
             onSelectEntry={(entry) => setSelectedBlockKey(blockKey(entry))}
             onSwipeDay={shiftDay}
             onRefresh={refresh}

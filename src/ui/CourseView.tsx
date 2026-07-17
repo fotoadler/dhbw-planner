@@ -47,6 +47,7 @@ export function CourseView({ entries, today, onBack }: Props) {
   const renderEntries = (items: ScheduleEntry[]) =>
     items.map((entry, i) => {
       const dayKey = berlinDayKey(entry.start);
+      const lecturers = entry.lecturers.join(', ');
       return (
         <article className="courseitem" key={`${entry.start.toISOString()}-${i}`}>
           <div className="courseitem__date">
@@ -56,9 +57,7 @@ export function CourseView({ entries, today, onBack }: Props) {
             </span>
           </div>
           <div className="courseitem__main">
-            {entry.lecturers.length > 0 && (
-              <p className="courseitem__lecturers">{entry.lecturers.join(', ')}</p>
-            )}
+            {lecturers && <p className="courseitem__lecturers">{lecturers}</p>}
             {entry.rooms.length > 0 && <p className="courseitem__meta">{entry.rooms.join(', ')}</p>}
             {entry.extra && <p className="courseitem__meta">{entry.extra}</p>}
           </div>

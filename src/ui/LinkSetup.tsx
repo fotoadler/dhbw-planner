@@ -21,6 +21,7 @@ export function LinkSetup({ initialLink = '', onSave }: Props) {
       setError('Der Link muss die Parameter „user“ und „file“ enthalten — bitte den kompletten Rapla-Link einfügen.');
       return;
     }
+    setError(null);
     onSave(link.trim(), config);
   };
 
@@ -44,6 +45,7 @@ export function LinkSetup({ initialLink = '', onSave }: Props) {
         onKeyDown={(e) => e.key === 'Enter' && submit()}
       />
       {error && <p className="setup__error">{error}</p>}
+
       <button className="setup__button" onClick={submit} disabled={!link.trim()}>
         Stundenplan laden
       </button>

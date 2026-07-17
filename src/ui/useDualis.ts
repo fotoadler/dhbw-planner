@@ -18,7 +18,7 @@ const client = new DualisClient();
 
 function userMessage(error: unknown): string {
   if (error instanceof DualisError) {
-    if (error.reason === 'login-failed') return 'Anmeldung fehlgeschlagen. Prüfe Benutzername und Passwort.';
+    if (error.reason === 'login-failed') return error.message;
     if (error.reason === 'missing-url') return 'Dualis hat eine erwartete Seite nicht geliefert.';
     if (error.reason === 'parse-failed') return 'Dualis sieht anders aus als erwartet. Die Daten konnten nicht gelesen werden.';
   }

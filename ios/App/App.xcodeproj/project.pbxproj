@@ -159,7 +159,6 @@
 				634BEA155EC495277670AD90 /* Info.plist */,
 				487F41680C8BDD376DDB1463 /* CourseLectureAttributes.swift */,
 			);
-			name = CourseLiveActivityWidget;
 			path = CourseLiveActivityWidget;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -358,6 +357,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CourseLiveActivityWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
@@ -487,6 +487,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -507,6 +508,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -526,6 +528,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CourseLiveActivityWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;

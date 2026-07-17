@@ -36,6 +36,16 @@ describe('parseRaplaWeek (Rapla 2.0 DOM)', () => {
     expect(e.extra).toBe('Maximilian Zorg');
   });
 
+  it('nutzt einen eindeutigen Personen-Zusatz als Dozent, wenn person-Spans fehlen', () => {
+    const html = WEEK_FIXTURE.replace(
+      '08:30 -10:00 Selbststudium<br>',
+      '08:30 -10:00 Selbststudium &lt;Max Mustermann&gt;<br>',
+    );
+    const e = parseRaplaWeek(html).find((x) => x.title === 'Selbststudium')!;
+    expect(e.lecturers).toEqual(['Max Mustermann']);
+    expect(e.extra).toBeUndefined();
+  });
+
   it('berechnet Start/Ende als Europe/Berlin-Wandzeit (Juli = CEST, UTC+2)', () => {
     const e = entries.find((x) => x.title === 'Onlinemarketing')!;
     expect(e.start.toISOString()).toBe('2026-07-06T06:30:00.000Z'); // 08:30 Berlin
@@ -100,5 +110,36 @@ describe('parseRaplaWeek (Rapla 2.0 DOM)', () => {
   it('liest das selektierte Jahr aus dem Selektor', () => {
     const doc = new DOMParser().parseFromString(WEEK_FIXTURE, 'text/html');
     expect(readYearOrThrow(doc)).toBe(2026);
+  });
+
+  it('parst Dozenten aus Klammern mitten im Titel und bereinigt den Titel', () => {
+    const html = WEEK_FIXTURE.replace(
+      '08:30 -10:00 Selbststudium<br>',
+      '08:30 -10:00 Prüfungsform Personalwirtschaft &lt;Bender / Jakob&gt; RV-WMKMM24B<br>',
+    );
+    const e = parseRaplaWeek(html).find((x) => x.title.startsWith('Prüfungsform'))!;
+    expect(e.title).toBe('Prüfungsform Personalwirtschaft RV-WMKMM24B');
+    expect(e.lecturers).toEqual(['Bender', 'Jakob']);
+    expect(e.extra).toBeUndefined();
+  });
+
+  it('parst Dozenten aus komplexen Zusätzen (z. B. Online-Info mit Klammern)', () => {
+    const html = WEEK_FIXTURE.replace(
+      '08:30 -10:00 Selbststudium<br>',
+      '08:30 -10:00 Vorlesung &lt;Online über BBB (Prof. Dr. Hopf)&gt;<br>',
+    );
+    const e = parseRaplaWeek(html).find((x) => x.title === 'Vorlesung')!;
+    expect(e.lecturers).toEqual(['Prof. Dr. Hopf']);
+    expect(e.extra).toBe('Online über BBB');
+  });
+
+  it('parst mehrere Dozenten getrennt durch Slash', () => {
+    const html = WEEK_FIXTURE.replace(
+      '08:30 -10:00 Selbststudium<br>',
+      '08:30 -10:00 Klausur &lt;Hildebrandt / Hopf / Weiß&gt;<br>',
+    );
+    const e = parseRaplaWeek(html).find((x) => x.title === 'Klausur')!;
+    expect(e.lecturers).toEqual(['Hildebrandt', 'Hopf', 'Weiß']);
+    expect(e.extra).toBeUndefined();
   });
 });

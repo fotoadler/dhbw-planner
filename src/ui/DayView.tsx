@@ -8,20 +8,32 @@
 
 import { useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
+import { MensaMeal } from '../seezeit/types';
 import { EntryCard } from './EntryCard';
+import { MensaSection } from './MensaSection';
 
 const SWIPE_THRESHOLD = 60;
 const PULL_THRESHOLD = 70;
 
 interface Props {
   entries: ScheduleEntry[];
+  meals: MensaMeal[];
+  mensaLabel: string;
   onSelectEntry: (entry: ScheduleEntry) => void;
   onSwipeDay: (delta: 1 | -1) => void;
   onRefresh: () => Promise<void>;
   refreshing: boolean;
 }
 
-export function DayView({ entries, onSelectEntry, onSwipeDay, onRefresh, refreshing }: Props) {
+export function DayView({
+  entries,
+  meals,
+  mensaLabel,
+  onSelectEntry,
+  onSwipeDay,
+  onRefresh,
+  refreshing,
+}: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const touch = useRef<{ x: number; y: number; pulling: boolean } | null>(null);
   const [pull, setPull] = useState(0);
@@ -78,6 +90,7 @@ export function DayView({ entries, onSelectEntry, onSwipeDay, onRefresh, refresh
           <EntryCard key={`${e.start.toISOString()}-${i}`} entry={e} onSelect={onSelectEntry} />
         ))
       )}
+      <MensaSection mensaLabel={mensaLabel} meals={meals} />
     </div>
   );
 }

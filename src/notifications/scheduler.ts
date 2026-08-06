@@ -30,6 +30,26 @@ export async function ensurePermission(): Promise<boolean> {
   }
 }
 
+/**
+ * Fragt zusätzlich die Android-12+-Berechtigung für exakte Alarme an (no-op auf
+ * iOS/Web). Ohne sie fällt @capacitor/local-notifications automatisch auf
+ * ungenaue Alarme zurück — die Vorab-Erinnerung kann dann im Doze-Modus um
+ * mehrere Minuten zu spät kommen. `changeExactNotificationSetting()` öffnet
+ * dafür einen System-Settings-Screen, deshalb nur an einer expliziten
+ * Nutzeraktion aufrufen (wie ensurePermission()), nie im Hintergrund.
+ */
+export async function ensureExactAlarmPermission(): Promise<void> {
+  if (Capacitor.getPlatform() !== 'android') return;
+  try {
+    const status = await LocalNotifications.checkExactNotificationSetting();
+    if (status.exact_alarm !== 'granted') {
+      await LocalNotifications.changeExactNotificationSetting();
+    }
+  } catch {
+    /* Exakte Alarme sind ein Komfort-Feature; das Plugin fällt sonst auf ungenaue Alarme zurück. */
+  }
+}
+
 /** Android: Channel einmalig anlegen (no-op auf iOS/Web). */
 export async function initNotifications(): Promise<void> {
   if (Capacitor.getPlatform() !== 'android') return;

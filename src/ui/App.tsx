@@ -27,7 +27,7 @@ import { MailView } from './MailView';
 import { mailProviderForSite } from '../mail/providers';
 import { blockKey } from './courseBlocks';
 import { shareIcs } from '../ical/export';
-import { ensurePermission } from '../notifications/scheduler';
+import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
   addDaysYmd,
@@ -105,6 +105,7 @@ export function App() {
         initialLink={settings.raplaLink}
         onSaveRapla={(link, config) => {
           void ensurePermission();
+          void ensureExactAlarmPermission();
           void applySettings({
             ...settings,
             raplaLink: link,

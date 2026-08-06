@@ -9,6 +9,8 @@ export class CourseLiveActivityWeb extends WebPlugin {
 
   async update() {}
 
+  async schedule() {}
+
   async end() {}
 
   async endAll() {}

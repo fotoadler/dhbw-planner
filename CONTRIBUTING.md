@@ -12,6 +12,8 @@ npm run build
 
 Bitte halte Änderungen fokussiert und ergänze Tests, wenn Parser, Zeitlogik, Notifications, Dualis-Auswertung oder ICS-Export betroffen sind.
 
+Der App-Review-Demomodus ist absichtlich transparent und nicht als geheimer Zugang gedacht. Seine öffentlichen Testwerte schalten nur lokale Beispieldaten frei; Details stehen in [docs/APP_REVIEW_DEMO.md](docs/APP_REVIEW_DEMO.md). Änderungen daran bitte zusammen mit Tests und Dokumentation einreichen.
+
 ## Pull Requests
 
 - Beschreibe kurz das Problem und die Lösung.

@@ -20,6 +20,16 @@ const MAIN_PAGE = `
   <a id="logoutButton" href="/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=LOGOUT&ARGUMENTS=-N111111111111111">Logout</a>
 </body></html>`;
 
+const MAIN_PAGE_WITHOUT_MENU_CLASSES = `
+<html><body>
+  <nav>
+    <a href="/scripts/mgrqispi.dll?APPNAME=CampusNet&amp;PRGNAME=COURSERESULTS&amp;ARGUMENTS=-N111111111111111">Kurse</a>
+    <a href="/scripts/mgrqispi.dll?APPNAME=CampusNet&amp;PRGNAME=STUDENT_RESULT&amp;ARGUMENTS=-N111111111111111">Pruefungen</a>
+    <a href="/scripts/mgrqispi.dll?APPNAME=CampusNet&amp;PRGNAME=SCHEDULE&amp;ARGUMENTS=-N111111111111111">Plan</a>
+    <a href="/scripts/mgrqispi.dll?APPNAME=CampusNet&amp;PRGNAME=LOGOUT&amp;ARGUMENTS=-N111111111111111">Logout</a>
+  </nav>
+</body></html>`;
+
 const STUDY_RESULTS = `
 <html><body>
   <table><tbody>
@@ -123,6 +133,14 @@ describe('Dualis parser', () => {
 
   it('extrahiert die wichtigen Hauptseiten-URLs', () => {
     const urls = parseMainPageUrls(MAIN_PAGE);
+    expect(urls.courseResults).toContain('COURSERESULTS');
+    expect(urls.studentResults).toContain('STUDENT_RESULT');
+    expect(urls.monthlySchedule).toContain('SCHEDULE');
+    expect(urls.logout).toContain('LOGOUT');
+  });
+
+  it('findet Menüeinträge auch ohne die desktop-spezifischen CSS-Klassen', () => {
+    const urls = parseMainPageUrls(MAIN_PAGE_WITHOUT_MENU_CLASSES);
     expect(urls.courseResults).toContain('COURSERESULTS');
     expect(urls.studentResults).toContain('STUDENT_RESULT');
     expect(urls.monthlySchedule).toContain('SCHEDULE');

@@ -103,6 +103,10 @@ export class DualisClient {
     const mainPage = await this.request('GET', mainUrl);
     this.urls = { ...parseMainPageUrls(mainPage.data), main: mainUrl, semesters: {} };
 
+    if (isTimeoutOrAccessDenied(mainPage.data)) {
+      throw new DualisError('Dualis-Anmeldung ist abgelaufen oder wurde abgelehnt.', 'login-failed');
+    }
+
     if (!this.urls.studentResults || !this.urls.courseResults) {
       throw new DualisError('Dualis-Menüpunkte konnten nicht gelesen werden.', 'parse-failed');
     }
@@ -190,51 +194,80 @@ export class DualisClient {
 
   private async request(method: 'GET' | 'POST', url: string, body?: Record<string, string>): Promise<HttpResponse> {
     try {
-      const headers: Record<string, string> = {
-        Accept: 'text/html,application/xhtml+xml',
-        ...this.cookieHeader(),
-      };
+      let currentMethod = method;
+      let currentUrl = url;
+      let currentBody = body;
 
-      let response: HttpResponse;
-      if (Capacitor.isNativePlatform()) {
-        const res =
-          method === 'GET'
-            ? await CapacitorHttp.get({ url, headers, responseType: 'text' })
-            : await CapacitorHttp.post({
-                url,
-                headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
-                data: new URLSearchParams(body).toString(),
-                responseType: 'text',
-              });
-        response = {
-          status: res.status,
-          data: typeof res.data === 'string' ? res.data : String(res.data ?? ''),
-          headers: normalizeHeaders(res.headers ?? {}),
-        };
-      } else {
-        const proxied = toDevProxyUrl(url);
-        const res = await fetch(proxied, {
-          method,
-          headers: method === 'POST' ? { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' } : headers,
-          body: method === 'POST' ? new URLSearchParams(body).toString() : undefined,
-        });
-        response = {
-          status: res.status,
-          data: await res.text(),
-          headers: normalizeHeaders(Object.fromEntries(res.headers.entries())),
-        };
+      // CapacitorHttp uses URLSession on iOS. URLSession follows redirects
+      // automatically, which hides the intermediate Location response that
+      // CampusNet uses to transfer the authenticated session. Handle native
+      // redirects explicitly so cookies and the session token stay aligned.
+      for (let redirectCount = 0; redirectCount < 6; redirectCount += 1) {
+        const response = await this.requestOnce(currentMethod, currentUrl, currentBody);
+        this.storeCookies(response.headers);
+
+        if (!Capacitor.isNativePlatform() || !isRedirect(response.status)) return response;
+
+        const location = header(response.headers, 'location');
+        if (!location) return response;
+
+        currentUrl = new URL(location, currentUrl).toString();
+        if (response.status === 301 || response.status === 302 || response.status === 303) {
+          currentMethod = 'GET';
+          currentBody = undefined;
+        }
       }
 
-      this.storeCookies(response.headers);
-      // Keep the native cookie jar intact for the duration of the request
-      // sequence. Dualis uses the session cookie across the login redirect
-      // and the first authenticated page request; clearing it here can make
-      // the next request look like an unauthenticated login page.
-      return response;
+      throw new DualisError('Dualis-Weiterleitung konnte nicht abgeschlossen werden.', 'network');
     } catch (error) {
       if (error instanceof DualisError) throw error;
       throw new DualisError('Dualis ist gerade nicht erreichbar.', 'network');
     }
+  }
+
+  private async requestOnce(
+    method: 'GET' | 'POST',
+    url: string,
+    body?: Record<string, string>,
+  ): Promise<HttpResponse> {
+    const headers: Record<string, string> = {
+      Accept: 'text/html,application/xhtml+xml',
+      ...this.cookieHeader(),
+    };
+
+    if (Capacitor.isNativePlatform()) {
+      const options = {
+        url,
+        headers: method === 'POST' ? { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' } : headers,
+        responseType: 'text' as const,
+        // Keep Location and Set-Cookie from each CampusNet hop visible to JS.
+        disableRedirects: true,
+      };
+      const res =
+        method === 'GET'
+          ? await CapacitorHttp.get(options)
+          : await CapacitorHttp.post({
+              ...options,
+              data: new URLSearchParams(body).toString(),
+            });
+      return {
+        status: res.status,
+        data: typeof res.data === 'string' ? res.data : String(res.data ?? ''),
+        headers: normalizeHeaders(res.headers ?? {}),
+      };
+    }
+
+    const proxied = toDevProxyUrl(url);
+    const res = await fetch(proxied, {
+      method,
+      headers: method === 'POST' ? { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' } : headers,
+      body: method === 'POST' ? new URLSearchParams(body).toString() : undefined,
+    });
+    return {
+      status: res.status,
+      data: await res.text(),
+      headers: normalizeHeaders(Object.fromEntries(res.headers.entries())),
+    };
   }
 
   private cookieHeader(): Record<string, string> {
@@ -248,11 +281,8 @@ export class DualisClient {
     const raw = header(headers, 'set-cookie');
     if (!raw) return;
 
-    for (const part of raw.split(/,(?=\s*[^;,]+=)/)) {
-      const cookie = part.split(';')[0]?.trim();
-      const separator = cookie?.indexOf('=') ?? -1;
-      if (!cookie || separator < 1) continue;
-      this.cookies.set(cookie.slice(0, separator), cookie.slice(separator + 1));
+    for (const [name, value] of parseSetCookieHeader(raw)) {
+      this.cookies.set(name, value);
     }
   }
 
@@ -271,6 +301,26 @@ export function normalizeDualisUsername(username: string): string {
   return value.includes('@') ? value : `${value}@stud.dhbw-ravensburg.de`;
 }
 
+/**
+ * CampusNet currently emits the session cookie as `cnsc =...` (with a space
+ * before `=`). Trim the cookie name as well as the value before constructing a
+ * Cookie header; otherwise native iOS requests send `cnsc ` and lose the
+ * authenticated session after the redirect.
+ */
+export function parseSetCookieHeader(raw: string): Array<[name: string, value: string]> {
+  const cookies: Array<[string, string]> = [];
+  for (const part of raw.split(/,(?=\s*[^;,]+=)/)) {
+    const cookie = part.split(';')[0]?.trim();
+    const separator = cookie?.indexOf('=') ?? -1;
+    if (!cookie || separator < 1) continue;
+
+    const name = cookie.slice(0, separator).trim();
+    const value = cookie.slice(separator + 1).trim();
+    if (name) cookies.push([name, value]);
+  }
+  return cookies;
+}
+
 function requireUrl(url: string | undefined, message: string): string {
   if (!url) throw new DualisError(message, 'missing-url');
   return url;
@@ -282,6 +332,10 @@ function normalizeHeaders(headers: Record<string, string>): Record<string, strin
 
 function header(headers: Record<string, string>, name: string): string | undefined {
   return headers[name.toLowerCase()];
+}
+
+function isRedirect(status: number): boolean {
+  return status >= 300 && status < 400;
 }
 
 function toDevProxyUrl(url: string): string {

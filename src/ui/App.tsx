@@ -24,7 +24,7 @@ import { SettingsSheet } from './SettingsSheet';
 import { DualisView } from './DualisView';
 import { blockKey } from './courseBlocks';
 import { shareIcs } from '../ical/export';
-import { ensurePermission } from '../notifications/scheduler';
+import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
   addDaysYmd,
@@ -96,6 +96,7 @@ export function App() {
         initialLink={settings.raplaLink}
         onSave={(link, config) => {
           void ensurePermission();
+          void ensureExactAlarmPermission();
           void applySettings({ ...settings, raplaLink: link, rapla: config });
         }}
       />

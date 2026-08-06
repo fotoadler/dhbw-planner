@@ -78,6 +78,7 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
   mensaEnabled: true,
   mensa: 'RV',
   mensaAuto: false,
+  hiddenModules: [],
 };
 
 /** Ebenfalls nur Beispieldaten: keine Dualis-Informationen einer Person. */

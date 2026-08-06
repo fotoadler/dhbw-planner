@@ -30,6 +30,7 @@ import {
   isAppStoreDemo,
 } from '../demo/appStoreDemo';
 import { isReviewDemoRaplaLink } from '../demo/reviewDemo';
+import { filterScheduleEntries, listScheduleModules, ScheduleModule } from '../schedule/modules';
 
 /** Drei Monate zurück bis drei Monate voraus, damit Kursdetails beide Richtungen zeigen. */
 const WINDOW_RADIUS_DAYS = 92;
@@ -164,9 +165,17 @@ export function useSchedule() {
 
   // Fehlende Dozenten aus dem dauerhaften Verzeichnis ergänzen (Abruf außerhalb
   // des Campus liefert nur Kurse). In-Netz-Termine mit Dozenten bleiben unberührt.
-  const entries = useMemo(
+  const allEntries = useMemo(
     () => applyLecturerDirectory(flatten(weeks), directory),
     [weeks, directory],
+  );
+  const entries = useMemo(
+    () => filterScheduleEntries(allEntries, settings?.hiddenModules ?? []),
+    [allEntries, settings?.hiddenModules],
+  );
+  const availableModules = useMemo<ScheduleModule[]>(
+    () => listScheduleModules(allEntries),
+    [allEntries],
   );
 
   /** Lädt den aktiven Provider, persistiert den gemeinsamen Plan und plant lokale Erinnerungen. */
@@ -229,7 +238,10 @@ export function useSchedule() {
       if (generation !== refreshGenerationRef.current || !activeSettings || !sameScheduleSource(activeSettings, s)) {
         return;
       }
-      const filled = applyLecturerDirectory(flatten(merged), nextDir);
+      const filled = filterScheduleEntries(
+        applyLecturerDirectory(flatten(merged), nextDir),
+        activeSettings.hiddenModules,
+      );
       await syncNotifications(filled, activeSettings);
       await syncCourseLiveActivity(filled, activeSettings, now);
     } catch {
@@ -242,7 +254,10 @@ export function useSchedule() {
       const activeSettings = settingsRef.current;
       if (activeSettings) {
         await syncCourseLiveActivity(
-          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          filterScheduleEntries(
+            applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+            activeSettings.hiddenModules,
+          ),
           activeSettings,
         );
       }
@@ -288,7 +303,10 @@ export function useSchedule() {
         await enqueueCacheSave(merged, now, { sourceKey: scheduleSourceKey(s) });
         const activeSettings = settingsRef.current;
         if (!activeSettings || !sameScheduleSource(activeSettings, s)) return;
-        const filled = applyLecturerDirectory(flatten(merged), nextDir);
+        const filled = filterScheduleEntries(
+          applyLecturerDirectory(flatten(merged), nextDir),
+          activeSettings.hiddenModules,
+        );
         await syncNotifications(filled, activeSettings);
         await syncCourseLiveActivity(filled, activeSettings, now);
       } catch {
@@ -338,7 +356,10 @@ export function useSchedule() {
         await refresh();
       } else {
         // Nur Benachrichtigungsoptionen geaendert: mit vorhandenen Daten neu planen/synchronisieren.
-        const filled = applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current);
+        const filled = filterScheduleEntries(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          next.hiddenModules,
+        );
         await syncNotifications(filled, next);
         await syncCourseLiveActivity(filled, next);
       }
@@ -377,7 +398,10 @@ export function useSchedule() {
         weeksRef.current = restored;
         setWeeks(restored);
         setUpdatedAt(cache.updatedAt);
-        await syncCourseLiveActivity(applyLecturerDirectory(flatten(restored), dir), s);
+        await syncCourseLiveActivity(
+          filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules),
+          s,
+        );
       }
       setSettings(s);
       settingsRef.current = s;
@@ -392,7 +416,10 @@ export function useSchedule() {
       const s = settingsRef.current;
       if (s) {
         void syncCourseLiveActivity(
-          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          filterScheduleEntries(
+            applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+            s.hiddenModules,
+          ),
           s,
         );
       }
@@ -424,5 +451,16 @@ export function useSchedule() {
     return () => window.clearTimeout(timer);
   }, [demo, entries, settings]);
 
-  return { settings, entries, updatedAt, refreshing, offline, isReviewDemo: reviewDemo, refresh, ensureWeek, applySettings };
+  return {
+    settings,
+    entries,
+    availableModules,
+    updatedAt,
+    refreshing,
+    offline,
+    isReviewDemo: reviewDemo,
+    refresh,
+    ensureWeek,
+    applySettings,
+  };
 }

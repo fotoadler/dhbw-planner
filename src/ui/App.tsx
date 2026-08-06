@@ -43,7 +43,7 @@ type DualisPage = 'overview' | 'exams';
 
 export function App() {
   const demoScreen = appStoreDemoScreen();
-  const { settings, entries, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
+  const { settings, entries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
   const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
   const { plan: mensaPlan, label: mensaName } = useMensa(
@@ -104,6 +104,7 @@ export function App() {
             scheduleSource: 'rapla',
             apiSelection: null,
             mensaAuto: false,
+            hiddenModules: [],
           });
         }}
         onSaveApi={(selection) => {
@@ -116,6 +117,7 @@ export function App() {
             apiSelection: selection,
             mensaAuto: true,
             mensa: selection.site,
+            hiddenModules: [],
           });
         }}
       />
@@ -319,6 +321,7 @@ export function App() {
       {showSettings && (
         <SettingsSheet
           settings={settings}
+          availableModules={availableModules}
           updatedAt={updatedAt}
           onChange={(next) => void applySettings(next)}
           onClose={() => setShowSettings(false)}

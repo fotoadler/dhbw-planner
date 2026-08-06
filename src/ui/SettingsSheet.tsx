@@ -8,17 +8,25 @@ import { useState } from 'react';
 import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
+import { ScheduleModule } from '../schedule/modules';
 
 interface Props {
   settings: AppSettings;
+  availableModules: ScheduleModule[];
   updatedAt: Date | null;
   onChange: (next: AppSettings) => void;
   onClose: () => void;
 }
 
-export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props) {
+export function SettingsSheet({ settings, availableModules, updatedAt, onChange, onClose }: Props) {
   const [link, setLink] = useState(settings.raplaLink);
   const [linkError, setLinkError] = useState(false);
+  const [moduleQuery, setModuleQuery] = useState('');
+  const visibleModuleCount = availableModules.filter((module) => !settings.hiddenModules.includes(module.key)).length;
+  const normalizedModuleQuery = moduleQuery.trim().toLocaleLowerCase('de-DE');
+  const filteredModules = normalizedModuleQuery
+    ? availableModules.filter((module) => module.label.toLocaleLowerCase('de-DE').includes(normalizedModuleQuery))
+    : availableModules;
 
   const saveLink = () => {
     const config = parseRaplaLink(link);
@@ -34,6 +42,7 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
       scheduleSource: 'rapla',
       apiSelection: null,
       mensaAuto: false,
+      hiddenModules: [],
     });
   };
 
@@ -63,32 +72,104 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
           )}
           <button
             className="sheet__textbtn"
-            onClick={() => onChange({ ...settings, raplaLink: '', rapla: null, apiSelection: null, scheduleSource: 'rapla' })}
+            onClick={() => onChange({
+              ...settings,
+              raplaLink: '',
+              rapla: null,
+              apiSelection: null,
+              scheduleSource: 'rapla',
+              hiddenModules: [],
+            })}
           >
             Stundenplan ändern
           </button>
         </section>
 
         <section className="sheet__section">
-          <label className="sheet__label" htmlFor="rapla-link">
-            Rapla-Link
-          </label>
-          <input
-            id="rapla-link"
-            className="sheet__input"
-            type="url"
-            value={link}
-            spellCheck={false}
-            autoCapitalize="off"
-            onChange={(e) => setLink(e.target.value)}
-          />
-          {linkError && <p className="setup__error">Link ungültig — „user“/„file“ oder „key“/„salt“ fehlen.</p>}
-          {link !== settings.raplaLink && (
-            <button className="sheet__save" onClick={saveLink}>
-              Link übernehmen
-            </button>
+          <div className="sheet__row">
+            <span>Vorlesungsmodule</span>
+            {availableModules.length > 0 && (
+              <strong className="sheet__value">
+                {visibleModuleCount} von {availableModules.length} sichtbar
+              </strong>
+            )}
+          </div>
+          <p className="sheet__note">
+            Blende einzelne Module aus, von denen du befreit bist. Die Auswahl gilt für den angezeigten Plan und seine Erinnerungen.
+          </p>
+          {availableModules.length > 0 ? (
+            <details className="sheet__module-picker">
+              <summary>
+                <span>Module auswählen</span>
+                <span className="sheet__module-picker-count">{visibleModuleCount}/{availableModules.length}</span>
+              </summary>
+              <div className="sheet__modules">
+                <input
+                  className="sheet__module-search"
+                  type="search"
+                  value={moduleQuery}
+                  placeholder="Module durchsuchen"
+                  aria-label="Module durchsuchen"
+                  onFocus={(event) => {
+                    const input = event.currentTarget;
+                    window.setTimeout(() => input.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 220);
+                  }}
+                  onChange={(event) => setModuleQuery(event.target.value)}
+                />
+                {filteredModules.map((module) => {
+                  const checked = !settings.hiddenModules.includes(module.key);
+                  return (
+                    <label className="sheet__module" key={module.key}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(event) => {
+                          const hidden = new Set(settings.hiddenModules);
+                          if (event.target.checked) hidden.delete(module.key);
+                          else hidden.add(module.key);
+                          set({ hiddenModules: [...hidden] });
+                        }}
+                      />
+                      <span>{module.label}</span>
+                    </label>
+                  );
+                })}
+                {filteredModules.length === 0 && <p className="sheet__note">Kein passendes Modul gefunden.</p>}
+                <div className="sheet__module-actions">
+                  <button type="button" onClick={() => set({ hiddenModules: [] })}>Alle anzeigen</button>
+                  <button type="button" onClick={() => set({ hiddenModules: availableModules.map((module) => module.key) })}>
+                    Alle ausblenden
+                  </button>
+                </div>
+              </div>
+            </details>
+          ) : (
+            <p className="sheet__note">Module werden nach dem ersten Planabruf angezeigt.</p>
           )}
         </section>
+
+        {settings.scheduleSource === 'rapla' && (
+          <section className="sheet__section">
+            <label className="sheet__label" htmlFor="rapla-link">
+              Rapla-Link
+            </label>
+            <input
+              id="rapla-link"
+              className="sheet__input"
+              type="url"
+              value={link}
+              spellCheck={false}
+              autoCapitalize="off"
+              onChange={(e) => setLink(e.target.value)}
+            />
+            {linkError && <p className="setup__error">Link ungültig — „user“/„file“ oder „key“/„salt“ fehlen.</p>}
+            {link !== settings.raplaLink && (
+              <button className="sheet__save" onClick={saveLink}>
+                Link übernehmen
+              </button>
+            )}
+          </section>
+        )}
 
         <section className="sheet__section">
           <div className="sheet__row">

@@ -77,6 +77,10 @@ Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab
 
 Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts über den API-Endpunkt `/mensa/{site}` geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst.
 
+Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Betreiber von [dhbw.app](https://dhbw.app/), ausdrücklich gestattet. Die technische Dokumentation und die verwendeten Endpunkte stehen in [docs/DHBW_API.md](docs/DHBW_API.md); private Kontaktdaten und der Mailverkehr werden nicht im Repository veröffentlicht.
+
+Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
+
 ## Datenschutz
 
 Kurzfassung:

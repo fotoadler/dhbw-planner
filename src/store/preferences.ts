@@ -3,7 +3,7 @@
  *
  * Einstellungen sind bewusst minimal (siehe Design-Philosophie): Rapla-Link,
  * Morgen-Benachrichtigung (an/aus + Uhrzeit), Live-Aktivitaeten,
- * Vorab-Erinnerung (an/aus + Minuten). Sonst nichts.
+ * Vorab-Erinnerung (an/aus + Minuten) und ausgeblendete Vorlesungsmodule.
  */
 
 import { Preferences } from '@capacitor/preferences';
@@ -46,6 +46,8 @@ export interface AppSettings {
   mensa: Mensa;
   /** Wenn aktiv, folgt die Mensa automatisch dem geführten DHBW-Standort. */
   mensaAuto: boolean;
+  /** Titel der Module, die aus dem sichtbaren Stundenplan ausgeblendet werden. */
+  hiddenModules: string[];
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -61,6 +63,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   mensaEnabled: true,
   mensa: 'RV',
   mensaAuto: false,
+  hiddenModules: [],
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -111,6 +114,11 @@ function parseApiSelection(value: unknown): ApiSelection | null {
   };
 }
 
+function parseHiddenModules(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean))];
+}
+
 function defaultSettings(): AppSettings {
   return { ...DEFAULT_SETTINGS };
 }
@@ -150,6 +158,7 @@ function parseSettings(raw: unknown): AppSettings {
     mensaEnabled: typeof data.mensaEnabled === 'boolean' ? data.mensaEnabled : DEFAULT_SETTINGS.mensaEnabled,
     mensa: mensaSiteCode(configuredMensa),
     mensaAuto: typeof data.mensaAuto === 'boolean' ? data.mensaAuto : DEFAULT_SETTINGS.mensaAuto,
+    hiddenModules: parseHiddenModules(data.hiddenModules),
   };
 }
 

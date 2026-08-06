@@ -1182,7 +1182,10 @@ button {
 .sheet {
   width: 100%;
   max-height: 85%;
+  max-height: min(85dvh, calc(100dvh - 16px));
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-bottom: calc(32px + env(safe-area-inset-bottom));
   background: var(--bg);
   border-radius: 16px 16px 0 0;
   padding: 20px 20px calc(24px + env(safe-area-inset-bottom));
@@ -1242,6 +1245,114 @@ button {
   color: var(--ink-3);
   font-size: 12px;
   line-height: 17px;
+}
+
+.sheet__module-picker {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sheet__module-picker summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0 12px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sheet__module-picker summary::-webkit-details-marker {
+  display: none;
+}
+
+.sheet__module-picker summary::after {
+  content: '⌄';
+  margin-left: 8px;
+  color: var(--ink-3);
+  font-size: 17px;
+  line-height: 1;
+  transform: translateY(-2px);
+}
+
+.sheet__module-picker[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.sheet__module-picker[open] summary::after {
+  transform: translateY(2px) rotate(180deg);
+}
+
+.sheet__module-picker-count {
+  margin-left: auto;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.sheet__modules {
+  display: flex;
+  flex-direction: column;
+  max-height: 260px;
+  padding: 4px 12px 0;
+  overflow-y: auto;
+}
+
+.sheet__module-search {
+  width: 100%;
+  margin: 4px 0 2px;
+  padding: 8px 10px;
+  scroll-margin: 24px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  outline: none;
+}
+
+.sheet__module-search:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+
+.sheet__module {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.sheet__module input {
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.sheet__module-actions {
+  display: flex;
+  gap: 16px;
+  margin: 3px 0 8px 29px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.sheet__module-actions button {
+  padding: 3px 0;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .sheet__textbtn {

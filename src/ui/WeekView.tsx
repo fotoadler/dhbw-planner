@@ -102,7 +102,10 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
       lastHour = Math.max(lastHour, Math.ceil(minutesOfDay(e.end) / 60));
     }
   }
-  const hours = Array.from({ length: lastHour - firstHour }, (_, i) => firstHour + i);
+  // Eine abschließende Rasterstunde hält die letzte horizontale Linie sichtbar,
+  // auch wenn ein Termin genau auf einer vollen Stunde endet.
+  const displayLastHour = lastHour + 1;
+  const hours = Array.from({ length: displayLastHour - firstHour }, (_, i) => firstHour + i);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -166,12 +169,11 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
           {dayLayouts.map(({ key: day, positioned }) => (
             <div key={day} className={`weekview__col${day === today ? ' is-today' : ''}`}>
               {groupPositionedEntries(positioned).map((cluster, clusterIndex) => {
-                if (cluster.length > 1) {
+                  if (cluster.length > 1) {
                   const start = new Date(Math.min(...cluster.map(({ entry }) => entry.start.getTime())));
                   const end = new Date(Math.max(...cluster.map(({ entry }) => entry.end.getTime())));
                   const top = ((minutesOfDay(start) - firstHour * 60) / 60) * HOUR_PX;
                   const height = Math.max(40, ((end.getTime() - start.getTime()) / 3_600_000) * HOUR_PX);
-                  const more = cluster.length - 1;
                   const titles = cluster.map(({ entry }) => entry.title);
                   return (
                     <button
@@ -181,11 +183,15 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                       onClick={() => onOpenDay(day)}
                       aria-label={`${cluster.length} parallele Termine: ${titles.join(', ')}`}
                     >
-                      <span className="weekview__parallel-count">
-                        {formatTime(start)} · {cluster.length} Termine parallel
+                      <span className="weekview__parallel-summary">
+                        <span className="weekview__parallel-count">{cluster.length}</span>
+                        <span className="weekview__parallel-label">Termine parallel</span>
                       </span>
-                      <span className="weekview__etitle">
-                        {titles[0]} + {more} {more === 1 ? 'weiterer' : 'weitere'}
+                      <span className="weekview__parallel-time">ab {formatTime(start)}</span>
+                      <span className="weekview__parallel-items">
+                        {titles.map((title, index) => (
+                          <span key={`${title}-${index}`} className="weekview__parallel-item">{title}</span>
+                        ))}
                       </span>
                     </button>
                   );

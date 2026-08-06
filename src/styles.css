@@ -491,6 +491,7 @@ button {
 .weekview__grid {
   position: relative;
   display: grid;
+  border-bottom: 1px solid var(--line);
   /* Feine Stundenlinien über die ganze Breite */
   background: repeating-linear-gradient(
     to bottom,
@@ -547,22 +548,62 @@ button {
   gap: 4px;
 }
 
-.weekview__parallel-count {
+.weekview__parallel-summary {
   width: 100%;
-  overflow: hidden;
-  color: #315864;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  color: #0f6079;
   font-size: 10px;
   line-height: 13px;
   font-weight: 700;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
-.weekview__event--parallel-group .weekview__etitle {
+.weekview__parallel-count {
+  flex: 0 0 auto;
+  min-width: 17px;
+  height: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: white;
+  background: #0f6079;
+  font-size: 10px;
+  line-height: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__parallel-label {
+  min-width: 0;
+  overflow: visible;
+  white-space: normal;
+}
+
+.weekview__parallel-time {
+  color: #315864;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__parallel-items {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.weekview__parallel-item {
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: #102f3a;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
 }
 
 .weekview__event.is-compact {

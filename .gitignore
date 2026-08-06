@@ -49,3 +49,5 @@ android/app/src/main/res/xml/config.xml
 plugins/*/android/build/
 !plugins/capacitor-course-live-activity/dist/
 !plugins/capacitor-course-live-activity/dist/**
+!plugins/capacitor-embedded-mail/dist/
+!plugins/capacitor-embedded-mail/dist/**

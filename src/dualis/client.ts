@@ -1,4 +1,4 @@
-import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { Capacitor, CapacitorCookies, CapacitorHttp } from '@capacitor/core';
 import {
   DUALIS_ENDPOINT,
   extractAccessToken,
@@ -56,6 +56,7 @@ export class DualisClient {
     };
     this.credentials = normalizedCredentials;
     this.cookies.clear();
+    await this.clearNativeCookies();
     this.urls = { semesters: {} };
     this.accessToken = null;
 
@@ -106,17 +107,20 @@ export class DualisClient {
 
   async logout(): Promise<void> {
     const logoutUrl = this.urls.logout;
+    if (logoutUrl) {
+      try {
+        // The server needs the current session cookie to invalidate it. The
+        // local/native cookie stores are cleared only after this best-effort call.
+        await this.request('GET', logoutUrl);
+      } catch {
+        /* Logout ist best-effort; lokale Session wird trotzdem verworfen. */
+      }
+    }
     this.credentials = null;
     this.urls = { semesters: {} };
     this.accessToken = null;
     this.cookies.clear();
-    if (logoutUrl) {
-      try {
-        await this.request('GET', logoutUrl);
-      } catch {
-        /* Logout ist best-effort; lokale Session wird immer verworfen. */
-      }
-    }
+    await this.clearNativeCookies();
   }
 
   async loadDashboard(): Promise<DualisDashboard> {
@@ -242,6 +246,15 @@ export class DualisClient {
       const separator = cookie?.indexOf('=') ?? -1;
       if (!cookie || separator < 1) continue;
       this.cookies.set(cookie.slice(0, separator), cookie.slice(separator + 1));
+    }
+  }
+
+  private async clearNativeCookies(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+    try {
+      await CapacitorCookies.clearCookies({ url: DUALIS_ENDPOINT });
+    } catch {
+      // The in-memory cookie map is still cleared if native cookie cleanup is unavailable.
     }
   }
 }

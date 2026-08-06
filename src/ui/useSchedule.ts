@@ -91,6 +91,22 @@ function prune(weeks: WeekMap): WeekMap {
   return Object.fromEntries(Object.entries(normalized).filter(([k]) => k >= min && k <= max));
 }
 
+function sameRaplaConfig(
+  a: AppSettings['rapla'] | undefined,
+  b: AppSettings['rapla'] | undefined,
+): boolean {
+  if (!a && !b) return true;
+  return Boolean(
+    a &&
+      b &&
+      a.baseUrl === b.baseUrl &&
+      a.user === b.user &&
+      a.file === b.file &&
+      a.key === b.key &&
+      a.salt === b.salt,
+  );
+}
+
 export function useSchedule() {
   const [reviewDemo, setReviewDemo] = useState(false);
   const demo = isAppStoreDemo() || reviewDemo;
@@ -110,6 +126,17 @@ export function useSchedule() {
   directoryRef.current = directory;
   const updatedAtRef = useRef(updatedAt);
   updatedAtRef.current = updatedAt;
+  const refreshGenerationRef = useRef(0);
+  const inFlightWeeksRef = useRef(new Map<string, Promise<void>>());
+  const cacheWriteChainRef = useRef(Promise.resolve());
+
+  // Preferences writes are serialized so a slower, older refresh cannot finish
+  // after a newer one and overwrite its cache.
+  const enqueueCacheSave = useCallback((nextWeeks: WeekMap, timestamp: Date): Promise<void> => {
+    const write = cacheWriteChainRef.current.then(() => saveCache(nextWeeks, timestamp));
+    cacheWriteChainRef.current = write.catch(() => {});
+    return write;
+  }, []);
 
   // Fehlende Dozenten aus dem dauerhaften Verzeichnis ergänzen (Abruf außerhalb
   // des Campus liefert nur Kurse). In-Netz-Termine mit Dozenten bleiben unberührt.
@@ -123,10 +150,15 @@ export function useSchedule() {
     if (demo) return;
     const s = settingsRef.current;
     if (!s?.rapla) return;
+    const generation = ++refreshGenerationRef.current;
     setRefreshing(true);
     try {
       const firstMonday = mondayOfYmd(addDaysYmd(mondayOf(new Date()), -WINDOW_RADIUS_DAYS));
-      const fresh = await fetchWeeks(s.rapla, firstMonday, WINDOW_WEEKS);
+      const freshResult = await fetchWeeks(s.rapla, firstMonday, WINDOW_WEEKS);
+      if (generation !== refreshGenerationRef.current || !sameRaplaConfig(settingsRef.current?.rapla, s.rapla)) {
+        return;
+      }
+      const fresh = freshResult.weeks;
       // Verzeichnis mit frisch geladenen Dozenten aktualisieren (nur im Hochschulnetz nicht leer).
       const { directory: nextDir, changed } = updateLecturerDirectory(
         directoryRef.current,
@@ -135,31 +167,40 @@ export function useSchedule() {
       directoryRef.current = nextDir;
       const merged = prune({ ...weeksRef.current, ...Object.fromEntries(fresh) });
       const now = new Date();
+      weeksRef.current = merged;
       setWeeks(merged);
       if (changed) {
         setDirectory(nextDir);
         await saveLecturerDirectory(nextDir);
       }
       setUpdatedAt(now);
-      setOffline(false);
-      await saveCache(merged, now);
+      setOffline(freshResult.failedWeeks.length > 0);
+      await enqueueCacheSave(merged, now);
+      const activeSettings = settingsRef.current;
+      if (generation !== refreshGenerationRef.current || !activeSettings || !sameRaplaConfig(activeSettings.rapla, s.rapla)) {
+        return;
+      }
       const filled = applyLecturerDirectory(flatten(merged), nextDir);
-      await syncNotifications(filled, s);
-      await syncCourseLiveActivity(filled, s, now);
+      await syncNotifications(filled, activeSettings);
+      await syncCourseLiveActivity(filled, activeSettings, now);
     } catch {
       // Offline/Netzwerkfehler: letzter Cache bleibt sichtbar, Notifications
       // bleiben auf Basis des Caches geplant.
+      if (generation !== refreshGenerationRef.current || !sameRaplaConfig(settingsRef.current?.rapla, s.rapla)) {
+        return;
+      }
       setOffline(true);
-      if (s) {
+      const activeSettings = settingsRef.current;
+      if (activeSettings) {
         await syncCourseLiveActivity(
           applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-          s,
+          activeSettings,
         );
       }
     } finally {
-      setRefreshing(false);
+      if (generation === refreshGenerationRef.current) setRefreshing(false);
     }
-  }, [demo]);
+  }, [demo, enqueueCacheSave]);
 
   /** Lädt eine Woche außerhalb des Fensters nach (Navigation in Vergangenheit/Zukunft). */
   const ensureWeek = useCallback(async (mondayKey: string): Promise<void> => {
@@ -167,22 +208,47 @@ export function useSchedule() {
     const s = settingsRef.current;
     const key = canonicalWeekKey(mondayKey);
     if (!s?.rapla || weeksRef.current[key]) return;
-    try {
-      const weekEntries = await fetchWeek(s.rapla, parseYmdKey(key));
-      const { directory: nextDir, changed } = updateLecturerDirectory(
-        directoryRef.current,
-        weekEntries,
-      );
-      setWeeks((prev) => normalizeWeeks({ ...prev, [key]: weekEntries }));
-      if (changed) {
+    const existing = inFlightWeeksRef.current.get(key);
+    if (existing) return existing;
+
+    let request: Promise<void> | null = null;
+    const run = async () => {
+      try {
+        const weekEntries = await fetchWeek(s.rapla!, parseYmdKey(key));
+        if (!sameRaplaConfig(settingsRef.current?.rapla, s.rapla)) return;
+
+        const { directory: nextDir, changed } = updateLecturerDirectory(
+          directoryRef.current,
+          weekEntries,
+        );
+        const merged = normalizeWeeks({ ...weeksRef.current, [key]: weekEntries });
+        weeksRef.current = merged;
+        setWeeks(merged);
         directoryRef.current = nextDir;
-        setDirectory(nextDir);
-        void saveLecturerDirectory(nextDir);
+        if (changed) {
+          setDirectory(nextDir);
+          await saveLecturerDirectory(nextDir);
+        }
+
+        const now = new Date();
+        updatedAtRef.current = now;
+        setUpdatedAt(now);
+        await enqueueCacheSave(merged, now);
+        const activeSettings = settingsRef.current;
+        if (!activeSettings || !sameRaplaConfig(activeSettings.rapla, s.rapla)) return;
+        const filled = applyLecturerDirectory(flatten(merged), nextDir);
+        await syncNotifications(filled, activeSettings);
+        await syncCourseLiveActivity(filled, activeSettings, now);
+      } catch {
+        /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
+      } finally {
+        if (request && inFlightWeeksRef.current.get(key) === request) inFlightWeeksRef.current.delete(key);
       }
-    } catch {
-      /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
-    }
-  }, [demo]);
+    };
+    request = run();
+    inFlightWeeksRef.current.set(key, request);
+    return request;
+  }, [demo, enqueueCacheSave]);
 
   /** Persistiert Einstellungen; bei neuem Rapla-Link wird alles neu geladen. */
   const applySettings = useCallback(
@@ -191,6 +257,7 @@ export function useSchedule() {
       if (isReviewDemoRaplaLink(next.raplaLink)) {
         // Der Review-Link ist ein lokaler Schalter: keine Speicherung,
         // keine Benachrichtigungen und kein Abruf eines externen Systems.
+        refreshGenerationRef.current += 1;
         const reviewSettings = { ...APP_STORE_DEMO_SETTINGS, raplaLink: next.raplaLink, rapla: next.rapla };
         const weekKey = ymdKey(mondayOfYmd(parseYmdKey('2026-07-20')));
         const now = new Date();
@@ -205,8 +272,7 @@ export function useSchedule() {
       }
       if (reviewDemo) return;
       const prev = settingsRef.current;
-      const linkChanged =
-        prev?.rapla?.user !== next.rapla?.user || prev?.rapla?.file !== next.rapla?.file;
+      const linkChanged = !sameRaplaConfig(prev?.rapla, next.rapla);
       setSettings(next);
       settingsRef.current = next;
       await saveSettings(next);
@@ -249,6 +315,7 @@ export function useSchedule() {
       setDirectory(dir);
       if (cache) {
         const pruned = prune(cache.weeks);
+        weeksRef.current = pruned;
         setWeeks(pruned);
         setUpdatedAt(cache.updatedAt);
         await syncCourseLiveActivity(applyLecturerDirectory(flatten(pruned), dir), s);

@@ -22,4 +22,12 @@ Der geführte Modus ruft die API direkt vom Gerät des Nutzers auf. Es gibt kein
 
 Für Stundenplan-Aktualisierungen verwendet die App den HTTP-`ETag`. Bei unveränderten Daten wird dadurch keine vollständige Antwort erneut verarbeitet. Die Delta-Endpunkte werden derzeit nicht verwendet; die laut API-Betreiber bestehenden Delta-Probleme für Ravensburg und Friedrichshafen bleiben damit ohne Auswirkung auf den geführten Modus.
 
-Die App speichert die Kursauswahl, den lokalen Stundenplan-Cache und die vom Nutzer ausgeblendeten Module lokal auf dem Gerät. Der API-Kursplan wird nicht in ein eigenes Backend kopiert.
+## Vergangene Wochen und Dozenten
+
+Der Kursplan wird mit `archived=true` abgerufen. Die Antwort wird nach Kalenderwochen gruppiert und lokal zwischengespeichert. Dadurch kann die App auch zu vergangenen Wochen navigieren, ohne für jede Woche einen eigenen API-Aufruf zu benötigen. Angezeigt werden nur die Termine, die in der API-Antwort enthalten sind; eine unbegrenzte oder dauerhaft garantierte Historie gibt es nicht.
+
+Dozentennamen sind nicht für jeden Termin garantiert. Das API-Feld `lecturer` kann leer sein, insbesondere wenn die zugrunde liegende Rapla-Quelle die Namen für einen Zugriff außerhalb des Hochschulnetzwerks nicht mitliefert. Die App verarbeitet zusätzlich Dozentenangaben, die in der Terminbezeichnung eingebettet sind. Wenn ein Termin bereits mit Dozenten geladen wurde, merkt sich die App diese Zuordnung lokal pro Kursblock und kann sie bei späteren Abrufen ohne Namen best effort ergänzen. Das ist ein lokaler Fallback und keine zusätzliche API-Abfrage; neu angelegte, verschobene oder umbenannte Veranstaltungen können daher weiterhin ohne Dozenten erscheinen.
+
+## Lokale Verarbeitung
+
+Die App speichert die Kursauswahl, den lokalen Stundenplan-Cache einschließlich ETag, den Mensa-Cache, das lokale Dozenten-Verzeichnis und die vom Nutzer ausgeblendeten Module lokal auf dem Gerät. Der API-Kursplan wird nicht in ein eigenes Backend kopiert. Die Auswahl eines anderen Mensa-Standorts ist im geführten Modus jederzeit möglich; standardmäßig folgt die Mensa-Auswahl dem gewählten DHBW-Standort.

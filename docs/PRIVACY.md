@@ -9,6 +9,10 @@ Die App kann lokal speichern:
 - Rapla-Link und daraus abgeleitete Rapla-Konfiguration
 - ausgewählter DHBW-Standort, Studiengang und Kurskennung im geführten Modus
 - zuletzt geladene Stundenplantermine
+- ETag und Metadaten des Stundenplan-Caches, damit unveränderte API-Antworten nicht vollständig neu verarbeitet werden
+- zuletzt geladener Mensa-Speiseplan und die gewählte Mensa
+- vom Nutzer ausgeblendete Vorlesungsmodule
+- ein lokales Dozenten-Verzeichnis mit zuletzt erfolgreich erkannten Zuordnungen, damit fehlende Dozentennamen bei späteren Abrufen best effort ergänzt werden können
 - Benachrichtigungseinstellungen
 - optional den Dualis-Benutzernamen, wenn „Benutzername merken“ aktiviert ist
 
@@ -28,6 +32,8 @@ Die App greift direkt auf die vom Nutzer konfigurierten DHBW-Systeme zu:
 - Dualis zum Abrufen von Modulnoten und Prüfungsleistungen
 
 Es gibt kein eigenes Backend und keine Weiterleitung dieser Daten an einen Projektdienst.
+
+Die öffentliche DHBW-API kann bei einzelnen Terminen unvollständige Daten liefern, zum Beispiel ohne Dozentenname. Die App versucht solche Angaben aus der Terminbezeichnung oder aus dem lokalen Dozenten-Verzeichnis zu ergänzen. Das Verzeichnis wird nicht an einen eigenen Server übertragen.
 
 ## Tracking
 

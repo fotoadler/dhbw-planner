@@ -11,7 +11,7 @@ DHBW Planner ist keine offizielle App der DHBW.
 ## Features
 
 - Geführte Kursauswahl über Standort, Studiengang und Kurs — ohne Rapla-Link
-- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und Dozentennamen
+- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
 - iCal-/ICS-Export über das native Share-Sheet
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
@@ -75,6 +75,8 @@ Der geführte Modus verwendet den öffentlichen Kurskatalog und den Kursplan der
 
 Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab und verwendet bei späteren Aktualisierungen den HTTP-`ETag`. Dadurch werden unveränderte Pläne nicht erneut übertragen. Die Delta-/Sync-Endpunkte werden bewusst nicht benötigt; der Rapla-Link bleibt als unabhängige Alternative erhalten.
 
+Der verwendete Kursplan-Endpunkt liefert mit `archived=true` auch vergangene Termine. Dadurch können im geführten Modus historische Stundenplanwochen angezeigt werden, sofern die API diese Termine noch bereitstellt. Die API kann Dozentennamen je nach Datenquelle und Zugriffssituation leer liefern. Die App übernimmt Namen aus dem API-Feld beziehungsweise aus eingebetteten Angaben und ergänzt bekannte Namen aus einem lokalen Dozenten-Verzeichnis; eine vollständige Dozentenanzeige kann daher nicht garantiert werden.
+
 Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts über den API-Endpunkt `/mensa/{site}` geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst.
 
 Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Betreiber von [dhbw.app](https://dhbw.app/), ausdrücklich gestattet. Die technische Dokumentation und die verwendeten Endpunkte stehen in [docs/DHBW_API.md](docs/DHBW_API.md); private Kontaktdaten und der Mailverkehr werden nicht im Repository veröffentlicht.
@@ -87,7 +89,7 @@ Kurzfassung:
 
 - Kein Tracking
 - Kein eigenes Backend
-- Rapla-Link bzw. API-Kursauswahl, Stundenplan-Cache und optionale Dualis-Einstellungen werden lokal gespeichert
+- Rapla-Link bzw. API-Kursauswahl, Stundenplan-Cache, Mensa-Cache, ausgeblendete Module, das lokale Dozenten-Verzeichnis und optionale Dualis-Einstellungen werden lokal gespeichert
 - Dualis-Passwörter werden nicht dauerhaft gespeichert
 - Netzwerkzugriffe gehen direkt an die konfigurierten DHBW-Systeme
 

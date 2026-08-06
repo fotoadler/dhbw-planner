@@ -6,12 +6,11 @@ Aktuell wird die neueste Version im `main`-Branch unterstützt.
 
 ## Schutz des Hauptbranches
 
-Der öffentliche `main`-Branch ist gegen direkte Änderungen, Force-Pushes und
-Löschung geschützt. Änderungen werden über Pull Requests eingebracht und
-benötigen den erfolgreichen GitHub-Actions-Check `web-quality`, der Tests und
-den Produktions-Build ausführt. Eine verpflichtende zweite Freigabe ist
-derzeit nicht aktiviert, damit der Solo-Entwicklungsworkflow nicht blockiert
-wird.
+Der öffentliche `main`-Branch ist gegen Force-Pushes und Löschung geschützt.
+Änderungen sollen über Pull Requests eingebracht werden und müssen den
+GitHub-Actions-Check `web-quality` bestehen, der Tests und den Produktions-Build
+ausführt. Eine verpflichtende zweite Freigabe ist derzeit nicht aktiviert,
+damit der Solo-Entwicklungsworkflow nicht blockiert wird.
 
 ## Reporting a Vulnerability
 
@@ -26,7 +25,7 @@ Gib bitte an:
 
 ## Sensitive Data
 
-Die App soll keine Zugangsdaten dauerhaft speichern. Rapla-Link, Stundenplan-Cache und optionale Dualis-Einstellungen liegen lokal auf dem Gerät. Bitte öffne sofort eine private Sicherheitsmeldung, falls du ein Verhalten findest, bei dem Credentials geloggt, exportiert oder dauerhaft gespeichert werden.
+Die App soll keine Zugangsdaten dauerhaft speichern. Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, Dozenten-Verzeichnis und optionale Dualis-Einstellungen liegen lokal auf dem Gerät. Bitte öffne sofort eine private Sicherheitsmeldung, falls du ein Verhalten findest, bei dem Credentials geloggt, exportiert oder dauerhaft gespeichert werden.
 
 ## Lokale Speicherung und Sitzungen
 

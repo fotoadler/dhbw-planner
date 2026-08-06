@@ -1,4 +1,5 @@
 import { CourseLiveActivity, CourseLiveActivityPayload } from '@dhbw/capacitor-course-live-activity';
+import { Capacitor } from '@capacitor/core';
 import { AppSettings } from '../store/preferences';
 import { ScheduleEntry } from '../types';
 
@@ -68,12 +69,24 @@ export async function syncCourseLiveActivity(
     const [current, next] = currentAndNext(entries, now);
     if (!current) {
       const upcoming = nextUpcomingCourse(entries, now);
-      if (upcoming && upcoming.start.getTime() - now.getTime() <= SCHEDULE_AHEAD_MS) {
+      if (
+        upcoming &&
+        upcoming.start.getTime() - now.getTime() <= SCHEDULE_AHEAD_MS &&
+        Capacitor.getPlatform() === 'ios'
+      ) {
         // On iOS 26 this is an ActivityKit-scheduled start, which the system
         // executes even when the JavaScript app is suspended at course start.
-        await CourseLiveActivity.schedule(payload(upcoming));
+        try {
+          await CourseLiveActivity.schedule(payload(upcoming));
+        } catch (err) {
+          await CourseLiveActivity.endAll();
+          throw err;
+        }
         return;
       }
+
+      // Android Live Updates represent an activity already in progress. Do
+      // not leave the finished course visible while waiting for the next one.
       await CourseLiveActivity.endAll();
       return;
     }

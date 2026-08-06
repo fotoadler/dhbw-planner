@@ -1,27 +1,30 @@
 /**
  * Wurzelkomponente.
  *
- * Struktur: unten eine feste Navigation zwischen den zwei Bereichen
- * „Kalender" und „Dualis". Oben schaltet ein kontextueller Segment-Umschalter
- * die Unteransicht (Kalender: Tag/Woche, Dualis: Übersicht/Prüfungen).
+ * Struktur: unten eine feste Navigation zwischen den Bereichen
+ * „Kalender", „Dualis" und — für unterstützte Standorte — „Uni-Mail".
+ * Oben schaltet ein kontextueller Segment-Umschalter die Unteransicht
+ * (Kalender: Tag/Woche, Dualis: Übersicht/Prüfungen).
  *
  * Der Dualis-Hook lebt hier oben, damit die angemeldete Session einen
  * Bereichswechsel überlebt (sonst müsste man sich bei jedem Tab-Wechsel neu
  * anmelden, weil DualisView sonst ab- und wieder aufgebaut würde).
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
-import { MENSA_LABELS } from '../seezeit/types';
-import { LinkSetup } from './LinkSetup';
+import { mensaLabel as formatMensaLabel } from '../seezeit/types';
+import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { CourseView } from './CourseView';
 import { SettingsSheet } from './SettingsSheet';
 import { DualisView } from './DualisView';
+import { MailView } from './MailView';
+import { mailProviderForSite } from '../mail/providers';
 import { blockKey } from './courseBlocks';
 import { shareIcs } from '../ical/export';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
@@ -37,17 +40,18 @@ import {
   ymdKey,
 } from '../lib/berlinTime';
 
-type Section = 'calendar' | 'dualis';
+type Section = 'calendar' | 'dualis' | 'mail';
 type CalendarView = 'day' | 'week';
 type DualisPage = 'overview' | 'exams';
 
 export function App() {
   const demoScreen = appStoreDemoScreen();
-  const { settings, entries, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
+  const { settings, entries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
-  const { plan: mensaPlan } = useMensa(
-    settings?.mensa ?? 'ravensburg',
-    (settings?.mensaEnabled ?? true) && !!settings?.rapla,
+  const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
+  const { plan: mensaPlan, label: mensaName } = useMensa(
+    mensaTarget,
+    (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
   const dualis = useDualis();
 
@@ -58,6 +62,11 @@ export function App() {
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
+
+  useEffect(() => {
+    if (section === 'mail' && !mailProvider) setSection('calendar');
+  }, [mailProvider, section]);
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
@@ -89,15 +98,36 @@ export function App() {
     return <div className="splash">Lade …</div>;
   }
 
-  // Erststart: nur das Rapla-Link-Eingabefeld, kein Wizard.
-  if (!settings.rapla) {
+  // Erststart: geführter API-Modus oder manueller Rapla-Fallback.
+  if (!settings.rapla && !(settings.scheduleSource === 'dhbw-api' && settings.apiSelection)) {
     return (
-      <LinkSetup
+      <SetupWizard
         initialLink={settings.raplaLink}
-        onSave={(link, config) => {
+        onSaveRapla={(link, config) => {
           void ensurePermission();
           void ensureExactAlarmPermission();
-          void applySettings({ ...settings, raplaLink: link, rapla: config });
+          void applySettings({
+            ...settings,
+            raplaLink: link,
+            rapla: config,
+            scheduleSource: 'rapla',
+            apiSelection: null,
+            mensaAuto: false,
+            hiddenModules: [],
+          });
+        }}
+        onSaveApi={(selection) => {
+          void ensurePermission();
+          void applySettings({
+            ...settings,
+            raplaLink: '',
+            rapla: null,
+            scheduleSource: 'dhbw-api',
+            apiSelection: selection,
+            mensaAuto: true,
+            mensa: selection.site,
+            hiddenModules: [],
+          });
         }}
       />
     );
@@ -129,13 +159,18 @@ export function App() {
   };
 
   const inCalendar = section === 'calendar';
+  const inDualis = section === 'dualis';
+  const inMail = section === 'mail';
   const dualisLoggedIn = dualis.loginState === 'logged-in';
   const showsReviewDemo = isReviewDemo || dualis.isReviewDemo;
 
   // Kopf: Titel/Untertitel je nach Bereich und Unteransicht.
   let title: string;
   let subtitle: string | null;
-  if (!inCalendar) {
+  if (inMail) {
+    title = 'Mail';
+    subtitle = null;
+  } else if (inDualis) {
     title = 'Dualis';
     subtitle = 'Noten und Prüfungen';
   } else if (selectedBlock) {
@@ -217,7 +252,7 @@ export function App() {
           </nav>
         </div>
       )}
-      {!inCalendar && dualisLoggedIn && (
+      {inDualis && dualisLoggedIn && (
         <div className="dualis__subnav">
           <nav className="segmented" aria-label="Dualis-Ansicht">
             <button className={dualisPage === 'overview' ? 'is-active' : ''} onClick={() => setDualisPage('overview')}>
@@ -238,7 +273,9 @@ export function App() {
       )}
 
       {/* Inhalt */}
-      {inCalendar && selectedBlock ? (
+      {inMail ? (
+        <MailView site={settings.apiSelection?.site ?? ''} />
+      ) : inCalendar && selectedBlock ? (
         <CourseView entries={blockEntries} today={today} onBack={() => setSelectedBlockKey(null)} />
       ) : inCalendar && calendarView === 'day' ? (
         <>
@@ -253,7 +290,7 @@ export function App() {
           <DayView
             entries={dayEntries}
             meals={settings.mensaEnabled ? mensaPlan[selectedDay] ?? [] : []}
-            mensaLabel={MENSA_LABELS[settings.mensa]}
+            mensaLabel={mensaName || formatMensaLabel(settings.mensa)}
             onSelectEntry={(entry) => setSelectedBlockKey(blockKey(entry))}
             onSwipeDay={shiftDay}
             onRefresh={refresh}
@@ -287,7 +324,7 @@ export function App() {
           <span>Kalender</span>
         </button>
         <button
-          className={`tabbar__item${!inCalendar ? ' is-active' : ''}`}
+          className={`tabbar__item${inDualis ? ' is-active' : ''}`}
           onClick={() => setSection('dualis')}
         >
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -295,11 +332,24 @@ export function App() {
           </svg>
           <span>Dualis</span>
         </button>
+        {mailProvider && (
+          <button
+            className={`tabbar__item${inMail ? ' is-active' : ''}`}
+            onClick={() => setSection('mail')}
+            aria-label={`${mailProvider.label} Uni-Mail`}
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" />
+            </svg>
+            <span>Mail</span>
+          </button>
+        )}
       </nav>
 
       {showSettings && (
         <SettingsSheet
           settings={settings}
+          availableModules={availableModules}
           updatedAt={updatedAt}
           onChange={(next) => void applySettings(next)}
           onClose={() => setShowSettings(false)}

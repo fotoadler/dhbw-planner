@@ -209,7 +209,9 @@ export function parseRaplaWeek(html: string): ScheduleEntry[] {
   const year = readYearOrThrow(doc);
 
   const table = doc.querySelector('table.week_table');
-  if (!table) return []; // Woche ohne Termine/Tabelle ist gültig.
+  if (!table) {
+    throw new Error('Rapla-HTML: Wochentabelle nicht gefunden');
+  }
 
   const rows = Array.from((table as HTMLTableElement).rows);
   const carry: number[] = []; // pro Spalte: verbleibende Zeilen aus rowspans
@@ -241,6 +243,10 @@ export function parseRaplaWeek(html: string): ScheduleEntry[] {
     for (let i = 0; i < carry.length; i++) if (carry[i] > 0) carry[i]--;
   }
 
+  if (days.length === 0) {
+    throw new Error('Rapla-HTML: Keine Wochentage gefunden');
+  }
+
   const entries: ScheduleEntry[] = [];
   for (const block of blocks) {
     const day = days.find((h) => block.col >= h.start && block.col < h.end);
@@ -250,6 +256,10 @@ export function parseRaplaWeek(html: string): ScheduleEntry[] {
     }
     const entry = parseBlock(block.el, resolveYear(year, day.month, weekNumber), day.month, day.day);
     if (entry) entries.push(entry);
+  }
+
+  if (blocks.length > 0 && entries.length === 0) {
+    throw new Error('Rapla-HTML: Terminblöcke konnten nicht gelesen werden');
   }
 
   entries.sort((a, b) => a.start.getTime() - b.start.getTime());

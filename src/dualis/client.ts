@@ -1,4 +1,4 @@
-import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { Capacitor, CapacitorCookies, CapacitorHttp } from '@capacitor/core';
 import {
   DUALIS_ENDPOINT,
   extractAccessToken,
@@ -56,6 +56,7 @@ export class DualisClient {
     };
     this.credentials = normalizedCredentials;
     this.cookies.clear();
+    await this.clearNativeCookies();
     this.urls = { semesters: {} };
     this.accessToken = null;
 
@@ -66,7 +67,10 @@ export class DualisClient {
       PRGNAME: 'LOGINCHECK',
       ARGUMENTS: 'clino,usrname,pass,menuno,menu_type,browser,platform',
       clino: '000000000000001',
-      menuno: '000324',
+      // This is the menu number submitted by the current Dualis login form.
+      // 000324 is the public Home menu and can lead to a successful-looking
+      // redirect without an authenticated student menu.
+      menuno: '000000',
       menu_type: 'classic',
       browser: '',
       platform: '',
@@ -106,17 +110,20 @@ export class DualisClient {
 
   async logout(): Promise<void> {
     const logoutUrl = this.urls.logout;
+    if (logoutUrl) {
+      try {
+        // The server needs the current session cookie to invalidate it. The
+        // local/native cookie stores are cleared only after this best-effort call.
+        await this.request('GET', logoutUrl);
+      } catch {
+        /* Logout ist best-effort; lokale Session wird trotzdem verworfen. */
+      }
+    }
     this.credentials = null;
     this.urls = { semesters: {} };
     this.accessToken = null;
     this.cookies.clear();
-    if (logoutUrl) {
-      try {
-        await this.request('GET', logoutUrl);
-      } catch {
-        /* Logout ist best-effort; lokale Session wird immer verworfen. */
-      }
-    }
+    await this.clearNativeCookies();
   }
 
   async loadDashboard(): Promise<DualisDashboard> {
@@ -219,6 +226,10 @@ export class DualisClient {
       }
 
       this.storeCookies(response.headers);
+      // Keep the native cookie jar intact for the duration of the request
+      // sequence. Dualis uses the session cookie across the login redirect
+      // and the first authenticated page request; clearing it here can make
+      // the next request look like an unauthenticated login page.
       return response;
     } catch (error) {
       if (error instanceof DualisError) throw error;
@@ -242,6 +253,15 @@ export class DualisClient {
       const separator = cookie?.indexOf('=') ?? -1;
       if (!cookie || separator < 1) continue;
       this.cookies.set(cookie.slice(0, separator), cookie.slice(separator + 1));
+    }
+  }
+
+  private async clearNativeCookies(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+    try {
+      await CapacitorCookies.clearCookies({ url: DUALIS_ENDPOINT });
+    } catch {
+      // The in-memory cookie map is still cleared if native cookie cleanup is unavailable.
     }
   }
 }

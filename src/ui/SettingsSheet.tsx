@@ -7,18 +7,26 @@
 import { useState } from 'react';
 import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
-import { Mensa, MENSA_LABELS } from '../seezeit/types';
+import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
+import { ScheduleModule } from '../schedule/modules';
 
 interface Props {
   settings: AppSettings;
+  availableModules: ScheduleModule[];
   updatedAt: Date | null;
   onChange: (next: AppSettings) => void;
   onClose: () => void;
 }
 
-export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props) {
+export function SettingsSheet({ settings, availableModules, updatedAt, onChange, onClose }: Props) {
   const [link, setLink] = useState(settings.raplaLink);
   const [linkError, setLinkError] = useState(false);
+  const [moduleQuery, setModuleQuery] = useState('');
+  const visibleModuleCount = availableModules.filter((module) => !settings.hiddenModules.includes(module.key)).length;
+  const normalizedModuleQuery = moduleQuery.trim().toLocaleLowerCase('de-DE');
+  const filteredModules = normalizedModuleQuery
+    ? availableModules.filter((module) => module.label.toLocaleLowerCase('de-DE').includes(normalizedModuleQuery))
+    : availableModules;
 
   const saveLink = () => {
     const config = parseRaplaLink(link);
@@ -27,7 +35,15 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
       return;
     }
     setLinkError(false);
-    onChange({ ...settings, raplaLink: link.trim(), rapla: config });
+    onChange({
+      ...settings,
+      raplaLink: link.trim(),
+      rapla: config,
+      scheduleSource: 'rapla',
+      apiSelection: null,
+      mensaAuto: false,
+      hiddenModules: [],
+    });
   };
 
   const set = (patch: Partial<AppSettings>) => onChange({ ...settings, ...patch });
@@ -43,42 +59,143 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
         </header>
 
         <section className="sheet__section">
-          <label className="sheet__label" htmlFor="rapla-link">
-            Rapla-Link
-          </label>
-          <input
-            id="rapla-link"
-            className="sheet__input"
-            type="url"
-            value={link}
-            spellCheck={false}
-            autoCapitalize="off"
-            onChange={(e) => setLink(e.target.value)}
-          />
-          {linkError && <p className="setup__error">Link ungültig — „user“ und „file“ fehlen.</p>}
-          {link !== settings.raplaLink && (
-            <button className="sheet__save" onClick={saveLink}>
-              Link übernehmen
-            </button>
+          <div className="sheet__row">
+            <span>Stundenplanquelle</span>
+            <strong className="sheet__value">
+              {settings.scheduleSource === 'dhbw-api' && settings.apiSelection ? 'Geführter Modus' : 'Manueller Rapla-Modus'}
+            </strong>
+          </div>
+          {settings.apiSelection && settings.scheduleSource === 'dhbw-api' && (
+            <p className="sheet__note">
+              {settings.apiSelection.site} · {settings.apiSelection.degree} · {settings.apiSelection.course}
+            </p>
+          )}
+          <button
+            className="sheet__textbtn"
+            onClick={() => onChange({
+              ...settings,
+              raplaLink: '',
+              rapla: null,
+              apiSelection: null,
+              scheduleSource: 'rapla',
+              hiddenModules: [],
+            })}
+          >
+            Stundenplan ändern
+          </button>
+        </section>
+
+        <section className="sheet__section">
+          <div className="sheet__row">
+            <span>Vorlesungsmodule</span>
+            {availableModules.length > 0 && (
+              <strong className="sheet__value">
+                {visibleModuleCount} von {availableModules.length} sichtbar
+              </strong>
+            )}
+          </div>
+          <p className="sheet__note">
+            Blende einzelne Module aus, von denen du befreit bist. Die Auswahl gilt für den angezeigten Plan und seine Erinnerungen.
+          </p>
+          {availableModules.length > 0 ? (
+            <details className="sheet__module-picker">
+              <summary>
+                <span>Module auswählen</span>
+                <span className="sheet__module-picker-count">{visibleModuleCount}/{availableModules.length}</span>
+              </summary>
+              <div className="sheet__modules">
+                <input
+                  className="sheet__module-search"
+                  type="search"
+                  value={moduleQuery}
+                  placeholder="Module durchsuchen"
+                  aria-label="Module durchsuchen"
+                  onFocus={(event) => {
+                    const input = event.currentTarget;
+                    window.setTimeout(() => input.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 220);
+                  }}
+                  onChange={(event) => setModuleQuery(event.target.value)}
+                />
+                {filteredModules.map((module) => {
+                  const checked = !settings.hiddenModules.includes(module.key);
+                  return (
+                    <label className="sheet__module" key={module.key}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(event) => {
+                          const hidden = new Set(settings.hiddenModules);
+                          if (event.target.checked) hidden.delete(module.key);
+                          else hidden.add(module.key);
+                          set({ hiddenModules: [...hidden] });
+                        }}
+                      />
+                      <span>{module.label}</span>
+                    </label>
+                  );
+                })}
+                {filteredModules.length === 0 && <p className="sheet__note">Kein passendes Modul gefunden.</p>}
+                <div className="sheet__module-actions">
+                  <button type="button" onClick={() => set({ hiddenModules: [] })}>Alle anzeigen</button>
+                  <button type="button" onClick={() => set({ hiddenModules: availableModules.map((module) => module.key) })}>
+                    Alle ausblenden
+                  </button>
+                </div>
+              </div>
+            </details>
+          ) : (
+            <p className="sheet__note">Module werden nach dem ersten Planabruf angezeigt.</p>
           )}
         </section>
+
+        {settings.scheduleSource === 'rapla' && (
+          <section className="sheet__section">
+            <label className="sheet__label" htmlFor="rapla-link">
+              Rapla-Link
+            </label>
+            <input
+              id="rapla-link"
+              className="sheet__input"
+              type="url"
+              value={link}
+              spellCheck={false}
+              autoCapitalize="off"
+              onChange={(e) => setLink(e.target.value)}
+            />
+            {linkError && <p className="setup__error">Link ungültig — „user“/„file“ oder „key“/„salt“ fehlen.</p>}
+            {link !== settings.raplaLink && (
+              <button className="sheet__save" onClick={saveLink}>
+                Link übernehmen
+              </button>
+            )}
+          </section>
+        )}
 
         <section className="sheet__section">
           <div className="sheet__row">
             <span>Mensa-Speiseplan</span>
             <select
-              value={settings.mensaEnabled ? settings.mensa : 'off'}
+              value={settings.mensaEnabled ? settings.mensaAuto && settings.apiSelection ? 'auto' : settings.mensa : 'off'}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === 'off') set({ mensaEnabled: false });
-                else set({ mensaEnabled: true, mensa: value as Mensa });
+                else if (value === 'auto' && settings.apiSelection) {
+                  set({ mensaEnabled: true, mensaAuto: true, mensa: settings.apiSelection.site });
+                } else {
+                  set({ mensaEnabled: true, mensaAuto: false, mensa: value as Mensa });
+                }
               }}
             >
               <option value="off">Aus</option>
-              {(Object.keys(MENSA_LABELS) as Mensa[]).map((m) => (
-                <option key={m} value={m}>
-                  {MENSA_LABELS[m]}
-                </option>
+              {settings.apiSelection && (
+                <option value="auto">Automatisch · {mensaLabel(settings.apiSelection.site)}</option>
+              )}
+              {[
+                ...(settings.mensa === 'ravensburg' ? [{ value: 'ravensburg', label: 'Ravensburg' }] : []),
+                ...(settings.mensa === 'friedrichshafen' ? [{ value: 'friedrichshafen', label: 'Friedrichshafen' }] : []),
+                ...API_MENSA_OPTIONS,
+              ].filter((option, index, all) => all.findIndex((item) => item.value === option.value) === index).map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>

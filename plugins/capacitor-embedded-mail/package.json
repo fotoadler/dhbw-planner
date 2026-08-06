@@ -1,0 +1,27 @@
+{
+  "name": "@dhbw/capacitor-embedded-mail",
+  "version": "0.1.0",
+  "description": "Embedded native web view for the DHBW mail tab.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "android",
+    "ios",
+    "dist",
+    "DhbwCapacitorEmbeddedMail.podspec"
+  ],
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=7.0.0"
+  }
+}

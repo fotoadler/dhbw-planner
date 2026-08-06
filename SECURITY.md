@@ -4,6 +4,14 @@
 
 Aktuell wird die neueste Version im `main`-Branch unterstützt.
 
+## Schutz des Hauptbranches
+
+Der öffentliche `main`-Branch ist gegen Force-Pushes und Löschung geschützt.
+Änderungen sollen über Pull Requests eingebracht werden und müssen den
+GitHub-Actions-Check `web-quality` bestehen, der Tests und den Produktions-Build
+ausführt. Eine verpflichtende zweite Freigabe ist derzeit nicht aktiviert,
+damit der Solo-Entwicklungsworkflow nicht blockiert wird.
+
 ## Reporting a Vulnerability
 
 Bitte melde Sicherheitsprobleme nicht als öffentliches Issue. Nutze GitHubs private vulnerability reporting Funktion, falls verfügbar, oder kontaktiere den Repository-Inhaber direkt über das GitHub-Profil.
@@ -17,4 +25,14 @@ Gib bitte an:
 
 ## Sensitive Data
 
-Die App soll keine Zugangsdaten dauerhaft speichern. Rapla-Link, Stundenplan-Cache und optionale Dualis-Einstellungen liegen lokal auf dem Gerät. Bitte öffne sofort eine private Sicherheitsmeldung, falls du ein Verhalten findest, bei dem Credentials geloggt, exportiert oder dauerhaft gespeichert werden.
+Die App soll keine Zugangsdaten dauerhaft speichern. Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, Dozenten-Verzeichnis und optionale Dualis-Einstellungen liegen lokal auf dem Gerät. Bitte öffne sofort eine private Sicherheitsmeldung, falls du ein Verhalten findest, bei dem Credentials geloggt, exportiert oder dauerhaft gespeichert werden.
+
+## Lokale Speicherung und Sitzungen
+
+- Android-App-Backups sind deaktiviert, weil Preferences- und Cache-Daten personenbezogene Stundenplan- oder Rapla-Informationen enthalten können.
+- Dualis-Passwörter werden nicht gespeichert. Session-Cookies werden nur für laufende Dualis-Requests im Speicher gehalten. Die automatische Capacitor-Cookie-Persistenz ist deaktiviert; nach jedem nativen Response sowie beim Login/Logout wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt.
+- Die lokale Preferences-Speicherung ist nicht als zusätzliche Ende-zu-Ende-Verschlüsselung zu verstehen. Geräteverschlüsselung und Geräteschutz bleiben wichtig.
+
+## Rapla-Links
+
+Rapla-Links werden vor der Verwendung auf den unterstützten DHBW-Rapla-Host und die bekannten Kalenderpfade geprüft. Die App verwendet keine beliebige Host-Adresse aus einem Link als Netzwerkziel.

@@ -107,6 +107,12 @@ describe('parseRaplaWeek (Rapla 2.0 DOM)', () => {
     expect(() => parseRaplaWeek(NO_YEAR_FIXTURE)).toThrow(/year/);
   });
 
+  it('behandelt eine HTML-Seite ohne Wochentabelle nicht als leere Woche', () => {
+    expect(() => parseRaplaWeek('<!DOCTYPE html><html><body><select name="year"><option selected>2026</option></select></body></html>')).toThrow(
+      /Wochentabelle/,
+    );
+  });
+
   it('liest das selektierte Jahr aus dem Selektor', () => {
     const doc = new DOMParser().parseFromString(WEEK_FIXTURE, 'text/html');
     expect(readYearOrThrow(doc)).toBe(2026);

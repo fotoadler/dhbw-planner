@@ -53,6 +53,16 @@ public class CourseLiveActivityPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void schedule(PluginCall call) {
+        // Android has no equivalent to iOS 26's ActivityKit scheduled start
+        // (posting a notification while the app process is suspended, at an
+        // exact future time). The JS side already re-syncs on app resume and
+        // at course boundaries while the app is active, so there is nothing
+        // to do here beyond resolving like the web fallback does.
+        call.resolve();
+    }
+
+    @PluginMethod
     public void end(PluginCall call) {
         String id = call.getString("id");
         if (id == null || id.trim().isEmpty()) {
@@ -142,7 +152,7 @@ public class CourseLiveActivityPlugin extends Plugin {
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
         NotificationManagerCompat.from(getContext()).notify(notificationId(id), notification);
-        addActiveId(id);
+        replaceActiveId(id);
         call.resolve();
     }
 
@@ -218,10 +228,22 @@ public class CourseLiveActivityPlugin extends Plugin {
         prefs().edit().putStringSet(ACTIVE_IDS, ids).apply();
     }
 
-    private void addActiveId(String id) {
-        Set<String> ids = getActiveIds();
-        ids.add(id);
-        saveActiveIds(ids);
+    /**
+     * Marks {@code id} as the only active live-activity notification, cancelling
+     * every other previously posted one. Mirrors the iOS plugin's
+     * endOtherActivities(except:), which keeps at most one course notification
+     * visible — otherwise a finished course's notification lingers indefinitely
+     * once a later course's notification is posted under a different id.
+     */
+    private void replaceActiveId(String id) {
+        Set<String> previousIds = getActiveIds();
+        NotificationManagerCompat manager = NotificationManagerCompat.from(getContext());
+        for (String previousId : previousIds) {
+            if (!previousId.equals(id)) manager.cancel(notificationId(previousId));
+        }
+        Set<String> nextIds = new HashSet<>();
+        nextIds.add(id);
+        saveActiveIds(nextIds);
     }
 
     private void removeActiveId(String id) {

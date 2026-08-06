@@ -932,9 +932,10 @@ button {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px;
-  padding: 32px 24px;
+  padding: clamp(40px, 12vh, 120px) 24px 40px;
+  overflow-y: auto;
   max-width: 480px;
   margin: 0 auto;
 }
@@ -958,6 +959,55 @@ button {
   font-size: 15px;
   margin-bottom: 8px;
   line-height: 21px;
+}
+
+.setup__stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: setup-stage-in 180ms ease-out both;
+}
+
+@keyframes setup-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.setup__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -2px 0 2px;
+}
+
+.setup__progress span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.setup__progress span.is-active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.setup__progress i {
+  width: 22px;
+  height: 1px;
+  background: var(--line);
 }
 
 .setup__choices {
@@ -1052,6 +1102,24 @@ button {
   color: var(--accent);
   font-size: 14px;
   font-weight: 600;
+}
+
+.setup__continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0 14px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--ink);
+  border-radius: 10px;
+}
+
+.setup__continue span {
+  color: var(--ink-3);
+  font-size: 18px;
 }
 
 .setup__input,

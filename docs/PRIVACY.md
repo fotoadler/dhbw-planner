@@ -24,6 +24,7 @@ Die App greift direkt auf die vom Nutzer konfigurierten DHBW-Systeme zu:
 
 - Rapla zum Abrufen des Stundenplans
 - die öffentliche DHBW-API für Standort-/Kurskatalog und geführte Stundenpläne
+- die öffentliche DHBW-API für den automatisch gewählten oder manuell ausgewählten Mensa-Speiseplan
 - Dualis zum Abrufen von Modulnoten und Prüfungsleistungen
 
 Es gibt kein eigenes Backend und keine Weiterleitung dieser Daten an einen Projektdienst.

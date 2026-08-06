@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
-import { Mensa, MENSA_LABELS } from '../seezeit/types';
+import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 
 interface Props {
   settings: AppSettings;
@@ -33,6 +33,7 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
       rapla: config,
       scheduleSource: 'rapla',
       apiSelection: null,
+      mensaAuto: false,
     });
   };
 
@@ -93,18 +94,27 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
           <div className="sheet__row">
             <span>Mensa-Speiseplan</span>
             <select
-              value={settings.mensaEnabled ? settings.mensa : 'off'}
+              value={settings.mensaEnabled ? settings.mensaAuto && settings.apiSelection ? 'auto' : settings.mensa : 'off'}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === 'off') set({ mensaEnabled: false });
-                else set({ mensaEnabled: true, mensa: value as Mensa });
+                else if (value === 'auto' && settings.apiSelection) {
+                  set({ mensaEnabled: true, mensaAuto: true, mensa: settings.apiSelection.site });
+                } else {
+                  set({ mensaEnabled: true, mensaAuto: false, mensa: value as Mensa });
+                }
               }}
             >
               <option value="off">Aus</option>
-              {(Object.keys(MENSA_LABELS) as Mensa[]).map((m) => (
-                <option key={m} value={m}>
-                  {MENSA_LABELS[m]}
-                </option>
+              {settings.apiSelection && (
+                <option value="auto">Automatisch · {mensaLabel(settings.apiSelection.site)}</option>
+              )}
+              {[
+                ...(settings.mensa === 'ravensburg' ? [{ value: 'ravensburg', label: 'Ravensburg' }] : []),
+                ...(settings.mensa === 'friedrichshafen' ? [{ value: 'friedrichshafen', label: 'Friedrichshafen' }] : []),
+                ...API_MENSA_OPTIONS,
+              ].filter((option, index, all) => all.findIndex((item) => item.value === option.value) === index).map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>

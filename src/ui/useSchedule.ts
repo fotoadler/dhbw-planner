@@ -212,7 +212,9 @@ export function useSchedule() {
       // Rapla liefert wochenweise Daten und wird deshalb gemerged. Der API-
       // Kurs-Endpoint ist dagegen die autoritative Antwort für diesen Kurs;
       // so verschwinden auch gelöschte Termine aus dem lokalen Cache.
-      const merged = apiSelection ? prune(fresh) : prune({ ...weeksRef.current, ...fresh });
+      // The API request includes archived dates, so retain the complete
+      // history. Rapla keeps its bounded rolling window as before.
+      const merged = apiSelection ? normalizeWeeks(fresh) : prune({ ...weeksRef.current, ...fresh });
       const now = new Date();
       weeksRef.current = merged;
       setWeeks(merged);
@@ -369,11 +371,13 @@ export function useSchedule() {
       setDirectory(dir);
       if (cache) {
         cacheMetaRef.current = { sourceKey: cache.sourceKey ?? scheduleSourceKey(s), etag: cache.etag };
-        const pruned = prune(cache.weeks);
-        weeksRef.current = pruned;
-        setWeeks(pruned);
+        const restored = s.scheduleSource === 'dhbw-api' && s.apiSelection
+          ? normalizeWeeks(cache.weeks)
+          : prune(cache.weeks);
+        weeksRef.current = restored;
+        setWeeks(restored);
         setUpdatedAt(cache.updatedAt);
-        await syncCourseLiveActivity(applyLecturerDirectory(flatten(pruned), dir), s);
+        await syncCourseLiveActivity(applyLecturerDirectory(flatten(restored), dir), s);
       }
       setSettings(s);
       settingsRef.current = s;

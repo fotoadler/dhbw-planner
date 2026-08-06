@@ -14,7 +14,7 @@ import { useMemo, useState } from 'react';
 import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
-import { MENSA_LABELS } from '../seezeit/types';
+import { mensaLabel as formatMensaLabel } from '../seezeit/types';
 import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
@@ -45,8 +45,9 @@ export function App() {
   const demoScreen = appStoreDemoScreen();
   const { settings, entries, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
-  const { plan: mensaPlan } = useMensa(
-    settings?.mensa ?? 'ravensburg',
+  const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
+  const { plan: mensaPlan, label: mensaName } = useMensa(
+    mensaTarget,
     (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
   const dualis = useDualis();
@@ -102,6 +103,7 @@ export function App() {
             rapla: config,
             scheduleSource: 'rapla',
             apiSelection: null,
+            mensaAuto: false,
           });
         }}
         onSaveApi={(selection) => {
@@ -112,6 +114,8 @@ export function App() {
             rapla: null,
             scheduleSource: 'dhbw-api',
             apiSelection: selection,
+            mensaAuto: true,
+            mensa: selection.site,
           });
         }}
       />
@@ -268,7 +272,7 @@ export function App() {
           <DayView
             entries={dayEntries}
             meals={settings.mensaEnabled ? mensaPlan[selectedDay] ?? [] : []}
-            mensaLabel={MENSA_LABELS[settings.mensa]}
+            mensaLabel={mensaName || formatMensaLabel(settings.mensa)}
             onSelectEntry={(entry) => setSelectedBlockKey(blockKey(entry))}
             onSwipeDay={shiftDay}
             onRefresh={refresh}

@@ -21,7 +21,7 @@ const SITE_LABELS: Record<string, string> = {
   KA: 'Karlsruhe',
   LÖR: 'Lörrach',
   MA: 'Mannheim',
-  MGH: 'Mosbach',
+  MGH: 'Bad Mergentheim',
   MOS: 'Mosbach',
   RV: 'Ravensburg',
   STG: 'Stuttgart',
@@ -110,6 +110,13 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
     if (sites.length === 0) await loadSites();
   };
 
+  const guidedStepNumber = step === 'site' ? 1 : step === 'degree' ? 2 : 3;
+  const goBack = () => {
+    if (step === 'site') setStep('mode');
+    else if (step === 'degree') setStep('site');
+    else setStep('degree');
+  };
+
   if (step === 'manual') {
     return <LinkSetup initialLink={initialLink} onSave={onSaveRapla} onBack={() => setStep('mode')} />;
   }
@@ -118,7 +125,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
     <div className="setup">
       <p className="setup__eyebrow">DHBW Plan</p>
       <h1 className="setup__title">
-        {step === 'mode' ? 'Stundenplan einrichten' : 'Kurs auswählen'}
+        {step === 'mode' ? 'Stundenplan einrichten' : step === 'site' ? 'Standort auswählen' : step === 'degree' ? 'Studienfach auswählen' : 'Kurs auswählen'}
       </h1>
 
       {step === 'mode' ? (
@@ -137,8 +144,11 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
           {error && <p className="setup__error">{error}</p>}
         </>
       ) : (
-        <>
-          <button className="setup__back" onClick={() => setStep(step === 'site' ? 'mode' : step === 'degree' ? 'site' : 'degree')}>
+        <div className="setup__stage" key={step}>
+          <div className="setup__progress" aria-label={`Schritt ${guidedStepNumber} von 3`}>
+            <span className="is-active">{guidedStepNumber}</span><i /><span>{guidedStepNumber < 3 ? guidedStepNumber + 1 : '✓'}</span>
+          </div>
+          <button className="setup__back" onClick={goBack}>
             ← Zurück
           </button>
           <p className="setup__hint">
@@ -158,6 +168,11 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
               </select>
             </label>
           )}
+          {step === 'site' && site && !loading && courses.length > 0 && (
+            <button className="setup__continue" onClick={() => setStep('degree')}>
+              Standort übernehmen <span>→</span>
+            </button>
+          )}
 
           {step === 'degree' && (
             <label className="setup__field">
@@ -167,6 +182,11 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
                 {degrees.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </label>
+          )}
+          {step === 'degree' && degree && !loading && visibleCourses.length > 0 && (
+            <button className="setup__continue" onClick={() => setStep('course')}>
+              Studienfach übernehmen <span>→</span>
+            </button>
           )}
 
           {step === 'course' && (
@@ -190,7 +210,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
           {step === 'course' && !loading && visibleCourses.length === 0 && (
             <p className="setup__status">Für diesen Studiengang sind derzeit keine Kurse verfügbar.</p>
           )}
-        </>
+        </div>
       )}
     </div>
   );

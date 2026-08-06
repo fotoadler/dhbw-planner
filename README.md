@@ -75,6 +75,8 @@ Der geführte Modus verwendet den öffentlichen Kurskatalog und den Kursplan der
 
 Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab und verwendet bei späteren Aktualisierungen den HTTP-`ETag`. Dadurch werden unveränderte Pläne nicht erneut übertragen. Die Delta-/Sync-Endpunkte werden bewusst nicht benötigt; der Rapla-Link bleibt als unabhängige Alternative erhalten.
 
+Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts über den API-Endpunkt `/mensa/{site}` geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst.
+
 ## Datenschutz
 
 Kurzfassung:

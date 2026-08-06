@@ -123,7 +123,10 @@ export async function getCourses(site: string): Promise<DhbwCourse[]> {
 
 export async function getCourseSchedule(course: string, etag?: string): Promise<CourseScheduleResult> {
   const response = await getJson<unknown>(
-    `/rapla/lectures/${encodeURIComponent(course)}/events?archived=false`,
+    // archived=true includes past course dates as well as the current plan.
+    // The app can therefore navigate to historical weeks without another
+    // date-specific API request.
+    `/rapla/lectures/${encodeURIComponent(course)}/events?archived=true`,
     etag,
   );
   if (response.status === 304) {
@@ -182,13 +185,24 @@ export function mapScheduleItem(item: DhbwScheduleItem): ScheduleEntry | null {
   const type: ScheduleEntry['type'] =
     kind.includes('EXAM') ? 'exam' : kind.includes('ONLINE') ? 'online' : kind.includes('HOLIDAY') ? 'holiday' : item.entityType === 'EVENT' ? 'unknown' : 'lecture';
 
+  const rawTitle = (item.name ?? 'Termin').trim() || 'Termin';
+  const embeddedLecturer = rawTitle.match(/^(.*?)(?:\s*<([^<>]+)>)\s*$/);
+  const title = embeddedLecturer?.[1].trim() || rawTitle;
+  const embeddedValue = embeddedLecturer?.[2].trim();
+  const embeddedRoom = embeddedValue && /^raum\b/i.test(embeddedValue) ? embeddedValue : undefined;
+  const lecturer = embeddedRoom ? undefined : embeddedValue;
+  const directLecturer = typeof item.lecturer === 'string' ? item.lecturer.trim() : '';
+
   return {
     start,
     end,
-    title: (item.name ?? 'Termin').trim() || 'Termin',
-    lecturers: typeof item.lecturer === 'string' && item.lecturer.trim() ? [item.lecturer.trim()] : [],
+    title,
+    lecturers: [directLecturer || lecturer].filter((value): value is string => Boolean(value)),
     course: typeof item.course === 'string' && item.course.trim() ? item.course.trim() : undefined,
-    rooms: Array.isArray(item.rooms) ? item.rooms.filter((room): room is string => typeof room === 'string' && Boolean(room.trim())).map((room) => room.trim()) : [],
+    rooms: [
+      ...(Array.isArray(item.rooms) ? item.rooms.filter((room): room is string => typeof room === 'string' && Boolean(room.trim())).map((room) => room.trim()) : []),
+      ...(embeddedRoom ? [embeddedRoom] : []),
+    ],
     type,
   };
 }

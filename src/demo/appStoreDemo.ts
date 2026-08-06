@@ -76,7 +76,8 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
   reminderEnabled: true,
   reminderMinutes: 15,
   mensaEnabled: true,
-  mensa: 'ravensburg',
+  mensa: 'RV',
+  mensaAuto: false,
 };
 
 /** Ebenfalls nur Beispieldaten: keine Dualis-Informationen einer Person. */

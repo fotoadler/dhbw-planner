@@ -45,6 +45,19 @@ describe('DHBW API client', () => {
     ).toBe('unknown');
   });
 
+  it('moves an API lecturer suffix below the title like Rapla does', () => {
+    expect(
+      mapScheduleItem({
+        startTime: '2026-08-06T07:00:00.000Z',
+        endTime: '2026-08-06T08:00:00.000Z',
+        name: 'Medienmarketing <Jonas Weiß>',
+      }),
+    ).toMatchObject({
+      title: 'Medienmarketing',
+      lecturers: ['Jonas Weiß'],
+    });
+  });
+
   it('groups entries by Berlin week for the existing calendar cache', () => {
     const first = mapScheduleItem({
       startTime: '2026-08-06T07:00:00.000Z',

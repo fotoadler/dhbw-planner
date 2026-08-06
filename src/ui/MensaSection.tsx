@@ -12,11 +12,12 @@ interface Props {
 
 export function MensaSection({ mensaLabel, meals }: Props) {
   if (meals.length === 0) return null;
+  const heading = /^mensa(?:\s|$)/i.test(mensaLabel) ? mensaLabel : `Mensa ${mensaLabel}`;
 
   return (
     <section className="mensa" aria-labelledby="mensa-title">
       <h2 id="mensa-title" className="mensa__title">
-        Mensa {mensaLabel}
+        {heading}
       </h2>
       {meals.map((meal, i) => (
         <article className="mensa__item" key={`${meal.category}-${i}`}>

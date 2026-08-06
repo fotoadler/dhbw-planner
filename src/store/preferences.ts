@@ -9,7 +9,7 @@
 import { Preferences } from '@capacitor/preferences';
 import { deserializeEntry, ScheduleEntry, SerializedEntry, serializeEntry } from '../types';
 import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
-import { Mensa, MensaPlan } from '../seezeit/types';
+import { Mensa, MensaPlan, mensaSiteCode } from '../seezeit/types';
 
 const SETTINGS_KEY = 'settings.v3';
 const PREVIOUS_SETTINGS_KEY = 'settings.v2';
@@ -42,8 +42,10 @@ export interface AppSettings {
   reminderMinutes: number;
   /** Mensa-Speiseplan in der Tagesansicht anzeigen. */
   mensaEnabled: boolean;
-  /** Gewählte Mensa für den Speiseplan. */
+  /** Mensa für den Speiseplan; im geführten Modus standardmäßig Standort. */
   mensa: Mensa;
+  /** Wenn aktiv, folgt die Mensa automatisch dem geführten DHBW-Standort. */
+  mensaAuto: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -57,7 +59,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   reminderEnabled: true,
   reminderMinutes: 15,
   mensaEnabled: true,
-  mensa: 'ravensburg',
+  mensa: 'RV',
+  mensaAuto: false,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -65,7 +68,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isMensa(value: unknown): value is Mensa {
-  return value === 'ravensburg' || value === 'friedrichshafen';
+  return typeof value === 'string' && /^[A-Za-zÄÖÜäöü0-9-]+$/.test(value.trim()) && Boolean(value.trim());
 }
 
 function isTime(value: unknown): value is string {
@@ -123,6 +126,7 @@ function parseSettings(raw: unknown): AppSettings {
 
   const reminderMinutes = data.reminderMinutes;
   const apiSelection = parseApiSelection(data.apiSelection);
+  const configuredMensa = isMensa(data.mensa) ? data.mensa : DEFAULT_SETTINGS.mensa;
   const scheduleSource: ScheduleSource =
     data.scheduleSource === 'dhbw-api' && apiSelection ? 'dhbw-api' : 'rapla';
 
@@ -144,7 +148,8 @@ function parseSettings(raw: unknown): AppSettings {
         ? reminderMinutes
         : DEFAULT_SETTINGS.reminderMinutes,
     mensaEnabled: typeof data.mensaEnabled === 'boolean' ? data.mensaEnabled : DEFAULT_SETTINGS.mensaEnabled,
-    mensa: isMensa(data.mensa) ? data.mensa : DEFAULT_SETTINGS.mensa,
+    mensa: mensaSiteCode(configuredMensa),
+    mensaAuto: typeof data.mensaAuto === 'boolean' ? data.mensaAuto : DEFAULT_SETTINGS.mensaAuto,
   };
 }
 
@@ -270,6 +275,7 @@ export interface MensaCache {
   mensa: Mensa;
   updatedAt: number;
   plan: MensaPlan;
+  label?: string;
 }
 
 export async function loadMensaCache(): Promise<MensaCache | null> {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeDualisUsername } from '../src/dualis/client';
+import { normalizeDualisUsername, parseSetCookieHeader } from '../src/dualis/client';
 
 describe('Dualis username input', () => {
   it('accepts the short Ravensburg account name', () => {
@@ -10,5 +10,9 @@ describe('Dualis username input', () => {
     expect(normalizeDualisUsername('ab1234@stud.dhbw-ravensburg.de')).toBe(
       'ab1234@stud.dhbw-ravensburg.de',
     );
+  });
+
+  it('normalizes CampusNet cookies with whitespace around the equals sign', () => {
+    expect(parseSetCookieHeader('cnsc =ABC123; HttpOnly; secure')).toEqual([['cnsc', 'ABC123']]);
   });
 });

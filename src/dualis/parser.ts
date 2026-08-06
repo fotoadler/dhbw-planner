@@ -36,10 +36,13 @@ export function extractRedirectUrl(html: string, endpoint = DUALIS_ENDPOINT): st
 export function parseMainPageUrls(html: string, endpoint = DUALIS_ENDPOINT): DualisSessionUrls {
   const doc = parseHtml(html);
   const urls: DualisSessionUrls = { semesters: {} };
-  urls.courseResults = hrefByClass(doc, 'link000307', endpoint);
-  urls.studentResults = hrefByClass(doc, 'link000310', endpoint);
-  urls.monthlySchedule = hrefByClass(doc, 'link000031', endpoint);
-  urls.logout = hrefById(doc, 'logoutButton', endpoint);
+  // The menu classes are stable on the desktop page, but CampusNet can emit
+  // a different class set for native/mobile user agents. PRGNAME is the
+  // actual semantic identifier and is therefore the safer fallback.
+  urls.courseResults = hrefByClass(doc, 'link000307', endpoint) ?? hrefByProgram(doc, 'COURSERESULTS', endpoint);
+  urls.studentResults = hrefByClass(doc, 'link000310', endpoint) ?? hrefByProgram(doc, 'STUDENT_RESULT', endpoint);
+  urls.monthlySchedule = hrefByClass(doc, 'link000031', endpoint) ?? hrefByProgram(doc, 'SCHEDULE', endpoint);
+  urls.logout = hrefById(doc, 'logoutButton', endpoint) ?? hrefByProgram(doc, 'LOGOUT', endpoint);
   return urls;
 }
 
@@ -215,6 +218,18 @@ function hrefByClass(doc: Document, className: string, endpoint: string): string
   return href ? absoluteUrl(href, endpoint) : undefined;
 }
 
+function hrefByProgram(doc: Document, programName: string, endpoint: string): string | undefined {
+  const link = Array.from(doc.querySelectorAll<HTMLAnchorElement>('a[href]')).find((anchor) => {
+    try {
+      return new URL(anchor.href, endpoint).searchParams.get('PRGNAME')?.toUpperCase() === programName;
+    } catch {
+      return false;
+    }
+  });
+  const href = link?.getAttribute('href');
+  return href ? absoluteUrl(href, endpoint) : undefined;
+}
+
 function hrefById(doc: Document, id: string, endpoint: string): string | undefined {
   const href = doc.getElementById(id)?.getAttribute('href');
   return href ? absoluteUrl(href, endpoint) : undefined;
@@ -286,4 +301,3 @@ function extractDetailsUrl(element: Element | undefined, endpoint: string): stri
   const url = source.match(/dl_popUp\((?:"|'|&quot;)(.+?)(?:"|'|&quot;)/)?.[1];
   return url ? absoluteUrl(decodeHtml(url), endpoint) : undefined;
 }
-

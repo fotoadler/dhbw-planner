@@ -30,6 +30,12 @@ export default defineConfig({
         secure: true,
         rewrite: (path) => path.replace(/^\/seezeit/, ''),
       },
+      '/dhbw-api': {
+        target: 'https://api.dhbw.app',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/dhbw-api/, ''),
+      },
     },
   },
   test: {

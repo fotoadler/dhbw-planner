@@ -5,8 +5,9 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Initial version: `1.0`
-- Initial build/versionCode: `1`
+- Current app version: `1.1` (`package.json`: `1.1.0`)
+- Current iOS build: `5`
+- Current Android versionCode: `2`
 
 This is a new app identity.
 
@@ -23,16 +24,20 @@ This is a new app identity.
 
 Short description:
 
-DHBW Planner zeigt deinen Rapla-Stundenplan kompakt als Tagesansicht mit Kursdetails, Kalenderexport und lokalen Erinnerungen.
+DHBW Planner zeigt deinen DHBW-Stundenplan kompakt als Tages- und Wochenansicht mit Kalenderexport und lokalen Erinnerungen — geführt über Standort, Studiengang und Kurs oder alternativ über deinen Rapla-Link.
 
 Full description:
 
-DHBW Planner ist eine schlanke App für Studierende der DHBW. Die App liest deinen persönlichen Rapla-Link ein, speichert den Stundenplan lokal auf deinem Gerät und zeigt Termine in einer schnellen Tages- und Wochenansicht. Optional können Modulnoten und Prüfungsleistungen direkt aus Dualis angezeigt werden.
+DHBW Planner ist eine schlanke App für Studierende der DHBW. Im geführten Modus wählst du Standort, Studiengang und Kurs direkt in der App aus; ein Rapla-Link kann weiterhin als manueller Modus verwendet werden. Der Stundenplan wird lokal auf deinem Gerät gespeichert und in einer schnellen Tages- und Wochenansicht angezeigt. Vergangene Wochen sind verfügbar, soweit die jeweilige Quelle die Termine bereitstellt. Optional können Modulnoten und Prüfungsleistungen direkt aus Dualis angezeigt werden.
 
 Funktionen:
 
 - Tagesansicht mit Wochenleiste
-- Kursübersicht mit vergangenen und kommenden Terminen
+- Wochenansicht mit vergangenen und kommenden Terminen
+- Geführte DHBW-Kursauswahl ohne Rapla-Link
+- Rapla-Link als alternative manuelle Datenquelle
+- Automatische Mensa passend zum DHBW-Standort mit manueller Auswahlmöglichkeit
+- Suchbare Modulfilter zum Ausblenden einzelner Vorlesungen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
 - Export als Kalenderdatei
 - Lokale Erinnerungen vor Uni-Terminen
@@ -41,11 +46,11 @@ Funktionen:
 
 Privacy summary:
 
-Die App speichert den Rapla-Link, den geladenen Stundenplan und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Passwörter werden nicht dauerhaft gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan- und Dualis-Daten. Kalenderexport und lokale Benachrichtigungen werden nur auf dem Gerät verarbeitet.
+Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Passwörter werden nicht dauerhaft gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Kalenderexport und lokale Benachrichtigungen werden nur auf dem Gerät verarbeitet.
 
 Support text:
 
-Bei Problemen prüfe zuerst, ob dein Rapla-Link in den Einstellungen korrekt hinterlegt ist und ob Rapla erreichbar ist.
+Bei Problemen prüfe zuerst, ob die gewählte Kursquelle erreichbar ist. Im manuellen Modus muss der Rapla-Link in den Einstellungen korrekt hinterlegt und Rapla erreichbar sein; im geführten Modus kann die Kursauswahl erneut durchgeführt werden.
 
 ## Android Release Steps
 

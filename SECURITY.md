@@ -4,6 +4,15 @@
 
 Aktuell wird die neueste Version im `main`-Branch unterstützt.
 
+## Schutz des Hauptbranches
+
+Der öffentliche `main`-Branch ist gegen direkte Änderungen, Force-Pushes und
+Löschung geschützt. Änderungen werden über Pull Requests eingebracht und
+benötigen den erfolgreichen GitHub-Actions-Check `web-quality`, der Tests und
+den Produktions-Build ausführt. Eine verpflichtende zweite Freigabe ist
+derzeit nicht aktiviert, damit der Solo-Entwicklungsworkflow nicht blockiert
+wird.
+
 ## Reporting a Vulnerability
 
 Bitte melde Sicherheitsprobleme nicht als öffentliches Issue. Nutze GitHubs private vulnerability reporting Funktion, falls verfügbar, oder kontaktiere den Repository-Inhaber direkt über das GitHub-Profil.

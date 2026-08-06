@@ -1537,6 +1537,39 @@ button {
   color: var(--accent);
 }
 
+/* --- Uni-Mail (OWA-Brücke) --- */
+
+.mailview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+}
+
+.mailview--launch {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.mailview--fallback {
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mailview__fallbacktext {
+  color: var(--ink-2);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mailview__open {
+  width: 100%;
+}
+
+.mailview__open:visited {
+  color: #fff;
+}
+
 /* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */
 
 .app__viewbar {

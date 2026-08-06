@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DualisClient, DualisError } from '../dualis/client';
 import { DualisCredentials, DualisDashboard, DualisExam, DualisLoginState, DualisModule } from '../dualis/types';
 import { DEFAULT_DUALIS_PREFS, DualisPrefs, loadDualisPrefs, saveDualisPrefs } from '../store/dualis';
+import { APP_STORE_DEMO_DUALIS, isAppStoreDemo } from '../demo/appStoreDemo';
+import { isReviewDemoCredentials } from '../demo/reviewDemo';
 
 export interface DualisState {
   loginState: DualisLoginState;
@@ -16,6 +18,19 @@ export interface DualisState {
 
 const client = new DualisClient();
 
+function loggedOutState(): DualisState {
+  return {
+    loginState: 'logged-out',
+    prefs: DEFAULT_DUALIS_PREFS,
+    dashboard: null,
+    selectedSemester: '',
+    semesterModules: [],
+    moduleExams: {},
+    loading: false,
+    error: null,
+  };
+}
+
 function userMessage(error: unknown): string {
   if (error instanceof DualisError) {
     if (error.reason === 'login-failed') return error.message;
@@ -26,28 +41,27 @@ function userMessage(error: unknown): string {
 }
 
 export function useDualis() {
-  const [state, setState] = useState<DualisState>({
-    loginState: 'logged-out',
-    prefs: DEFAULT_DUALIS_PREFS,
-    dashboard: null,
-    selectedSemester: '',
-    semesterModules: [],
-    moduleExams: {},
-    loading: false,
-    error: null,
-  });
+  const [reviewDemo, setReviewDemo] = useState(false);
+  const demo = isAppStoreDemo() || reviewDemo;
+  const [state, setState] = useState<DualisState>(() =>
+    demo
+      ? APP_STORE_DEMO_DUALIS
+      : loggedOutState(),
+  );
 
   const selectedSemesterRef = useRef('');
   selectedSemesterRef.current = state.selectedSemester;
 
   useEffect(() => {
+    if (demo) return;
     void (async () => {
       const prefs = await loadDualisPrefs();
       setState((current) => ({ ...current, prefs }));
     })();
-  }, []);
+  }, [demo]);
 
   const loadDashboard = useCallback(async () => {
+    if (demo) return;
     setState((current) => ({ ...current, loading: true, error: null }));
     try {
       const dashboard = await client.loadDashboard();
@@ -63,10 +77,18 @@ export function useDualis() {
     } catch (error) {
       setState((current) => ({ ...current, loading: false, error: userMessage(error) }));
     }
-  }, []);
+  }, [demo]);
 
   const login = useCallback(
     async (credentials: DualisCredentials, rememberUsername: boolean) => {
+      if (demo) return;
+      if (isReviewDemoCredentials(credentials)) {
+        // Kein Netzwerkzugriff und keine Persistenz: Dies sind ausschließlich
+        // statische Beispieldaten für die App Review.
+        setReviewDemo(true);
+        setState(APP_STORE_DEMO_DUALIS);
+        return;
+      }
       setState((current) => ({ ...current, loginState: 'logging-in', loading: true, error: null }));
       try {
         await client.login(credentials);
@@ -83,10 +105,16 @@ export function useDualis() {
         }));
       }
     },
-    [loadDashboard],
+    [demo, loadDashboard],
   );
 
   const logout = useCallback(async () => {
+    if (reviewDemo) {
+      setReviewDemo(false);
+      setState(loggedOutState());
+      return;
+    }
+    if (demo) return;
     await client.logout();
     setState((current) => ({
       ...current,
@@ -98,9 +126,10 @@ export function useDualis() {
       loading: false,
       error: null,
     }));
-  }, []);
+  }, [demo, reviewDemo]);
 
   const selectSemester = useCallback(async (name: string) => {
+    if (demo) return;
     setState((current) => ({ ...current, selectedSemester: name, loading: true, error: null }));
     try {
       const semester = await client.loadSemester(name);
@@ -113,9 +142,10 @@ export function useDualis() {
     } catch (error) {
       setState((current) => ({ ...current, loading: false, error: userMessage(error) }));
     }
-  }, []);
+  }, [demo]);
 
   const loadModuleExams = useCallback(async (module: DualisModule) => {
+    if (demo) return;
     if (!module.detailsUrl) return;
     setState((current) => ({ ...current, loading: true, error: null }));
     try {
@@ -128,11 +158,11 @@ export function useDualis() {
     } catch (error) {
       setState((current) => ({ ...current, loading: false, error: userMessage(error) }));
     }
-  }, []);
+  }, [demo]);
 
   return useMemo(
-    () => ({ ...state, login, logout, refresh: loadDashboard, selectSemester, loadModuleExams }),
-    [loadDashboard, loadModuleExams, login, logout, selectSemester, state],
+    () => ({ ...state, isReviewDemo: reviewDemo, login, logout, refresh: loadDashboard, selectSemester, loadModuleExams }),
+    [loadDashboard, loadModuleExams, login, logout, reviewDemo, selectSemester, state],
   );
 }
 

@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildWeekUrl, fetchWeeks, parseRaplaLink } from '../src/rapla/client';
+import {
+  buildWeekUrl,
+  fetchWeeks,
+  MAX_CONCURRENT_WEEK_REQUESTS,
+  parseRaplaLink,
+} from '../src/rapla/client';
 import { WEEK_FIXTURE } from './fixtures';
 
 describe('rapla client URLs', () => {
@@ -66,6 +71,30 @@ describe('rapla client URLs', () => {
 
     expect(result.weeks.size).toBe(1);
     expect(result.failedWeeks).toEqual(['2026-07-13']);
+    vi.unstubAllGlobals();
+  });
+
+  it('begrenzt parallele Wochenabrufe', async () => {
+    let activeRequests = 0;
+    let maximumActiveRequests = 0;
+    const fetchMock = vi.fn(async () => {
+      activeRequests += 1;
+      maximumActiveRequests = Math.max(maximumActiveRequests, activeRequests);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      activeRequests -= 1;
+      return { ok: true, text: async () => WEEK_FIXTURE };
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await fetchWeeks(
+      { user: 'test', file: 'plan', baseUrl: 'https://rapla.dhbw.de/rapla/calendar' },
+      { y: 2026, m: 7, d: 6 },
+      12,
+    );
+
+    expect(result.weeks.size).toBe(12);
+    expect(fetchMock).toHaveBeenCalledTimes(12);
+    expect(maximumActiveRequests).toBeLessThanOrEqual(MAX_CONCURRENT_WEEK_REQUESTS);
     vi.unstubAllGlobals();
   });
 });

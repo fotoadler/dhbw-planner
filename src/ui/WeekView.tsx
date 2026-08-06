@@ -4,7 +4,9 @@
  * Akzent-Balken statt der roten Block-Optik der alten App.
  *
  * Tippen auf einen Termin oder Tageskopf öffnet die Tagesansicht;
- * horizontales Wischen wechselt die Woche.
+ * Die Wochenpfeile wechseln die Woche; horizontales Wischen bleibt als
+ * optionale, schnelle Navigation erhalten. Die Kalenderfläche selbst ist
+ * nicht horizontal scrollbar.
  */
 
 import { useRef } from 'react';
@@ -36,6 +38,7 @@ interface Positioned {
   entry: ScheduleEntry;
   lane: number;
   laneCount: number;
+  clusterId: number;
 }
 
 /** Überlappende Termine nebeneinander legen (greedy Lane-Zuweisung pro Cluster). */
@@ -45,6 +48,7 @@ function layoutDay(entries: ScheduleEntry[]): Positioned[] {
   let cluster: Positioned[] = [];
   let laneEnds: number[] = []; // Ende (ms) des letzten Termins je Lane
   let clusterEnd = -Infinity;
+  let clusterId = -1;
 
   const flush = () => {
     for (const p of cluster) p.laneCount = laneEnds.length;
@@ -54,15 +58,28 @@ function layoutDay(entries: ScheduleEntry[]): Positioned[] {
   };
 
   for (const entry of sorted) {
-    if (entry.start.getTime() >= clusterEnd) flush();
+    if (entry.start.getTime() >= clusterEnd) {
+      flush();
+      clusterId += 1;
+    }
     let lane = laneEnds.findIndex((end) => end <= entry.start.getTime());
     if (lane === -1) lane = laneEnds.length;
     laneEnds[lane] = entry.end.getTime();
-    cluster.push({ entry, lane, laneCount: 1 });
+    cluster.push({ entry, lane, laneCount: 1, clusterId });
     clusterEnd = Math.max(clusterEnd, entry.end.getTime());
   }
   flush();
   return result;
+}
+
+function groupPositionedEntries(positioned: Positioned[]): Positioned[][] {
+  const groups = new Map<number, Positioned[]>();
+  for (const item of positioned) {
+    const group = groups.get(item.clusterId) ?? [];
+    group.push(item);
+    groups.set(item.clusterId, group);
+  }
+  return [...groups.values()];
 }
 
 export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek }: Props) {
@@ -73,6 +90,8 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
   const days = weekDays
     .map((key, weekdayIndex) => ({ key, weekdayIndex }))
     .filter(({ key, weekdayIndex }) => weekdayIndex < 5 || (entriesByDay[key]?.length ?? 0) > 0);
+  const dayLayouts = days.map(({ key }) => ({ key, positioned: layoutDay(entriesByDay[key] ?? []) }));
+  const gridColumns = `44px repeat(${days.length}, minmax(0, 1fr))`;
 
   // Stundenbereich: Standard 08–18 Uhr, bei früheren/späteren Terminen erweitern.
   let firstHour = 8;
@@ -100,8 +119,23 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
 
   return (
     <div className="weekview" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <div className="weekview__header">
-        <div className="weekview__gutter" />
+      <div className="weekview__header" style={{ gridTemplateColumns: gridColumns }}>
+        <div className="weekview__gutter">
+          <button
+            className="weekview__arrow"
+            aria-label="Vorherige Woche"
+            onClick={() => onSwipeWeek(-1)}
+          >
+            ‹
+          </button>
+          <button
+            className="weekview__arrow"
+            aria-label="Nächste Woche"
+            onClick={() => onSwipeWeek(1)}
+          >
+            ›
+          </button>
+        </div>
         {days.map(({ key: day, weekdayIndex }) => {
           const ymd = parseYmdKey(day);
           return (
@@ -118,7 +152,10 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
       </div>
 
       <div className="weekview__scroll">
-        <div className="weekview__grid" style={{ height: hours.length * HOUR_PX }}>
+        <div
+          className="weekview__grid"
+          style={{ height: hours.length * HOUR_PX, gridTemplateColumns: gridColumns }}
+        >
           <div className="weekview__times">
             {hours.map((h) => (
               <span key={h} className="weekview__hour" style={{ top: (h - firstHour) * HOUR_PX }}>
@@ -126,9 +163,35 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
               </span>
             ))}
           </div>
-          {days.map(({ key: day }) => (
+          {dayLayouts.map(({ key: day, positioned }) => (
             <div key={day} className={`weekview__col${day === today ? ' is-today' : ''}`}>
-              {layoutDay(entriesByDay[day] ?? []).map(({ entry, lane, laneCount }, i) => {
+              {groupPositionedEntries(positioned).map((cluster, clusterIndex) => {
+                if (cluster.length > 1) {
+                  const start = new Date(Math.min(...cluster.map(({ entry }) => entry.start.getTime())));
+                  const end = new Date(Math.max(...cluster.map(({ entry }) => entry.end.getTime())));
+                  const top = ((minutesOfDay(start) - firstHour * 60) / 60) * HOUR_PX;
+                  const height = Math.max(40, ((end.getTime() - start.getTime()) / 3_600_000) * HOUR_PX);
+                  const more = cluster.length - 1;
+                  const titles = cluster.map(({ entry }) => entry.title);
+                  return (
+                    <button
+                      key={`parallel-${clusterIndex}`}
+                      className="weekview__event weekview__event--parallel-group"
+                      style={{ top, height, left: '2px', width: 'calc(100% - 4px)' }}
+                      onClick={() => onOpenDay(day)}
+                      aria-label={`${cluster.length} parallele Termine: ${titles.join(', ')}`}
+                    >
+                      <span className="weekview__parallel-count">
+                        {formatTime(start)} · {cluster.length} Termine parallel
+                      </span>
+                      <span className="weekview__etitle">
+                        {titles[0]} + {more} {more === 1 ? 'weiterer' : 'weitere'}
+                      </span>
+                    </button>
+                  );
+                }
+
+                const [{ entry, laneCount }] = cluster;
                 const top = ((minutesOfDay(entry.start) - firstHour * 60) / 60) * HOUR_PX;
                 const height = Math.max(
                   28,
@@ -139,10 +202,10 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                 const density = height >= 176 ? 'is-roomy' : height >= 112 ? 'is-tall' : 'is-regular';
                 // Der Titel ist die wichtigste Information. Namen erscheinen
                 // nur dann in der Karte, wenn sie ihm keinen Leseraum nehmen.
-                const showLecturers = Boolean(lecturers) && height >= 176;
+                const showLecturers = Boolean(lecturers) && height >= 176 && laneCount < 3;
                 return (
                   <button
-                    key={i}
+                    key={`event-${clusterIndex}`}
                     className={[
                       'weekview__event',
                       `weekview__event--${entry.type}`,
@@ -152,23 +215,16 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                     ]
                       .filter(Boolean)
                       .join(' ')}
-                    style={{
-                      top,
-                      height,
-                      left: `${(lane / laneCount) * 100}%`,
-                      width: `${100 / laneCount}%`,
-                    }}
+                    style={{ top, height, left: '2px', width: 'calc(100% - 4px)' }}
                     onClick={() => onOpenDay(day)}
                     aria-label={`${entry.title}, ${formatTime(entry.start)} bis ${formatTime(entry.end)}${lecturers ? `, ${lecturers}` : ''}`}
                   >
                     <span className="weekview__etime">{formatTime(entry.start)}</span>
                     <span className="weekview__etitle">
                       {entry.title}
-                      {lecturers && isCompact ? ` · ${lecturers}` : ''}
+                      {lecturers && isCompact && laneCount < 3 ? ` · ${lecturers}` : ''}
                     </span>
-                    {showLecturers && (
-                      <span className="weekview__emeta">{lecturers}</span>
-                    )}
+                    {showLecturers && <span className="weekview__emeta">{lecturers}</span>}
                   </button>
                 );
               })}

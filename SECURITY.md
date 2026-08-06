@@ -22,7 +22,7 @@ Die App soll keine Zugangsdaten dauerhaft speichern. Rapla-Link, Stundenplan-Cac
 ## Lokale Speicherung und Sitzungen
 
 - Android-App-Backups sind deaktiviert, weil Preferences- und Cache-Daten personenbezogene Stundenplan- oder Rapla-Informationen enthalten können.
-- Dualis-Passwörter werden nicht gespeichert. Session-Cookies werden für die laufenden Dualis-Requests verwendet und beim Login/Logout aus dem nativen Cookie-Speicher entfernt.
+- Dualis-Passwörter werden nicht gespeichert. Session-Cookies werden nur für laufende Dualis-Requests im Speicher gehalten. Die automatische Capacitor-Cookie-Persistenz ist deaktiviert; nach jedem nativen Response sowie beim Login/Logout wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt.
 - Die lokale Preferences-Speicherung ist nicht als zusätzliche Ende-zu-Ende-Verschlüsselung zu verstehen. Geräteverschlüsselung und Geräteschutz bleiben wichtig.
 
 ## Rapla-Links

@@ -223,6 +223,10 @@ export class DualisClient {
       }
 
       this.storeCookies(response.headers);
+      // CapacitorHttp may copy Set-Cookie into the native/WebView cookie
+      // store before returning the response. DualisClient owns the session
+      // in memory, so remove that native copy immediately after extracting it.
+      await this.clearNativeCookies();
       return response;
     } catch (error) {
       if (error instanceof DualisError) throw error;

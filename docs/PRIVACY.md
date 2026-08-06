@@ -16,7 +16,7 @@ Dualis-Passwörter werden nicht dauerhaft gespeichert.
 
 Die lokale Speicherung erfolgt über die Plattform-Speichermechanismen von Capacitor Preferences. Sie ist für App-Einstellungen und Cache-Daten gedacht, ersetzt aber keine zusätzliche Ende-zu-Ende-Verschlüsselung innerhalb der App.
 
-Auf Android sind automatische App-Backups für diese lokalen Daten deaktiviert. Bei Dualis werden Session-Cookies beim Login und Abmelden aus dem nativen Cookie-Speicher entfernt.
+Auf Android sind automatische App-Backups für diese lokalen Daten deaktiviert. Bei Dualis werden Session-Cookies nur für laufende Requests im Speicher gehalten; die automatische Capacitor-Cookie-Persistenz ist deaktiviert. Nach nativen Responses sowie beim Login und Abmelden wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt.
 
 ## Netzwerkzugriffe
 

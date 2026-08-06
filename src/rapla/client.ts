@@ -12,6 +12,8 @@ import { addDaysYmd, ymdKey, Ymd } from '../lib/berlinTime';
 import { parseRaplaWeek } from './parser';
 
 export const DEFAULT_BASE_URL = 'https://rapla.dhbw.de/rapla/calendar';
+/** Rapla soll bei einem Refresh nicht mit mehreren Dutzend Requests zugleich belastet werden. */
+export const MAX_CONCURRENT_WEEK_REQUESTS = 5;
 
 export interface RaplaConfig {
   user?: string;
@@ -113,7 +115,26 @@ export async function fetchWeeks(
   count: number,
 ): Promise<{ weeks: Map<string, ScheduleEntry[]>; failedWeeks: string[] }> {
   const mondays = Array.from({ length: count }, (_, i) => addDaysYmd(firstMonday, i * 7));
-  const results = await Promise.allSettled(mondays.map((m) => fetchWeek(cfg, m)));
+  const results: PromiseSettledResult<ScheduleEntry[]>[] = Array.from({ length: mondays.length });
+  let nextIndex = 0;
+  const workerCount = Math.min(MAX_CONCURRENT_WEEK_REQUESTS, mondays.length);
+
+  // Keep partial success semantics while limiting pressure on Rapla. Each
+  // worker catches its own request so one failed week cannot stop the queue.
+  await Promise.all(
+    Array.from({ length: workerCount }, async () => {
+      while (true) {
+        const index = nextIndex++;
+        if (index >= mondays.length) return;
+        try {
+          results[index] = { status: 'fulfilled', value: await fetchWeek(cfg, mondays[index]) };
+        } catch (reason) {
+          results[index] = { status: 'rejected', reason };
+        }
+      }
+    }),
+  );
+
   const byWeek = new Map<string, ScheduleEntry[]>();
   const failedWeeks: string[] = [];
   mondays.forEach((m, i) => {

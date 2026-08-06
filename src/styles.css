@@ -427,17 +427,34 @@ button {
 }
 
 .weekview__header {
-  display: flex;
+  display: grid;
   padding: 0 12px 0 0;
   border-bottom: 1px solid var(--line);
 }
 
 .weekview__gutter {
-  flex: 0 0 44px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.weekview__arrow {
+  width: 20px;
+  height: 32px;
+  padding: 0;
+  color: var(--ink-3);
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.weekview__arrow:active {
+  color: var(--ink);
+  background: var(--bg-soft);
 }
 
 .weekview__dayhead {
-  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -466,24 +483,24 @@ button {
 .weekview__scroll {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 0 12px calc(24px + env(safe-area-inset-bottom)) 0;
 }
 
 .weekview__grid {
   position: relative;
-  display: flex;
+  display: grid;
   /* Feine Stundenlinien über die ganze Breite */
   background: repeating-linear-gradient(
     to bottom,
     var(--line) 0 1px,
-    transparent 1px 56px
+    transparent 1px 64px
   );
 }
 
 .weekview__times {
   position: relative;
-  flex: 0 0 44px;
 }
 
 .weekview__hour {
@@ -499,7 +516,6 @@ button {
 
 .weekview__col {
   position: relative;
-  flex: 1;
   min-width: 0;
   border-left: 1px solid var(--line);
 }
@@ -523,6 +539,30 @@ button {
   outline: 2px solid var(--bg);
   box-shadow: 0 1px 2px rgba(14, 39, 50, 0.08);
   text-align: left;
+}
+
+.weekview__event--parallel-group {
+  background: #dceef2;
+  border-left-color: #0f6079;
+  gap: 4px;
+}
+
+.weekview__parallel-count {
+  width: 100%;
+  overflow: hidden;
+  color: #315864;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.weekview__event--parallel-group .weekview__etitle {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .weekview__event.is-compact {
@@ -551,25 +591,23 @@ button {
   line-height: 15px;
   font-weight: 600;
   color: #102f3a;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  display: block;
   overflow: hidden;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .weekview__event.is-tall .weekview__etitle {
-  -webkit-line-clamp: 5;
+  white-space: nowrap;
 }
 
 .weekview__event.is-roomy .weekview__etitle {
-  -webkit-line-clamp: 8;
+  white-space: nowrap;
 }
 
 .weekview__event.has-lecturers .weekview__etitle {
   /* Bei hohen Karten erhält der Dozent bewusst Raum für den vollen Namen. */
-  -webkit-line-clamp: 5;
+  white-space: nowrap;
 }
 
 .weekview__event.is-compact .weekview__etitle {
@@ -590,7 +628,8 @@ button {
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: break-word;
-  hyphens: auto;
+  word-break: normal;
+  hyphens: none;
   flex: 0 0 auto;
 }
 

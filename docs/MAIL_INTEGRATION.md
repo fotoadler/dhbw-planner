@@ -19,3 +19,5 @@ Ein solcher Dienst darf keine Zugangsdaten unverschlüsselt speichern. Vor einer
 ## Standortabhängigkeit
 
 Die Provider-Zuordnung liegt in `src/mail/providers.ts` und ist absichtlich nicht global im App-Root verteilt. Aktuell ist nur Ravensburg hinterlegt. Andere DHBW-Standorte verwenden unterschiedliche Mail-Plattformen; sie können später jeweils mit eigener Webmail-Adresse und eigenem Login-Verfahren ergänzt werden.
+
+Für einen weiteren Standort werden dort ein eigener `MailProvider` und ein Eintrag in `MAIL_PROVIDERS` ergänzt. Die App blendet den Mail-Tab anschließend automatisch für diesen Standort ein. Das native Plugin kennt keine DHBW-Standorte und lädt lediglich die vom Provider gelieferte Webmail-Adresse.

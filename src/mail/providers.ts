@@ -20,6 +20,14 @@ export const RAVENSBURG_MAIL_PROVIDER: MailProvider = {
   usernameHint: 'DOMAB\\Benutzername',
 };
 
+/**
+ * Zentrale Provider-Registry. Für einen weiteren Standort wird hier nur ein
+ * weiterer Provider ergänzt; App-Shell und native WebView bleiben unverändert.
+ */
+export const MAIL_PROVIDERS: Readonly<Record<string, MailProvider>> = {
+  [RAVENSBURG_MAIL_PROVIDER.site]: RAVENSBURG_MAIL_PROVIDER,
+};
+
 export function mailProviderForSite(site: string | undefined): MailProvider | null {
-  return site === RAVENSBURG_MAIL_PROVIDER.site ? RAVENSBURG_MAIL_PROVIDER : null;
+  return site ? MAIL_PROVIDERS[site] ?? null : null;
 }

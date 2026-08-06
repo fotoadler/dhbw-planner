@@ -926,7 +926,7 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
-/* --- Erststart: nur ein Eingabefeld --- */
+/* --- Einrichtung: geführter API-Modus oder manueller Rapla-Modus --- */
 
 .setup {
   height: 100%;
@@ -945,10 +945,113 @@ button {
   letter-spacing: -0.02em;
 }
 
+.setup__eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .setup__hint {
   color: var(--ink-2);
   font-size: 15px;
   margin-bottom: 8px;
+  line-height: 21px;
+}
+
+.setup__choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.setup__choice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: left;
+}
+
+.setup__choice:active {
+  background: var(--bg-soft);
+}
+
+.setup__choice--recommended {
+  border-color: rgba(226, 0, 26, 0.45);
+  box-shadow: 0 2px 8px rgba(226, 0, 26, 0.08);
+}
+
+.setup__choice-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.setup__choice-title small {
+  margin-left: 8px;
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.setup__choice-text,
+.setup__status {
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.setup__back {
+  align-self: flex-start;
+  margin: -4px 0 2px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.setup__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.setup__select {
+  width: 100%;
+  padding: 13px 40px 13px 14px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--bg-soft);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.setup__select:focus {
+  border-color: var(--accent);
+  background-color: var(--bg);
+}
+
+.setup__secondary {
+  align-self: flex-start;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .setup__input,
@@ -1057,6 +1160,28 @@ button {
   align-items: center;
   font-size: 15px;
   min-height: 32px;
+}
+
+.sheet__value {
+  max-width: 62%;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.sheet__note {
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.sheet__textbtn {
+  align-self: flex-start;
+  padding: 2px 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .sheet__row--sub {

@@ -1,6 +1,6 @@
 # DHBW Planner
 
-DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Sie lädt persönliche Rapla-Stundenpläne direkt vom DHBW-Rapla-System, bereitet sie als Tages- und Wochenansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
+DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Stundenpläne können entweder geführt über Standort, Studiengang und Kurs aus der öffentlichen DHBW-API ausgewählt oder weiterhin über einen persönlichen Rapla-Link eingebunden werden. Die App bereitet beide Quellen als Tages- und Wochenansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
 
 Die App arbeitet ohne eigenes Backend. Rapla- und Dualis-Daten werden direkt vom Gerät aus abgerufen; gespeicherte Einstellungen und der Stundenplan-Cache liegen lokal auf dem Gerät.
 
@@ -10,7 +10,8 @@ DHBW Planner ist keine offizielle App der DHBW.
 
 ## Features
 
-- Rapla-2.0-Stundenplan mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und Dozentennamen
+- Geführte Kursauswahl über Standort, Studiengang und Kurs — ohne Rapla-Link
+- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und Dozentennamen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
 - iCal-/ICS-Export über das native Share-Sheet
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
@@ -68,13 +69,19 @@ Der Parser übernimmt `user` und `file`, normalisiert `internal_calendar` auf `c
 
 Zusätzlich werden öffentliche Rapla-Freigabelinks mit den Parametern `key` und `salt` unterstützt. Aus Sicherheitsgründen akzeptiert die App nur Rapla-Links von `rapla.dhbw.de` mit dem Pfad `/rapla/calendar` oder `/rapla/internal_calendar`.
 
+## Geführter Modus und DHBW-API
+
+Der geführte Modus verwendet den öffentlichen Kurskatalog und den Kursplan der [DHBW-API](https://api.dhbw.app/api). Die Auswahl speichert nur Standort, Studiengang und Kurskennung; der Stundenplan wird anschließend direkt vom Gerät geladen. Ein eigenes Backend ist dafür nicht erforderlich.
+
+Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab und verwendet bei späteren Aktualisierungen den HTTP-`ETag`. Dadurch werden unveränderte Pläne nicht erneut übertragen. Die Delta-/Sync-Endpunkte werden bewusst nicht benötigt; der Rapla-Link bleibt als unabhängige Alternative erhalten.
+
 ## Datenschutz
 
 Kurzfassung:
 
 - Kein Tracking
 - Kein eigenes Backend
-- Rapla-Link, Stundenplan-Cache und optionale Dualis-Einstellungen werden lokal gespeichert
+- Rapla-Link bzw. API-Kursauswahl, Stundenplan-Cache und optionale Dualis-Einstellungen werden lokal gespeichert
 - Dualis-Passwörter werden nicht dauerhaft gespeichert
 - Netzwerkzugriffe gehen direkt an die konfigurierten DHBW-Systeme
 
@@ -89,6 +96,7 @@ Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentiert
 ```text
 src/
   dualis/                    Dualis-Client, Parser und Typen
+  dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
   ical/                      ICS-Export
   lib/                       Zeitfunktionen für Europe/Berlin
   notifications/             Planung und Registrierung lokaler Benachrichtigungen

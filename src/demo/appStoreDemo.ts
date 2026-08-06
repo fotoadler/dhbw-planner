@@ -68,6 +68,8 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
     file: 'beispiel',
     baseUrl: 'https://rapla.dhbw.de/rapla/calendar',
   },
+  scheduleSource: 'rapla',
+  apiSelection: null,
   morningEnabled: true,
   morningTime: '07:00',
   liveEnabled: false,

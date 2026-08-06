@@ -11,17 +11,30 @@ import { deserializeEntry, ScheduleEntry, SerializedEntry, serializeEntry } from
 import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
 import { Mensa, MensaPlan } from '../seezeit/types';
 
-const SETTINGS_KEY = 'settings.v2';
+const SETTINGS_KEY = 'settings.v3';
+const PREVIOUS_SETTINGS_KEY = 'settings.v2';
 const LEGACY_SETTINGS_KEY = 'settings.v1';
 const CACHE_KEY = 'cache.v2';
 const LEGACY_CACHE_KEY = 'cache.v1';
 const MENSA_CACHE_KEY = 'mensa.v1';
-const STORAGE_VERSION = 2;
+const STORAGE_VERSION = 3;
+
+export type ScheduleSource = 'rapla' | 'dhbw-api';
+
+export interface ApiSelection {
+  site: string;
+  course: string;
+  degree: string;
+}
 
 export interface AppSettings {
   /** Der vom Nutzer eingetragene Rapla-Link (Original, für die Anzeige). */
   raplaLink: string;
   rapla: RaplaConfig | null;
+  /** Quelle des Stundenplans. Alte Installationen bleiben automatisch Rapla. */
+  scheduleSource: ScheduleSource;
+  /** Geführte Auswahl aus Standort, Studiengang und Kurs. */
+  apiSelection: ApiSelection | null;
   morningEnabled: boolean;
   morningTime: string;
   liveEnabled: boolean;
@@ -36,6 +49,8 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   raplaLink: '',
   rapla: null,
+  scheduleSource: 'rapla',
+  apiSelection: null,
   morningEnabled: true,
   morningTime: '07:00',
   liveEnabled: true,
@@ -80,13 +95,26 @@ function parseRaplaConfig(value: unknown): RaplaConfig | null {
   }
 }
 
+function parseApiSelection(value: unknown): ApiSelection | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.site !== 'string' || typeof value.course !== 'string' || typeof value.degree !== 'string') {
+    return null;
+  }
+  if (!value.site.trim() || !value.course.trim() || !value.degree.trim()) return null;
+  return {
+    site: value.site.trim(),
+    course: value.course.trim(),
+    degree: value.degree.trim(),
+  };
+}
+
 function defaultSettings(): AppSettings {
   return { ...DEFAULT_SETTINGS };
 }
 
 function parseSettings(raw: unknown): AppSettings {
   const data =
-    isRecord(raw) && raw.version === STORAGE_VERSION && isRecord(raw.data)
+    isRecord(raw) && (raw.version === STORAGE_VERSION || raw.version === 2) && isRecord(raw.data)
       ? raw.data
       : isRecord(raw) && 'version' in raw
         ? null
@@ -94,9 +122,15 @@ function parseSettings(raw: unknown): AppSettings {
   if (!isRecord(data)) return defaultSettings();
 
   const reminderMinutes = data.reminderMinutes;
+  const apiSelection = parseApiSelection(data.apiSelection);
+  const scheduleSource: ScheduleSource =
+    data.scheduleSource === 'dhbw-api' && apiSelection ? 'dhbw-api' : 'rapla';
+
   return {
     raplaLink: typeof data.raplaLink === 'string' ? data.raplaLink : DEFAULT_SETTINGS.raplaLink,
     rapla: parseRaplaConfig(data.rapla),
+    scheduleSource,
+    apiSelection: scheduleSource === 'dhbw-api' ? apiSelection : null,
     morningEnabled: typeof data.morningEnabled === 'boolean' ? data.morningEnabled : DEFAULT_SETTINGS.morningEnabled,
     morningTime: isTime(data.morningTime) ? data.morningTime : DEFAULT_SETTINGS.morningTime,
     liveEnabled: typeof data.liveEnabled === 'boolean' ? data.liveEnabled : DEFAULT_SETTINGS.liveEnabled,
@@ -117,8 +151,9 @@ function parseSettings(raw: unknown): AppSettings {
 export async function loadSettings(): Promise<AppSettings> {
   try {
     const current = await Preferences.get({ key: SETTINGS_KEY });
-    const legacy = current.value ? null : await Preferences.get({ key: LEGACY_SETTINGS_KEY });
-    const value = current.value ?? legacy?.value;
+    const previous = current.value ? null : await Preferences.get({ key: PREVIOUS_SETTINGS_KEY });
+    const legacy = current.value || previous?.value ? null : await Preferences.get({ key: LEGACY_SETTINGS_KEY });
+    const value = current.value ?? previous?.value ?? legacy?.value;
     if (!value) return defaultSettings();
     return parseSettings(JSON.parse(value) as unknown);
   } catch {
@@ -138,6 +173,10 @@ export interface ScheduleCache {
   version: 2;
   updatedAt: string;
   weeks: Record<string, SerializedEntry[]>;
+  /** Bindet den Cache an Rapla-Link oder API-Kurs. */
+  sourceKey?: string;
+  /** ETag der API-Antwort für bedingte Aktualisierungen. */
+  etag?: string;
 }
 
 function isEntryType(value: unknown): value is ScheduleEntry['type'] {
@@ -162,32 +201,47 @@ function isSerializedEntry(value: unknown): value is SerializedEntry {
   );
 }
 
-function parseCache(raw: unknown): { updatedAt: Date; weeks: Record<string, ScheduleEntry[]> } | null {
+function parseCache(
+  raw: unknown,
+  expectedSourceKey?: string,
+): { updatedAt: Date; weeks: Record<string, ScheduleEntry[]>; sourceKey?: string; etag?: string } | null {
   // Missing version is the legacy settings.v1/cache.v1 format. Future versions
   // must be migrated explicitly instead of being treated as compatible.
-  if (!isRecord(raw) || (raw.version !== undefined && raw.version !== STORAGE_VERSION)) return null;
+  if (!isRecord(raw) || (raw.version !== undefined && raw.version !== 2)) return null;
   if (typeof raw.updatedAt !== 'string' || !Number.isFinite(Date.parse(raw.updatedAt)) || !isRecord(raw.weeks)) {
     return null;
   }
+  const sourceKey = typeof raw.sourceKey === 'string' ? raw.sourceKey : undefined;
+  // A legacy cache without a source key is usable for the old Rapla flow, but
+  // must never be shown for a newly selected API course.
+  if (expectedSourceKey?.startsWith('api:') && sourceKey !== expectedSourceKey) return null;
+  if (sourceKey && expectedSourceKey && sourceKey !== expectedSourceKey) return null;
 
   const weeks: Record<string, ScheduleEntry[]> = {};
   for (const [key, entries] of Object.entries(raw.weeks)) {
     if (!Array.isArray(entries)) continue;
     weeks[key] = entries.filter(isSerializedEntry).map(deserializeEntry);
   }
-  return { updatedAt: new Date(raw.updatedAt), weeks };
+  return {
+    updatedAt: new Date(raw.updatedAt),
+    weeks,
+    ...(sourceKey ? { sourceKey } : {}),
+    ...(typeof raw.etag === 'string' ? { etag: raw.etag } : {}),
+  };
 }
 
-export async function loadCache(): Promise<{
+export async function loadCache(expectedSourceKey?: string): Promise<{
   updatedAt: Date;
   weeks: Record<string, ScheduleEntry[]>;
+  sourceKey?: string;
+  etag?: string;
 } | null> {
   try {
     const current = await Preferences.get({ key: CACHE_KEY });
     const legacy = current.value ? null : await Preferences.get({ key: LEGACY_CACHE_KEY });
     const value = current.value ?? legacy?.value;
     if (!value) return null;
-    return parseCache(JSON.parse(value) as unknown);
+    return parseCache(JSON.parse(value) as unknown, expectedSourceKey);
   } catch {
     return null; // Defekter Cache wird ignoriert, nicht eskaliert.
   }
@@ -196,8 +250,15 @@ export async function loadCache(): Promise<{
 export async function saveCache(
   weeks: Record<string, ScheduleEntry[]>,
   updatedAt: Date,
+  metadata: { sourceKey?: string; etag?: string } = {},
 ): Promise<void> {
-  const raw: ScheduleCache = { version: STORAGE_VERSION, updatedAt: updatedAt.toISOString(), weeks: {} };
+  const raw: ScheduleCache = {
+    version: 2,
+    updatedAt: updatedAt.toISOString(),
+    weeks: {},
+    ...(metadata.sourceKey ? { sourceKey: metadata.sourceKey } : {}),
+    ...(metadata.etag ? { etag: metadata.etag } : {}),
+  };
   for (const [key, entries] of Object.entries(weeks)) {
     raw.weeks[key] = entries.map(serializeEntry);
   }

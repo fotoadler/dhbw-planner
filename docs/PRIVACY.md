@@ -7,6 +7,7 @@ DHBW Planner ist so gebaut, dass keine eigene Server-Infrastruktur nötig ist.
 Die App kann lokal speichern:
 
 - Rapla-Link und daraus abgeleitete Rapla-Konfiguration
+- ausgewählter DHBW-Standort, Studiengang und Kurskennung im geführten Modus
 - zuletzt geladene Stundenplantermine
 - Benachrichtigungseinstellungen
 - optional den Dualis-Benutzernamen, wenn „Benutzername merken“ aktiviert ist
@@ -22,6 +23,7 @@ Auf Android sind automatische App-Backups für diese lokalen Daten deaktiviert. 
 Die App greift direkt auf die vom Nutzer konfigurierten DHBW-Systeme zu:
 
 - Rapla zum Abrufen des Stundenplans
+- die öffentliche DHBW-API für Standort-/Kurskatalog und geführte Stundenpläne
 - Dualis zum Abrufen von Modulnoten und Prüfungsleistungen
 
 Es gibt kein eigenes Backend und keine Weiterleitung dieser Daten an einen Projektdienst.

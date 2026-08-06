@@ -15,7 +15,7 @@ import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { MENSA_LABELS } from '../seezeit/types';
-import { LinkSetup } from './LinkSetup';
+import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
@@ -47,7 +47,7 @@ export function App() {
     useSchedule();
   const { plan: mensaPlan } = useMensa(
     settings?.mensa ?? 'ravensburg',
-    (settings?.mensaEnabled ?? true) && !!settings?.rapla,
+    (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
   const dualis = useDualis();
 
@@ -89,14 +89,30 @@ export function App() {
     return <div className="splash">Lade …</div>;
   }
 
-  // Erststart: nur das Rapla-Link-Eingabefeld, kein Wizard.
-  if (!settings.rapla) {
+  // Erststart: geführter API-Modus oder manueller Rapla-Fallback.
+  if (!settings.rapla && !(settings.scheduleSource === 'dhbw-api' && settings.apiSelection)) {
     return (
-      <LinkSetup
+      <SetupWizard
         initialLink={settings.raplaLink}
-        onSave={(link, config) => {
+        onSaveRapla={(link, config) => {
           void ensurePermission();
-          void applySettings({ ...settings, raplaLink: link, rapla: config });
+          void applySettings({
+            ...settings,
+            raplaLink: link,
+            rapla: config,
+            scheduleSource: 'rapla',
+            apiSelection: null,
+          });
+        }}
+        onSaveApi={(selection) => {
+          void ensurePermission();
+          void applySettings({
+            ...settings,
+            raplaLink: '',
+            rapla: null,
+            scheduleSource: 'dhbw-api',
+            apiSelection: selection,
+          });
         }}
       />
     );

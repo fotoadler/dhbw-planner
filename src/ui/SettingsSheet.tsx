@@ -27,7 +27,13 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
       return;
     }
     setLinkError(false);
-    onChange({ ...settings, raplaLink: link.trim(), rapla: config });
+    onChange({
+      ...settings,
+      raplaLink: link.trim(),
+      rapla: config,
+      scheduleSource: 'rapla',
+      apiSelection: null,
+    });
   };
 
   const set = (patch: Partial<AppSettings>) => onChange({ ...settings, ...patch });
@@ -43,6 +49,26 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
         </header>
 
         <section className="sheet__section">
+          <div className="sheet__row">
+            <span>Stundenplanquelle</span>
+            <strong className="sheet__value">
+              {settings.scheduleSource === 'dhbw-api' && settings.apiSelection ? 'Geführter Modus' : 'Manueller Rapla-Modus'}
+            </strong>
+          </div>
+          {settings.apiSelection && settings.scheduleSource === 'dhbw-api' && (
+            <p className="sheet__note">
+              {settings.apiSelection.site} · {settings.apiSelection.degree} · {settings.apiSelection.course}
+            </p>
+          )}
+          <button
+            className="sheet__textbtn"
+            onClick={() => onChange({ ...settings, raplaLink: '', rapla: null, apiSelection: null, scheduleSource: 'rapla' })}
+          >
+            Stundenplan ändern
+          </button>
+        </section>
+
+        <section className="sheet__section">
           <label className="sheet__label" htmlFor="rapla-link">
             Rapla-Link
           </label>
@@ -55,7 +81,7 @@ export function SettingsSheet({ settings, updatedAt, onChange, onClose }: Props)
             autoCapitalize="off"
             onChange={(e) => setLink(e.target.value)}
           />
-          {linkError && <p className="setup__error">Link ungültig — „user“ und „file“ fehlen.</p>}
+          {linkError && <p className="setup__error">Link ungültig — „user“/„file“ oder „key“/„salt“ fehlen.</p>}
           {link !== settings.raplaLink && (
             <button className="sheet__save" onClick={saveLink}>
               Link übernehmen

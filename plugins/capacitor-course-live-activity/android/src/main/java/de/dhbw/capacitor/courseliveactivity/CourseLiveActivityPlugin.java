@@ -27,8 +27,11 @@ import java.util.Set;
 @CapacitorPlugin(name = "CourseLiveActivity")
 public class CourseLiveActivityPlugin extends Plugin {
     private static final String CHANNEL_ID = "course_live_activity";
-    private static final String PREFS = "course_live_activity";
-    private static final String ACTIVE_IDS = "active_ids";
+    static final String PREFS = "course_live_activity";
+    static final String ACTIVE_IDS = "active_ids";
+    static final String DISMISSED_ID = "dismissed_id";
+    static final String EXTRA_ACTIVITY_ID = "activity_id";
+    private static final String EXTRA_REQUEST_PROMOTED_ONGOING = "android.requestPromotedOngoing";
     private static final int REQUEST_CODE = 48170;
 
     @PluginMethod
@@ -55,10 +58,9 @@ public class CourseLiveActivityPlugin extends Plugin {
     @PluginMethod
     public void schedule(PluginCall call) {
         // Android has no equivalent to iOS 26's ActivityKit scheduled start
-        // (posting a notification while the app process is suspended, at an
-        // exact future time). The JS side already re-syncs on app resume and
-        // at course boundaries while the app is active, so there is nothing
-        // to do here beyond resolving like the web fallback does.
+        // (posting a notification while the app process is suspended). Treat
+        // this as cleanup so an earlier course cannot remain visible.
+        clearActiveNotifications();
         call.resolve();
     }
 
@@ -76,11 +78,15 @@ public class CourseLiveActivityPlugin extends Plugin {
 
     @PluginMethod
     public void endAll(PluginCall call) {
+        clearActiveNotifications();
+        call.resolve();
+    }
+
+    private void clearActiveNotifications() {
         for (String id : getActiveIds()) {
             NotificationManagerCompat.from(getContext()).cancel(notificationId(id));
         }
         saveActiveIds(new HashSet<>());
-        call.resolve();
     }
 
     private void post(PluginCall call) {
@@ -91,6 +97,11 @@ public class CourseLiveActivityPlugin extends Plugin {
 
         if (id == null || id.trim().isEmpty() || title == null || title.trim().isEmpty() || startTime == null || endTime == null) {
             call.reject("Missing id, title, startTime or endTime");
+            return;
+        }
+
+        if (wasDismissed(id)) {
+            call.resolve();
             return;
         }
 
@@ -139,6 +150,7 @@ public class CourseLiveActivityPlugin extends Plugin {
             .setWhen(endTime)
             .setUsesChronometer(true)
             .setChronometerCountDown(true)
+            .setTimeoutAfter(Math.max(1_000L, endTime - now))
             .setProgress(100, progress, false)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -147,12 +159,20 @@ public class CourseLiveActivityPlugin extends Plugin {
             builder.setContentIntent(contentIntent);
         }
 
-        builder.getExtras().putBoolean("android.requestPromotedOngoing", true);
-        Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        PendingIntent deleteIntent = PendingIntent.getBroadcast(
+            getContext(),
+            notificationId(id) + 1,
+            new Intent(getContext(), CourseLiveActivityDismissedReceiver.class)
+                .putExtra(EXTRA_ACTIVITY_ID, id),
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        builder.setDeleteIntent(deleteIntent);
 
-        NotificationManagerCompat.from(getContext()).notify(notificationId(id), notification);
+        builder.getExtras().putBoolean(EXTRA_REQUEST_PROMOTED_ONGOING, true);
+        Notification notification = builder.build();
+
         replaceActiveId(id);
+        NotificationManagerCompat.from(getContext()).notify(notificationId(id), notification);
         call.resolve();
     }
 
@@ -224,6 +244,10 @@ public class CourseLiveActivityPlugin extends Plugin {
         return new HashSet<>(prefs().getStringSet(ACTIVE_IDS, new HashSet<>()));
     }
 
+    private boolean wasDismissed(String id) {
+        return id.equals(prefs().getString(DISMISSED_ID, null));
+    }
+
     private void saveActiveIds(Set<String> ids) {
         prefs().edit().putStringSet(ACTIVE_IDS, ids).apply();
     }
@@ -243,7 +267,7 @@ public class CourseLiveActivityPlugin extends Plugin {
         }
         Set<String> nextIds = new HashSet<>();
         nextIds.add(id);
-        saveActiveIds(nextIds);
+        prefs().edit().putStringSet(ACTIVE_IDS, nextIds).remove(DISMISSED_ID).apply();
     }
 
     private void removeActiveId(String id) {

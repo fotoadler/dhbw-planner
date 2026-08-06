@@ -42,7 +42,7 @@ export async function ensureExactAlarmPermission(): Promise<void> {
   if (Capacitor.getPlatform() !== 'android') return;
   try {
     const status = await LocalNotifications.checkExactNotificationSetting();
-    if (status.exact_alarm === 'prompt' || status.exact_alarm === 'prompt-with-rationale') {
+    if (status.exact_alarm !== 'granted') {
       await LocalNotifications.changeExactNotificationSetting();
     }
   } catch {

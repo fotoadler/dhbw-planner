@@ -78,6 +78,10 @@ Kurzfassung:
 
 Details stehen in [docs/PRIVACY.md](docs/PRIVACY.md).
 
+## App Review
+
+Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentierten Demomodus. Er verwendet ausschließlich Beispieldaten und ruft weder Rapla noch Dualis auf. Die konkreten Eingaben und die Begründung für das öffentliche Repository stehen in [docs/APP_REVIEW_DEMO.md](docs/APP_REVIEW_DEMO.md).
+
 ## Projektstruktur
 
 ```text

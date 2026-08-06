@@ -12,11 +12,12 @@ struct CourseLiveActivityWidgetBundle: WidgetBundle {
 struct CourseLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CourseLectureAttributes.self) { context in
-            CourseLiveLockScreenView(state: context.state)
+            CourseLiveLockScreenView(state: context.state, isStale: activityIsStale(context))
                 .activityBackgroundTint(Color(red: 0.08, green: 0.09, blue: 0.11))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
-            DynamicIsland {
+            let isStale = activityIsStale(context)
+            return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(context.state.title)
@@ -27,33 +28,40 @@ struct CourseLiveActivityWidget: Widget {
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    HStack(spacing: 4) {
-                        Text("Noch")
-                            .font(.caption.weight(.medium))
+                    if isStale {
+                        Text("Beendet")
+                            .font(.caption.weight(.semibold))
                             .foregroundStyle(Color.white.opacity(0.72))
-                        CourseLiveCountdown(state: context.state, showsHours: true)
-                            .font(.headline.monospacedDigit().weight(.semibold))
-                            .foregroundStyle(Color.white)
+                    } else {
+                        Text("Endet \(context.state.endTime, style: .time)")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Color.white.opacity(0.8))
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack(alignment: .leading, spacing: 8) {
-                        CourseLiveProgressView(state: context.state)
-                        if !context.state.room.isEmpty {
-                            Label(context.state.room, systemImage: "mappin.and.ellipse")
+                        if isStale {
+                            Label("Vorlesung beendet", systemImage: "checkmark.circle")
                                 .font(.caption)
                                 .foregroundStyle(Color.white.opacity(0.76))
-                                .lineLimit(1)
-                        }
-                        if !context.state.nextTitle.isEmpty, let nextStartTime = context.state.nextStartTime {
-                            Label {
-                                Text("Als Nächstes · \(nextStartLabel(nextStartTime))  \(context.state.nextTitle)")
+                        } else {
+                            CourseLiveProgressView(state: context.state)
+                            if !context.state.room.isEmpty {
+                                Label(context.state.room, systemImage: "mappin.and.ellipse")
+                                    .font(.caption)
+                                    .foregroundStyle(Color.white.opacity(0.76))
                                     .lineLimit(1)
-                            } icon: {
-                                Image(systemName: "arrow.right.circle.fill")
                             }
-                            .font(.caption)
-                            .foregroundStyle(Color.white.opacity(0.76))
+                            if !context.state.nextTitle.isEmpty, let nextStartTime = context.state.nextStartTime {
+                                Label {
+                                    Text("Als Nächstes · \(nextStartLabel(nextStartTime))  \(context.state.nextTitle)")
+                                        .lineLimit(1)
+                                } icon: {
+                                    Image(systemName: "arrow.right.circle.fill")
+                                }
+                                .font(.caption)
+                                .foregroundStyle(Color.white.opacity(0.76))
+                            }
                         }
                     }
                 }
@@ -61,15 +69,26 @@ struct CourseLiveActivityWidget: Widget {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(CourseLiveStyle.accent)
             } compactTrailing: {
-                CourseLiveCountdown(state: context.state, showsHours: true)
-                    .font(.caption2.monospacedDigit())
-                    .frame(maxWidth: 44)
+                if isStale {
+                    Image(systemName: "checkmark")
+                } else {
+                    Text(context.state.endTime, style: .time)
+                        .font(.caption2.monospacedDigit())
+                        .frame(maxWidth: 44)
+                }
             } minimal: {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(CourseLiveStyle.accent)
             }
         }
     }
+}
+
+private func activityIsStale(_ context: ActivityViewContext<CourseLectureAttributes>) -> Bool {
+    if #available(iOS 16.2, *) {
+        return context.isStale
+    }
+    return false
 }
 
 private func nextStartLabel(_ date: Date) -> String {
@@ -85,6 +104,7 @@ private func nextStartLabel(_ date: Date) -> String {
 
 struct CourseLiveLockScreenView: View {
     let state: CourseLectureAttributes.ContentState
+    let isStale: Bool
 
     var body: some View {
         // Lock-screen Live Activities have a limited vertical presentation.
@@ -97,22 +117,20 @@ struct CourseLiveLockScreenView: View {
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
 
-            HStack(alignment: .firstTextBaseline) {
-                HStack(spacing: 4) {
-                    Text("Noch")
+            if isStale {
+                Label("Vorlesung beendet", systemImage: "checkmark.circle")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.8))
+            } else {
+                HStack(alignment: .firstTextBaseline) {
+                    Spacer(minLength: 12)
+                    Text("Endet \(state.endTime, style: .time)")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.white.opacity(0.7))
-                    CourseLiveCountdown(state: state, showsHours: true)
-                        .font(.title3.monospacedDigit().weight(.semibold))
-                        .foregroundStyle(.white)
                 }
-                Spacer(minLength: 12)
-                Text("Endet \(state.endTime, style: .time)")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.7))
-            }
 
-            CourseLiveProgressView(state: state)
+                CourseLiveProgressView(state: state)
+            }
 
             HStack(spacing: 12) {
                 Label {
@@ -145,34 +163,12 @@ private enum CourseLiveStyle {
     static let accent = Color(red: 0.89, green: 0.0, blue: 0.1)
 }
 
-struct CourseLiveCountdown: View {
-    let state: CourseLectureAttributes.ContentState
-    let showsHours: Bool
-
-    var body: some View {
-        // `Text(timerInterval:)` on iOS 16 counts down from the beginning of
-        // this range. Starting at the current moment (rather than at the
-        // course start) therefore always yields the remaining time.
-        Text(
-            timerInterval: countdownStart...state.endTime,
-            pauseTime: state.endTime,
-            countsDown: true,
-            showsHours: showsHours
-        )
-    }
-
-    private var countdownStart: Date {
-        min(max(Date(), state.startTime), state.endTime)
-    }
-}
-
 struct CourseLiveProgressView: View {
     let state: CourseLectureAttributes.ContentState
 
     var body: some View {
-        // The convenience initializer adds its own elapsed-time label in the
-        // Dynamic Island. Supplying empty labels leaves only the progress bar;
-        // the explicit "Noch …" countdown remains the sole timer.
+        // Supplying empty labels leaves the bar unobtrusive; the end time is
+        // presented separately as static, reliable text.
         ProgressView(timerInterval: state.startTime...state.endTime, countsDown: false) {
             EmptyView()
         } currentValueLabel: {

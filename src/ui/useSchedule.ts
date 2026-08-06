@@ -22,7 +22,13 @@ import {
   updateLecturerDirectory,
 } from '../store/lecturerDirectory';
 import { initNotifications, syncNotifications } from '../notifications/scheduler';
-import { syncCourseLiveActivity } from '../liveActivity/scheduler';
+import { nextLiveActivityTransition, syncCourseLiveActivity } from '../liveActivity/scheduler';
+import {
+  APP_STORE_DEMO_ENTRIES,
+  APP_STORE_DEMO_SETTINGS,
+  isAppStoreDemo,
+} from '../demo/appStoreDemo';
+import { isReviewDemoRaplaLink } from '../demo/reviewDemo';
 
 /** Drei Monate zurück bis drei Monate voraus, damit Kursdetails beide Richtungen zeigen. */
 const WINDOW_RADIUS_DAYS = 92;
@@ -86,6 +92,8 @@ function prune(weeks: WeekMap): WeekMap {
 }
 
 export function useSchedule() {
+  const [reviewDemo, setReviewDemo] = useState(false);
+  const demo = isAppStoreDemo() || reviewDemo;
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [weeks, setWeeks] = useState<WeekMap>({});
   const [directory, setDirectory] = useState<LecturerDirectory>({});
@@ -112,6 +120,7 @@ export function useSchedule() {
 
   /** Lädt das Kursdetail-Fenster, merged, persistiert, plant Notifications. */
   const refresh = useCallback(async (): Promise<void> => {
+    if (demo) return;
     const s = settingsRef.current;
     if (!s?.rapla) return;
     setRefreshing(true);
@@ -150,10 +159,11 @@ export function useSchedule() {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [demo]);
 
   /** Lädt eine Woche außerhalb des Fensters nach (Navigation in Vergangenheit/Zukunft). */
   const ensureWeek = useCallback(async (mondayKey: string): Promise<void> => {
+    if (demo) return;
     const s = settingsRef.current;
     const key = canonicalWeekKey(mondayKey);
     if (!s?.rapla || weeksRef.current[key]) return;
@@ -172,11 +182,28 @@ export function useSchedule() {
     } catch {
       /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
     }
-  }, []);
+  }, [demo]);
 
   /** Persistiert Einstellungen; bei neuem Rapla-Link wird alles neu geladen. */
   const applySettings = useCallback(
     async (next: AppSettings): Promise<void> => {
+      if (isAppStoreDemo()) return;
+      if (isReviewDemoRaplaLink(next.raplaLink)) {
+        // Der Review-Link ist ein lokaler Schalter: keine Speicherung,
+        // keine Benachrichtigungen und kein Abruf eines externen Systems.
+        const reviewSettings = { ...APP_STORE_DEMO_SETTINGS, raplaLink: next.raplaLink, rapla: next.rapla };
+        const weekKey = ymdKey(mondayOfYmd(parseYmdKey('2026-07-20')));
+        const now = new Date();
+        setReviewDemo(true);
+        setSettings(reviewSettings);
+        settingsRef.current = reviewSettings;
+        setWeeks({ [weekKey]: APP_STORE_DEMO_ENTRIES });
+        weeksRef.current = { [weekKey]: APP_STORE_DEMO_ENTRIES };
+        setUpdatedAt(now);
+        setOffline(false);
+        return;
+      }
+      if (reviewDemo) return;
       const prev = settingsRef.current;
       const linkChanged =
         prev?.rapla?.user !== next.rapla?.user || prev?.rapla?.file !== next.rapla?.file;
@@ -194,11 +221,26 @@ export function useSchedule() {
         await syncCourseLiveActivity(filled, next);
       }
     },
-    [refresh],
+    [refresh, reviewDemo],
   );
 
   // Initialer Start: Settings + Cache laden, dann im Hintergrund aktualisieren.
   useEffect(() => {
+    if (demo) {
+      const currentSettings = settingsRef.current;
+      const demoSettings =
+        reviewDemo && currentSettings
+          ? { ...APP_STORE_DEMO_SETTINGS, raplaLink: currentSettings.raplaLink, rapla: currentSettings.rapla }
+          : APP_STORE_DEMO_SETTINGS;
+      const weekKey = ymdKey(mondayOfYmd(parseYmdKey('2026-07-20')));
+      const now = new Date();
+      setSettings(demoSettings);
+      settingsRef.current = demoSettings;
+      setWeeks({ [weekKey]: APP_STORE_DEMO_ENTRIES });
+      weeksRef.current = { [weekKey]: APP_STORE_DEMO_ENTRIES };
+      setUpdatedAt(now);
+      return;
+    }
     void (async () => {
       await initNotifications();
       const s = await loadSettings();
@@ -215,10 +257,11 @@ export function useSchedule() {
       settingsRef.current = s;
       if (s.rapla) void refresh();
     })();
-  }, [refresh]);
+  }, [demo, refresh]);
 
   // App-Resume: prüfen, ob Refresh + Neuplanung nötig sind.
   useEffect(() => {
+    if (demo) return;
     const listener = CapApp.addListener('resume', () => {
       const s = settingsRef.current;
       if (s) {
@@ -233,21 +276,27 @@ export function useSchedule() {
     return () => {
       void listener.then((l) => l.remove());
     };
-  }, [refresh]);
+  }, [demo, refresh]);
 
-  // Foreground-Takt: aktualisiert Countdown/Progress der nativen Live-Aktivitaet.
+  // Vor dem nächsten Kurs registriert iOS 26 einen nativen, zeitgesteuerten
+  // Start. Die übrige Synchronisierung geschieht nur an Kursgrenzen statt
+  // minütlich, damit eine weggewischte Activity nicht neu angefordert wird.
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      const s = settingsRef.current;
-      if (s) {
-        void syncCourseLiveActivity(
-          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-          s,
-        );
-      }
-    }, 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
+    if (demo || !settings) return;
 
-  return { settings, entries, updatedAt, refreshing, offline, refresh, ensureWeek, applySettings };
+    const now = new Date();
+    const sync = () => void syncCourseLiveActivity(entries, settings);
+    sync();
+
+    const transition = nextLiveActivityTransition(entries, now);
+    if (!transition) return;
+
+    // Run just after the boundary. Timers are suspended in the background;
+    // the existing resume listener performs the same reconciliation then.
+    const delay = Math.max(250, transition.getTime() - now.getTime() + 250);
+    const timer = window.setTimeout(sync, delay);
+    return () => window.clearTimeout(timer);
+  }, [demo, entries, settings]);
+
+  return { settings, entries, updatedAt, refreshing, offline, isReviewDemo: reviewDemo, refresh, ensureWeek, applySettings };
 }

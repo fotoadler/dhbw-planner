@@ -25,6 +25,7 @@ import { DualisView } from './DualisView';
 import { blockKey } from './courseBlocks';
 import { shareIcs } from '../ical/export';
 import { ensurePermission } from '../notifications/scheduler';
+import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
   addDaysYmd,
   berlinDayKey,
@@ -41,7 +42,8 @@ type CalendarView = 'day' | 'week';
 type DualisPage = 'overview' | 'exams';
 
 export function App() {
-  const { settings, entries, updatedAt, refreshing, offline, refresh, ensureWeek, applySettings } =
+  const demoScreen = appStoreDemoScreen();
+  const { settings, entries, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
   const { plan: mensaPlan } = useMensa(
     settings?.mensa ?? 'ravensburg',
@@ -49,10 +51,10 @@ export function App() {
   );
   const dualis = useDualis();
 
-  const today = berlinDayKey(new Date());
-  const [section, setSection] = useState<Section>('calendar');
-  const [calendarView, setCalendarView] = useState<CalendarView>('day');
-  const [dualisPage, setDualisPage] = useState<DualisPage>('overview');
+  const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(new Date());
+  const [section, setSection] = useState<Section>(demoScreen === 'grades' ? 'dualis' : 'calendar');
+  const [calendarView, setCalendarView] = useState<CalendarView>(demoScreen === 'week' ? 'week' : 'day');
+  const [dualisPage, setDualisPage] = useState<DualisPage>(demoScreen === 'grades' ? 'exams' : 'overview');
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -127,6 +129,7 @@ export function App() {
 
   const inCalendar = section === 'calendar';
   const dualisLoggedIn = dualis.loginState === 'logged-in';
+  const showsReviewDemo = isReviewDemo || dualis.isReviewDemo;
 
   // Kopf: Titel/Untertitel je nach Bereich und Unteransicht.
   let title: string;
@@ -190,6 +193,12 @@ export function App() {
           </button>
         </div>
       </header>
+
+      {showsReviewDemo && (
+        <p className="app__review-demo" role="status">
+          App-Review-Demo · ausschließlich Beispieldaten
+        </p>
+      )}
 
       {/* Kontextueller Segment-Umschalter für die Unteransicht */}
       {inCalendar && !selectedBlock && (

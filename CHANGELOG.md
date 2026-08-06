@@ -20,7 +20,8 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 
 ### Sicherheit und Robustheit
 
-- Dualis-Session-Cookies werden nur für laufende Requests im Speicher gehalten; die automatische Capacitor-Cookie-Persistenz ist deaktiviert. Nach nativen Responses sowie beim Login und Logout wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt.
+- Dualis-Session-Cookies werden nur für laufende Requests im Speicher gehalten; die automatische Capacitor-Cookie-Persistenz ist deaktiviert. Beim Login und Logout wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt, bleibt aber während des Login-Redirects und der anschließenden authentifizierten Requests erhalten.
+- Der Dualis-Login verwendet die aktuelle CampusNet-Menükennung `000000`; dadurch und durch die erhaltene Cookie-Session werden Android-Logins nicht mehr fälschlich als abweichende Dualis-Seite erkannt.
 - Android-App-Backups sind deaktiviert, damit lokale Stundenplan-, Rapla- und Sessiondaten nicht automatisch gesichert werden.
 - Rapla-Links werden auf den unterstützten Host und Pfad begrenzt. Persönliche `user`/`file`-Links sowie öffentliche `key`/`salt`-Freigabelinks werden unterstützt.
 - Rapla-Antworten werden strukturell geprüft. Fehler- oder Loginseiten mit HTTP 200 werden nicht mehr als leere Kalenderwoche übernommen.

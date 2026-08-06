@@ -67,7 +67,10 @@ export class DualisClient {
       PRGNAME: 'LOGINCHECK',
       ARGUMENTS: 'clino,usrname,pass,menuno,menu_type,browser,platform',
       clino: '000000000000001',
-      menuno: '000324',
+      // This is the menu number submitted by the current Dualis login form.
+      // 000324 is the public Home menu and can lead to a successful-looking
+      // redirect without an authenticated student menu.
+      menuno: '000000',
       menu_type: 'classic',
       browser: '',
       platform: '',
@@ -223,10 +226,10 @@ export class DualisClient {
       }
 
       this.storeCookies(response.headers);
-      // CapacitorHttp may copy Set-Cookie into the native/WebView cookie
-      // store before returning the response. DualisClient owns the session
-      // in memory, so remove that native copy immediately after extracting it.
-      await this.clearNativeCookies();
+      // Keep the native cookie jar intact for the duration of the request
+      // sequence. Dualis uses the session cookie across the login redirect
+      // and the first authenticated page request; clearing it here can make
+      // the next request look like an unauthenticated login page.
       return response;
     } catch (error) {
       if (error instanceof DualisError) throw error;

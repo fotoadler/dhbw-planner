@@ -28,3 +28,6 @@ project(':dhbw-capacitor-course-live-activity').projectDir = new File('../plugin
 
 include ':dhbw-capacitor-embedded-mail'
 project(':dhbw-capacitor-embedded-mail').projectDir = new File('../plugins/capacitor-embedded-mail/android')
+
+include ':dhbw-capacitor-secure-storage'
+project(':dhbw-capacitor-secure-storage').projectDir = new File('../plugins/capacitor-secure-storage/android')

@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DualisClient, DualisError } from '../dualis/client';
 import { DualisCredentials, DualisDashboard, DualisExam, DualisLoginState, DualisModule } from '../dualis/types';
-import { DEFAULT_DUALIS_PREFS, DualisPrefs, loadDualisPrefs, saveDualisPrefs } from '../store/dualis';
+import {
+  clearStoredDualisCredentials,
+  DEFAULT_DUALIS_PREFS,
+  DualisPrefs,
+  loadDualisPrefs,
+  loadStoredDualisCredentials,
+  saveDualisPrefs,
+  saveStoredDualisCredentials,
+} from '../store/dualis';
 import { APP_STORE_DEMO_DUALIS, isAppStoreDemo } from '../demo/appStoreDemo';
 import { isReviewDemoCredentials } from '../demo/reviewDemo';
 import { normalizeSiteCode } from '../dhbw/siteConfiguration';
@@ -39,6 +47,13 @@ function userMessage(error: unknown): string {
   return 'Dualis ist gerade nicht erreichbar.';
 }
 
+function storedLoginMessage(error: unknown): string {
+  if (error instanceof DualisError && error.reason === 'login-failed') {
+    return 'Die gespeicherte Dualis-Anmeldung ist nicht mehr gültig. Bitte erneut anmelden.';
+  }
+  return 'Die gespeicherte Dualis-Anmeldung konnte nicht wiederhergestellt werden. Bitte später erneut versuchen.';
+}
+
 export function useDualis(site?: string) {
   // Without a guided DHBW site (e.g. manual Rapla mode), never guess a
   // Ravensburg domain. The unknown-site profile requires the full address.
@@ -58,24 +73,22 @@ export function useDualis(site?: string) {
   selectedSemesterRef.current = state.selectedSemester;
 
   const previousSiteRef = useRef(activeSite);
+  const siteChangePromiseRef = useRef(Promise.resolve());
+  const restoreAttemptRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (demo || previousSiteRef.current === activeSite) return;
     previousSiteRef.current = activeSite;
     client.setSite(activeSite);
-    void client.logout();
-    setState((current) => ({
-      ...loggedOutState(),
-      prefs: current.prefs,
-    }));
+    const logoutPromise = client.logout();
+    siteChangePromiseRef.current = logoutPromise;
+    void logoutPromise.then(() => {
+      setState((current) => ({
+        ...loggedOutState(),
+        prefs: current.prefs,
+      }));
+    });
   }, [activeSite, client, demo]);
-
-  useEffect(() => {
-    if (demo) return;
-    void (async () => {
-      const prefs = await loadDualisPrefs();
-      setState((current) => ({ ...current, prefs }));
-    })();
-  }, [demo]);
 
   const loadDashboard = useCallback(async () => {
     if (demo) return;
@@ -96,8 +109,65 @@ export function useDualis(site?: string) {
     }
   }, [demo]);
 
+  useEffect(() => {
+    if (demo) return;
+    let cancelled = false;
+
+    const restore = async () => {
+      const prefs = await loadDualisPrefs();
+      if (cancelled) return;
+      setState((current) => ({ ...current, prefs }));
+
+      if (!prefs.rememberCredentials) return;
+      const stored = await loadStoredDualisCredentials();
+      if (cancelled || !stored || stored.site !== activeSite) return;
+
+      const restoreKey = `${stored.site}:${stored.username}`;
+      if (restoreAttemptRef.current === restoreKey) return;
+      restoreAttemptRef.current = restoreKey;
+
+      await siteChangePromiseRef.current;
+      if (cancelled) return;
+
+      client.setSite(activeSite);
+      setState((current) => ({
+        ...current,
+        loginState: 'logging-in',
+        loading: true,
+        error: null,
+      }));
+
+      try {
+        await client.login({ username: stored.username, password: stored.password });
+        if (cancelled) {
+          await client.logout();
+          return;
+        }
+        setState((current) => ({ ...current, loginState: 'logged-in', loading: false }));
+        await loadDashboard();
+      } catch (error) {
+        if (error instanceof DualisError && error.reason === 'login-failed') {
+          await clearStoredDualisCredentials();
+        }
+        if (!cancelled) {
+          setState((current) => ({
+            ...current,
+            loginState: 'failed',
+            loading: false,
+            error: storedLoginMessage(error),
+          }));
+        }
+      }
+    };
+
+    void restore();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSite, client, demo, loadDashboard]);
+
   const login = useCallback(
-    async (credentials: DualisCredentials, rememberUsername: boolean) => {
+    async (credentials: DualisCredentials, rememberUsername: boolean, rememberCredentials: boolean) => {
       if (demo) return;
       if (isReviewDemoCredentials(credentials)) {
         // Kein Netzwerkzugriff und keine Persistenz: Dies sind ausschließlich
@@ -110,10 +180,19 @@ export function useDualis(site?: string) {
       setState((current) => ({ ...current, loginState: 'logging-in', loading: true, error: null }));
       try {
         await client.login(credentials);
-        const prefs = { username: credentials.username, rememberUsername };
+        const credentialsStored = rememberCredentials
+          ? await saveStoredDualisCredentials({ ...credentials, site: activeSite })
+          : (await clearStoredDualisCredentials(), true);
+        const prefs = { username: credentials.username, rememberUsername, rememberCredentials: credentialsStored };
         await saveDualisPrefs(prefs);
         setState((current) => ({ ...current, loginState: 'logged-in', prefs }));
         await loadDashboard();
+        if (rememberCredentials && !credentialsStored) {
+          setState((current) => ({
+            ...current,
+            error: 'Anmeldung erfolgreich. Das sichere Speichern ist auf diesem Gerät nicht verfügbar.',
+          }));
+        }
       } catch (error) {
         setState((current) => ({
           ...current,
@@ -134,9 +213,13 @@ export function useDualis(site?: string) {
     }
     if (demo) return;
     await client.logout();
+    await clearStoredDualisCredentials();
+    const prefs = { ...state.prefs, rememberCredentials: false };
+    await saveDualisPrefs(prefs);
     setState((current) => ({
       ...current,
       loginState: 'logged-out',
+      prefs,
       dashboard: null,
       selectedSemester: '',
       semesterModules: [],
@@ -144,7 +227,7 @@ export function useDualis(site?: string) {
       loading: false,
       error: null,
     }));
-  }, [demo, reviewDemo]);
+  }, [client, demo, reviewDemo, state.prefs]);
 
   const selectSemester = useCallback(async (name: string) => {
     if (demo) return;

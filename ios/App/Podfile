@@ -20,6 +20,7 @@ def capacitor_pods
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'
   pod 'DhbwCapacitorEmbeddedMail', :path => '../../plugins/capacitor-embedded-mail'
+  pod 'DhbwCapacitorSecureStorage', :path => '../../plugins/capacitor-secure-storage'
 end
 
 target 'App' do

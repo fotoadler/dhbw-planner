@@ -21,6 +21,8 @@ PODS:
     - Capacitor
   - DhbwCapacitorEmbeddedMail (0.1.0):
     - Capacitor
+  - DhbwCapacitorSecureStorage (0.1.0):
+    - Capacitor
   - IONFilesystemLib (1.1.2)
 
 DEPENDENCIES:
@@ -35,6 +37,7 @@ DEPENDENCIES:
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
   - DhbwCapacitorEmbeddedMail (from `../../plugins/capacitor-embedded-mail`)
+  - DhbwCapacitorSecureStorage (from `../../plugins/capacitor-secure-storage`)
 
 SPEC REPOS:
   trunk:
@@ -63,6 +66,8 @@ EXTERNAL SOURCES:
     :path: "../../plugins/capacitor-course-live-activity"
   DhbwCapacitorEmbeddedMail:
     :path: "../../plugins/capacitor-embedded-mail"
+  DhbwCapacitorSecureStorage:
+    :path: "../../plugins/capacitor-secure-storage"
 
 SPEC CHECKSUMS:
   Capacitor: 8ef25ba872436d2c5ac2a4791f7255529bdcd93b
@@ -76,8 +81,9 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
   DhbwCapacitorCourseLiveActivity: 4a6f8601a753b0afcbaf7b9783996c64802a65bd
   DhbwCapacitorEmbeddedMail: 89894d526add00b5c9d1b63d2a5a0429a29d93cc
+  DhbwCapacitorSecureStorage: ffa6b8c4ec2c6b72c410c7621b71394e6ea4cbc4
   IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
 
-PODFILE CHECKSUM: fd4f99b72ee7189774f7b80ae99ebfaea44049ca
+PODFILE CHECKSUM: cf9a25caab2883c46861c2f5580827fd795036b6
 
 COCOAPODS: 1.16.2

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DualisModule } from '../dualis/types';
 import { UseDualis } from './useDualis';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
@@ -17,6 +17,7 @@ export function DualisView({ dualis, site, page }: DualisViewProps) {
       <DualisLogin
         initialUsername={dualis.prefs.username}
         initialRememberUsername={dualis.prefs.rememberUsername}
+        initialRememberCredentials={dualis.prefs.rememberCredentials}
         usernameDescription={siteConfig.dualis.description}
         loading={dualis.loginState === 'logging-in' || dualis.loading}
         error={dualis.error}
@@ -54,15 +55,21 @@ export function DualisView({ dualis, site, page }: DualisViewProps) {
 interface LoginProps {
   initialUsername: string;
   initialRememberUsername: boolean;
+  initialRememberCredentials: boolean;
   usernameDescription: string;
   loading: boolean;
   error: string | null;
-  onLogin: (credentials: { username: string; password: string }, rememberUsername: boolean) => Promise<void>;
+  onLogin: (
+    credentials: { username: string; password: string },
+    rememberUsername: boolean,
+    rememberCredentials: boolean,
+  ) => Promise<void>;
 }
 
 function DualisLogin({
   initialUsername,
   initialRememberUsername,
+  initialRememberCredentials,
   usernameDescription,
   loading,
   error,
@@ -71,10 +78,19 @@ function DualisLogin({
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [rememberUsername, setRememberUsername] = useState(initialRememberUsername);
+  const [rememberCredentials, setRememberCredentials] = useState(initialRememberCredentials);
+
+  // Preferences werden beim App-Start asynchron geladen. So aktualisiert sich
+  // das Formular auch dann, wenn es bereits vor dem Laden gerendert wurde.
+  useEffect(() => {
+    setUsername(initialUsername);
+    setRememberUsername(initialRememberUsername);
+    setRememberCredentials(initialRememberCredentials);
+  }, [initialRememberCredentials, initialRememberUsername, initialUsername]);
 
   const submit = () => {
     if (!username.trim() || !password) return;
-    void onLogin({ username: username.trim(), password }, rememberUsername);
+    void onLogin({ username: username.trim(), password }, rememberUsername, rememberCredentials);
   };
 
   return (
@@ -118,6 +134,16 @@ function DualisLogin({
             checked={rememberUsername}
             disabled={loading}
             onChange={(event) => setRememberUsername(event.target.checked)}
+          />
+        </label>
+
+        <label className="dualis-login__check">
+          <span>Angemeldet bleiben</span>
+          <input
+            type="checkbox"
+            checked={rememberCredentials}
+            disabled={loading}
+            onChange={(event) => setRememberCredentials(event.target.checked)}
           />
         </label>
 

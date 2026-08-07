@@ -13,9 +13,9 @@ const config: CapacitorConfig = {
       iconColor: '#E2001A',
     },
     CapacitorCookies: {
-      // DualisClient verwaltet Session-Cookies bewusst nur im Speicher.
-      // Die automatische native/WebView-Persistenz darf keine Session über
-      // Logout, App-Neustart oder Geräte-Backups hinweg aufbewahren.
+      // DualisClient verwaltet Session-Cookies bewusst nur im Speicher und
+      // meldet sich nach einem Neustart mit dem Secure-Storage-Secret neu an.
+      // Der Mail-Tab nutzt dagegen seine eigene native WebView-Datenbank.
       enabled: false,
     },
     CapacitorHttp: {

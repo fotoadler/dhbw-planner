@@ -85,7 +85,7 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
 /** Ebenfalls nur Beispieldaten: keine Dualis-Informationen einer Person. */
 export const APP_STORE_DEMO_DUALIS: DualisState = {
   loginState: 'logged-in',
-  prefs: { username: '', rememberUsername: false },
+  prefs: { username: '', rememberUsername: false, rememberCredentials: false },
   dashboard: {
     summary: {
       gpaTotal: 1.8,

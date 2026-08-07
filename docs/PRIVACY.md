@@ -15,12 +15,13 @@ Die App kann lokal speichern:
 - ein lokales Dozenten-Verzeichnis mit zuletzt erfolgreich erkannten Zuordnungen, damit fehlende Dozentennamen bei späteren Abrufen best effort ergänzt werden können
 - Benachrichtigungseinstellungen
 - optional den Dualis-Benutzernamen, wenn „Benutzername merken“ aktiviert ist
+- optional die Dualis-Zugangsdaten, wenn „Angemeldet bleiben“ ausdrücklich aktiviert ist; diese liegen ausschließlich im nativen Secure Storage des Geräts
 
-Dualis-Passwörter werden nicht dauerhaft gespeichert.
+Ohne „Angemeldet bleiben“ wird das Dualis-Passwort nicht dauerhaft gespeichert. Die Mail-Zugangsdaten werden nicht von der App kopiert oder separat gespeichert; der Mail-Tab nutzt die Session-Daten der nativen WebView.
 
 Die lokale Speicherung erfolgt über die Plattform-Speichermechanismen von Capacitor Preferences. Sie ist für App-Einstellungen und Cache-Daten gedacht, ersetzt aber keine zusätzliche Ende-zu-Ende-Verschlüsselung innerhalb der App.
 
-Auf Android sind automatische App-Backups für diese lokalen Daten deaktiviert. Bei Dualis werden Session-Cookies nur für laufende Requests im Speicher gehalten; die automatische Capacitor-Cookie-Persistenz ist deaktiviert. Nach nativen Responses sowie beim Login und Abmelden wird ein nativer Cookie-Speicher zusätzlich best-effort bereinigt.
+Auf Android sind automatische App-Backups für diese lokalen Daten deaktiviert. Dualis-Zugangsdaten werden auf iOS in der Keychain und auf Android mit einem vom Android Keystore geschützten Schlüssel verschlüsselt abgelegt. Dualis-Session-Cookies werden nur für laufende Requests im Speicher gehalten; die automatische Capacitor-Cookie-Persistenz ist deaktiviert. Mail-WebView-Cookies werden dagegen über den jeweiligen nativen persistenten WebView-Speicher gehalten.
 
 ## Netzwerkzugriffe
 

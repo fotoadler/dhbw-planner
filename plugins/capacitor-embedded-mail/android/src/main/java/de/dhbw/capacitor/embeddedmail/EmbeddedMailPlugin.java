@@ -70,18 +70,32 @@ public class EmbeddedMailPlugin extends Plugin {
             if (mailWebView != null && mailWebView.getParent() instanceof ViewGroup) {
                 ((ViewGroup) mailWebView.getParent()).removeView(mailWebView);
             }
+            // WebView schreibt Cookies asynchron. Android dokumentiert flush()
+            // als explizite Sicherung in den persistenten Cookie-Speicher.
+            flushCookies();
             call.resolve();
         });
     }
 
     @Override
+    protected void handleOnPause() {
+        flushCookies();
+        super.handleOnPause();
+    }
+
+    @Override
     protected void handleOnDestroy() {
+        flushCookies();
         if (mailWebView != null) {
             mailWebView.stopLoading();
             mailWebView.destroy();
             mailWebView = null;
         }
         super.handleOnDestroy();
+    }
+
+    private void flushCookies() {
+        CookieManager.getInstance().flush();
     }
 
     private WebView createWebView() {

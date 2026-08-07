@@ -35,6 +35,8 @@ public class EmbeddedMailPlugin: CAPPlugin, CAPBridgedPlugin, WKNavigationDelega
 
             if self.mailWebView == nil {
                 let configuration = WKWebViewConfiguration()
+                // .default() persists cookies and website data across WebView
+                // instances and complete app restarts. Never use .nonPersistent().
                 configuration.websiteDataStore = .default()
                 let webView = WKWebView(frame: .zero, configuration: configuration)
                 webView.navigationDelegate = self

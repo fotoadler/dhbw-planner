@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author = 'fotoadler'
   s.source = { :path => '.' }
   s.source_files = 'ios/Sources/SecureStoragePlugin/**/*.{swift,h,m,c,cc,mm,cpp}'
-  s.ios.deployment_target = '14.0'
+  s.ios.deployment_target = '15.0'
   s.dependency 'Capacitor'
   s.frameworks = 'Security'
   s.swift_version = '5.0'

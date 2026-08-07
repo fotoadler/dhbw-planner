@@ -18,6 +18,7 @@ dependencies {
     implementation project(':capacitor-status-bar')
     implementation project(':dhbw-capacitor-course-live-activity')
     implementation project(':dhbw-capacitor-embedded-mail')
+    implementation project(':dhbw-capacitor-community-messaging')
     implementation project(':dhbw-capacitor-secure-storage')
 
 }

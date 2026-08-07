@@ -1,6 +1,6 @@
 require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
-platform :ios, '14.0'
+platform :ios, '15.0'
 use_frameworks!
 
 # workaround to avoid Xcode caching of Pods that requires
@@ -20,6 +20,7 @@ def capacitor_pods
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'
   pod 'DhbwCapacitorEmbeddedMail', :path => '../../plugins/capacitor-embedded-mail'
+  pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorSecureStorage', :path => '../../plugins/capacitor-secure-storage'
 end
 

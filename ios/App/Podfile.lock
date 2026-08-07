@@ -17,13 +17,70 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (7.0.6):
     - Capacitor
+  - DhbwCapacitorCommunityMessaging (0.1.0):
+    - Capacitor
+    - FirebaseCore (~> 11.0)
+    - FirebaseMessaging (~> 11.0)
   - DhbwCapacitorCourseLiveActivity (0.1.0):
     - Capacitor
   - DhbwCapacitorEmbeddedMail (0.1.0):
     - Capacitor
   - DhbwCapacitorSecureStorage (0.1.0):
     - Capacitor
+  - FirebaseCore (11.15.0):
+    - FirebaseCoreInternal (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Logger (~> 8.1)
+  - FirebaseCoreInternal (11.15.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.1)"
+  - FirebaseInstallations (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - PromisesObjC (~> 2.4)
+  - FirebaseMessaging (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+    - FirebaseInstallations (~> 11.0)
+    - GoogleDataTransport (~> 10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Reachability (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - nanopb (~> 3.30910.0)
+  - GoogleDataTransport (10.1.1):
+    - nanopb (~> 3.30910.0)
+    - PromisesObjC (~> 2.4)
+  - GoogleUtilities/AppDelegateSwizzler (8.1.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Environment (8.1.2):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.1.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Network (8.1.2):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Privacy
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (8.1.2)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.1.2)
+  - GoogleUtilities/Reachability (8.1.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/UserDefaults (8.1.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
   - IONFilesystemLib (1.1.2)
+  - nanopb (3.30910.0):
+    - nanopb/decode (= 3.30910.0)
+    - nanopb/encode (= 3.30910.0)
+  - nanopb/decode (3.30910.0)
+  - nanopb/encode (3.30910.0)
+  - PromisesObjC (2.4.1)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -35,13 +92,22 @@ DEPENDENCIES:
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - DhbwCapacitorCommunityMessaging (from `../../plugins/capacitor-community-messaging`)
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
   - DhbwCapacitorEmbeddedMail (from `../../plugins/capacitor-embedded-mail`)
   - DhbwCapacitorSecureStorage (from `../../plugins/capacitor-secure-storage`)
 
 SPEC REPOS:
   trunk:
+    - FirebaseCore
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - FirebaseMessaging
+    - GoogleDataTransport
+    - GoogleUtilities
     - IONFilesystemLib
+    - nanopb
+    - PromisesObjC
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -62,6 +128,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/share"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  DhbwCapacitorCommunityMessaging:
+    :path: "../../plugins/capacitor-community-messaging"
   DhbwCapacitorCourseLiveActivity:
     :path: "../../plugins/capacitor-course-live-activity"
   DhbwCapacitorEmbeddedMail:
@@ -79,11 +147,20 @@ SPEC CHECKSUMS:
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
   CapacitorShare: 25f7fc5dd0e4edbde5d6801c6de5d14a8b450a41
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
-  DhbwCapacitorCourseLiveActivity: 4a6f8601a753b0afcbaf7b9783996c64802a65bd
-  DhbwCapacitorEmbeddedMail: 89894d526add00b5c9d1b63d2a5a0429a29d93cc
-  DhbwCapacitorSecureStorage: ffa6b8c4ec2c6b72c410c7621b71394e6ea4cbc4
+  DhbwCapacitorCommunityMessaging: ba5f1d98f6423195e583f5b017d93b74248b7bcb
+  DhbwCapacitorCourseLiveActivity: 1e8360e163b9ab5c59e95d4c75111c3934c3d3e2
+  DhbwCapacitorEmbeddedMail: 76db687861342708c08840c943675e94a5601810
+  DhbwCapacitorSecureStorage: f0fdfb0914750fc61e410697dbe5074b212d3a88
+  FirebaseCore: efb3893e5b94f32b86e331e3bd6dadf18b66568e
+  FirebaseCoreInternal: 9afa45b1159304c963da48addb78275ef701c6b4
+  FirebaseInstallations: 317270fec08a5d418fdbc8429282238cab3ac843
+  FirebaseMessaging: 3b26e2cee503815e01c3701236b020aa9b576f09
+  GoogleDataTransport: a24e58982ab3ba2f64d79613e027fe7f57e88539
+  GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
+  nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
 
-PODFILE CHECKSUM: cf9a25caab2883c46861c2f5580827fd795036b6
+PODFILE CHECKSUM: 72c9d400b171986dcbfa34d7bc10ec3cbc54cc83
 
 COCOAPODS: 1.16.2

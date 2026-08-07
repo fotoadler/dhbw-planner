@@ -12,6 +12,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
@@ -48,6 +49,7 @@ export function App() {
   const demoScreen = appStoreDemoScreen();
   const { settings, entries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
+  const [systemThemeMode, setSystemThemeMode] = useState<ResolvedTheme>(() => systemTheme());
   const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
   const { plan: mensaPlan, label: mensaName } = useMensa(
     mensaTarget,
@@ -63,6 +65,18 @@ export function App() {
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => setSystemThemeMode(media.matches ? 'dark' : 'light');
+    media.addEventListener?.('change', onChange);
+    return () => media.removeEventListener?.('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    const configuredMode = settings?.themeMode ?? readThemeHint();
+    applyTheme(isThemeMode(configuredMode) ? configuredMode : 'auto', systemThemeMode);
+  }, [settings?.themeMode, systemThemeMode]);
 
   useEffect(() => {
     if (section === 'mail' && !mailProvider) setSection('calendar');

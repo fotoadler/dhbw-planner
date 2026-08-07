@@ -5,6 +5,9 @@ const config: CapacitorConfig = {
   appName: 'DHBW Planner',
   webDir: 'dist',
   plugins: {
+    StatusBar: {
+      overlaysWebView: true,
+    },
     LocalNotifications: {
       smallIcon: 'ic_stat_notify',
       iconColor: '#E2001A',

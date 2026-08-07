@@ -9,7 +9,19 @@ import UIKit
 final class ViewController: CAPBridgeViewController {
     override var prefersStatusBarHidden: Bool { false }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle { .darkContent }
+    // .default follows the current iOS interface style: dark content on a
+    // light surface and light content on a dark surface.
+    override var preferredStatusBarStyle: UIStatusBarStyle { .default }
 
     override var prefersHomeIndicatorAutoHidden: Bool { false }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        setNeedsStatusBarAppearanceUpdate()
+    }
 }

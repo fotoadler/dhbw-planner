@@ -1,16 +1,25 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getCourses, getSites, DhbwCourse, DhbwSite } from '../dhbwApi/client';
 import { ApiSelection } from '../store/preferences';
 import { LinkSetup } from './LinkSetup';
 import { RaplaConfig } from '../rapla/client';
+import { selectionHaptic } from '../lib/haptics';
 
-type Step = 'mode' | 'site' | 'degree' | 'course' | 'manual';
+type Step = 'site' | 'degree' | 'course' | 'manual';
 
 interface Props {
   initialLink?: string;
   onSaveRapla: (link: string, config: RaplaConfig) => void;
   onSaveApi: (selection: ApiSelection) => void;
 }
+
+interface Choice {
+  value: string;
+  label: string;
+  detail?: string;
+}
+
+const PICKER_ROW_HEIGHT = 96;
 
 const SITE_LABELS: Record<string, string> = {
   CAS: 'Center for Advanced Studies',
@@ -36,15 +45,132 @@ function degreeName(course: DhbwCourse): string {
   return course.degree?.name?.trim() || 'Weitere Studiengänge';
 }
 
+function PickerList({
+  choices,
+  onActiveChange,
+  disabled = false,
+}: {
+  choices: Choice[];
+  onActiveChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
+  const scrollFrameRef = useRef<number | null>(null);
+  const onActiveChangeRef = useRef(onActiveChange);
+  onActiveChangeRef.current = onActiveChange;
+
+  const updateActiveIndex = () => {
+    if (!pickerRef.current || choices.length === 0) return;
+    const nextIndex = Math.max(
+      0,
+      Math.min(choices.length - 1, Math.round(pickerRef.current.scrollTop / PICKER_ROW_HEIGHT)),
+    );
+    if (nextIndex === activeIndexRef.current) return;
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
+    onActiveChange(choices[nextIndex].value);
+    selectionHaptic();
+  };
+
+  const handleScroll = () => {
+    if (scrollFrameRef.current !== null) cancelAnimationFrame(scrollFrameRef.current);
+    scrollFrameRef.current = requestAnimationFrame(() => {
+      scrollFrameRef.current = null;
+      updateActiveIndex();
+    });
+  };
+
+  const scrollToChoice = (index: number) => {
+    pickerRef.current?.scrollTo({ top: index * PICKER_ROW_HEIGHT, behavior: 'smooth' });
+  };
+
+  useEffect(() => () => {
+    if (scrollFrameRef.current !== null) cancelAnimationFrame(scrollFrameRef.current);
+  }, []);
+
+  const firstChoiceValue = choices[0]?.value ?? '';
+  const choiceSignature = choices.map((choice) => `${choice.value}\u001f${choice.label}\u001f${choice.detail ?? ''}`).join('\u001e');
+  useEffect(() => {
+    activeIndexRef.current = 0;
+    setActiveIndex(0);
+    pickerRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    if (firstChoiceValue) onActiveChangeRef.current(firstChoiceValue);
+  }, [choiceSignature, firstChoiceValue]);
+
+  return (
+    <div className="setup__picker-shell">
+      <div className="setup__picker-fade setup__picker-fade--top" aria-hidden="true" />
+      <div className="setup__picker-fade setup__picker-fade--bottom" aria-hidden="true" />
+      <div className="setup__picker-focus" aria-hidden="true" />
+      <div
+        className="setup__picker"
+        ref={pickerRef}
+        onScroll={handleScroll}
+        aria-label="Auswahl"
+        role="listbox"
+        aria-activedescendant={`picker-option-${activeIndex}`}
+        tabIndex={0}
+      >
+        {choices.map((choice, index) => (
+          <button
+            className={`setup__picker-item${index === activeIndex ? ' is-active' : ''}`}
+            id={`picker-option-${index}`}
+            key={choice.value}
+            type="button"
+            onClick={() => scrollToChoice(index)}
+            disabled={disabled}
+            role="option"
+            aria-selected={index === activeIndex}
+          >
+            <span className="setup__picker-copy">
+              <span className="setup__picker-label">{choice.label}</span>
+              {choice.detail && <span className="setup__picker-detail">{choice.detail}</span>}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PickerFooter({
+  step,
+  disabled,
+  onConfirm,
+  onManual,
+}: {
+  step: Step;
+  disabled: boolean;
+  onConfirm: () => void;
+  onManual: () => void;
+}) {
+  return (
+    <footer className="setup__footer">
+      <button className="setup__confirm" type="button" onClick={onConfirm} disabled={disabled}>
+        {step === 'course' ? 'Kurs auswählen' : 'Weiter'}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+      {step === 'site' && (
+        <button className="setup__manual-link" type="button" onClick={onManual}>
+          Rapla-Link verwenden
+        </button>
+      )}
+    </footer>
+  );
+}
+
 export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props) {
-  const [step, setStep] = useState<Step>('mode');
+  const [step, setStep] = useState<Step>('site');
   const [sites, setSites] = useState<DhbwSite[]>([]);
   const [courses, setCourses] = useState<DhbwCourse[]>([]);
   const [site, setSite] = useState('');
   const [degree, setDegree] = useState('');
-  const [course, setCourse] = useState('');
+  const [activeChoice, setActiveChoice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const didLoadSites = useRef(false);
 
   const loadSites = useCallback(async () => {
     setLoading(true);
@@ -55,11 +181,18 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
         .sort((a, b) => siteLabel(a).localeCompare(siteLabel(b), 'de'));
       setSites(available);
     } catch {
-      setError('Die Standorte konnten gerade nicht geladen werden. Du kannst alternativ den Rapla-Link verwenden.');
+      setError('Standorte konnten nicht geladen werden.');
     } finally {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!didLoadSites.current) {
+      didLoadSites.current = true;
+      void loadSites();
+    }
+  }, [loadSites]);
 
   const degrees = useMemo(
     () => [...new Set(courses.map(degreeName))].sort((a, b) => a.localeCompare(b, 'de')),
@@ -72,146 +205,108 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
   );
 
   const chooseSite = async (nextSite: string) => {
+    if (loading) return;
     setSite(nextSite);
     setDegree('');
-    setCourse('');
-    if (!nextSite) {
-      setCourses([]);
-      return;
-    }
-    setLoading(true);
+    setCourses([]);
     setError(null);
+    setStep('degree');
+    setLoading(true);
     try {
       setCourses(await getCourses(nextSite));
-      setStep('degree');
     } catch {
-      setCourses([]);
-      setError('Die Studiengänge konnten gerade nicht geladen werden. Bitte versuche es erneut oder nutze den Rapla-Link.');
+      setError('Studiengänge konnten nicht geladen werden.');
     } finally {
       setLoading(false);
     }
   };
 
-  const chooseDegree = (nextDegree: string) => {
-    setDegree(nextDegree);
-    setCourse('');
-    if (nextDegree) setStep('course');
-  };
-
-  const chooseCourse = (nextCourse: string) => {
-    setCourse(nextCourse);
-    if (nextCourse) {
-      onSaveApi({ site, course: nextCourse, degree });
+  const confirmCurrentChoice = (value: string) => {
+    if (loading || !value) return;
+    selectionHaptic();
+    if (step === 'site') {
+      void chooseSite(value);
+    } else if (step === 'degree') {
+      setDegree(value);
+      setStep('course');
+    } else {
+      onSaveApi({ site, course: value, degree });
     }
   };
 
-  const startGuidedMode = async () => {
-    setStep('site');
-    if (sites.length === 0) await loadSites();
-  };
-
-  const guidedStepNumber = step === 'site' ? 1 : step === 'degree' ? 2 : 3;
   const goBack = () => {
-    if (step === 'site') setStep('mode');
-    else if (step === 'degree') setStep('site');
-    else setStep('degree');
+    selectionHaptic();
+    setError(null);
+    if (step === 'degree') setStep('site');
+    if (step === 'course') setStep('degree');
   };
 
   if (step === 'manual') {
-    return <LinkSetup initialLink={initialLink} onSave={onSaveRapla} onBack={() => setStep('mode')} />;
+    return <LinkSetup initialLink={initialLink} onSave={onSaveRapla} onBack={() => { setError(null); setStep('site'); }} />;
   }
 
+  const stepNumber = step === 'site' ? 1 : step === 'degree' ? 2 : 3;
+  const selectedSite = sites.find((item) => item.site === site);
+  const context = step === 'degree' ? (selectedSite ? siteLabel(selectedSite) : site) : degree;
+  const choices: Choice[] =
+    step === 'site'
+      ? sites.map((item) => ({ value: item.site, label: siteLabel(item), detail: item.site }))
+      : step === 'degree'
+        ? degrees.map((item) => ({ value: item, label: item }))
+        : visibleCourses.map((item) => ({ value: item.name, label: item.name }));
+
   return (
-    <div className="setup">
-      <p className="setup__eyebrow">DHBW Plan</p>
-      <h1 className="setup__title">
-        {step === 'mode' ? 'Stundenplan einrichten' : step === 'site' ? 'Standort auswählen' : step === 'degree' ? 'Studienfach auswählen' : 'Kurs auswählen'}
-      </h1>
-
-      {step === 'mode' ? (
-        <>
-          <p className="setup__hint">Wähle, wie du deinen Stundenplan verbinden möchtest.</p>
-          <div className="setup__choices">
-            <button className="setup__choice setup__choice--recommended" onClick={() => void startGuidedMode()}>
-              <span className="setup__choice-title">Geführter Modus <small>Empfohlen</small></span>
-              <span className="setup__choice-text">Standort, Studiengang und Kurs auswählen — ganz ohne Rapla-Link.</span>
-            </button>
-            <button className="setup__choice" onClick={() => setStep('manual')}>
-              <span className="setup__choice-title">Manueller Modus <small>Rapla</small></span>
-              <span className="setup__choice-text">Deinen vorhandenen Rapla-Link einfügen und direkt loslegen.</span>
-            </button>
-          </div>
-          {error && <p className="setup__error">{error}</p>}
-        </>
-      ) : (
-        <div className="setup__stage" key={step}>
-          <div className="setup__progress" aria-label={`Schritt ${guidedStepNumber} von 3`}>
-            <span className="is-active">{guidedStepNumber}</span><i /><span>{guidedStepNumber < 3 ? guidedStepNumber + 1 : '✓'}</span>
-          </div>
-          <button className="setup__back" onClick={goBack}>
-            ← Zurück
+    <main className="setup setup--guided">
+      <div className="setup__top">
+        <div className="setup__brandline"><span className="setup__step">Schritt {stepNumber} von 3</span></div>
+        {step !== 'site' && (
+          <button className="setup__back" type="button" onClick={goBack}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            Zurück
           </button>
-          <p className="setup__hint">
-            {step === 'site' && 'Wähle zuerst deinen DHBW-Standort.'}
-            {step === 'degree' && `Studiengänge in ${SITE_LABELS[site] ?? site}`}
-            {step === 'course' && `${degree} — jetzt deinen Kurs auswählen.`}
-          </p>
-
-          {step === 'site' && (
-            <label className="setup__field">
-              <span>Standort</span>
-              <select className="setup__select" value={site} onChange={(event) => void chooseSite(event.target.value)} disabled={loading}>
-                <option value="">Standort auswählen …</option>
-                {sites.map((item) => (
-                  <option key={item.site} value={item.site}>{siteLabel(item)}</option>
-                ))}
-              </select>
-            </label>
-          )}
-          {step === 'site' && site && !loading && courses.length > 0 && (
-            <button className="setup__continue" onClick={() => setStep('degree')}>
-              Standort übernehmen <span>→</span>
-            </button>
-          )}
-
-          {step === 'degree' && (
-            <label className="setup__field">
-              <span>Studienfach</span>
-              <select className="setup__select" value={degree} onChange={(event) => chooseDegree(event.target.value)} disabled={loading}>
-                <option value="">Studienfach auswählen …</option>
-                {degrees.map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
-            </label>
-          )}
-          {step === 'degree' && degree && !loading && visibleCourses.length > 0 && (
-            <button className="setup__continue" onClick={() => setStep('course')}>
-              Studienfach übernehmen <span>→</span>
-            </button>
-          )}
-
-          {step === 'course' && (
-            <label className="setup__field">
-              <span>Kurs</span>
-              <select className="setup__select" value={course} onChange={(event) => chooseCourse(event.target.value)} disabled={loading}>
-                <option value="">Kurs auswählen …</option>
-                {visibleCourses.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}
-              </select>
-            </label>
-          )}
-
-          {loading && <p className="setup__status">Lade Auswahl …</p>}
-          {error && <p className="setup__error">{error}</p>}
-          {step === 'site' && !loading && sites.length === 0 && (
-            <button className="setup__secondary" onClick={() => setStep('manual')}>Rapla-Link manuell einfügen</button>
-          )}
-          {step === 'degree' && !loading && degrees.length === 0 && (
-            <p className="setup__status">Für diesen Standort sind derzeit keine Studiengänge verfügbar.</p>
-          )}
-          {step === 'course' && !loading && visibleCourses.length === 0 && (
-            <p className="setup__status">Für diesen Studiengang sind derzeit keine Kurse verfügbar.</p>
-          )}
+        )}
+        {context && <p className="setup__context">{context}</p>}
+        <h1 className="setup__title">
+          {step === 'site' && 'Wo studierst du?'}
+          {step === 'degree' && 'Studiengang'}
+          {step === 'course' && 'Kurs'}
+        </h1>
+        <div className="setup__progress" aria-label={`Schritt ${stepNumber} von 3`}>
+          {[1, 2, 3].map((item) => <span className={item <= stepNumber ? 'is-active' : ''} key={item} />)}
         </div>
+      </div>
+
+      <section className="setup__content" aria-live="polite">
+        {loading && choices.length === 0 ? (
+          <div className="setup__loading">
+            <span className="setup__spinner" aria-hidden="true" />
+            <span>{step === 'site' ? 'Standorte' : step === 'degree' ? 'Studiengänge' : 'Kurse'} werden geladen</span>
+          </div>
+        ) : choices.length > 0 ? (
+          <PickerList
+            key={`${step}-${choices.length}-${choices[0]?.value ?? ''}`}
+            choices={choices}
+            onActiveChange={setActiveChoice}
+            disabled={loading}
+          />
+        ) : (
+          <div className="setup__empty">
+            <p>{error ?? 'Keine Auswahl verfügbar.'}</p>
+            {step === 'site' && <button type="button" onClick={() => void loadSites()}>Erneut laden</button>}
+            {step === 'degree' && <button type="button" onClick={() => void chooseSite(site)}>Erneut laden</button>}
+          </div>
+        )}
+        {error && choices.length > 0 && <p className="setup__error" role="alert">{error}</p>}
+      </section>
+
+      {choices.length > 0 && (
+        <PickerFooter
+          step={step}
+          disabled={loading}
+          onConfirm={() => confirmCurrentChoice(activeChoice || choices[0]?.value || '')}
+          onManual={() => setStep('manual')}
+        />
       )}
-    </div>
+    </main>
   );
 }

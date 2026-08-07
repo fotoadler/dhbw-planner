@@ -9,6 +9,7 @@ import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
+import { isThemeMode, type ThemeMode } from '../lib/theme';
 
 interface Props {
   settings: AppSettings;
@@ -57,6 +58,28 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
             ✕
           </button>
         </header>
+
+        <section className="sheet__section">
+          <div className="sheet__row">
+            <div>
+              <span>Darstellung</span>
+              <p className="sheet__note">Automatisch folgt der Systemeinstellung.</p>
+            </div>
+            <select
+              className="sheet__theme-select"
+              value={settings.themeMode}
+              aria-label="Darstellung auswählen"
+              onChange={(event) => {
+                const value = event.target.value;
+                if (isThemeMode(value)) set({ themeMode: value as ThemeMode });
+              }}
+            >
+              <option value="auto">Automatisch</option>
+              <option value="light">Hell</option>
+              <option value="dark">Dunkel</option>
+            </select>
+          </div>
+        </section>
 
         <section className="sheet__section">
           <div className="sheet__row">

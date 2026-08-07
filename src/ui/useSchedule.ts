@@ -323,7 +323,17 @@ export function useSchedule() {
   /** Persistiert Einstellungen; bei neuem Provider/Kurs wird der Plan neu geladen. */
   const applySettings = useCallback(
     async (next: AppSettings): Promise<void> => {
-      if (isAppStoreDemo()) return;
+      if (isAppStoreDemo()) {
+        // Store-Aufnahmen bleiben datenseitig unverändert, dürfen aber den
+        // Theme-Umschalter genauso wie die echte App demonstrieren.
+        const current = settingsRef.current;
+        if (current && current.themeMode !== next.themeMode) {
+          const demoSettings = { ...current, themeMode: next.themeMode };
+          setSettings(demoSettings);
+          settingsRef.current = demoSettings;
+        }
+        return;
+      }
       if (isReviewDemoRaplaLink(next.raplaLink)) {
         // Der Review-Link ist ein lokaler Schalter: keine Speicherung,
         // keine Benachrichtigungen und kein Abruf eines externen Systems.

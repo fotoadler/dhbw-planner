@@ -25,8 +25,8 @@ export function LinkSetup({ initialLink = '', onSave, onBack }: Props) {
 
   return (
     <div className="setup">
-      {onBack && <button className="setup__back" onClick={onBack}>← Zurück zur Auswahl</button>}
-      <h1 className="setup__title">DHBW Plan</h1>
+      {onBack && <button className="setup__back" type="button" onClick={onBack}>← Zurück zur Auswahl</button>}
+      <h1 className="setup__title">Rapla-Link</h1>
       <p className="setup__hint">Füge deinen Rapla-Link ein, um deinen Stundenplan zu sehen.</p>
       <input
         className="setup__input"
@@ -47,7 +47,7 @@ export function LinkSetup({ initialLink = '', onSave, onBack }: Props) {
 
       <p className="setup__status">Den Link findest du in Rapla unter „Kalender abonnieren“ bzw. „Kalender-Link“. Der geführte Modus ist auch ohne diesen Link möglich.</p>
 
-      <button className="setup__button" onClick={submit} disabled={!link.trim()}>
+      <button className="setup__button" type="button" onClick={submit} disabled={!link.trim()}>
         Stundenplan laden
       </button>
     </div>

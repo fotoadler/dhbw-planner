@@ -10,14 +10,14 @@ import { Preferences } from '@capacitor/preferences';
 import { deserializeEntry, ScheduleEntry, SerializedEntry, serializeEntry } from '../types';
 import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
 import { Mensa, MensaPlan, mensaSiteCode } from '../seezeit/types';
+import { isThemeMode, type ThemeMode } from '../lib/theme';
 
-const SETTINGS_KEY = 'settings.v3';
-const PREVIOUS_SETTINGS_KEY = 'settings.v2';
-const LEGACY_SETTINGS_KEY = 'settings.v1';
+const SETTINGS_KEY = 'settings.v4';
+const SETTINGS_FALLBACK_KEYS = ['settings.v3', 'settings.v2', 'settings.v1'];
 const CACHE_KEY = 'cache.v2';
 const LEGACY_CACHE_KEY = 'cache.v1';
 const MENSA_CACHE_KEY = 'mensa.v1';
-const STORAGE_VERSION = 3;
+const STORAGE_VERSION = 4;
 
 export type ScheduleSource = 'rapla' | 'dhbw-api';
 
@@ -48,6 +48,8 @@ export interface AppSettings {
   mensaAuto: boolean;
   /** Titel der Module, die aus dem sichtbaren Stundenplan ausgeblendet werden. */
   hiddenModules: string[];
+  /** Darstellung: Systemvorgabe oder manuell hell/dunkel. */
+  themeMode: ThemeMode;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -64,6 +66,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   mensa: 'RV',
   mensaAuto: false,
   hiddenModules: [],
+  themeMode: 'auto',
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -125,7 +128,7 @@ function defaultSettings(): AppSettings {
 
 function parseSettings(raw: unknown): AppSettings {
   const data =
-    isRecord(raw) && (raw.version === STORAGE_VERSION || raw.version === 2) && isRecord(raw.data)
+    isRecord(raw) && [STORAGE_VERSION, 3, 2].includes(raw.version as number) && isRecord(raw.data)
       ? raw.data
       : isRecord(raw) && 'version' in raw
         ? null
@@ -159,15 +162,20 @@ function parseSettings(raw: unknown): AppSettings {
     mensa: mensaSiteCode(configuredMensa),
     mensaAuto: typeof data.mensaAuto === 'boolean' ? data.mensaAuto : DEFAULT_SETTINGS.mensaAuto,
     hiddenModules: parseHiddenModules(data.hiddenModules),
+    themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
   };
 }
 
 export async function loadSettings(): Promise<AppSettings> {
   try {
-    const current = await Preferences.get({ key: SETTINGS_KEY });
-    const previous = current.value ? null : await Preferences.get({ key: PREVIOUS_SETTINGS_KEY });
-    const legacy = current.value || previous?.value ? null : await Preferences.get({ key: LEGACY_SETTINGS_KEY });
-    const value = current.value ?? previous?.value ?? legacy?.value;
+    let value: string | null = null;
+    for (const key of [SETTINGS_KEY, ...SETTINGS_FALLBACK_KEYS]) {
+      const result = await Preferences.get({ key });
+      if (result.value) {
+        value = result.value;
+        break;
+      }
+    }
     if (!value) return defaultSettings();
     return parseSettings(JSON.parse(value) as unknown);
   } catch {

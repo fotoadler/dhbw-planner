@@ -13,8 +13,8 @@ struct CourseLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CourseLectureAttributes.self) { context in
             CourseLiveLockScreenView(state: context.state, isStale: activityIsStale(context))
-                .activityBackgroundTint(Color(red: 0.08, green: 0.09, blue: 0.11))
-                .activitySystemActionForegroundColor(.white)
+                .activityBackgroundTint(Color(uiColor: .systemBackground))
+                .activitySystemActionForegroundColor(.primary)
         } dynamicIsland: { context in
             let isStale = activityIsStale(context)
             return DynamicIsland {
@@ -22,7 +22,7 @@ struct CourseLiveActivityWidget: Widget {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(context.state.title)
                             .font(.headline)
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Color.primary)
                             .lineLimit(2)
                             .minimumScaleFactor(0.8)
                     }
@@ -31,11 +31,11 @@ struct CourseLiveActivityWidget: Widget {
                     if isStale {
                         Text("Beendet")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.white.opacity(0.72))
+                            .foregroundStyle(Color.secondary)
                     } else {
                         Text("Endet \(context.state.endTime, style: .time)")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.white.opacity(0.8))
+                            .foregroundStyle(Color.secondary)
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
@@ -43,13 +43,13 @@ struct CourseLiveActivityWidget: Widget {
                         if isStale {
                             Label("Vorlesung beendet", systemImage: "checkmark.circle")
                                 .font(.caption)
-                                .foregroundStyle(Color.white.opacity(0.76))
+                                .foregroundStyle(Color.secondary)
                         } else {
                             CourseLiveProgressView(state: context.state)
                             if !context.state.room.isEmpty {
                                 Label(context.state.room, systemImage: "mappin.and.ellipse")
                                     .font(.caption)
-                                    .foregroundStyle(Color.white.opacity(0.76))
+                                    .foregroundStyle(Color.secondary)
                                     .lineLimit(1)
                             }
                             if !context.state.nextTitle.isEmpty, let nextStartTime = context.state.nextStartTime {
@@ -60,7 +60,7 @@ struct CourseLiveActivityWidget: Widget {
                                     Image(systemName: "arrow.right.circle.fill")
                                 }
                                 .font(.caption)
-                                .foregroundStyle(Color.white.opacity(0.76))
+                                .foregroundStyle(Color.secondary)
                             }
                         }
                     }
@@ -113,14 +113,14 @@ struct CourseLiveLockScreenView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(state.title)
                 .font(.headline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.primary)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
 
             if isStale {
                 Label("Vorlesung beendet", systemImage: "checkmark.circle")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(Color.secondary)
             } else {
                 HStack(alignment: .firstTextBaseline) {
                     Spacer(minLength: 12)
@@ -145,12 +145,12 @@ struct CourseLiveLockScreenView: View {
                 }
             }
             .font(.caption)
-            .foregroundStyle(.white.opacity(0.76))
+            .foregroundStyle(Color.secondary)
 
             if !state.lecturer.isEmpty {
                 Label(state.lecturer, systemImage: "person")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.76))
+                    .foregroundStyle(Color.secondary)
                     .lineLimit(1)
             }
         }

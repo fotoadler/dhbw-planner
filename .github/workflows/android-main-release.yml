@@ -1,0 +1,114 @@
+name: Android main beta
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-main-beta
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    name: Build and publish signed APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build web application and sync Android
+        run: npm run build && npx cap sync android
+
+      - name: Restore Android signing files
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/ci-release.jks
+          {
+            printf 'storeFile=../ci-release.jks\n'
+            printf 'storePassword=%s\n' "$ANDROID_KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$ANDROID_KEY_PASSWORD"
+          } > android/release-signing.properties
+
+      - name: Build signed release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Prepare release files
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk dhbw-planner-main.apk
+          sha256sum dhbw-planner-main.apk > dhbw-planner-main.apk.sha256
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dhbw-planner-main-${{ github.sha }}
+          path: |
+            dhbw-planner-main.apk
+            dhbw-planner-main.apk.sha256
+          if-no-files-found: error
+
+      - name: Publish rolling main beta release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          release_notes="Automatisch aus main gebaut. Commit: ${GITHUB_SHA}. Diese Vorabversion kann instabil sein."
+
+          if gh release view main-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh api \
+              --method PATCH \
+              "repos/${GITHUB_REPOSITORY}/git/refs/tags/main-latest" \
+              -f sha="$GITHUB_SHA" \
+              -F force=true >/dev/null
+            gh release upload main-latest \
+              dhbw-planner-main.apk \
+              dhbw-planner-main.apk.sha256 \
+              --clobber \
+              --repo "$GITHUB_REPOSITORY"
+            gh release edit main-latest \
+              --title "DHBW Planner – aktuelle Main-Beta" \
+              --notes "$release_notes" \
+              --prerelease \
+              --latest=false \
+              --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create main-latest \
+              dhbw-planner-main.apk \
+              dhbw-planner-main.apk.sha256 \
+              --target "$GITHUB_SHA" \
+              --title "DHBW Planner – aktuelle Main-Beta" \
+              --notes "$release_notes" \
+              --prerelease \
+              --repo "$GITHUB_REPOSITORY"
+          fi

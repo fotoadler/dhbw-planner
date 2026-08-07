@@ -67,4 +67,19 @@ describe('syncCourseLiveActivity platform lifecycle', () => {
     expect(mocks.schedule).toHaveBeenCalledOnce();
     expect(mocks.endAll).not.toHaveBeenCalled();
   });
+
+  it('falls back to the live boundary sync on older iOS versions', async () => {
+    mocks.platform = 'ios';
+    mocks.schedule.mockResolvedValueOnce({ scheduled: false });
+
+    await syncCourseLiveActivity(
+      [entry('Nächste Vorlesung', '2026-07-14T11:00:00.000Z', '2026-07-14T12:30:00.000Z')],
+      settings,
+      new Date('2026-07-14T10:00:00.000Z'),
+    );
+
+    expect(mocks.schedule).toHaveBeenCalledOnce();
+    expect(mocks.endAll).toHaveBeenCalledOnce();
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
 });

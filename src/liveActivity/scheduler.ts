@@ -77,11 +77,16 @@ export async function syncCourseLiveActivity(
         // On iOS 26 this is an ActivityKit-scheduled start, which the system
         // executes even when the JavaScript app is suspended at course start.
         try {
-          await CourseLiveActivity.schedule(payload(upcoming));
+          const result = await CourseLiveActivity.schedule(payload(upcoming));
+          // ActivityKit's future-start API is only available on iOS 26.
+          // Older iOS versions return to the normal boundary/resume fallback
+          // so they can still start the activity once the course is live.
+          if (result?.scheduled !== false) return;
         } catch (err) {
           await CourseLiveActivity.endAll();
           throw err;
         }
+        await CourseLiveActivity.endAll();
         return;
       }
 

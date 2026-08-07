@@ -8,7 +8,7 @@ const CourseLiveActivity = core.registerPlugin('CourseLiveActivity', {
       }
       async start() {}
       async update() {}
-      async schedule() {}
+      async schedule() { return { scheduled: false }; }
       async end() {}
       async endAll() {}
     },

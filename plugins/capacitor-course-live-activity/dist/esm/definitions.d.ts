@@ -15,11 +15,15 @@ export interface CourseLiveActivityAvailability {
   reason?: string;
 }
 
+export interface CourseLiveActivityScheduleResult {
+  scheduled: boolean;
+}
+
 export interface CourseLiveActivityPlugin {
   isAvailable(): Promise<CourseLiveActivityAvailability>;
   start(options: CourseLiveActivityPayload): Promise<void>;
   update(options: CourseLiveActivityPayload): Promise<void>;
-  schedule(options: CourseLiveActivityPayload): Promise<void>;
+  schedule(options: CourseLiveActivityPayload): Promise<CourseLiveActivityScheduleResult>;
   end(options: { id: string }): Promise<void>;
   endAll(): Promise<void>;
 }

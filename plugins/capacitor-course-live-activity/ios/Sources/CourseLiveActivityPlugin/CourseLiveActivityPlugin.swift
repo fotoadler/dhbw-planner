@@ -310,7 +310,7 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         guard #available(iOS 26.0, *) else {
             // The JavaScript boundary timer remains the compatibility path on
             // earlier iOS versions.
-            call.resolve()
+            call.resolve(["scheduled": false])
             return
         }
 
@@ -328,13 +328,13 @@ public class CourseLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         Task {
             do {
                 try await controller.schedule(id: payload.id, state: payload.state)
-                call.resolve()
+                call.resolve(["scheduled": true])
             } catch {
                 call.reject("Unable to schedule Live Activity", nil, error)
             }
         }
         #else
-        call.resolve()
+        call.resolve(["scheduled": false])
         #endif
     }
 

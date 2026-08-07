@@ -2,6 +2,19 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Fehlerbehebungen
+
+- Android startet im Dark Mode wieder. `values-night/styles.xml` definierte `AppTheme`, `AppTheme.NoActionBar` und `AppTheme.NoActionBarLaunch` ohne `parent`; da Ressourcen-Qualifier einen Style vollständig ersetzen statt ihn zu ergänzen, verloren die Themes im Dark Mode ihre Abstammung von `Theme.AppCompat` und die App stürzte bei jedem Start mit `IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.` ab. Im hellen Design trat der Fehler nicht auf.
+- Der System-Zurück-Button funktioniert unter Android wieder. `@capacitor/app` registriert beim Start einen aktiven `OnBackPressedCallback`, der ohne `backButton`-Listener nur `webView.goBack()` aufruft. Da die Navigation reiner React-State ohne History ist, wurde jeder Zurück-Druck wirkungslos verschluckt — weder eine Ebene zurück noch das Verlassen der App war möglich. Ein Zurück-Druck baut jetzt eine sichtbare Ebene ab: Einstellungen, Kursdetail, Bereich, Dualis-Unterseite, Wochenansicht, danach wird die App beendet.
+
+### Entwicklung
+
+- Die Zurück-Navigation liegt als reine Funktion in `src/ui/backNavigation.ts` und ist über `tests/backNavigation.test.ts` abgedeckt; `src/ui/useBackButton.ts` bleibt ein dünner Wrapper um das Plugin.
+- `tests/androidThemes.test.ts` prüft, dass jeder Style in `values-night/styles.xml` denselben `parent` trägt wie seine Tag-Variante. Der Fehler war rein deklarativ und wurde weder vom TypeScript-Compiler noch von `lintVitalRelease` erkannt.
+- Bekannte Schwachstellen der Build-Toolchain über `npm audit fix` behoben (nur `package-lock.json`, keine Laufzeitabhängigkeiten der App).
+
 ## 1.2.0 - 2026-08-06
 
 ### Funktionen und Darstellung

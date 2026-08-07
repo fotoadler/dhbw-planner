@@ -13,6 +13,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
+import { useBackButton } from './useBackButton';
+import { CalendarView, DualisPage, resolveBackAction, Section } from './backNavigation';
 import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
@@ -41,10 +43,6 @@ import {
   parseYmdKey,
   ymdKey,
 } from '../lib/berlinTime';
-
-type Section = 'calendar' | 'dualis' | 'mail';
-type CalendarView = 'day' | 'week';
-type DualisPage = 'overview' | 'exams';
 
 export function App() {
   const demoScreen = appStoreDemoScreen();
@@ -84,6 +82,37 @@ export function App() {
   useEffect(() => {
     if (section === 'mail' && !showMailTab) setSection('calendar');
   }, [section, showMailTab]);
+
+  // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
+  useBackButton(() => {
+    const action = resolveBackAction({
+      showSettings,
+      selectedBlockKey,
+      section,
+      calendarView,
+      dualisPage,
+      dualisLoggedIn: dualis.loginState === 'logged-in',
+    });
+    switch (action) {
+      case 'close-settings':
+        setShowSettings(false);
+        return true;
+      case 'close-course':
+        setSelectedBlockKey(null);
+        return true;
+      case 'to-calendar':
+        setSection('calendar');
+        return true;
+      case 'to-dualis-overview':
+        setDualisPage('overview');
+        return true;
+      case 'to-calendar-day':
+        setCalendarView('day');
+        return true;
+      case 'exit-app':
+        return false;
+    }
+  });
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));

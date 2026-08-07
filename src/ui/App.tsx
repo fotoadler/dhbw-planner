@@ -26,6 +26,7 @@ import { SettingsSheet } from './SettingsSheet';
 import { DualisView } from './DualisView';
 import { MailView } from './MailView';
 import { mailProviderForSite } from '../mail/providers';
+import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
 import { shareIcs } from '../ical/export';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
@@ -55,7 +56,7 @@ export function App() {
     mensaTarget,
     (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
-  const dualis = useDualis();
+  const dualis = useDualis(settings?.apiSelection?.site);
 
   const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(new Date());
   const [section, setSection] = useState<Section>(demoScreen === 'grades' ? 'dualis' : 'calendar');
@@ -65,6 +66,8 @@ export function App() {
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
+  const siteConfig = siteConfigurationFor(settings?.apiSelection?.site);
+  const showMailTab = Boolean(settings?.apiSelection?.site);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -79,8 +82,8 @@ export function App() {
   }, [settings?.themeMode, systemThemeMode]);
 
   useEffect(() => {
-    if (section === 'mail' && !mailProvider) setSection('calendar');
-  }, [mailProvider, section]);
+    if (section === 'mail' && !showMailTab) setSection('calendar');
+  }, [section, showMailTab]);
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
@@ -323,7 +326,7 @@ export function App() {
           onSwipeWeek={(delta) => selectDay(ymdKey(addDaysYmd(parseYmdKey(monday), delta * 7)))}
         />
       ) : (
-        <DualisView dualis={dualis} page={dualisPage} />
+        <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
       )}
 
       {/* Feste Bereichsnavigation unten */}
@@ -346,11 +349,11 @@ export function App() {
           </svg>
           <span>Dualis</span>
         </button>
-        {mailProvider && (
+        {showMailTab && (
           <button
             className={`tabbar__item${inMail ? ' is-active' : ''}`}
             onClick={() => setSection('mail')}
-            aria-label={`${mailProvider.label} Uni-Mail`}
+            aria-label={`${mailProvider?.label ?? siteConfig.label} Uni-Mail`}
           >
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" />

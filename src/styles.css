@@ -1794,6 +1794,16 @@ option {
   text-align: center;
 }
 
+.sheet__feedback {
+  margin-top: 12px;
+}
+
+.sheet__feedback-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
 /* --- Feste Bereichsnavigation unten (Kalender / Dualis) --- */
 
 .tabbar {
@@ -1850,6 +1860,22 @@ option {
 
 .mailview__open:visited {
   color: var(--on-accent);
+}
+
+.mailview__fallbacklink {
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.mailview__fallbacklink:visited {
+  color: var(--accent);
+}
+
+.mailview__note {
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 /* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */

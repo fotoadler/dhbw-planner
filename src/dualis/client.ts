@@ -21,6 +21,7 @@ import {
   DualisSemester,
   DualisSessionUrls,
 } from './types';
+import { dualisUsernameFor, siteConfigurationFor, normalizeSiteCode } from '../dhbw/siteConfiguration';
 
 interface HttpResponse {
   status: number;
@@ -42,17 +43,24 @@ export class DualisClient {
   private credentials: DualisCredentials | null = null;
   private urls: DualisSessionUrls = { semesters: {} };
   private accessToken: string | null = null;
+  private site: string;
+
+  constructor(site?: string) {
+    this.site = site === undefined ? 'RV' : normalizeSiteCode(site);
+  }
+
+  setSite(site: string | undefined): void {
+    this.site = site === undefined ? 'RV' : normalizeSiteCode(site);
+  }
 
   get isLoggedIn(): boolean {
     return Boolean(this.credentials && this.urls.main && this.accessToken);
   }
 
   async login(credentials: DualisCredentials): Promise<void> {
-    // Dualis Ravensburg expects the complete student address. Accepting the
-    // short account name here avoids a very common, otherwise opaque failure.
     const normalizedCredentials = {
       ...credentials,
-      username: normalizeDualisUsername(credentials.username),
+      username: normalizeDualisUsername(credentials.username, this.site),
     };
     this.credentials = normalizedCredentials;
     this.cookies.clear();
@@ -87,7 +95,7 @@ export class DualisClient {
       extractRefreshUrl(header(loginResponse.headers, 'refresh')) ?? extractRedirectUrl(loginResponse.data);
     if (!redirectUrl) {
       throw new DualisError(
-        'Anmeldung abgelehnt. Für Ravensburg bitte den vollständigen Dualis-Benutzernamen verwenden.',
+        `Anmeldung abgelehnt. ${siteConfigurationFor(this.site).dualis.description}`,
         'login-failed',
       );
     }
@@ -296,9 +304,8 @@ export class DualisClient {
   }
 }
 
-export function normalizeDualisUsername(username: string): string {
-  const value = username.trim();
-  return value.includes('@') ? value : `${value}@stud.dhbw-ravensburg.de`;
+export function normalizeDualisUsername(username: string, site = 'RV'): string {
+  return dualisUsernameFor(username, site);
 }
 
 /**

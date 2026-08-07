@@ -48,6 +48,11 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
   };
 
   const set = (patch: Partial<AppSettings>) => onChange({ ...settings, ...patch });
+  const feedbackHref = `mailto:christian@fotoadler.com?subject=${encodeURIComponent(
+    'DHBW Planner – App-Feedback',
+  )}&body=${encodeURIComponent(
+    'Hallo Christian,\n\nmein Feedback zur DHBW Planner App:\n\n',
+  )}`;
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -281,6 +286,14 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
             {updatedAt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', dateStyle: 'short', timeStyle: 'short' })}
           </p>
         )}
+
+        <section className="sheet__section sheet__feedback">
+          <span>App-Feedback</span>
+          <p className="sheet__note">Ideen, Fehler oder Hinweise direkt an den Entwickler senden.</p>
+          <a className="setup__button sheet__feedback-button" href={feedbackHref}>
+            Feedback senden <span aria-hidden="true">✉</span>
+          </a>
+        </section>
       </div>
     </div>
   );

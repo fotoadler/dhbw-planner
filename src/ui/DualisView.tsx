@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { DualisModule } from '../dualis/types';
 import { UseDualis } from './useDualis';
+import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 
 interface DualisViewProps {
   dualis: UseDualis;
+  site?: string;
   /** Unteransicht wird in App gehalten, damit sie den Tab-Wechsel überlebt. */
   page: 'overview' | 'exams';
 }
 
-export function DualisView({ dualis, page }: DualisViewProps) {
+export function DualisView({ dualis, site, page }: DualisViewProps) {
+  const siteConfig = siteConfigurationFor(site);
   if (dualis.loginState !== 'logged-in') {
     return (
       <DualisLogin
         initialUsername={dualis.prefs.username}
         initialRememberUsername={dualis.prefs.rememberUsername}
+        usernameDescription={siteConfig.dualis.description}
         loading={dualis.loginState === 'logging-in' || dualis.loading}
         error={dualis.error}
         onLogin={dualis.login}
@@ -50,12 +54,20 @@ export function DualisView({ dualis, page }: DualisViewProps) {
 interface LoginProps {
   initialUsername: string;
   initialRememberUsername: boolean;
+  usernameDescription: string;
   loading: boolean;
   error: string | null;
   onLogin: (credentials: { username: string; password: string }, rememberUsername: boolean) => Promise<void>;
 }
 
-function DualisLogin({ initialUsername, initialRememberUsername, loading, error, onLogin }: LoginProps) {
+function DualisLogin({
+  initialUsername,
+  initialRememberUsername,
+  usernameDescription,
+  loading,
+  error,
+  onLogin,
+}: LoginProps) {
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [rememberUsername, setRememberUsername] = useState(initialRememberUsername);
@@ -69,10 +81,7 @@ function DualisLogin({ initialUsername, initialRememberUsername, loading, error,
     <div className="dualis dualis--login">
       <div className="dualis-login">
         <h2>Dualis anmelden</h2>
-        <p>
-          Prüfungsleistungen und Modulnoten werden direkt von Dualis geladen. Du kannst dein Kürzel
-          eingeben; die Ravensburger Dualis-Adresse wird automatisch ergänzt.
-        </p>
+        <p>{usernameDescription}</p>
 
         <label className="sheet__label" htmlFor="dualis-user">
           Benutzername

@@ -95,6 +95,10 @@ Kurzfassung:
 
 Details stehen in [docs/PRIVACY.md](docs/PRIVACY.md).
 
+## DHBW-Standorte, Dualis und Uni-Mail
+
+DUALIS wird zentral für die DHBW betrieben, die Login-Domains und Mailplattformen unterscheiden sich jedoch je nach Standort. Die App führt diese Regeln in einem modularen Standortprofil und verwendet für unbekannte oder nicht eindeutig dokumentierte Account-Domains die unveränderte vollständige E-Mail-Adresse. Die verifizierte Übersicht und die Erweiterungsanleitung stehen in [docs/DHBW_SITE_INTEGRATIONS.md](docs/DHBW_SITE_INTEGRATIONS.md).
+
 ## App Review
 
 Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentierten Demomodus. Er verwendet ausschließlich Beispieldaten und ruft weder Rapla noch Dualis auf. Die konkreten Eingaben und die Begründung für das öffentliche Repository stehen in [docs/APP_REVIEW_DEMO.md](docs/APP_REVIEW_DEMO.md).
@@ -103,6 +107,7 @@ Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentiert
 
 ```text
 src/
+  dhbw/                     Standortprofile für Dualis- und Mail-Integrationen
   dualis/                    Dualis-Client, Parser und Typen
   dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
   ical/                      ICS-Export

@@ -4,6 +4,7 @@ import { DualisCredentials, DualisDashboard, DualisExam, DualisLoginState, Duali
 import { DEFAULT_DUALIS_PREFS, DualisPrefs, loadDualisPrefs, saveDualisPrefs } from '../store/dualis';
 import { APP_STORE_DEMO_DUALIS, isAppStoreDemo } from '../demo/appStoreDemo';
 import { isReviewDemoCredentials } from '../demo/reviewDemo';
+import { normalizeSiteCode } from '../dhbw/siteConfiguration';
 
 export interface DualisState {
   loginState: DualisLoginState;
@@ -15,8 +16,6 @@ export interface DualisState {
   loading: boolean;
   error: string | null;
 }
-
-const client = new DualisClient();
 
 function loggedOutState(): DualisState {
   return {
@@ -40,7 +39,13 @@ function userMessage(error: unknown): string {
   return 'Dualis ist gerade nicht erreichbar.';
 }
 
-export function useDualis() {
+export function useDualis(site?: string) {
+  // Without a guided DHBW site (e.g. manual Rapla mode), never guess a
+  // Ravensburg domain. The unknown-site profile requires the full address.
+  const activeSite = normalizeSiteCode(site);
+  const clientRef = useRef<DualisClient | null>(null);
+  if (!clientRef.current) clientRef.current = new DualisClient(activeSite);
+  const client = clientRef.current;
   const [reviewDemo, setReviewDemo] = useState(false);
   const demo = isAppStoreDemo() || reviewDemo;
   const [state, setState] = useState<DualisState>(() =>
@@ -51,6 +56,18 @@ export function useDualis() {
 
   const selectedSemesterRef = useRef('');
   selectedSemesterRef.current = state.selectedSemester;
+
+  const previousSiteRef = useRef(activeSite);
+  useEffect(() => {
+    if (demo || previousSiteRef.current === activeSite) return;
+    previousSiteRef.current = activeSite;
+    client.setSite(activeSite);
+    void client.logout();
+    setState((current) => ({
+      ...loggedOutState(),
+      prefs: current.prefs,
+    }));
+  }, [activeSite, client, demo]);
 
   useEffect(() => {
     if (demo) return;
@@ -89,6 +106,7 @@ export function useDualis() {
         setState(APP_STORE_DEMO_DUALIS);
         return;
       }
+      client.setSite(activeSite);
       setState((current) => ({ ...current, loginState: 'logging-in', loading: true, error: null }));
       try {
         await client.login(credentials);
@@ -105,7 +123,7 @@ export function useDualis() {
         }));
       }
     },
-    [demo, loadDashboard],
+    [activeSite, client, demo, loadDashboard],
   );
 
   const logout = useCallback(async () => {

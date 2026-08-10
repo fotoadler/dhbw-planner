@@ -6,4 +6,8 @@ describe('native security configuration', () => {
     expect(config.plugins?.CapacitorCookies).toEqual({ enabled: false });
     expect(config.plugins?.CapacitorHttp).toEqual({ enabled: true });
   });
+
+  it('never logs native plugin calls containing credentials', () => {
+    expect(config.loggingBehavior).toBe('none');
+  });
 });

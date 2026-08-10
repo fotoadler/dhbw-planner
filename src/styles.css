@@ -1861,6 +1861,13 @@ option {
   font-size: 14px;
 }
 
+.mailview__loading {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
 .mailview--fallback {
   flex-direction: column;
   gap: 14px;

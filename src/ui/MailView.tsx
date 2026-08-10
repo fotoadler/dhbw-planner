@@ -86,7 +86,12 @@ export function MailView({ site }: Props) {
   if (nativeMailView && !nativeOpenFailed) {
     return (
       <main className="mailview mailview--launch dayview">
-        <p>Mail wird geöffnet …</p>
+        {/* Die native Mail-WebView blendet sich erst ein, wenn sie etwas
+            gezeichnet hat. Bis dahin ist dieser Ladehinweis sichtbar. */}
+        <div className="mailview__loading" aria-live="polite">
+          <span className="setup__spinner" aria-hidden="true" />
+          <span>Mail wird geöffnet …</span>
+        </div>
       </main>
     );
   }

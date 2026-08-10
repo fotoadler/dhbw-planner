@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -25,8 +26,17 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 public class EmbeddedMailPlugin extends Plugin {
     private static final int DEFAULT_BOTTOM_INSET_DP = 58;
 
+    /**
+     * Sicherheitsnetz: Bleibt das erste Zeichnen aus — etwa weil die Anmeldeseite
+     * hängt — wird die WebView trotzdem eingeblendet. Sonst bliebe der Ladehinweis
+     * der App stehen, obwohl die Seite vielleicht längst eine Meldung anzeigt.
+     */
+    private static final long REVEAL_TIMEOUT_MS = 8000;
+
     private WebView mailWebView;
     private int bottomInsetDp = DEFAULT_BOTTOM_INSET_DP;
+
+    private final Runnable revealTimeout = this::revealWebView;
 
     private final View.OnLayoutChangeListener hostLayoutListener = (
         view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom
@@ -73,6 +83,10 @@ public class EmbeddedMailPlugin extends Plugin {
 
             positionWebView(host);
             mailWebView.bringToFront();
+
+            // Bis zum ersten Zeichnen bliebe die WebView weiß und würde den
+            // Ladehinweis der App verdecken — sie bleibt deshalb unsichtbar.
+            hideWebView();
             mailWebView.loadUrl(rawUrl);
             call.resolve();
         });
@@ -81,10 +95,13 @@ public class EmbeddedMailPlugin extends Plugin {
     @PluginMethod
     public void close(PluginCall call) {
         getActivity().runOnUiThread(() -> {
-            if (mailWebView != null && mailWebView.getParent() instanceof ViewGroup) {
-                ViewGroup host = (ViewGroup) mailWebView.getParent();
-                host.removeOnLayoutChangeListener(hostLayoutListener);
-                host.removeView(mailWebView);
+            if (mailWebView != null) {
+                mailWebView.removeCallbacks(revealTimeout);
+                if (mailWebView.getParent() instanceof ViewGroup) {
+                    ViewGroup host = (ViewGroup) mailWebView.getParent();
+                    host.removeOnLayoutChangeListener(hostLayoutListener);
+                    host.removeView(mailWebView);
+                }
             }
             // WebView schreibt Cookies asynchron. Android dokumentiert flush()
             // als explizite Sicherung in den persistenten Cookie-Speicher.
@@ -103,6 +120,7 @@ public class EmbeddedMailPlugin extends Plugin {
     protected void handleOnDestroy() {
         flushCookies();
         if (mailWebView != null) {
+            mailWebView.removeCallbacks(revealTimeout);
             if (mailWebView.getParent() instanceof ViewGroup) {
                 ((ViewGroup) mailWebView.getParent()).removeOnLayoutChangeListener(hostLayoutListener);
             }
@@ -117,9 +135,25 @@ public class EmbeddedMailPlugin extends Plugin {
         CookieManager.getInstance().flush();
     }
 
+    private void hideWebView() {
+        if (mailWebView == null) return;
+        mailWebView.setVisibility(View.INVISIBLE);
+        mailWebView.removeCallbacks(revealTimeout);
+        mailWebView.postDelayed(revealTimeout, REVEAL_TIMEOUT_MS);
+    }
+
+    private void revealWebView() {
+        if (mailWebView == null) return;
+        mailWebView.removeCallbacks(revealTimeout);
+        if (mailWebView.getVisibility() != View.VISIBLE) {
+            mailWebView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private WebView createWebView() {
         WebView view = new WebView(getContext());
         view.setBackgroundColor(Color.WHITE);
+        view.setVisibility(View.INVISIBLE);
         view.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request) {
@@ -129,6 +163,25 @@ public class EmbeddedMailPlugin extends Plugin {
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {
                 return false;
+            }
+
+            // Bewusst onPageFinished statt onPageCommitVisible: Letzteres meldet
+            // schon den ersten Frame, und der ist bei den Webmail-Anmeldeseiten
+            // noch leer — die WebView wurde dadurch weiß sichtbar, also genau der
+            // Zustand, den der Ladehinweis ersetzen soll. Der Fehlerfall und die
+            // Zeitgrenze sind Rückfallebenen, damit nichts unsichtbar hängt.
+            @Override
+            public void onPageFinished(WebView webView, String url) {
+                revealWebView();
+            }
+
+            @Override
+            public void onReceivedError(
+                WebView webView,
+                WebResourceRequest request,
+                WebResourceError error
+            ) {
+                if (request.isForMainFrame()) revealWebView();
             }
         });
         view.setWebChromeClient(new WebChromeClient());

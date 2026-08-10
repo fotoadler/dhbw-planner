@@ -2,7 +2,7 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
-## Unveröffentlicht
+## 1.4.0 - 2026-08-10
 
 ### Funktionen und Darstellung
 

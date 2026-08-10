@@ -5,9 +5,9 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.4` (`package.json`: `1.4.0`)
-- Current iOS build: `10`
-- Current Android versionCode: `7`
+- Current app version: `1.4.1` (`package.json`: `1.4.1`)
+- Current iOS build: `11`
+- Current Android versionCode: `8`
 
 This is a new app identity.
 

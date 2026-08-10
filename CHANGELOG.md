@@ -2,7 +2,7 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
-## Unveröffentlicht
+## 1.4.1 - 2026-08-10
 
 ### Funktionen und Darstellung
 
@@ -12,6 +12,7 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 
 ### Fehlerbehebungen
 
+- Vorlesungstitel nutzen in der Wochenansicht die tatsächlich verfügbare Kachelhöhe und werden nur noch bei wirklich zu kurzen Terminen mit einer Ellipse abgeschnitten.
 - Historisch falsch gespeicherte Heidenheimer Kursnamen (`DHD-…`) werden zu `HDH-…` korrigiert; der Kursplan-Endpunkt antwortet auf die alte Schreibweise mit 404.
 - Die Auswahlhaptik unter iOS funktioniert wieder: Capacitor verlangt den Dreischritt aus Start, Änderung und Ende; ein einzelnes `selectionChanged` löst kein Feedback aus.
 - Für Bad Mergentheim entfallen die acht Speiseplanlinks des Studierendenwerks. Sie zeigten auf eine einzige Platzhalterdatei mit dem Text „Derzeit kein Speiseplan vorhanden!“; verlinkt sind jetzt nur restauranteigene Seiten.

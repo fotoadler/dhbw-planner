@@ -2,6 +2,18 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Fehlerbehebungen
+
+- Der Dualis-Login zeigt „Angemeldet bleiben“ nur noch dort, wo die Zugangsdaten auch abgelegt werden können. Das SecureStorage-Plugin ist ohne Web-Implementierung registriert, im Browser scheiterte das Speichern deshalb immer — angeboten wurde es trotzdem.
+- Scheitert das Speichern der Zugangsdaten auf dem Gerät, erscheint kein Fehler mehr. Die Anmeldung selbst hat funktioniert; die Meldung steht jetzt als sachlicher Hinweis in der Dualis-Ansicht und sagt, was daraus folgt: „beim nächsten Start musst du dich erneut anmelden.“
+
+### Entwicklung
+
+- Der Dualis-State trennt `error` und `notice`: `error` bleibt echten Fehlern und dem roten Kasten im Login-Formular vorbehalten, `notice` trägt Hinweise ohne Fehlercharakter. Beides wird beim nächsten Anmeldeversuch und beim Abmelden zurückgesetzt.
+- `isSecureStorageAvailable()` in `src/store/dualis.ts` beantwortet die Plattformfrage an einer Stelle, analog zu `isEmbeddedMailAvailable()`. `tests/dualisCredentialStorage.test.ts` deckt den Hinweiszweig über den gerenderten Hook ab.
+
 ## 1.4.0 - 2026-08-10
 
 ### Funktionen und Darstellung

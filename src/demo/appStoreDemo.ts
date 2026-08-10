@@ -111,4 +111,5 @@ export const APP_STORE_DEMO_DUALIS: DualisState = {
   moduleExams: {},
   loading: false,
   error: null,
+  notice: null,
 };

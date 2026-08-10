@@ -23,6 +23,8 @@ export interface DualisState {
   moduleExams: Record<string, DualisExam[]>;
   loading: boolean;
   error: string | null;
+  /** Sachlicher Hinweis ohne Fehlercharakter, etwa nach erfolgreicher Anmeldung. */
+  notice: string | null;
 }
 
 function loggedOutState(): DualisState {
@@ -35,6 +37,7 @@ function loggedOutState(): DualisState {
     moduleExams: {},
     loading: false,
     error: null,
+    notice: null,
   };
 }
 
@@ -46,6 +49,13 @@ function userMessage(error: unknown): string {
   }
   return 'Dualis ist gerade nicht erreichbar.';
 }
+
+/**
+ * Kein Fehler: Die Anmeldung hat funktioniert, nur der Keystore beziehungsweise
+ * die Keychain hat die Zugangsdaten nicht angenommen.
+ */
+export const CREDENTIALS_NOT_STORED_NOTICE =
+  'Anmeldung erfolgreich. Deine Zugangsdaten konnten auf diesem Gerät nicht gespeichert werden — beim nächsten Start musst du dich erneut anmelden.';
 
 function storedLoginMessage(error: unknown): string {
   if (error instanceof DualisError && error.reason === 'login-failed') {
@@ -177,7 +187,7 @@ export function useDualis(site?: string) {
         return;
       }
       client.setSite(activeSite);
-      setState((current) => ({ ...current, loginState: 'logging-in', loading: true, error: null }));
+      setState((current) => ({ ...current, loginState: 'logging-in', loading: true, error: null, notice: null }));
       try {
         await client.login(credentials);
         const credentialsStored = rememberCredentials
@@ -188,10 +198,7 @@ export function useDualis(site?: string) {
         setState((current) => ({ ...current, loginState: 'logged-in', prefs }));
         await loadDashboard();
         if (rememberCredentials && !credentialsStored) {
-          setState((current) => ({
-            ...current,
-            error: 'Anmeldung erfolgreich. Das sichere Speichern ist auf diesem Gerät nicht verfügbar.',
-          }));
+          setState((current) => ({ ...current, notice: CREDENTIALS_NOT_STORED_NOTICE }));
         }
       } catch (error) {
         setState((current) => ({
@@ -226,6 +233,7 @@ export function useDualis(site?: string) {
       moduleExams: {},
       loading: false,
       error: null,
+      notice: null,
     }));
   }, [client, demo, reviewDemo, state.prefs]);
 

@@ -712,20 +712,38 @@ option {
 
 .mensa__link,
 .mensa__action {
+  align-items: center;
+  gap: 4px;
   color: var(--accent);
   font-size: 13px;
   font-weight: 650;
+  line-height: 1.25;
   text-decoration: none;
 }
 
-.mensa__link--compact {
+.mensa__link {
   display: inline-flex;
+}
+
+.mensa__link--compact {
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
+.mensa__external-icon {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
 .mensa__action {
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-top: 10px;
   padding: 10px 14px;
   color: #fff;

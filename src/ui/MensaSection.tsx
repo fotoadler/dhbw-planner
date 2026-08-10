@@ -251,7 +251,14 @@ function StatusCard({ title, text, tone = 'info' }: { title: string; text?: stri
 
 function ExternalLink({ href, label, compact = false, button = false }: { href: string; label: string; compact?: boolean; button?: boolean }) {
   const className = button ? 'mensa__action' : compact ? 'mensa__link mensa__link--compact' : 'mensa__link';
-  return <a className={className} href={href} target="_blank" rel="noreferrer">{label} <span aria-hidden="true">↗</span></a>;
+  return (
+    <a className={className} href={href} target="_blank" rel="noreferrer">
+      <span>{label}</span>
+      <svg className="mensa__external-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M5 11 11 5M6 5h5v5" />
+      </svg>
+    </a>
+  );
 }
 
 function groupMeals(meals: DiningMeal[]): Array<[string, DiningMeal[]]> {

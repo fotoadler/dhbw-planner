@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+node_modules
 
 # Web build and test output
 dist/

@@ -346,12 +346,6 @@ export function normalizeDualisUsername(username: string, site = 'RV'): string {
  * Cookie header; otherwise native iOS requests send `cnsc ` and lose the
  * authenticated session after the redirect.
  */
-/**
- * CampusNet currently emits the session cookie as `cnsc =...` (with a space
- * before `=`). Trim the cookie name as well as the value before constructing a
- * Cookie header; otherwise native iOS requests send `cnsc ` and lose the
- * authenticated session after the redirect.
- */
 export function parseSetCookieHeader(raw: string): Array<[name: string, value: string]> {
   const cookies: Array<[string, string]> = [];
   for (const part of raw.split(/,(?=\s*[^;,]+=)/)) {

@@ -12,6 +12,9 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 ### Sicherheit
 
 - Die Dualis-Session landete unter Android trotz `CapacitorCookies: { enabled: false }` im WebView-Cookie-Store, weil diese Einstellung nur die JavaScript-Seite steuert. Mit dem Leeren des Jars nach jeder Antwort gilt die dokumentierte Zusage wieder, dass Session-Cookies ausschließlich im Speicher gehalten werden.
+- Native Plugin-Aufrufe werden auch in Debug-Builds nicht mehr protokolliert,
+  damit Dualis-Benutzername und -Passwort nicht im Android-/iOS-Systemprotokoll
+  erscheinen.
 
 ### Entwicklung
 

@@ -121,6 +121,9 @@ describe('Dualis-Cookie-Transport unter Android', () => {
 
     await new DualisClient('RV').login(credentials);
 
-    expect(clearCookies.mock.calls.length).toBeLessThan(httpGet.mock.calls.length + 1);
+    expect(clearedUrls()).toEqual([
+      'https://dualis.dhbw.de',
+      'https://dualis.dhbw.de/scripts/mgrqispi.dll',
+    ]);
   });
 });

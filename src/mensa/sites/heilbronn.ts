@@ -20,8 +20,8 @@ export const heilbronnDining = defineDiningSite({
   categoryLabels: { main: 'Angebot' },
   markerPolicy: 'hidden',
   partners: [
-    { id: 'hn-cafe', name: 'Café am Bildungscampus', description: 'Weiteres Angebot am Campus' },
-    { id: 'hn-campus-garden', name: 'Campus Garden', description: 'Weiteres Angebot am Campus' },
-    { id: 'hn-shopbox', name: 'shop.box', description: 'Weiteres Angebot am Campus' },
+    { id: 'hn-cafe', name: 'Café am Bildungscampus', infoUrl: 'https://www.stw.uni-heidelberg.de/essen-trinken/restaurant/cafe-bildungscampus-gebaeude-m/' },
+    { id: 'hn-campus-garden', name: 'Campus Garden', infoUrl: 'https://bildungscampus.hn/leben-am-campus/gastronomie' },
+    { id: 'hn-shopbox', name: 'shop.box', infoUrl: 'https://bildungscampus.hn/leben-am-campus/gastronomie' },
   ],
 });

@@ -14,6 +14,7 @@ import { ScheduleEntry } from '../types';
 import { addDaysYmd, mondayOf, mondayOfYmd, parseYmdKey, ymdKey } from '../lib/berlinTime';
 import { fetchWeek, fetchWeeks } from '../rapla/client';
 import { getCourseSchedule, groupEntriesByWeek } from '../dhbwApi/client';
+import { canonicalCourseName } from '../dhbwApi/courseName';
 import { AppSettings, loadCache, loadSettings, saveCache, saveSettings } from '../store/preferences';
 import {
   applyLecturerDirectory,
@@ -193,7 +194,7 @@ export function useSchedule() {
 
       if (apiSelection) {
         const storedEtag = cacheMetaRef.current.sourceKey === sourceKey ? cacheMetaRef.current.etag : undefined;
-        const apiResult = await getCourseSchedule(apiSelection.course, storedEtag);
+        const apiResult = await getCourseSchedule(canonicalCourseName(apiSelection.site, apiSelection.course), storedEtag);
         if (apiResult.notModified) {
           if (Object.keys(weeksRef.current).length === 0) throw new Error('DHBW-API: Kein lokaler Cache für 304-Antwort.');
           fresh = weeksRef.current;

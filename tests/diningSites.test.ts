@@ -64,7 +64,7 @@ describe('standortseparierte Mensa-Profile', () => {
     ]);
   });
 
-  it('modelliert Bad Mergentheim ohne leeren API-Abruf als neun Partner', async () => {
+  it('modelliert Bad Mergentheim ohne API-Abruf als neun Partner mit dauerhaften Links', async () => {
     const getJson = vi.fn(async () => { throw new Error('darf nicht aufgerufen werden'); });
     const snapshot = await loadDiningSnapshot(
       diningProfileForSite('MGH'),
@@ -74,7 +74,7 @@ describe('standortseparierte Mensa-Profile', () => {
     expect(snapshot.presentation).toBe('partner-list');
     expect(snapshot.partners).toHaveLength(9);
     expect(snapshot.voucher).toMatchObject({ price: 2.7, value: 5.4 });
-    expect(snapshot.partners.every((partner) => partner.menuUrl === undefined)).toBe(true);
+    expect(snapshot.partners.every((partner) => Boolean(partner.menuUrl))).toBe(true);
   });
 
   it('erkennt den Karlsruher Schließtext als Status statt als Beilage', () => {
@@ -156,7 +156,7 @@ describe('kompakte Mensa-Darstellung', () => {
     expect(html).not.toContain('mensa-ravensburg/');
   });
 
-  it('zeigt Bad Mergentheim als Partnerverzeichnis ohne leere PDF-Aktionen', async () => {
+  it('zeigt Bad Mergentheim kompakt mit dauerhaften Partner-Speiseplanlinks', async () => {
     const profile = diningProfileForSite('MGH');
     const snapshot = await loadDiningSnapshot(profile);
     const html = renderToStaticMarkup(createElement(MensaSection, {
@@ -167,10 +167,29 @@ describe('kompakte Mensa-Darstellung', () => {
       selectedDay: '2026-08-10',
     }));
 
-    expect(html).toContain('Partnerrestaurants');
     expect(html).toContain('Essensmarke: 2,70');
     expect(html).toContain('Kidano Restaurant');
-    expect(html).not.toContain('sp-mgh-');
+    expect(html).toContain('sp-mgh-pomodoro-aktuell.pdf');
+    expect(html).toContain('pomodoro-e-basilico.eatbu.com');
+    expect(html).not.toContain('Partnerrestaurants');
+    expect(html).not.toContain('aktuelle Online-Speisepläne fehlen');
+  });
+
+  it('führt den Heidenheimer Pausenverkauf eingeklappt statt als Mensa-Tab', () => {
+    const profile = diningProfileForSite('HDH');
+    const snapshot = mapApiDiningResponse(profile, [response(13, 'HDH', 'Mensa DHBW Heidenheim')]);
+    const html = renderToStaticMarkup(createElement(MensaSection, {
+      profile,
+      snapshot,
+      status: 'ready',
+      error: null,
+      selectedDay: '2026-08-10',
+    }));
+
+    expect(html).toContain('<summary>Weitere Angebote am Campus</summary>');
+    expect(html).toContain('Pausenverkauf Wilhelmstraße');
+    expect(html).not.toContain('mensa__tabs');
+    expect(html).not.toContain('Für diese Einrichtung gibt es keinen tagesbezogenen Mittagsspeiseplan.');
   });
 
   it('bietet offizielle Infos nur als Fallback bei einem Abruffehler an', () => {

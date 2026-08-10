@@ -4,7 +4,7 @@ export const heidenheimDining = defineDiningSite({
   site: 'HDH',
   label: 'Heidenheim',
   operator: 'Studierendenwerk Ulm',
-  presentation: 'facility-tabs',
+  presentation: 'single-facility',
   source: { kind: 'dhbw-api' },
   officialInfoUrl: 'https://studierendenwerk-ulm.de/essen-trinken/mensen-und-cafeterien/#mensa-dhbw-heidenheim',
   facilities: [
@@ -16,13 +16,14 @@ export const heidenheimDining = defineDiningSite({
       notice: 'Fleisch- und Fischgerichte müssen bis 09:00 Uhr vorbestellt werden.',
       specialPeriods: [{ from: '2026-07-27', to: '2026-09-05', label: 'Verkürzte Sommeröffnung', hours: 'Mo–Fr 07:30–14:00' }],
     },
-    {
-      id: 'hdh-wilhelmstrasse', kind: 'snack-only', name: 'Pausenverkauf Wilhelmstraße', shortName: 'Wilhelmstraße',
-      address: 'Wilhelmstraße 10, 89518 Heidenheim', openingHours: 'Mo–Fr 08:15–10:30 und 11:00–13:30',
-      notice: 'Getränke, Backwaren, Snacks und Süßigkeiten; kein Mittagsspeiseplan.',
-      specialPeriods: [{ from: '2026-08-31', to: '2026-09-25', label: 'Geschlossen' }],
-    },
   ],
+  partners: [{
+    id: 'hdh-wilhelmstrasse',
+    name: 'Pausenverkauf Wilhelmstraße',
+    description: 'Backwaren und Snacks · Mo–Fr 08:15–10:30 und 11:00–13:30',
+    address: 'Wilhelmstraße 10, 89518 Heidenheim',
+    infoUrl: 'https://www.heidenheim.dhbw.de/service-einrichtungen/studierendenwerk-ulm',
+  }],
   categoryLabels: { main: 'Tagesgericht' },
   markerPolicy: 'hidden',
 });

@@ -1,12 +1,13 @@
 import { defineDiningSite } from './types';
 
+const STW_BASE = 'https://www.stw.uni-heidelberg.de/wp-content/uploads/2025';
+
 export const badMergentheimDining = defineDiningSite({
   site: 'MGH',
   label: 'Bad Mergentheim',
   operator: 'DHBW Mosbach / Studierendenwerk Heidelberg',
   presentation: 'partner-list',
   source: { kind: 'partners' },
-  intro: 'Neun Partnerrestaurants akzeptieren Essensmarken; aktuelle Online-Speisepläne fehlen derzeit.',
   officialInfoUrl: 'https://www.mosbach.dhbw.de/bad-mergentheim/campusmensa/',
   facilities: [],
   voucher: {
@@ -16,14 +17,47 @@ export const badMergentheimDining = defineDiningSite({
     infoUrl: 'https://www.mosbach.dhbw.de/bad-mergentheim/campusmensa/',
   },
   partners: [
-    { id: 'mgh-pomodoro', name: 'Pomodoro-e-Basilico', address: 'Bahnhofplatz 1, Bad Mergentheim', description: 'Montags Ruhetag' },
-    { id: 'mgh-ct-no1', name: 'CT No. 1', address: 'Härterichstraße 12, Bad Mergentheim' },
-    { id: 'mgh-la-flamme', name: 'La Flamme', address: 'Nonnengasse 7, Bad Mergentheim', description: 'Mo–Sa erst ab 17 Uhr' },
-    { id: 'mgh-schlossgarten', name: 'Café im Schlossgarten', address: 'Schloss 14, Bad Mergentheim', description: 'Freitags Ruhetag' },
-    { id: 'mgh-patila', name: 'Patila', address: 'Bahnhofstraße 14, Bad Mergentheim' },
-    { id: 'mgh-balis', name: 'Bali’s Imbiss', address: 'Poststraße 9, Bad Mergentheim' },
-    { id: 'mgh-poseidon', name: 'Zunftstuben Poseidon', address: 'Hans-Heinrich-Ehrler-Platz 42, Bad Mergentheim', description: 'Mittwochs Ruhetag' },
-    { id: 'mgh-cocoas', name: 'Cocoa’s Bistro', address: 'Bahnhofstraße 9, Bad Mergentheim' },
-    { id: 'mgh-kidano', name: 'Kidano Restaurant', address: 'Hans-Heinrich-Ehrler-Platz 39, Bad Mergentheim', description: 'Montags Ruhetag', infoUrl: 'https://mgh.kidano-restaurant.de/' },
+    {
+      id: 'mgh-pomodoro', name: 'Pomodoro-e-Basilico', address: 'Bahnhofplatz 1, Bad Mergentheim',
+      description: 'Montags Ruhetag', menuUrl: `${STW_BASE}/04/sp-mgh-pomodoro-aktuell.pdf`,
+      infoUrl: 'https://pomodoro-e-basilico.eatbu.com/?lang=de',
+    },
+    {
+      id: 'mgh-ct-no1', name: 'CT No. 1', address: 'Härterichstraße 12, Bad Mergentheim',
+      menuUrl: `${STW_BASE}/05/sp-mgh-no1-aktuell.pdf`, infoUrl: 'https://ct-no1.de/speisekarte/',
+    },
+    {
+      id: 'mgh-la-flamme', name: 'La Flamme', address: 'Nonnengasse 7, Bad Mergentheim',
+      description: 'Mo–Sa erst ab 17 Uhr', menuUrl: `${STW_BASE}/04/sp-mgh-laflamme-aktuell.pdf`,
+      infoUrl: 'https://www.la-flamme.de/standorte/bad-mergentheim/',
+    },
+    {
+      id: 'mgh-schlossgarten', name: 'Café im Schlossgarten', address: 'Schloss 14, Bad Mergentheim',
+      description: 'Freitags Ruhetag', menuUrl: `${STW_BASE}/04/sp-mgh-schlossgarten-aktuell.pdf`,
+      infoUrl: 'https://www.cafe-im-schlossgarten.de/',
+    },
+    {
+      id: 'mgh-patila', name: 'Patila', address: 'Bahnhofstraße 14, Bad Mergentheim',
+      menuUrl: `${STW_BASE}/04/sp-mgh-patila-aktuell.pdf`,
+      infoUrl: 'https://visit.bad-mergentheim.de/de/kultur-schloss-genuss/gastronomieverzeichnis/patila-id_2191/',
+    },
+    {
+      id: 'mgh-balis', name: 'Bali’s Imbiss', address: 'Poststraße 9, Bad Mergentheim',
+      menuUrl: `${STW_BASE}/04/sp-mgh-balis-aktuell.pdf`,
+    },
+    {
+      id: 'mgh-poseidon', name: 'Zunftstuben Poseidon', address: 'Hans-Heinrich-Ehrler-Platz 42, Bad Mergentheim',
+      description: 'Mittwochs Ruhetag', menuUrl: `${STW_BASE}/05/sp-mgh-poseidon-aktuell.pdf`,
+      infoUrl: 'https://www.poseidon-mgh.de/',
+    },
+    {
+      id: 'mgh-cocoas', name: 'Cocoa’s Bistro', address: 'Bahnhofstraße 1, Bad Mergentheim',
+      menuUrl: `${STW_BASE}/04/sp-mgh-cocoa-aktuell.pdf`,
+    },
+    {
+      id: 'mgh-kidano', name: 'Kidano Restaurant', address: 'Hans-Heinrich-Ehrler-Platz 39, Bad Mergentheim',
+      description: 'Montags Ruhetag', menuUrl: 'https://kidano-restaurant.de/mittagstisch/',
+      infoUrl: 'https://kidano-restaurant.de/menu/',
+    },
   ],
 });

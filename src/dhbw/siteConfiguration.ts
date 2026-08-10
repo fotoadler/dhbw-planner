@@ -105,10 +105,7 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
   FN: {
     site: 'FN',
     label: 'DHBW Friedrichshafen',
-    dualis: {
-      ...FULL_EMAIL_DUALIS,
-      description: 'Vollständige Adresse eingeben; je nach Bereich gilt eine andere Domain.',
-    },
+    dualis: FULL_EMAIL_DUALIS,
     mail: {
       site: 'FN',
       label: 'DHBW Friedrichshafen',

@@ -12,6 +12,7 @@ import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
 import { Mensa, mensaSiteCode } from '../seezeit/types';
 import type { DiningSnapshot } from '../mensa/model';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
+import { canonicalCourseName } from '../dhbwApi/courseName';
 
 const SETTINGS_KEY = 'settings.v4';
 const SETTINGS_FALLBACK_KEYS = ['settings.v3', 'settings.v2', 'settings.v1'];
@@ -113,7 +114,7 @@ function parseApiSelection(value: unknown): ApiSelection | null {
   if (!value.site.trim() || !value.course.trim() || !value.degree.trim()) return null;
   return {
     site: value.site.trim(),
-    course: value.course.trim(),
+    course: canonicalCourseName(value.site, value.course),
     degree: value.degree.trim(),
   };
 }

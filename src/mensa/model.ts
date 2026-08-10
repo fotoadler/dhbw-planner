@@ -3,7 +3,7 @@
 export type DiningDayStatus = 'open' | 'closed' | 'partial' | 'unpublished' | 'unavailable';
 export type DiningPresentation = 'single-facility' | 'facility-tabs' | 'partner-list' | 'preorder';
 export type DiningApiBucket = 'starter' | 'main' | 'side' | 'dessert';
-export type DiningFacilityKind = 'warm-meals' | 'snack-only' | 'serving-counter' | 'external-menu';
+export type DiningFacilityKind = 'warm-meals' | 'serving-counter' | 'external-menu';
 
 export interface DiningPeriod {
   from: string;

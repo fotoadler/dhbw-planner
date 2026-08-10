@@ -481,8 +481,7 @@ option {
 
 .mensa__header,
 .mensa__facilityhead,
-.mensa__mealrow,
-.mensa__partner {
+.mensa__mealrow {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -687,10 +686,23 @@ option {
 }
 
 .mensa__partner {
-  padding: 11px 12px;
+  display: grid;
+  gap: 9px;
+  padding: 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--bg);
+}
+
+.mensa__partnercopy,
+.mensa__partneractions {
+  min-width: 0;
+}
+
+.mensa__partneractions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
 }
 
 .mensa__partner strong {
@@ -707,6 +719,7 @@ option {
 }
 
 .mensa__link--compact {
+  display: inline-flex;
   flex: 0 0 auto;
   white-space: nowrap;
 }

@@ -1,7 +1,7 @@
 /** Gemeinsame Mensa-UI; Inhalt und Normalisierung kommen aus dem Standortprofil. */
 
 import { useEffect, useMemo, useState } from 'react';
-import type { DiningDay, DiningFacility, DiningLoadStatus, DiningMeal, DiningSnapshot } from '../mensa/model';
+import type { DiningDay, DiningFacility, DiningLoadStatus, DiningMeal, DiningPartner, DiningSnapshot } from '../mensa/model';
 import { DINING_SITE_OPTIONS, type DiningSiteProfile } from '../mensa/sites';
 
 interface Props {
@@ -77,21 +77,9 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
 
       {(snapshot?.partners.length ?? 0) > 0 && (
         <details className="mensa__alternatives">
-          <summary>{profile.site === 'HN' ? 'Weitere Angebote am Campus' : 'Weitere Angebote'}</summary>
+          <summary>{profile.site === 'KA' ? 'Weitere Mensen' : 'Weitere Angebote am Campus'}</summary>
           <div className="mensa__partnerlist">
-            {snapshot?.partners.map((partner) => (
-              <article className="mensa__partner" key={partner.id}>
-                <strong>{partner.name}</strong>
-                {partner.description && <span>{partner.description}</span>}
-                {(partner.menuUrl || partner.infoUrl) && (
-                  <ExternalLink
-                    href={partner.menuUrl ?? partner.infoUrl ?? '#'}
-                    label={partner.menuUrl ? 'Speiseplan' : 'Website'}
-                    compact
-                  />
-                )}
-              </article>
-            ))}
+            {snapshot?.partners.map((partner) => <PartnerCard partner={partner} key={partner.id} />)}
           </div>
         </details>
       )}
@@ -115,7 +103,7 @@ function FacilityView({
     [facility.days, selectedDay],
   );
 
-  const visibleHours = facility.mealHours ?? (facility.kind === 'snack-only' || facility.kind === 'external-menu'
+  const visibleHours = facility.mealHours ?? (facility.kind === 'external-menu'
     ? facility.openingHours
     : undefined);
   const showsFacilityHead = showName || Boolean(visibleHours) || facility.kind === 'external-menu';
@@ -142,9 +130,7 @@ function FacilityView({
       {facility.notice && <p className="mensa__notice">{facility.notice}</p>}
       {facility.orderUrl && <ExternalLink href={facility.orderUrl} label="Vorbestellen" button />}
 
-      {facility.kind === 'snack-only' ? (
-        <StatusCard title="Pausenverkauf" text="Für diese Einrichtung gibt es keinen tagesbezogenen Mittagsspeiseplan." />
-      ) : facility.kind === 'external-menu' ? (
+      {facility.kind === 'external-menu' ? (
         <StatusCard title="Externer Wochenplan" text="Der aktuelle Plan wird von der Einrichtung selbst veröffentlicht." />
       ) : period && day?.status === 'closed' ? null : (
         <DayMenu day={day} nextDay={nextDay} />
@@ -222,9 +208,7 @@ function PartnerDirectory({ profile, snapshot }: { profile: DiningSiteProfile; s
   const partners = snapshot?.partners ?? profile.partners ?? [];
   const voucher = snapshot?.voucher ?? profile.voucher;
   return (
-    <section className="mensa" aria-labelledby="mensa-title">
-      <h2 id="mensa-title" className="mensa__title">Partnerrestaurants</h2>
-      {profile.intro && <p className="mensa__intro">{profile.intro}</p>}
+    <section className="mensa" aria-label={`Essensangebote ${profile.label}`}>
       {voucher && (
         <div className="mensa__voucher">
           <strong>Essensmarke: {formatPrice(voucher.price)} · Wert {formatPrice(voucher.value)}</strong>
@@ -233,24 +217,31 @@ function PartnerDirectory({ profile, snapshot }: { profile: DiningSiteProfile; s
         </div>
       )}
       <div className="mensa__partnerlist">
-        {partners.map((partner) => (
-          <article className="mensa__partner" key={partner.id}>
-            <div>
-              <strong>{partner.name}</strong>
-              {partner.address && <span>{partner.address}</span>}
-              {partner.description && <span>{partner.description}</span>}
-            </div>
-            {(partner.menuUrl || partner.infoUrl) && (
-              <ExternalLink
-                href={partner.menuUrl ?? partner.infoUrl ?? '#'}
-                label={partner.menuUrl ? 'Speiseplan' : 'Website'}
-                compact
-              />
-            )}
-          </article>
-        ))}
+        {partners.map((partner) => <PartnerCard partner={partner} key={partner.id} />)}
       </div>
     </section>
+  );
+}
+
+function PartnerCard({ partner }: { partner: DiningPartner }) {
+  return (
+    <article className="mensa__partner">
+      <div className="mensa__partnercopy">
+        <strong>{partner.name}</strong>
+        {partner.address && <span>{partner.address}</span>}
+        {partner.hours && <span>{partner.hours}</span>}
+        {partner.description && <span>{partner.description}</span>}
+      </div>
+      {(partner.menuUrl || partner.infoUrl || partner.orderUrl) && (
+        <div className="mensa__partneractions">
+          {partner.menuUrl && <ExternalLink href={partner.menuUrl} label="Speiseplan" compact />}
+          {partner.infoUrl && partner.infoUrl !== partner.menuUrl && (
+            <ExternalLink href={partner.infoUrl} label="Website" compact />
+          )}
+          {partner.orderUrl && <ExternalLink href={partner.orderUrl} label="Bestellen" compact />}
+        </div>
+      )}
+    </article>
   );
 }
 

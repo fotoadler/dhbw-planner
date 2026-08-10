@@ -213,6 +213,7 @@ export class DualisClient {
       for (let redirectCount = 0; redirectCount < 6; redirectCount += 1) {
         const response = await this.requestOnce(currentMethod, currentUrl, currentBody);
         this.storeCookies(response.headers);
+        await this.discardNativeCookieJar(currentUrl);
 
         if (!Capacitor.isNativePlatform() || !isRedirect(response.status)) return response;
 
@@ -294,10 +295,41 @@ export class DualisClient {
     }
   }
 
+  /**
+   * Android installiert über CapacitorCookies unabhängig von
+   * `CapacitorCookies.enabled` einen globalen CookieHandler. Der schreibt
+   * jedes Set-Cookie in den WebView-Cookie-Jar und hängt es beim nächsten
+   * Request als ZWEITEN Cookie-Header an. Beide Header werden zusammengefasst
+   * — am Server kommt `cnsc=<wert>,cnsc=<wert>` an. Cookie-Werte werden mit
+   * `; ` getrennt, nicht mit `,`, also liest CampusNet einen einzigen Cookie
+   * mit unbrauchbarem Wert und liefert wieder das Loginformular.
+   *
+   * Der Jar wird deshalb nach jeder Antwort geleert. Alleinige Quelle der
+   * Session bleibt `this.cookies` im Speicher — genau wie vorgesehen.
+   *
+   * Nur Android: iOS zeigt das Verhalten nicht, und ein dort funktionierender
+   * Login soll nicht auf Verdacht angefasst werden.
+   */
+  private async discardNativeCookieJar(url: string): Promise<void> {
+    if (Capacitor.getPlatform() !== 'android') return;
+    try {
+      // Mit der Request-URL leeren, nicht mit der Origin: CampusNet sendet
+      // den Cookie ohne Path-Attribut, der WebView leitet den Pfad deshalb
+      // aus der Request-URL ab (/scripts). Ein Aufruf auf die Origin fragt
+      // Pfad / ab und findet den Cookie nicht.
+      await CapacitorCookies.clearCookies({ url });
+    } catch {
+      // Ohne nativen Cookie-Speicher gibt es auch nichts zu leeren.
+    }
+  }
+
   private async clearNativeCookies(): Promise<void> {
     if (!Capacitor.isNativePlatform()) return;
     try {
+      // Beide Pfadebenen: Der Session-Cookie hängt an /scripts, ein Aufruf
+      // allein auf die Origin würde ihn nicht erfassen.
       await CapacitorCookies.clearCookies({ url: DUALIS_ENDPOINT });
+      await CapacitorCookies.clearCookies({ url: `${DUALIS_ENDPOINT}/scripts/mgrqispi.dll` });
     } catch {
       // The in-memory cookie map is still cleared if native cookie cleanup is unavailable.
     }

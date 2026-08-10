@@ -2,6 +2,21 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Fehlerbehebungen
+
+- Der Dualis-Login unter Android schlägt nicht mehr mit „Dualis-Anmeldung ist abgelaufen oder wurde abgelehnt." fehl. CapacitorCookies installiert beim Start unabhängig von `CapacitorCookies.enabled` einen globalen CookieHandler; der schreibt jedes `Set-Cookie` in den WebView-Cookie-Jar und hängt es beim nächsten Request als zweiten `Cookie`-Header an. Beide Header werden zusammengefasst, sodass am Server `cnsc=<wert>,cnsc=<wert>` ankam — Cookie-Werte werden aber mit `; ` getrennt, nicht mit `,`. CampusNet las dadurch einen einzigen Cookie mit unbrauchbarem Wert und lieferte wieder das Loginformular. Der native Jar wird jetzt nach jeder Antwort geleert, und zwar mit der Request-URL: CampusNet sendet den Cookie ohne `Path`-Attribut, der WebView bindet ihn deshalb an `/scripts`, und ein Aufruf auf die blanke Origin hätte ihn nicht erfasst. Im Browser trat der Fehler nicht auf, weil die Fetch-API den selbst gesetzten `Cookie`-Header verwirft und nur einer hinausgeht.
+- Die bestehende Aufräumroutine für native Cookies bei Anmeldung und Abmeldung erfasst den Session-Cookie jetzt tatsächlich. Sie leerte bisher nur die Origin und ging damit am pfadgebundenen Cookie vorbei.
+
+### Sicherheit
+
+- Die Dualis-Session landete unter Android trotz `CapacitorCookies: { enabled: false }` im WebView-Cookie-Store, weil diese Einstellung nur die JavaScript-Seite steuert. Mit dem Leeren des Jars nach jeder Antwort gilt die dokumentierte Zusage wieder, dass Session-Cookies ausschließlich im Speicher gehalten werden.
+
+### Entwicklung
+
+- `tests/dualisAndroidCookies.test.ts` deckt den nativen Cookie-Transport über einen gemockten Capacitor-Layer ab: Für jede angefragte URL muss der Jar mit genau dieser URL geleert werden, der Session-Cookie genau einmal und ohne Komma hinausgehen, und andere Plattformen dürfen unberührt bleiben.
+
 ## 1.4.0 - 2026-08-10
 
 ### Funktionen und Darstellung

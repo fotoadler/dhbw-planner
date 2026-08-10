@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'de.dhbw.raplaplan',
   appName: 'DHBW Planner',
   webDir: 'dist',
+  // Plugin-Aufrufe koennen Zugangsdaten enthalten. Auch Debug-Builds duerfen
+  // diese deshalb nicht im nativen Android-/iOS-Protokoll ausgeben.
+  loggingBehavior: 'none',
   plugins: {
     StatusBar: {
       overlaysWebView: true,

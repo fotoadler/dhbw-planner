@@ -2,6 +2,23 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Fehlerbehebungen
+
+- Der Dualis-Login funktioniert unter Android wieder. Capacitors globaler
+  Cookie-Handler für `HttpURLConnection` mischte CampusNets ungültig als
+  `cnsc =...` geschriebenen Sitzungscookie in den bereits bereinigten
+  Cookie-Header. Native HTTP-Aufrufe sind jetzt von diesem WebView-Cookiespeicher
+  getrennt; Dualis verwaltet seinen Sitzungscookie weiterhin ausschließlich im
+  Arbeitsspeicher.
+
+### Entwicklung
+
+- Native Plugin-Aufrufe werden auch in Debug-Builds nicht mehr protokolliert,
+  damit Dualis-Benutzername und -Passwort nicht im Android-/iOS-Systemprotokoll
+  erscheinen.
+
 ## 1.4.0 - 2026-08-10
 
 ### Funktionen und Darstellung

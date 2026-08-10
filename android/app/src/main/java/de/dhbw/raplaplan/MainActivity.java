@@ -13,6 +13,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import java.net.CookieHandler;
 import java.util.Locale;
 
 public class MainActivity extends BridgeActivity {
@@ -28,8 +29,27 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disableAutomaticHttpCookies();
         syncSystemBars(getResources().getConfiguration());
         observeSafeAreaInsets();
+    }
+
+    /**
+     * CapacitorCookies installiert beim Start einen prozessweiten CookieHandler
+     * fuer HttpURLConnection. Dualis kann diesen Speicher nicht verwenden: Der
+     * Server sendet seinen Sitzungscookie als "cnsc =..." (Leerzeichen vor dem
+     * Gleichheitszeichen). Der Android CookieManager bewahrt diese ungueltige
+     * Schreibweise auf und haengt sie spaeter zusaetzlich an den vom
+     * DualisClient korrekt gesetzten Cookie-Header. CampusNet verwirft die dann
+     * mehrdeutige Sitzung.
+     *
+     * DualisClient verwaltet seine Cookies bewusst selbst im Arbeitsspeicher;
+     * alle anderen CapacitorHttp-Aufrufe der App sind zustandslose GETs. Die
+     * WebView-Cookies (unter anderem fuer den Mail-Tab) liegen im separaten
+     * android.webkit.CookieManager und bleiben hiervon unberuehrt.
+     */
+    private void disableAutomaticHttpCookies() {
+        CookieHandler.setDefault(null);
     }
 
     @Override

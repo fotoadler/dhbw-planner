@@ -9,7 +9,7 @@
  * nicht horizontal scrollbar.
  */
 
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { ScheduleEntry } from '../types';
 import { berlinParts, formatTime, parseYmdKey } from '../lib/berlinTime';
 
@@ -80,6 +80,78 @@ function groupPositionedEntries(positioned: Positioned[]): Positioned[][] {
     groups.set(item.clusterId, group);
   }
   return [...groups.values()];
+}
+
+export function weekTitleLineCapacity(
+  cardHeight: number,
+  fixedContentHeight: number,
+  paddingHeight: number,
+  gapHeight: number,
+  lineHeight: number,
+): number {
+  if (lineHeight <= 0) return 1;
+  return Math.max(
+    1,
+    Math.floor((cardHeight - fixedContentHeight - paddingHeight - gapHeight) / lineHeight),
+  );
+}
+
+/**
+ * WebKit kann mehrzeiligen Text nur mit einer konkreten Zeilenzahl mit
+ * Ellipse abschneiden. Diese Komponente ermittelt sie aus dem realen Platz in
+ * der Karte, damit weder Smartphone-Breite noch Dozentenzeilen geschätzt
+ * werden müssen.
+ */
+function AdaptiveEventTitle({ children }: { children: string }) {
+  const titleRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const title = titleRef.current;
+    const card = title?.closest<HTMLElement>('.weekview__event');
+    if (!title || !card) return;
+
+    const fixedChildren = [...card.children].filter((child) => child !== title) as HTMLElement[];
+    const updateLineCapacity = () => {
+      const cardStyle = getComputedStyle(card);
+      const titleStyle = getComputedStyle(title);
+      const paddingHeight =
+        (Number.parseFloat(cardStyle.paddingTop) || 0) +
+        (Number.parseFloat(cardStyle.paddingBottom) || 0);
+      const rowGap = Number.parseFloat(cardStyle.rowGap || cardStyle.gap) || 0;
+      const gapHeight = rowGap * Math.max(0, card.children.length - 1);
+      const fixedContentHeight = fixedChildren.reduce(
+        (height, child) => height + child.getBoundingClientRect().height,
+        0,
+      );
+      const lineHeight = Number.parseFloat(titleStyle.lineHeight) || 15;
+      const lines = weekTitleLineCapacity(
+        card.clientHeight,
+        fixedContentHeight,
+        paddingHeight,
+        gapHeight,
+        lineHeight,
+      );
+      title.style.setProperty('--weekview-title-lines', String(lines));
+    };
+
+    updateLineCapacity();
+    window.addEventListener('resize', updateLineCapacity);
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateLineCapacity);
+    resizeObserver?.observe(card);
+    fixedChildren.forEach((child) => resizeObserver?.observe(child));
+
+    return () => {
+      window.removeEventListener('resize', updateLineCapacity);
+      resizeObserver?.disconnect();
+    };
+  }, [children]);
+
+  return (
+    <span ref={titleRef} className="weekview__etitle">
+      {children}
+    </span>
+  );
 }
 
 export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek }: Props) {
@@ -205,7 +277,6 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                 );
                 const lecturers = entry.lecturers.join(', ');
                 const isCompact = height < 52;
-                const density = height >= 176 ? 'is-roomy' : height >= 112 ? 'is-tall' : 'is-regular';
                 // Der Titel ist die wichtigste Information. Namen erscheinen
                 // nur dann in der Karte, wenn sie ihm keinen Leseraum nehmen.
                 const showLecturers = Boolean(lecturers) && height >= 176 && laneCount < 3;
@@ -217,7 +288,6 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                       `weekview__event--${entry.type}`,
                       showLecturers ? 'has-lecturers' : '',
                       isCompact ? 'is-compact' : '',
-                      density,
                     ]
                       .filter(Boolean)
                       .join(' ')}
@@ -226,10 +296,9 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                     aria-label={`${entry.title}, ${formatTime(entry.start)} bis ${formatTime(entry.end)}${lecturers ? `, ${lecturers}` : ''}`}
                   >
                     <span className="weekview__etime">{formatTime(entry.start)}</span>
-                    <span className="weekview__etitle">
-                      {entry.title}
-                      {lecturers && isCompact && laneCount < 3 ? ` · ${lecturers}` : ''}
-                    </span>
+                    <AdaptiveEventTitle>
+                      {entry.title + (lecturers && isCompact && laneCount < 3 ? ` · ${lecturers}` : '')}
+                    </AdaptiveEventTitle>
                     {showLecturers && <span className="weekview__emeta">{lecturers}</span>}
                   </button>
                 );

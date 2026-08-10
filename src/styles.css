@@ -967,53 +967,18 @@ option {
   line-height: 15px;
   font-weight: 600;
   color: var(--calendar-event-text);
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--weekview-title-lines, 1);
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.weekview__event.is-tall .weekview__etitle {
-  /* Auf schmalen Spalten bleibt die kompakte Einzeile lesbarer. */
-  white-space: nowrap;
-}
-
-.weekview__event.is-roomy .weekview__etitle {
-  white-space: nowrap;
-}
-
-.weekview__event.has-lecturers .weekview__etitle {
-  /* Bei hohen Karten erhält der Dozent bewusst Raum für den vollen Namen. */
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .weekview__event.is-compact .weekview__etitle {
-  width: 100%;
   display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-/* Sobald die Tages-Spalten genügend Breite haben, darf der Titel umbrechen.
-   So bleibt z. B. „Onlinemarketing“ auf Tablets/Desktop sichtbar, während
-   die sehr schmalen Smartphone-Spalten nicht wieder buchstabenweise umbrechen. */
-@media (min-width: 520px) {
-  .weekview__event:not(.is-compact) .weekview__etitle {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow-wrap: break-word;
-    white-space: normal;
-  }
-
-  .weekview__event:not(.is-compact).is-tall .weekview__etitle {
-    -webkit-line-clamp: 5;
-  }
-
-  .weekview__event:not(.is-compact).is-roomy .weekview__etitle,
-  .weekview__event:not(.is-compact).has-lecturers .weekview__etitle {
-    -webkit-line-clamp: 8;
-  }
 }
 
 .weekview__emeta {

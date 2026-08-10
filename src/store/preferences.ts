@@ -9,14 +9,16 @@
 import { Preferences } from '@capacitor/preferences';
 import { deserializeEntry, ScheduleEntry, SerializedEntry, serializeEntry } from '../types';
 import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
-import { Mensa, MensaPlan, mensaSiteCode } from '../seezeit/types';
+import { Mensa, mensaSiteCode } from '../seezeit/types';
+import type { DiningSnapshot } from '../mensa/model';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
+import { canonicalCourseName } from '../dhbwApi/courseName';
 
 const SETTINGS_KEY = 'settings.v4';
 const SETTINGS_FALLBACK_KEYS = ['settings.v3', 'settings.v2', 'settings.v1'];
 const CACHE_KEY = 'cache.v2';
 const LEGACY_CACHE_KEY = 'cache.v1';
-const MENSA_CACHE_KEY = 'mensa.v1';
+const MENSA_CACHE_KEY = 'mensa.v2';
 const STORAGE_VERSION = 4;
 
 export type ScheduleSource = 'rapla' | 'dhbw-api';
@@ -112,7 +114,7 @@ function parseApiSelection(value: unknown): ApiSelection | null {
   if (!value.site.trim() || !value.course.trim() || !value.degree.trim()) return null;
   return {
     site: value.site.trim(),
-    course: value.course.trim(),
+    course: canonicalCourseName(value.site, value.course),
     degree: value.degree.trim(),
   };
 }
@@ -287,12 +289,11 @@ export async function saveCache(
   await Preferences.set({ key: CACHE_KEY, value: JSON.stringify(raw) });
 }
 
-/** Mensa-Cache: zuletzt geladener Speiseplan + gewählte Mensa + Zeitstempel (ms). */
+/** Mensa-Cache: verlustfreier Standort-Snapshot + Zeitstempel (ms). */
 export interface MensaCache {
-  mensa: Mensa;
+  site: string;
   updatedAt: number;
-  plan: MensaPlan;
-  label?: string;
+  snapshot: DiningSnapshot;
 }
 
 export async function loadMensaCache(): Promise<MensaCache | null> {
@@ -300,7 +301,7 @@ export async function loadMensaCache(): Promise<MensaCache | null> {
     const { value } = await Preferences.get({ key: MENSA_CACHE_KEY });
     if (!value) return null;
     const raw = JSON.parse(value) as MensaCache;
-    if (!raw || typeof raw !== 'object' || !raw.plan) return null;
+    if (!raw || typeof raw !== 'object' || !raw.snapshot || typeof raw.site !== 'string') return null;
     return raw;
   } catch {
     return null; // Defekter Cache wird ignoriert, nicht eskaliert.

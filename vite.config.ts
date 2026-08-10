@@ -36,6 +36,12 @@ export default defineConfig({
         secure: true,
         rewrite: (path) => path.replace(/^\/dhbw-api/, ''),
       },
+      '/stw-heidelberg': {
+        target: 'https://www.stw.uni-heidelberg.de',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/stw-heidelberg/, ''),
+      },
     },
   },
   test: {

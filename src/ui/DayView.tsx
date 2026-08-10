@@ -8,7 +8,8 @@
 
 import { useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
-import { MensaMeal } from '../seezeit/types';
+import type { DiningLoadStatus, DiningSnapshot } from '../mensa/model';
+import type { DiningSiteProfile } from '../mensa/sites';
 import { EntryCard } from './EntryCard';
 import { MensaSection } from './MensaSection';
 
@@ -17,8 +18,16 @@ const PULL_THRESHOLD = 70;
 
 interface Props {
   entries: ScheduleEntry[];
-  meals: MensaMeal[];
-  mensaLabel: string;
+  dining: {
+    profile: DiningSiteProfile;
+    snapshot: DiningSnapshot | null;
+    status: DiningLoadStatus;
+    error: string | null;
+    selectedDay: string;
+    /** Studienstandort; entscheidet ueber den Wechsel des Essensstandorts. */
+    homeSite?: string;
+    onSelectSite?: (site: string) => void;
+  } | null;
   onSelectEntry: (entry: ScheduleEntry) => void;
   onSwipeDay: (delta: 1 | -1) => void;
   onRefresh: () => Promise<void>;
@@ -27,8 +36,7 @@ interface Props {
 
 export function DayView({
   entries,
-  meals,
-  mensaLabel,
+  dining,
   onSelectEntry,
   onSwipeDay,
   onRefresh,
@@ -90,7 +98,7 @@ export function DayView({
           <EntryCard key={`${e.start.toISOString()}-${i}`} entry={e} onSelect={onSelectEntry} />
         ))
       )}
-      <MensaSection mensaLabel={mensaLabel} meals={meals} />
+      {dining && <MensaSection {...dining} />}
     </div>
   );
 }

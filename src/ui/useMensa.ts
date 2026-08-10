@@ -1,84 +1,85 @@
-/**
- * Lädt den Mensa-Speiseplan der gewählten Mensa und hält ihn frisch.
- *
- * Analog zum Stundenplan: der letzte Stand liegt im Preferences-Cache und wird
- * sofort angezeigt, während im Hintergrund aktualisiert wird. Ein Mensawechsel
- * lädt neu; beim App-Resume wird bei veraltetem Stand (> 6 h) nachgeladen.
- */
+/** Standortbewusster Mensa-Loader mit Cache sowie sichtbaren Lade-/Fehlerzustaenden. */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { App as CapApp } from '@capacitor/app';
-import { DhbwMensaClient, mapDhbwMensaResponse } from '../dhbwApi/mensa';
-import { Mensa, MensaPlan, mensaLabel, mensaSiteCode } from '../seezeit/types';
+import { loadDiningSnapshot } from '../mensa/loadDining';
+import type { DiningLoadStatus, DiningSnapshot } from '../mensa/model';
+import { diningProfileForSite, type DiningSiteProfile } from '../mensa/sites';
+import { Mensa, mensaSiteCode } from '../seezeit/types';
 import { loadMensaCache, saveMensaCache } from '../store/preferences';
 
-/** Speisepläne ändern sich selten → 6 Stunden gelten als frisch genug. */
 const STALE_MS = 6 * 60 * 60_000;
 
 export function useMensa(mensa: Mensa, enabled: boolean) {
-  const [plan, setPlan] = useState<MensaPlan>({});
-  const [label, setLabel] = useState(() => mensaLabel(mensa));
-  const mensaRef = useRef(mensa);
-  mensaRef.current = mensa;
+  const site = mensaSiteCode(mensa);
+  const profile = diningProfileForSite(site);
+  const [snapshot, setSnapshot] = useState<DiningSnapshot | null>(null);
+  const [status, setStatus] = useState<DiningLoadStatus>('idle');
+  const [error, setError] = useState<string | null>(null);
+  const siteRef = useRef(site);
+  const profileRef = useRef<DiningSiteProfile>(profile);
+  const snapshotRef = useRef<DiningSnapshot | null>(snapshot);
   const updatedAtRef = useRef(0);
-  const clientRef = useRef(new DhbwMensaClient());
+  siteRef.current = site;
+  profileRef.current = profile;
+  snapshotRef.current = snapshot;
 
-  const refresh = useCallback(async (m: Mensa): Promise<void> => {
+  const refresh = useCallback(async (): Promise<void> => {
+    const requestedSite = siteRef.current;
+    const requestedProfile = profileRef.current;
+    setStatus((current) => current === 'ready' || current === 'stale' ? 'stale' : 'loading');
+    setError(null);
     try {
-      const response = await clientRef.current.fetchResponse(mensaSiteCode(m));
-      const fresh = mapDhbwMensaResponse(response);
-      const freshLabel = response
-        .map((item) => item.mensaInfo.name.trim())
-        .filter(Boolean)
-        .join(' / ') || mensaLabel(m);
-      // Zwischenzeitlicher Mensawechsel: veraltetes Ergebnis verwerfen.
-      if (mensaRef.current !== m) return;
-      setPlan(fresh);
-      setLabel(freshLabel);
-      updatedAtRef.current = Date.now();
-      await saveMensaCache({ mensa: m, updatedAt: updatedAtRef.current, plan: fresh, label: freshLabel });
-    } catch {
-      /* Offline/Netzwerkfehler: letzter Cache bleibt sichtbar. */
+      const fresh = await loadDiningSnapshot(requestedProfile);
+      if (siteRef.current !== requestedSite) return;
+      const updatedAt = Date.now();
+      setSnapshot(fresh);
+      setStatus('ready');
+      updatedAtRef.current = updatedAt;
+      await saveMensaCache({ site: requestedSite, updatedAt, snapshot: fresh });
+    } catch (cause) {
+      if (siteRef.current !== requestedSite) return;
+      setError(cause instanceof Error ? cause.message : 'Speiseplan konnte nicht geladen werden.');
+      setStatus((current) => snapshotRef.current || current === 'stale' ? 'stale' : 'error');
     }
   }, []);
 
-  // Mensawechsel oder (De-)Aktivierung: Cache laden, dann aktualisieren.
   useEffect(() => {
     if (!enabled) {
-      setPlan({});
-      setLabel(mensaLabel(mensa));
+      setSnapshot(null);
+      setStatus('idle');
+      setError(null);
       return;
     }
     let cancelled = false;
     void (async () => {
       const cached = await loadMensaCache();
       if (cancelled) return;
-      if (cached && cached.mensa === mensa) {
-        setPlan(cached.plan);
-        setLabel(cached.label ?? mensaLabel(mensa));
+      if (cached?.site === site) {
+        setSnapshot(cached.snapshot);
         updatedAtRef.current = cached.updatedAt;
+        setStatus(Date.now() - cached.updatedAt > STALE_MS ? 'stale' : 'ready');
       } else {
-        setPlan({});
-        setLabel(mensaLabel(mensa));
+        setSnapshot(null);
         updatedAtRef.current = 0;
+        setStatus('loading');
       }
-      void refresh(mensa);
+      void refresh();
     })();
     return () => {
       cancelled = true;
     };
-  }, [mensa, enabled, refresh]);
+  }, [site, enabled, refresh]);
 
-  // App-Resume: bei veraltetem Stand neu laden.
   useEffect(() => {
     if (!enabled) return;
     const listener = CapApp.addListener('resume', () => {
-      if (Date.now() - updatedAtRef.current > STALE_MS) void refresh(mensaRef.current);
+      if (Date.now() - updatedAtRef.current > STALE_MS) void refresh();
     });
     return () => {
-      void listener.then((l) => l.remove());
+      void listener.then((registered) => registered.remove());
     };
   }, [enabled, refresh]);
 
-  return { plan, label };
+  return { profile, snapshot, status, error, refresh };
 }

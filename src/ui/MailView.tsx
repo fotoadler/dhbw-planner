@@ -15,8 +15,8 @@ export function MailView({ site }: Props) {
   )}&body=${encodeURIComponent(
     `Standort: ${siteConfig.label}${siteConfig.site ? ` (${siteConfig.site})` : ''}\n\nMailprovider oder Anmeldeseite:\n`,
   )}`;
-  const helpHref = siteConfig.mailSupportHref ?? feedbackHref;
-  const helpLabel = siteConfig.mailSupportLabel ?? 'Informationen senden';
+  const helpHref = siteConfig.mailSupport?.href ?? feedbackHref;
+  const helpLabel = siteConfig.mailSupport?.label ?? 'Informationen senden';
   const nativeMailView = isEmbeddedMailAvailable();
   const [nativeOpenFailed, setNativeOpenFailed] = useState(false);
   const webmailUrls = useMemo(
@@ -68,14 +68,14 @@ export function MailView({ site }: Props) {
           <a className="setup__button mailview__helpaction" href={helpHref}>
             {helpLabel}
           </a>
-          {siteConfig.mailContributionHref && (
+          {siteConfig.mailContribution && (
             <a
               className="mailview__contribution"
-              href={siteConfig.mailContributionHref}
+              href={siteConfig.mailContribution.href}
               target="_blank"
               rel="noreferrer"
             >
-              {siteConfig.mailContributionLabel ?? 'Auf GitHub beitragen'} <span aria-hidden="true">↗</span>
+              {siteConfig.mailContribution.label} <span aria-hidden="true">↗</span>
             </a>
           )}
         </section>

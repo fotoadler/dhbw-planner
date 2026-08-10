@@ -21,6 +21,7 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 
 - Die Zurück-Navigation liegt als reine Funktion in `src/ui/backNavigation.ts` und ist über `tests/backNavigation.test.ts` abgedeckt; `src/ui/useBackButton.ts` bleibt ein dünner Wrapper um das Plugin.
 - `tests/embeddedMailLayout.test.ts` sichert die Inset-Logik des nativen Mail-Plugins schmal über den Quelltext ab; die Sichtprüfung auf Android 14 und Android 15+ ersetzt das nicht. Die Repository-Adresse liegt als `PROJECT_REPOSITORY_URL` in `src/lib/projectLinks.ts`.
+- Die Aktionen der Mailhilfe stehen als `mailSupport`/`mailContribution` mit verpflichtender Beschriftung in der Standortkonfiguration. Als getrennte optionale Href- und Label-Felder konnte eine Beschriftung an einem fremden Ziel landen, ohne dass der Compiler es bemerkt.
 - `tests/androidThemes.test.ts` prüft die explizite AppCompat-Abstammung der Night-Styles sowie die vollständige Splashscreen-Konfiguration. Der Fehler war rein deklarativ und wurde weder vom TypeScript-Compiler noch von `lintVitalRelease` erkannt.
 - Bekannte Schwachstellen der Build-Toolchain über `npm audit fix` behoben (nur `package-lock.json`, keine Laufzeitabhängigkeiten der App).
 

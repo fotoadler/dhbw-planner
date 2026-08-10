@@ -24,8 +24,9 @@ describe('mail provider mapping', () => {
     const karlsruhe = siteConfigurationFor('KA');
     expect(karlsruhe.mailUnavailableTitle).toBeTruthy();
     expect(karlsruhe.mailUnavailableReason).toBeTruthy();
-    expect(karlsruhe.mailSupportLabel).toBeTruthy();
-    expect(karlsruhe.mailContributionHref).toBe(PROJECT_REPOSITORY_URL);
+    expect(karlsruhe.mailSupport?.label).toBeTruthy();
+    expect(karlsruhe.mailContribution?.href).toBe(PROJECT_REPOSITORY_URL);
+    expect(karlsruhe.mailContribution?.label).toBeTruthy();
   });
 
   it('supports different webmail platforms through the same adapter', () => {

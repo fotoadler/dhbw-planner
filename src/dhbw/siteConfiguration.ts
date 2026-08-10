@@ -45,12 +45,30 @@ export interface DhbwSiteConfiguration {
   mailUnavailableReason?: string;
   /** Beschreibt, wo die Nachrichten stattdessen gelesen oder verwaltet werden. */
   mailUnavailableInstructions?: string;
-  /** Optionaler Kontakt für standortspezifische Fragen zum Mailzugang. */
-  mailSupportHref?: string;
-  mailSupportLabel?: string;
+  /**
+   * Optionaler Kontakt für standortspezifische Fragen zum Mailzugang.
+   *
+   * Ziel und Beschriftung stehen bewusst in einem Objekt: Als getrennte
+   * optionale Felder könnte eine Beschriftung an einem fremden Ziel landen —
+   * etwa „Webmail-Link mitteilen" über dem generischen Feedback-Formular oder
+   * „Informationen senden" über einem standortspezifischen IT-Service-Link.
+   * Ohne `href` beschriftet `label` den Feedback-Fallback.
+   */
+  mailSupport?: SiteMailAction;
   /** Optionaler Open-Source-Beitrag zur Ergänzung des Mailzugangs. */
-  mailContributionHref?: string;
-  mailContributionLabel?: string;
+  mailContribution?: SiteMailLink;
+}
+
+/** Aktion der Mailhilfe ohne eigenes Ziel: beschriftet dann den Feedback-Fallback. */
+export interface SiteMailAction {
+  href?: string;
+  label: string;
+}
+
+/** Aktion der Mailhilfe mit eigenem Ziel; ohne href gäbe es nichts zu öffnen. */
+export interface SiteMailLink {
+  href: string;
+  label: string;
 }
 
 const RAVENSBURG_DUALIS: DualisSiteConfig = {
@@ -152,9 +170,8 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
       'Für Karlsruhe ist eine Weiterleitungsadresse dokumentiert, aber kein bestätigter Webmail-Login. Wenn du dort studierst und ein Postfach mit eigenem Weblogin nutzt, teile uns bitte den Link mit.',
     mailUnavailableInstructions:
       'Du kennst dich mit Code aus? Dann kannst du den Zugang auch direkt im Open-Source-Projekt auf GitHub ergänzen.',
-    mailSupportLabel: 'Webmail-Link mitteilen',
-    mailContributionHref: PROJECT_REPOSITORY_URL,
-    mailContributionLabel: 'Auf GitHub beitragen',
+    mailSupport: { label: 'Webmail-Link mitteilen' },
+    mailContribution: { href: PROJECT_REPOSITORY_URL, label: 'Auf GitHub beitragen' },
   },
   MA: {
     site: 'MA',

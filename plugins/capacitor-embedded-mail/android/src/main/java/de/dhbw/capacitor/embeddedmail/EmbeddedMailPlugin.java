@@ -138,9 +138,13 @@ public class EmbeddedMailPlugin extends Plugin {
     }
 
     private void positionWebView(ViewGroup host) {
+        int statusInset = 0;
         int navigationInset = 0;
         WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(host);
         if (insets != null) {
+            statusInset = insets.getInsets(
+                WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.displayCutout()
+            ).top;
             navigationInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
         }
 
@@ -148,7 +152,9 @@ public class EmbeddedMailPlugin extends Plugin {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         );
-        params.topMargin = 0;
+        // Die Mail-WebView liegt als native View über der Capacitor-WebView und
+        // erbt deshalb nicht deren CSS-safe-area-inset-top.
+        params.topMargin = statusInset;
         params.bottomMargin = dpToPx(bottomInsetDp) + navigationInset;
         mailWebView.setLayoutParams(params);
         mailWebView.bringToFront();

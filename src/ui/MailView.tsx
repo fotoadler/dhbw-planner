@@ -15,6 +15,8 @@ export function MailView({ site }: Props) {
   )}&body=${encodeURIComponent(
     `Standort: ${siteConfig.label}${siteConfig.site ? ` (${siteConfig.site})` : ''}\n\nMailprovider oder Anmeldeseite:\n`,
   )}`;
+  const helpHref = siteConfig.mailSupportHref ?? feedbackHref;
+  const helpLabel = siteConfig.mailSupportLabel ?? 'Informationen senden';
   const nativeMailView = isEmbeddedMailAvailable();
   const [nativeOpenFailed, setNativeOpenFailed] = useState(false);
   const webmailUrls = useMemo(
@@ -50,16 +52,33 @@ export function MailView({ site }: Props) {
 
   if (!provider) {
     return (
-      <main className="mailview dayview">
-        <div className="mailview__empty">
-          <h2>Uni-Mail</h2>
-          <p>Diese Funktion ist für deinen Standort noch nicht verfügbar.</p>
-          <p>Falls du zur Bereitstellung beitragen möchtest, freuen wir uns über Details zum Mailprovider o. Ä.</p>
-          {siteConfig.mailUnavailableReason && <p className="mailview__note">{siteConfig.mailUnavailableReason}</p>}
-          <a className="setup__button mailview__open" href={feedbackHref}>
-            Informationen senden <span aria-hidden="true">✉</span>
+      <main className="mailview mailview--help dayview">
+        <section className="mailview__help" aria-labelledby="mail-help-title">
+          <p className="mailview__site">{siteConfig.label}</p>
+          <h2 id="mail-help-title">{siteConfig.mailUnavailableTitle ?? 'Noch kein Mailzugang hinterlegt'}</h2>
+          <p className="mailview__helptext">
+            {siteConfig.mailUnavailableReason ??
+              'Für diesen Standort ist noch keine verlässliche Anmeldeseite hinterlegt.'}
+          </p>
+          {siteConfig.mailUnavailableInstructions && (
+            <p className="mailview__helptext mailview__helptext--secondary">
+              {siteConfig.mailUnavailableInstructions}
+            </p>
+          )}
+          <a className="setup__button mailview__helpaction" href={helpHref}>
+            {helpLabel}
           </a>
-        </div>
+          {siteConfig.mailContributionHref && (
+            <a
+              className="mailview__contribution"
+              href={siteConfig.mailContributionHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {siteConfig.mailContributionLabel ?? 'Auf GitHub beitragen'}
+            </a>
+          )}
+        </section>
       </main>
     );
   }

@@ -37,8 +37,18 @@ export interface DhbwSiteConfiguration {
   label: string;
   dualis: DualisSiteConfig;
   mail: SiteMailConfig | null;
+  /** Kurze, standortspezifische Hilfe, wenn kein Webmail-Login existiert. */
+  mailUnavailableTitle?: string;
   /** Erklärt einen bewusst nicht angebotenen Mail-Login in der UI. */
   mailUnavailableReason?: string;
+  /** Beschreibt, wo die Nachrichten stattdessen gelesen oder verwaltet werden. */
+  mailUnavailableInstructions?: string;
+  /** Optionaler Kontakt für standortspezifische Fragen zum Mailzugang. */
+  mailSupportHref?: string;
+  mailSupportLabel?: string;
+  /** Optionaler Open-Source-Beitrag zur Ergänzung des Mailzugangs. */
+  mailContributionHref?: string;
+  mailContributionLabel?: string;
 }
 
 const RAVENSBURG_DUALIS: DualisSiteConfig = {
@@ -101,7 +111,7 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
       site: 'STG',
       label: 'DHBW Stuttgart',
       platform: 'roundcube',
-      webmailUrl: 'https://lehre-webmail.dhbw-stuttgart.de/',
+      webmailUrl: 'https://lehre-webmail.dhbw-stuttgart.de/roundcubemail/',
       usernameHint: 'UserID oder DHBW-Lehre-Adresse',
     },
   },
@@ -131,10 +141,18 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
       usernameHint: 'Benutzerkennung oder vollständige DHBW-Adresse',
       description: 'Benutzerkennung genügt; @dh-karlsruhe.de wird ergänzt.',
     },
-    // Karlsruhe documents a forwarding address rather than a student
-    // mailbox/webmail login. Do not expose a misleading mail tab here.
+    // Für Karlsruhe ist noch kein verlässlicher studentischer Webmail-Einstieg
+    // bekannt. Der Tab bleibt als standortspezifischer Mitmach-Einstieg sichtbar,
+    // ohne eine unbestätigte Anmeldeseite auszuliefern.
     mail: null,
-    mailUnavailableReason: 'Der Standort stellt eine Weiterleitungsadresse bereit, aber kein studentisches Postfach mit eigenem Webmail-Login.',
+    mailUnavailableTitle: 'Mailzugang für Karlsruhe gesucht',
+    mailUnavailableReason:
+      'Wir konnten die Webmail-Adresse für den Standort Karlsruhe bisher nicht zuverlässig ermitteln. Wenn du dort studierst, teile uns bitte den Link zu eurem Mailpostfach mit.',
+    mailUnavailableInstructions:
+      'Du kennst dich mit Code aus? Dann kannst du den Zugang auch direkt im Open-Source-Projekt auf GitHub ergänzen.',
+    mailSupportLabel: 'Webmail-Link mitteilen',
+    mailContributionHref: 'https://github.com/fotoadler/dhbw-planner',
+    mailContributionLabel: 'Auf GitHub beitragen',
   },
   MA: {
     site: 'MA',

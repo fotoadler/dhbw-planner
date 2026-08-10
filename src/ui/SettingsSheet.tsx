@@ -293,6 +293,17 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
           <a className="setup__button sheet__feedback-button" href={feedbackHref}>
             Feedback senden <span aria-hidden="true">✉</span>
           </a>
+          <div className="sheet__opensource">
+            <p>DHBW Planner ist Open Source – schau dir den Code an oder entwickle mit.</p>
+            <a
+              className="setup__button sheet__feedback-button sheet__opensource-button"
+              href="https://github.com/fotoadler/dhbw-planner"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Projekt auf GitHub öffnen <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </section>
       </div>
     </div>

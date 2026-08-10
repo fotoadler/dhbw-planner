@@ -1804,6 +1804,24 @@ option {
   text-decoration: none;
 }
 
+.sheet__opensource {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 2px;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 17px;
+  text-align: center;
+}
+
+.sheet__opensource-button,
+.sheet__opensource-button:visited {
+  color: var(--on-accent);
+  font-size: 15px;
+  line-height: normal;
+}
+
 /* --- Feste Bereichsnavigation unten (Kalender / Dualis) --- */
 
 .tabbar {
@@ -1848,6 +1866,77 @@ option {
   gap: 14px;
 }
 
+.mailview--help {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 24px;
+}
+
+.mailview__help {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-soft);
+}
+
+.mailview__site {
+  margin-bottom: 8px;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mailview__help h2 {
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.mailview__helptext {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.mailview__helptext--secondary {
+  margin-top: 10px;
+  color: var(--ink-2);
+}
+
+.mailview__helpaction {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.mailview__helpaction:visited {
+  color: var(--on-accent);
+}
+
+.mailview__contribution {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.mailview__contribution:visited {
+  color: var(--accent);
+}
+
 .mailview__fallbacktext {
   color: var(--ink-2);
   font-size: 16px;
@@ -1870,12 +1959,6 @@ option {
 
 .mailview__fallbacklink:visited {
   color: var(--accent);
-}
-
-.mailview__note {
-  color: var(--ink-2);
-  font-size: 13px;
-  line-height: 1.45;
 }
 
 /* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */

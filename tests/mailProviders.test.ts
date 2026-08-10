@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { siteConfigurationFor } from '../src/dhbw/siteConfiguration';
 import { mailProviderForSite, RAVENSBURG_MAIL_PROVIDER } from '../src/mail/providers';
 
 describe('mail provider mapping', () => {
@@ -18,10 +19,18 @@ describe('mail provider mapping', () => {
 
   it('keeps a documented forwarding-only location without a fake mail login', () => {
     expect(mailProviderForSite('KA')).toBeNull();
+    const karlsruhe = siteConfigurationFor('KA');
+    expect(karlsruhe.mailUnavailableTitle).toBe('Mailzugang für Karlsruhe gesucht');
+    expect(karlsruhe.mailUnavailableReason).toContain('Webmail-Adresse');
+    expect(karlsruhe.mailSupportLabel).toBe('Webmail-Link mitteilen');
+    expect(karlsruhe.mailContributionHref).toBe('https://github.com/fotoadler/dhbw-planner');
   });
 
   it('supports different webmail platforms through the same adapter', () => {
     expect(mailProviderForSite('STG')?.platform).toBe('roundcube');
+    expect(mailProviderForSite('STG')?.webmailUrl).toBe(
+      'https://lehre-webmail.dhbw-stuttgart.de/roundcubemail/',
+    );
     expect(mailProviderForSite('VS')?.platform).toBe('modoboa');
     expect(mailProviderForSite('HDH')?.platform).toBe('owa');
   });

@@ -4,7 +4,15 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 
 ## Unveröffentlicht
 
+### Funktionen und Darstellung
+
+- Standorte ohne bestätigten Webmail-Login zeigen im Mail-Tab jetzt einen standortspezifischen Hinweis mit Feedback- und GitHub-Aktion statt eines generischen Leerzustands.
+- Die Einstellungen weisen sichtbar darauf hin, dass DHBW Planner Open Source ist, und verlinken das Repository.
+
 ### Fehlerbehebungen
+
+- Die native Mail-WebView unter Android liegt nicht mehr unter Statusleiste oder Display-Cutout. Sie ist eine native View über der Capacitor-WebView und erbt deren CSS-Safe-Area-Insets nicht. Ergänzt wird nur der Anteil der System-Insets, den der Host tatsächlich noch überdeckt — ohne erzwungenes Edge-to-Edge (Android 14 und älter) hat das DecorView die Leisten bereits verrechnet, ein ungeprüfter Rand wäre dort ein zweiter, sichtbarer Abstand. Rotation, Split-Screen und eingeblendete Tastatur positionieren die Ansicht jetzt neu.
+- Der Stuttgarter Webmail-Einstieg zeigt auf `/roundcubemail/`. Die bisherige Adresse lieferte nur eine Infoseite statt des Shibboleth-SSO-Logins.
 
 - Android startet im Dark Mode wieder. `values-night/styles.xml` definierte `AppTheme`, `AppTheme.NoActionBar` und `AppTheme.NoActionBarLaunch` ohne `parent`; da Ressourcen-Qualifier einen Style vollständig ersetzen statt ihn zu ergänzen, verloren die Themes im Dark Mode ihre Abstammung von `Theme.AppCompat` und die App stürzte bei jedem Start mit `IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.` ab. Im hellen Design trat der Fehler nicht auf.
 - Der System-Zurück-Button funktioniert unter Android wieder. `@capacitor/app` registriert beim Start einen aktiven `OnBackPressedCallback`, der ohne `backButton`-Listener nur `webView.goBack()` aufruft. Da die Navigation reiner React-State ohne History ist, wurde jeder Zurück-Druck wirkungslos verschluckt — weder eine Ebene zurück noch das Verlassen der App war möglich. Ein Zurück-Druck baut jetzt eine sichtbare Ebene ab: Einstellungen, Kursdetail, Bereich, Dualis-Unterseite, Wochenansicht, danach wird die App beendet.
@@ -12,6 +20,7 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 ### Entwicklung
 
 - Die Zurück-Navigation liegt als reine Funktion in `src/ui/backNavigation.ts` und ist über `tests/backNavigation.test.ts` abgedeckt; `src/ui/useBackButton.ts` bleibt ein dünner Wrapper um das Plugin.
+- `tests/embeddedMailLayout.test.ts` sichert die Inset-Logik des nativen Mail-Plugins schmal über den Quelltext ab; die Sichtprüfung auf Android 14 und Android 15+ ersetzt das nicht. Die Repository-Adresse liegt als `PROJECT_REPOSITORY_URL` in `src/lib/projectLinks.ts`.
 - `tests/androidThemes.test.ts` prüft die explizite AppCompat-Abstammung der Night-Styles sowie die vollständige Splashscreen-Konfiguration. Der Fehler war rein deklarativ und wurde weder vom TypeScript-Compiler noch von `lintVitalRelease` erkannt.
 - Bekannte Schwachstellen der Build-Toolchain über `npm audit fix` behoben (nur `package-lock.json`, keine Laufzeitabhängigkeiten der App).
 

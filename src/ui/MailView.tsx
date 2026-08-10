@@ -75,7 +75,7 @@ export function MailView({ site }: Props) {
               target="_blank"
               rel="noreferrer"
             >
-              {siteConfig.mailContributionLabel ?? 'Auf GitHub beitragen'}
+              {siteConfig.mailContributionLabel ?? 'Auf GitHub beitragen'} <span aria-hidden="true">↗</span>
             </a>
           )}
         </section>

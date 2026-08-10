@@ -10,6 +10,7 @@ import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
+import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
 
 interface Props {
   settings: AppSettings;
@@ -297,7 +298,7 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
             <p>DHBW Planner ist Open Source – schau dir den Code an oder entwickle mit.</p>
             <a
               className="setup__button sheet__feedback-button sheet__opensource-button"
-              href="https://github.com/fotoadler/dhbw-planner"
+              href={PROJECT_REPOSITORY_URL}
               target="_blank"
               rel="noreferrer"
             >

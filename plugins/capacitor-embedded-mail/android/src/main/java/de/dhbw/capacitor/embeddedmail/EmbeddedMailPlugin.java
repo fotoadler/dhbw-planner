@@ -3,6 +3,7 @@ package de.dhbw.capacitor.embeddedmail;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
@@ -26,6 +27,12 @@ public class EmbeddedMailPlugin extends Plugin {
 
     private WebView mailWebView;
     private int bottomInsetDp = DEFAULT_BOTTOM_INSET_DP;
+
+    private final View.OnLayoutChangeListener hostLayoutListener = (
+        view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom
+    ) -> {
+        if (view instanceof ViewGroup) positionWebView((ViewGroup) view);
+    };
 
     @PluginMethod
     public void open(PluginCall call) {
@@ -58,7 +65,14 @@ public class EmbeddedMailPlugin extends Plugin {
                 host.addView(mailWebView);
             }
 
+            // Rotation, Split-Screen oder eine eingeblendete Tastatur ändern die
+            // Insets, ohne die WebView neu zu öffnen. positionWebView() bricht bei
+            // unveränderten Rändern ab und löst deshalb keine Layout-Schleife aus.
+            host.removeOnLayoutChangeListener(hostLayoutListener);
+            host.addOnLayoutChangeListener(hostLayoutListener);
+
             positionWebView(host);
+            mailWebView.bringToFront();
             mailWebView.loadUrl(rawUrl);
             call.resolve();
         });
@@ -68,7 +82,9 @@ public class EmbeddedMailPlugin extends Plugin {
     public void close(PluginCall call) {
         getActivity().runOnUiThread(() -> {
             if (mailWebView != null && mailWebView.getParent() instanceof ViewGroup) {
-                ((ViewGroup) mailWebView.getParent()).removeView(mailWebView);
+                ViewGroup host = (ViewGroup) mailWebView.getParent();
+                host.removeOnLayoutChangeListener(hostLayoutListener);
+                host.removeView(mailWebView);
             }
             // WebView schreibt Cookies asynchron. Android dokumentiert flush()
             // als explizite Sicherung in den persistenten Cookie-Speicher.
@@ -87,6 +103,9 @@ public class EmbeddedMailPlugin extends Plugin {
     protected void handleOnDestroy() {
         flushCookies();
         if (mailWebView != null) {
+            if (mailWebView.getParent() instanceof ViewGroup) {
+                ((ViewGroup) mailWebView.getParent()).removeOnLayoutChangeListener(hostLayoutListener);
+            }
             mailWebView.stopLoading();
             mailWebView.destroy();
             mailWebView = null;
@@ -138,6 +157,8 @@ public class EmbeddedMailPlugin extends Plugin {
     }
 
     private void positionWebView(ViewGroup host) {
+        if (mailWebView == null) return;
+
         int statusInset = 0;
         int navigationInset = 0;
         WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(host);
@@ -148,16 +169,36 @@ public class EmbeddedMailPlugin extends Plugin {
             navigationInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
         }
 
+        // Die Mail-WebView liegt als native View über der Capacitor-WebView und
+        // erbt deshalb nicht deren CSS-safe-area-insets.
+        //
+        // getRootWindowInsets() meldet die Insets des Fensters unabhängig davon, ob
+        // das DecorView sie bereits verrechnet hat. Erzwungenes Edge-to-Edge gilt
+        // aber erst ab Android 15; auf älteren Systemen beginnt der Host bereits
+        // unterhalb der Statusleiste und endet oberhalb der Navigationsleiste. Ein
+        // ungeprüfter Rand wäre dort ein zweiter, sichtbarer Abstand. Deshalb wird
+        // nur der Anteil ergänzt, den der Host tatsächlich noch überdeckt.
+        int[] hostPosition = new int[2];
+        host.getLocationInWindow(hostPosition);
+        int gapAboveHost = hostPosition[1];
+        int gapBelowHost = Math.max(0, host.getRootView().getHeight() - (hostPosition[1] + host.getHeight()));
+
+        int topMargin = Math.max(0, statusInset - gapAboveHost);
+        int bottomMargin = dpToPx(bottomInsetDp) + Math.max(0, navigationInset - gapBelowHost);
+
+        ViewGroup.LayoutParams current = mailWebView.getLayoutParams();
+        if (current instanceof CoordinatorLayout.LayoutParams) {
+            CoordinatorLayout.LayoutParams existing = (CoordinatorLayout.LayoutParams) current;
+            if (existing.topMargin == topMargin && existing.bottomMargin == bottomMargin) return;
+        }
+
         CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         );
-        // Die Mail-WebView liegt als native View über der Capacitor-WebView und
-        // erbt deshalb nicht deren CSS-safe-area-inset-top.
-        params.topMargin = statusInset;
-        params.bottomMargin = dpToPx(bottomInsetDp) + navigationInset;
+        params.topMargin = topMargin;
+        params.bottomMargin = bottomMargin;
         mailWebView.setLayoutParams(params);
-        mailWebView.bringToFront();
     }
 
     private int dpToPx(int dp) {

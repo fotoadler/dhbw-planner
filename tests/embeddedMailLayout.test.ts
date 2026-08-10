@@ -1,3 +1,9 @@
+/**
+ * Das native Layout ist nur auf einem Gerät vollständig prüfbar. Dieser Test
+ * sichert deshalb bewusst schmal ab, dass die Inset-Logik überhaupt vorhanden
+ * bleibt — er ersetzt keine Sichtprüfung auf Android 14 und Android 15+.
+ */
+
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -11,9 +17,20 @@ const androidEmbeddedMailPlugin = readFileSync(
 );
 
 describe('embedded mail native layout', () => {
-  it('keeps the Android mail WebView below the status bar and display cutout', () => {
+  it('berücksichtigt Statusleiste und Display-Cutout', () => {
     expect(androidEmbeddedMailPlugin).toContain('WindowInsetsCompat.Type.statusBars()');
     expect(androidEmbeddedMailPlugin).toContain('WindowInsetsCompat.Type.displayCutout()');
-    expect(androidEmbeddedMailPlugin).toContain('params.topMargin = statusInset;');
+    expect(androidEmbeddedMailPlugin).toMatch(/params\.topMargin\s*=/);
+  });
+
+  it('zieht bereits verrechnete Systemleisten ab, statt sie doppelt zu addieren', () => {
+    expect(androidEmbeddedMailPlugin).toContain('getLocationInWindow');
+    expect(androidEmbeddedMailPlugin).toMatch(/Math\.max\(0,\s*statusInset - gapAboveHost\)/);
+    expect(androidEmbeddedMailPlugin).toMatch(/Math\.max\(0,\s*navigationInset - gapBelowHost\)/);
+  });
+
+  it('positioniert die WebView nach Layoutwechseln neu', () => {
+    expect(androidEmbeddedMailPlugin).toContain('addOnLayoutChangeListener(hostLayoutListener)');
+    expect(androidEmbeddedMailPlugin).toContain('removeOnLayoutChangeListener(hostLayoutListener)');
   });
 });

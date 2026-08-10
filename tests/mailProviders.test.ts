@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { siteConfigurationFor } from '../src/dhbw/siteConfiguration';
 import { mailProviderForSite, RAVENSBURG_MAIL_PROVIDER } from '../src/mail/providers';
+import { PROJECT_REPOSITORY_URL } from '../src/lib/projectLinks';
 
 describe('mail provider mapping', () => {
   it('exposes the Ravensburg OWA provider for RV', () => {
@@ -17,13 +18,14 @@ describe('mail provider mapping', () => {
     expect(RAVENSBURG_MAIL_PROVIDER.usernameHint).toBe('DOMAB\\Benutzername');
   });
 
-  it('keeps a documented forwarding-only location without a fake mail login', () => {
+  it('keeps a location without a confirmed webmail login free of a fake mail login', () => {
+    // Bewusst ohne Wortlautprüfung: der Test sichert die Datenform, nicht die Copy.
     expect(mailProviderForSite('KA')).toBeNull();
     const karlsruhe = siteConfigurationFor('KA');
-    expect(karlsruhe.mailUnavailableTitle).toBe('Mailzugang für Karlsruhe gesucht');
-    expect(karlsruhe.mailUnavailableReason).toContain('Webmail-Adresse');
-    expect(karlsruhe.mailSupportLabel).toBe('Webmail-Link mitteilen');
-    expect(karlsruhe.mailContributionHref).toBe('https://github.com/fotoadler/dhbw-planner');
+    expect(karlsruhe.mailUnavailableTitle).toBeTruthy();
+    expect(karlsruhe.mailUnavailableReason).toBeTruthy();
+    expect(karlsruhe.mailSupportLabel).toBeTruthy();
+    expect(karlsruhe.mailContributionHref).toBe(PROJECT_REPOSITORY_URL);
   });
 
   it('supports different webmail platforms through the same adapter', () => {

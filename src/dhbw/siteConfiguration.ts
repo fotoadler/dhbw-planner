@@ -8,6 +8,8 @@
  * Plugin anzupassen.
  */
 
+import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
+
 export type DualisUsernameMode = 'email-domain' | 'full-email';
 export type MailPlatform = 'owa' | 'roundcube' | 'modoboa' | 'webmail';
 
@@ -147,11 +149,11 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
     mail: null,
     mailUnavailableTitle: 'Mailzugang für Karlsruhe gesucht',
     mailUnavailableReason:
-      'Wir konnten die Webmail-Adresse für den Standort Karlsruhe bisher nicht zuverlässig ermitteln. Wenn du dort studierst, teile uns bitte den Link zu eurem Mailpostfach mit.',
+      'Für Karlsruhe ist eine Weiterleitungsadresse dokumentiert, aber kein bestätigter Webmail-Login. Wenn du dort studierst und ein Postfach mit eigenem Weblogin nutzt, teile uns bitte den Link mit.',
     mailUnavailableInstructions:
       'Du kennst dich mit Code aus? Dann kannst du den Zugang auch direkt im Open-Source-Projekt auf GitHub ergänzen.',
     mailSupportLabel: 'Webmail-Link mitteilen',
-    mailContributionHref: 'https://github.com/fotoadler/dhbw-planner',
+    mailContributionHref: PROJECT_REPOSITORY_URL,
     mailContributionLabel: 'Auf GitHub beitragen',
   },
   MA: {

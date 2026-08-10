@@ -1,8 +1,18 @@
+import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { SecureStorage } from '@dhbw/capacitor-secure-storage';
 
 const DUALIS_PREFS_KEY = 'dualis.prefs.v1';
 const DUALIS_CREDENTIALS_KEY = 'dualis.credentials.v1';
+
+/**
+ * SecureStorage ist ohne Web-Implementierung registriert: Keystore und Keychain
+ * gibt es nur nativ. Im Browser darf das Speichern deshalb gar nicht erst
+ * angeboten werden.
+ */
+export function isSecureStorageAvailable(): boolean {
+  return Capacitor.isNativePlatform();
+}
 
 export interface DualisPrefs {
   username: string;

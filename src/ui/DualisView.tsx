@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { DualisModule } from '../dualis/types';
 import { UseDualis } from './useDualis';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
+import { isSecureStorageAvailable } from '../store/dualis';
 
 interface DualisViewProps {
   dualis: UseDualis;
@@ -28,6 +29,7 @@ export function DualisView({ dualis, site, page }: DualisViewProps) {
 
   return (
     <div className="dualis">
+      {dualis.notice && <p className="dualis__notice">{dualis.notice}</p>}
       {dualis.error && <p className="dualis__notice">{dualis.error}</p>}
 
       {page === 'overview' ? (
@@ -75,18 +77,21 @@ function DualisLogin({
   error,
   onLogin,
 }: LoginProps) {
+  // Ohne Keystore beziehungsweise Keychain gibt es keinen sicheren Ablageort für
+  // das Passwort — im Web wird das Angebot deshalb weggelassen.
+  const canRememberCredentials = isSecureStorageAvailable();
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [rememberUsername, setRememberUsername] = useState(initialRememberUsername);
-  const [rememberCredentials, setRememberCredentials] = useState(initialRememberCredentials);
+  const [rememberCredentials, setRememberCredentials] = useState(initialRememberCredentials && canRememberCredentials);
 
   // Preferences werden beim App-Start asynchron geladen. So aktualisiert sich
   // das Formular auch dann, wenn es bereits vor dem Laden gerendert wurde.
   useEffect(() => {
     setUsername(initialUsername);
     setRememberUsername(initialRememberUsername);
-    setRememberCredentials(initialRememberCredentials);
-  }, [initialRememberCredentials, initialRememberUsername, initialUsername]);
+    setRememberCredentials(initialRememberCredentials && canRememberCredentials);
+  }, [canRememberCredentials, initialRememberCredentials, initialRememberUsername, initialUsername]);
 
   const submit = () => {
     if (!username.trim() || !password) return;
@@ -137,15 +142,17 @@ function DualisLogin({
           />
         </label>
 
-        <label className="dualis-login__check">
-          <span>Angemeldet bleiben</span>
-          <input
-            type="checkbox"
-            checked={rememberCredentials}
-            disabled={loading}
-            onChange={(event) => setRememberCredentials(event.target.checked)}
-          />
-        </label>
+        {canRememberCredentials && (
+          <label className="dualis-login__check">
+            <span>Angemeldet bleiben</span>
+            <input
+              type="checkbox"
+              checked={rememberCredentials}
+              disabled={loading}
+              onChange={(event) => setRememberCredentials(event.target.checked)}
+            />
+          </label>
+        )}
 
         {error && <p className="setup__error">{error}</p>}
 

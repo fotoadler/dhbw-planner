@@ -17,6 +17,8 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 - Für Bad Mergentheim entfallen die acht Speiseplanlinks des Studierendenwerks. Sie zeigten auf eine einzige Platzhalterdatei mit dem Text „Derzeit kein Speiseplan vorhanden!“; verlinkt sind jetzt nur restauranteigene Seiten.
 - Der Dualis-Login unter Android schlägt nicht mehr mit „Dualis-Anmeldung ist abgelaufen oder wurde abgelehnt." fehl. CapacitorCookies installiert beim Start unabhängig von `CapacitorCookies.enabled` einen globalen CookieHandler; der schreibt jedes `Set-Cookie` in den WebView-Cookie-Jar und hängt es beim nächsten Request als zweiten `Cookie`-Header an. Beide Header werden zusammengefasst, sodass am Server `cnsc=<wert>,cnsc=<wert>` ankam — Cookie-Werte werden aber mit `; ` getrennt, nicht mit `,`. CampusNet las dadurch einen einzigen Cookie mit unbrauchbarem Wert und lieferte wieder das Loginformular. Der native Jar wird jetzt nach jeder Antwort geleert, und zwar mit der Request-URL: CampusNet sendet den Cookie ohne `Path`-Attribut, der WebView bindet ihn deshalb an `/scripts`, und ein Aufruf auf die blanke Origin hätte ihn nicht erfasst. Im Browser trat der Fehler nicht auf, weil die Fetch-API den selbst gesetzten `Cookie`-Header verwirft und nur einer hinausgeht.
 - Die bestehende Aufräumroutine für native Cookies bei Anmeldung und Abmeldung erfasst den Session-Cookie jetzt tatsächlich. Sie leerte bisher nur die Origin und ging damit am pfadgebundenen Cookie vorbei.
+- Der Dualis-Login zeigt „Angemeldet bleiben“ nur noch dort, wo die Zugangsdaten auch abgelegt werden können. Das SecureStorage-Plugin ist ohne Web-Implementierung registriert, im Browser scheiterte das Speichern deshalb immer — angeboten wurde es trotzdem.
+- Scheitert das Speichern der Zugangsdaten auf dem Gerät, erscheint kein Fehler mehr. Die Anmeldung selbst hat funktioniert; die Meldung steht jetzt als sachlicher Hinweis in der Dualis-Ansicht und sagt, was daraus folgt: „beim nächsten Start musst du dich erneut anmelden.“
 
 ### Sicherheit
 
@@ -32,6 +34,8 @@ Alle nennenswerten Änderungen werden hier dokumentiert.
 - `tests/diningSites.test.ts` prüft die Abdeckung gegen `SITE_CONFIGURATIONS` statt gegen eine feste Liste; ein neuer Standort ohne Essensprofil fällt damit auf.
 - Aufbau und Erweiterung sind in `docs/MENSA_INTEGRATION.md` beschrieben.
 - `tests/dualisAndroidCookies.test.ts` deckt den nativen Cookie-Transport über einen gemockten Capacitor-Layer ab: Für jede angefragte URL muss der Jar mit genau dieser URL geleert werden, der Session-Cookie genau einmal und ohne Komma hinausgehen, und andere Plattformen dürfen unberührt bleiben.
+- Der Dualis-State trennt `error` und `notice`: `error` bleibt echten Fehlern und dem roten Kasten im Login-Formular vorbehalten, `notice` trägt Hinweise ohne Fehlercharakter. Beides wird beim nächsten Anmeldeversuch und beim Abmelden zurückgesetzt.
+- `isSecureStorageAvailable()` in `src/store/dualis.ts` beantwortet die Plattformfrage an einer Stelle, analog zu `isEmbeddedMailAvailable()`. `tests/dualisCredentialStorage.test.ts` deckt den Hinweiszweig über den gerenderten Hook ab.
 
 ## 1.4.0 - 2026-08-10
 

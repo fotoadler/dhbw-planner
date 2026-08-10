@@ -11,7 +11,7 @@ export const mannheimDining = defineDiningSite({
     {
       id: 'ma-metropol', apiId: 5, name: 'Mensaria Metropol + greenes²', shortName: 'Coblitzallee',
       address: 'Hans-Thoma-Straße 51, 68163 Mannheim', openingHours: 'Mo–Fr 07:30–15:30',
-      menuUrl: 'https://www.stw-ma.de/essen-trinken/speiseplaene/mensaria-metropol/',
+      menuUrl: 'https://www.stw-ma.de/essen-trinken/speiseplaene/mensaria-metropol-greenes/',
     },
     {
       id: 'ma-wohlgelegen', apiId: 6, name: 'Mensaria Wohlgelegen', shortName: 'Wohlgelegen',

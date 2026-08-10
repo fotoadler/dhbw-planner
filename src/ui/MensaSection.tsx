@@ -27,15 +27,7 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
 
   const selectedFacility = facilities.find((facility) => facility.id === selectedFacilityId) ?? facilities[0];
   return (
-    <section className="mensa" aria-labelledby="mensa-title">
-      <header className="mensa__header">
-        <div>
-          <h2 id="mensa-title" className="mensa__title">Essen in {profile.label}</h2>
-          <p className="mensa__operator">{profile.operator}</p>
-        </div>
-        {snapshot?.officialInfoUrl && <ExternalLink href={snapshot.officialInfoUrl} label="Info" compact />}
-      </header>
-
+    <section className="mensa" aria-label={`Speiseplan ${profile.label}`}>
       {profile.intro && <p className="mensa__intro">{profile.intro}</p>}
       {profile.venueScope === 'multi-site' && onSelectSite && (
         <label className="mensa__sitepicker">
@@ -48,13 +40,14 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
         </label>
       )}
       {status === 'loading' && !snapshot && <StatusCard title="Speiseplan wird geladen …" />}
-      {error && (
+      {error && <>
         <StatusCard
           tone="warning"
           title={status === 'stale' ? 'Aktualisierung fehlgeschlagen' : 'Speiseplan nicht erreichbar'}
           text={status === 'stale' ? 'Der zuletzt gespeicherte Stand bleibt sichtbar.' : error}
         />
-      )}
+        {profile.officialInfoUrl && <ExternalLink href={profile.officialInfoUrl} label="Offizielle Infos" compact />}
+      </>}
 
       {facilities.length > 1 && (
         <nav className="mensa__tabs" aria-label="Einrichtung auswählen">
@@ -72,9 +65,14 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
         </nav>
       )}
 
-      {selectedFacility && <FacilityView facility={selectedFacility} selectedDay={selectedDay} />}
+      {selectedFacility && (
+        <FacilityView facility={selectedFacility} selectedDay={selectedDay} showName={facilities.length === 1} />
+      )}
       {!selectedFacility && status !== 'loading' && (
-        <StatusCard title="Noch kein Angebot eingerichtet" text="Nutze die verlinkten offiziellen Informationen für diesen Standort." />
+        <>
+          <StatusCard title="Noch kein Angebot eingerichtet" />
+          {profile.officialInfoUrl && <ExternalLink href={profile.officialInfoUrl} label="Offizielle Infos" compact />}
+        </>
       )}
 
       {(snapshot?.partners.length ?? 0) > 0 && (
@@ -86,7 +84,11 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
                 <strong>{partner.name}</strong>
                 {partner.description && <span>{partner.description}</span>}
                 {(partner.menuUrl || partner.infoUrl) && (
-                  <ExternalLink href={partner.menuUrl ?? partner.infoUrl ?? '#'} label="Ansehen" compact />
+                  <ExternalLink
+                    href={partner.menuUrl ?? partner.infoUrl ?? '#'}
+                    label={partner.menuUrl ? 'Speiseplan' : 'Website'}
+                    compact
+                  />
                 )}
               </article>
             ))}
@@ -97,7 +99,15 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
   );
 }
 
-function FacilityView({ facility, selectedDay }: { facility: DiningFacility; selectedDay: string }) {
+function FacilityView({
+  facility,
+  selectedDay,
+  showName,
+}: {
+  facility: DiningFacility;
+  selectedDay: string;
+  showName: boolean;
+}) {
   const day = facility.days[selectedDay];
   const period = facility.specialPeriods.find(({ from, to }) => selectedDay >= from && selectedDay <= to);
   const nextDay = useMemo(
@@ -105,16 +115,22 @@ function FacilityView({ facility, selectedDay }: { facility: DiningFacility; sel
     [facility.days, selectedDay],
   );
 
+  const visibleHours = facility.mealHours ?? (facility.kind === 'snack-only' || facility.kind === 'external-menu'
+    ? facility.openingHours
+    : undefined);
+  const showsFacilityHead = showName || Boolean(visibleHours) || facility.kind === 'external-menu';
+
   return (
     <div className="mensa__facility">
-      <div className="mensa__facilityhead">
+      {showsFacilityHead && <div className="mensa__facilityhead">
         <div>
-          <h3>{facility.name}</h3>
-          {(facility.mealHours || facility.openingHours) && <p>{facility.mealHours ?? facility.openingHours}</p>}
-          {facility.address && <p>{facility.address}</p>}
+          {showName && <h3>{facility.name}</h3>}
+          {visibleHours && <p>{visibleHours}</p>}
         </div>
-        {facility.menuUrl && <ExternalLink href={facility.menuUrl} label="Speiseplan" compact />}
-      </div>
+        {facility.kind === 'external-menu' && facility.menuUrl && (
+          <ExternalLink href={facility.menuUrl} label="Wochenplan öffnen" compact />
+        )}
+      </div>}
 
       {period && (
         <StatusCard
@@ -207,13 +223,7 @@ function PartnerDirectory({ profile, snapshot }: { profile: DiningSiteProfile; s
   const voucher = snapshot?.voucher ?? profile.voucher;
   return (
     <section className="mensa" aria-labelledby="mensa-title">
-      <header className="mensa__header">
-        <div>
-          <h2 id="mensa-title" className="mensa__title">Essen in {profile.label}</h2>
-          <p className="mensa__operator">{profile.operator}</p>
-        </div>
-        {profile.officialInfoUrl && <ExternalLink href={profile.officialInfoUrl} label="Info" compact />}
-      </header>
+      <h2 id="mensa-title" className="mensa__title">Partnerrestaurants</h2>
       {profile.intro && <p className="mensa__intro">{profile.intro}</p>}
       {voucher && (
         <div className="mensa__voucher">
@@ -230,7 +240,13 @@ function PartnerDirectory({ profile, snapshot }: { profile: DiningSiteProfile; s
               {partner.address && <span>{partner.address}</span>}
               {partner.description && <span>{partner.description}</span>}
             </div>
-            {(partner.menuUrl || partner.infoUrl) && <ExternalLink href={partner.menuUrl ?? partner.infoUrl ?? '#'} label="Speiseplan" compact />}
+            {(partner.menuUrl || partner.infoUrl) && (
+              <ExternalLink
+                href={partner.menuUrl ?? partner.infoUrl ?? '#'}
+                label={partner.menuUrl ? 'Speiseplan' : 'Website'}
+                compact
+              />
+            )}
           </article>
         ))}
       </div>

@@ -22,7 +22,7 @@ export const karlsruheDining = defineDiningSite({
   markerPolicy: 'mixed-additives',
   closedMealPattern: /\bgeschlossen\b/i,
   partners: [
-    { id: 'ka-adenauerring', name: 'Mensa am Adenauerring', description: 'Alternative des Studierendenwerks Karlsruhe', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa_adenauerring/' },
-    { id: 'ka-moltke', name: 'Mensa Moltke', description: 'Alternative des Studierendenwerks Karlsruhe', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa_moltke/' },
+    { id: 'ka-adenauerring', name: 'Mensa am Adenauerring', description: 'Alternative des Studierendenwerks Karlsruhe', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa-am-adenauerring/' },
+    { id: 'ka-moltke', name: 'Mensa Moltke', description: 'Alternative des Studierendenwerks Karlsruhe', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa-moltke/' },
   ],
 });

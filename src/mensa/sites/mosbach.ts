@@ -23,10 +23,9 @@ export const mosbachDining = defineDiningSite({
   partners: [{
     id: 'mos-fideljo',
     name: 'Fideljo',
-    description: 'Kooperationsrestaurant nahe Gebäude F',
+    description: 'Kooperationsrestaurant nahe Gebäude F · derzeit kein Speiseplan veröffentlicht',
     address: 'Neckarburkener Straße 18, 74821 Mosbach',
     hours: 'Mittagstisch 11:45–13:00',
-    menuUrl: 'https://www.stw.uni-heidelberg.de/wp-content/uploads/2025/04/sp-mos-fideljo-aktuell.pdf',
   }],
   categoryLabels: { main: 'Tagesgericht' },
   markerPolicy: 'swapped',

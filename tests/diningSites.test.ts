@@ -1,8 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { DhbwMensaClient, type DhbwMensaMeal, type DhbwMensaResponse } from '../src/dhbwApi/mensa';
 import { loadDiningSnapshot, mapApiDiningResponse } from '../src/mensa/loadDining';
 import { DINING_SITE_PROFILES, diningProfileForSite } from '../src/mensa/sites';
 import { parseStwHeidelbergPlan } from '../src/mensa/stwHeidelberg';
+import { MensaSection } from '../src/ui/MensaSection';
 
 const meal = (id: number, name: string, overrides: Partial<DhbwMensaMeal> = {}): DhbwMensaMeal => ({
   id,
@@ -71,7 +74,7 @@ describe('standortseparierte Mensa-Profile', () => {
     expect(snapshot.presentation).toBe('partner-list');
     expect(snapshot.partners).toHaveLength(9);
     expect(snapshot.voucher).toMatchObject({ price: 2.7, value: 5.4 });
-    expect(snapshot.partners.some((partner) => partner.menuUrl?.includes('sp-sha-'))).toBe(false);
+    expect(snapshot.partners.every((partner) => partner.menuUrl === undefined)).toBe(true);
   });
 
   it('erkennt den Karlsruher Schließtext als Status statt als Beilage', () => {
@@ -129,6 +132,60 @@ describe('standortseparierte Mensa-Profile', () => {
     });
     await client.fetchResponse('LÖR');
     expect(urls).toEqual(['https://example.test/mensa/L%C3%96R']);
+  });
+});
+
+describe('kompakte Mensa-Darstellung', () => {
+  it('zeigt Ravensburg ohne redundanten Standortkopf, Adresse und externen Speiseplan', () => {
+    const profile = diningProfileForSite('RV');
+    const snapshot = mapApiDiningResponse(profile, [response(11, 'RV', 'Mensa Ravensburg')]);
+    const html = renderToStaticMarkup(createElement(MensaSection, {
+      profile,
+      snapshot,
+      status: 'ready',
+      error: null,
+      selectedDay: '2026-08-10',
+    }));
+
+    expect(html).toContain('Mensa Ravensburg');
+    expect(html).toContain('Mensa Ravensburg Gericht');
+    expect(html).toContain('Mittagessen 11:30–13:30');
+    expect(html).not.toContain('Essen in Ravensburg');
+    expect(html).not.toContain('Seezeit Studierendenwerk Bodensee');
+    expect(html).not.toContain('Marienplatz 2');
+    expect(html).not.toContain('mensa-ravensburg/');
+  });
+
+  it('zeigt Bad Mergentheim als Partnerverzeichnis ohne leere PDF-Aktionen', async () => {
+    const profile = diningProfileForSite('MGH');
+    const snapshot = await loadDiningSnapshot(profile);
+    const html = renderToStaticMarkup(createElement(MensaSection, {
+      profile,
+      snapshot,
+      status: 'ready',
+      error: null,
+      selectedDay: '2026-08-10',
+    }));
+
+    expect(html).toContain('Partnerrestaurants');
+    expect(html).toContain('Essensmarke: 2,70');
+    expect(html).toContain('Kidano Restaurant');
+    expect(html).not.toContain('sp-mgh-');
+  });
+
+  it('bietet offizielle Infos nur als Fallback bei einem Abruffehler an', () => {
+    const profile = diningProfileForSite('RV');
+    const html = renderToStaticMarkup(createElement(MensaSection, {
+      profile,
+      snapshot: null,
+      status: 'error',
+      error: 'Netzwerkfehler',
+      selectedDay: '2026-08-10',
+    }));
+
+    expect(html).toContain('Speiseplan nicht erreichbar');
+    expect(html).toContain('Offizielle Infos');
+    expect(html).toContain(profile.officialInfoUrl);
   });
 });
 

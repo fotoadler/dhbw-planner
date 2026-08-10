@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { groupEntriesByWeek, mapScheduleItem } from '../src/dhbwApi/client';
+import { canonicalCourseName } from '../src/dhbwApi/courseName';
 
 describe('DHBW API client', () => {
+  it('repairs the historic DHD prefix for Heidenheim course selections', () => {
+    expect(canonicalCourseName('HDH', 'DHD-WBK2024')).toBe('HDH-WBK2024');
+    expect(canonicalCourseName('RV', 'DHD-WBK2024')).toBe('DHD-WBK2024');
+  });
+
   it('maps API events into the existing schedule model', () => {
     const entry = mapScheduleItem({
       entityType: 'LECTURE',

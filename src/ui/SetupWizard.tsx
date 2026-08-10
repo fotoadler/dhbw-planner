@@ -4,6 +4,7 @@ import { ApiSelection } from '../store/preferences';
 import { LinkSetup } from './LinkSetup';
 import { RaplaConfig } from '../rapla/client';
 import { selectionHaptic } from '../lib/haptics';
+import { canonicalCourseName } from '../dhbwApi/courseName';
 
 type Step = 'site' | 'degree' | 'course' | 'manual';
 
@@ -230,7 +231,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
       setDegree(value);
       setStep('course');
     } else {
-      onSaveApi({ site, course: value, degree });
+      onSaveApi({ site, course: canonicalCourseName(site, value), degree });
     }
   };
 

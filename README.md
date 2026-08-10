@@ -79,7 +79,7 @@ Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab
 
 Der verwendete Kursplan-Endpunkt liefert mit `archived=true` auch vergangene Termine. Dadurch können im geführten Modus historische Stundenplanwochen angezeigt werden, sofern die API diese Termine noch bereitstellt. Die API kann Dozentennamen je nach Datenquelle und Zugriffssituation leer liefern. Die App übernimmt Namen aus dem API-Feld beziehungsweise aus eingebetteten Angaben und ergänzt bekannte Namen aus einem lokalen Dozenten-Verzeichnis; eine vollständige Dozentenanzeige kann daher nicht garantiert werden.
 
-Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts über den API-Endpunkt `/mensa/{site}` geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst.
+Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst. Weil die Standorte unterschiedliche Betreiber und Datenlagen haben, beschreibt jeder Standort sein Angebot als eigenes Profil; Aufbau und Erweiterung stehen in [docs/MENSA_INTEGRATION.md](docs/MENSA_INTEGRATION.md).
 
 Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Betreiber von [dhbw.app](https://dhbw.app/), ausdrücklich gestattet. Die technische Dokumentation und die verwendeten Endpunkte stehen in [docs/DHBW_API.md](docs/DHBW_API.md); private Kontaktdaten und der Mailverkehr werden nicht im Repository veröffentlicht.
 
@@ -117,10 +117,11 @@ src/
   lib/                       Zeit-, Theme- und Haptik-Helfer sowie Projektlinks
   liveActivity/              Live-Aktivitäten und deren Planung
   mail/                      Mail-Adapter und Brücke zur nativen Mailansicht
+  mensa/                     Standortprofile und Normalisierung der Essensangebote
   notifications/             Planung und Registrierung lokaler Benachrichtigungen
   rapla/                     Rapla-Client und Rapla-2.0-Parser
   schedule/                  Stundenplanmodell und Modulfilter
-  seezeit/                   Mensa-Speisepläne
+  seezeit/                   Seezeit-Speisepläne für Ravensburg und Friedrichshafen
   store/                     Persistente Einstellungen und Cache
   ui/                        React-Komponenten
 tests/                       Parser-, Planner-, Dualis-, ICS- und Layouttests

@@ -18,7 +18,6 @@ import { resolveBackAction, type CalendarView, type DualisPage, type Section } f
 import { useSchedule } from './useSchedule';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
-import { mensaLabel as formatMensaLabel } from '../seezeit/types';
 import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
@@ -50,7 +49,7 @@ export function App() {
     useSchedule();
   const [systemThemeMode, setSystemThemeMode] = useState<ResolvedTheme>(() => systemTheme());
   const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
-  const { plan: mensaPlan, label: mensaName } = useMensa(
+  const dining = useMensa(
     mensaTarget,
     (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
@@ -335,8 +334,17 @@ export function App() {
           />
           <DayView
             entries={dayEntries}
-            meals={settings.mensaEnabled ? mensaPlan[selectedDay] ?? [] : []}
-            mensaLabel={mensaName || formatMensaLabel(settings.mensa)}
+            dining={settings.mensaEnabled ? {
+              ...dining,
+              selectedDay,
+              homeSite: settings.apiSelection?.site,
+              onSelectSite: (site) => void applySettings({
+                ...settings,
+                mensaEnabled: true,
+                mensaAuto: false,
+                mensa: site,
+              }),
+            } : null}
             onSelectEntry={(entry) => setSelectedBlockKey(blockKey(entry))}
             onSwipeDay={shiftDay}
             onRefresh={refresh}

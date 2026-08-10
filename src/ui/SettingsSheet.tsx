@@ -11,6 +11,7 @@ import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
 import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
+import { selectionHaptic } from '../lib/haptics';
 
 interface Props {
   settings: AppSettings;
@@ -207,6 +208,7 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
               value={settings.mensaEnabled ? settings.mensaAuto && settings.apiSelection ? 'auto' : settings.mensa : 'off'}
               onChange={(e) => {
                 const value = e.target.value;
+                selectionHaptic();
                 if (value === 'off') set({ mensaEnabled: false });
                 else if (value === 'auto' && settings.apiSelection) {
                   set({ mensaEnabled: true, mensaAuto: true, mensa: settings.apiSelection.site });

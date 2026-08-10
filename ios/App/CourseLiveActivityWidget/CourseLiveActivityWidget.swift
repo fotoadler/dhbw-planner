@@ -19,27 +19,30 @@ struct CourseLiveActivityWidget: Widget {
             let isStale = activityIsStale(context)
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading, spacing: 2) {
+                    Image(systemName: "calendar.badge.clock")
+                        .foregroundStyle(CourseLiveStyle.accent)
+                }
+                .contentMargins(.leading, 16)
+                DynamicIslandExpandedRegion(.trailing) {
+                    if isStale {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(Color.secondary)
+                    } else {
+                        Text(context.state.endTime, style: .time)
+                            .font(.caption.monospacedDigit().weight(.semibold))
+                            .foregroundStyle(Color.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                .contentMargins(.trailing, 16)
+                DynamicIslandExpandedRegion(.bottom) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text(context.state.title)
                             .font(.headline)
                             .foregroundStyle(Color.primary)
                             .lineLimit(2)
                             .minimumScaleFactor(0.8)
-                    }
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    if isStale {
-                        Text("Beendet")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.secondary)
-                    } else {
-                        Text("Endet \(context.state.endTime, style: .time)")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.secondary)
-                    }
-                }
-                DynamicIslandExpandedRegion(.bottom) {
-                    VStack(alignment: .leading, spacing: 8) {
+
                         if isStale {
                             Label("Vorlesung beendet", systemImage: "checkmark.circle")
                                 .font(.caption)
@@ -65,6 +68,7 @@ struct CourseLiveActivityWidget: Widget {
                         }
                     }
                 }
+                .contentMargins(.horizontal, 16)
             } compactLeading: {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(CourseLiveStyle.accent)

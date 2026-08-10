@@ -24,6 +24,8 @@ interface Props {
     status: DiningLoadStatus;
     error: string | null;
     selectedDay: string;
+    /** Studienstandort; entscheidet ueber den Wechsel des Essensstandorts. */
+    homeSite?: string;
     onSelectSite?: (site: string) => void;
   } | null;
   onSelectEntry: (entry: ScheduleEntry) => void;

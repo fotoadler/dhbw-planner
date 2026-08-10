@@ -211,7 +211,7 @@ function mapMenu(profile: DiningSiteProfile, facilityId: string, menu: DhbwMensa
   const hasMain = rawMeals.some(({ bucket }) => bucket === 'main');
   const status = menu.closed || closingMeal
     ? 'closed'
-    : profile.site === 'KA' && meals.length > 0 && !hasMain
+    : profile.partialWithoutMain && meals.length > 0 && !hasMain
       ? 'partial'
       : meals.length > 0
         ? 'open'
@@ -304,7 +304,8 @@ function unique(values: string[]): string[] {
 }
 
 function parseGermanPrice(value: string | undefined): number | undefined {
-  if (!value) return undefined;
+  // Ohne Ziffernpruefung wuerde "kostenlos" als 0 durchgehen und als "0,00 €" erscheinen.
+  if (!value || !/\d/.test(value)) return undefined;
   const parsed = Number(value.replace(/[^\d,.-]/g, '').replace(',', '.'));
   return Number.isFinite(parsed) ? parsed : undefined;
 }

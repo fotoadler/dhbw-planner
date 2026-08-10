@@ -14,7 +14,13 @@ export const friedrichshafenDining = defineDiningSite({
     address: 'Fallenbrunnen 2, Gebäude H, 88045 Friedrichshafen',
     mealHours: 'Mittagessen 11:30–13:30',
     menuUrl: 'https://seezeit.com/essen/speiseplaene/mensa-friedrichshafen/',
-    specialPeriods: [{ from: '2026-06-29', to: '2026-09-18', label: 'Sommerpause bis 18. September' }],
+    specialPeriods: [{
+      from: '2026-06-29',
+      to: '2026-09-18',
+      label: 'Sommerpause bis 18. September',
+      source: 'https://seezeit.com/essen/mensa-cafeteria-co/mensa-friedrichshafen/',
+      checkedAt: '2026-08-10',
+    }],
   }],
   categoryLabels: { main: 'Angebot' },
 });

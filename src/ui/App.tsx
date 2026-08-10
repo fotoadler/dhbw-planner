@@ -337,6 +337,7 @@ export function App() {
             dining={settings.mensaEnabled ? {
               ...dining,
               selectedDay,
+              homeSite: settings.apiSelection?.site,
               onSelectSite: (site) => void applySettings({
                 ...settings,
                 mensaEnabled: true,

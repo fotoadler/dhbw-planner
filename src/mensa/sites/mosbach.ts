@@ -18,7 +18,13 @@ export const mosbachDining = defineDiningSite({
     infoUrl: 'https://www.mosbach.dhbw.de/mosbach/campusmensa/',
     menuUrl: 'https://www.stw.uni-heidelberg.de/wp-content/uploads/2025/04/sp-mos-mensa-tannenhof-aktuell.pdf',
     notice: 'Vorbestellung erforderlich · Campuscard · Bestätigungsmail mitbringen',
-    specialPeriods: [{ from: '2026-07-01', to: '2026-09-11', label: 'Geschlossen bis 11. September' }],
+    specialPeriods: [{
+      from: '2026-07-01',
+      to: '2026-09-11',
+      label: 'Geschlossen bis 11. September',
+      source: 'https://www.stw.uni-heidelberg.de/wp-content/uploads/2025/04/sp-mos-mensa-tannenhof-aktuell.pdf',
+      checkedAt: '2026-08-10',
+    }],
   }],
   partners: [{
     id: 'mos-fideljo',

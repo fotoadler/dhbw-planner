@@ -10,6 +10,10 @@ export interface DiningPeriod {
   to: string;
   label: string;
   hours?: string;
+  /** Beleg fuer die Angabe; feste Zeitraeume veralten sonst unbemerkt. */
+  source?: string;
+  /** Datum der letzten Pruefung im Format YYYY-MM-DD. */
+  checkedAt?: string;
 }
 
 export interface DiningPrice {

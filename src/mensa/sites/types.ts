@@ -51,6 +51,18 @@ export interface DiningSiteProfile {
   pricePolicy?: 'student-only' | 'all';
   /** Optionale lokale Erkennung eines als Gericht gelieferten Schliesshinweises. */
   closedMealPattern?: RegExp;
+  /**
+   * Standorte, die Beilagen vor dem Hauptgericht veroeffentlichen: Ein Tag ohne
+   * Hauptgericht ist dort ein unvollstaendiger, kein fehlender Plan.
+   */
+  partialWithoutMain?: boolean;
+  /** Ueberschrift der eingeklappten Zusatzangebote. */
+  partnersLabel?: string;
+  /**
+   * Aggregierende Profile ohne eigene Mensa tauchen nicht als waehlbarer
+   * Essensstandort auf, bieten den Wechsel aber selbst an.
+   */
+  venuePicker?: 'hidden';
 }
 
 export function defineDiningSite(profile: DiningSiteProfile): DiningSiteProfile {

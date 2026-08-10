@@ -21,6 +21,8 @@ export const karlsruheDining = defineDiningSite({
   categoryLabels: { main: 'Menü', side: 'Extra', dessert: 'Dessert' },
   markerPolicy: 'mixed-additives',
   closedMealPattern: /\bgeschlossen\b/i,
+  partialWithoutMain: true,
+  partnersLabel: 'Weitere Mensen',
   partners: [
     { id: 'ka-adenauerring', name: 'Mensa am Adenauerring', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa-am-adenauerring/' },
     { id: 'ka-moltke', name: 'Mensa Moltke', infoUrl: 'https://www.sw-ka.de/de/hochschulgastronomie/mensa/mensa-moltke/' },

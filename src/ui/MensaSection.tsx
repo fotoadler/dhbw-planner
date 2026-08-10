@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { DiningDay, DiningFacility, DiningLoadStatus, DiningMeal, DiningPartner, DiningSnapshot } from '../mensa/model';
-import { DINING_SITE_OPTIONS, type DiningSiteProfile } from '../mensa/sites';
+import {
+  DINING_SITE_OPTIONS,
+  DINING_SITE_PROFILES,
+  diningProfileForSite,
+  type DiningSiteProfile,
+} from '../mensa/sites';
 
 interface Props {
   profile: DiningSiteProfile;
@@ -10,16 +15,26 @@ interface Props {
   status: DiningLoadStatus;
   error: string | null;
   selectedDay: string;
+  homeSite?: string;
   onSelectSite?: (site: string) => void;
 }
 
-export function MensaSection({ profile, snapshot, status, error, selectedDay, onSelectSite }: Props) {
+export function MensaSection({ profile, snapshot, status, error, selectedDay, homeSite, onSelectSite }: Props) {
   const facilities = snapshot?.facilities ?? [];
   const [selectedFacilityId, setSelectedFacilityId] = useState(() => facilities[0]?.id ?? profile.facilities[0]?.id ?? '');
 
   useEffect(() => {
     setSelectedFacilityId(facilities[0]?.id ?? profile.facilities[0]?.id ?? '');
   }, [profile.site, facilities.length]);
+
+  // Der Wechsel haengt am Studienstandort, nicht am gerade gezeigten Profil:
+  // sonst verschwaende der Wähler nach dem ersten Wechsel und der Weg zurueck
+  // fuehrte nur ueber die Einstellungen.
+  const pickerHome = diningProfileForSite(homeSite ?? profile.site);
+  const showVenuePicker = pickerHome.venueScope === 'multi-site';
+  const venueOptions = DINING_SITE_OPTIONS.filter(
+    (option) => DINING_SITE_PROFILES[option.value]?.venuePicker !== 'hidden',
+  );
 
   if (profile.presentation === 'partner-list') {
     return <PartnerDirectory profile={profile} snapshot={snapshot} />;
@@ -29,11 +44,11 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
   return (
     <section className="mensa" aria-label={`Speiseplan ${profile.label}`}>
       {profile.intro && <p className="mensa__intro">{profile.intro}</p>}
-      {profile.venueScope === 'multi-site' && onSelectSite && (
+      {showVenuePicker && onSelectSite && (
         <label className="mensa__sitepicker">
           <span>Essensstandort</span>
           <select value={profile.site} onChange={(event) => onSelectSite(event.target.value)}>
-            {DINING_SITE_OPTIONS.filter((option) => option.value !== 'CAS').map((option) => (
+            {venueOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
           </select>
@@ -77,7 +92,7 @@ export function MensaSection({ profile, snapshot, status, error, selectedDay, on
 
       {(snapshot?.partners.length ?? 0) > 0 && (
         <details className="mensa__alternatives">
-          <summary>{profile.site === 'KA' ? 'Weitere Mensen' : 'Weitere Angebote am Campus'}</summary>
+          <summary>{profile.partnersLabel ?? 'Weitere Angebote am Campus'}</summary>
           <div className="mensa__partnerlist">
             {snapshot?.partners.map((partner) => <PartnerCard partner={partner} key={partner.id} />)}
           </div>
@@ -209,6 +224,7 @@ function PartnerDirectory({ profile, snapshot }: { profile: DiningSiteProfile; s
   const voucher = snapshot?.voucher ?? profile.voucher;
   return (
     <section className="mensa" aria-label={`Essensangebote ${profile.label}`}>
+      {profile.intro && <p className="mensa__intro">{profile.intro}</p>}
       {voucher && (
         <div className="mensa__voucher">
           <strong>Essensmarke: {formatPrice(voucher.price)} · Wert {formatPrice(voucher.value)}</strong>

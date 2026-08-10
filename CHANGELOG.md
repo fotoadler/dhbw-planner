@@ -2,6 +2,27 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Funktionen und Darstellung
+
+- Die Mensa-Ansicht kennt jeden Standort einzeln: eigene Einrichtungen, Kategorien, Preise, Kennzeichnungen, Schließzeiten und Vorbestellhinweise statt einer gemeinsamen generischen Darstellung. Partnerrestaurants und nicht tagesbezogene Campusangebote stehen eingeklappt darunter.
+- Bad Mergentheim wird als Essensmarken-Modell mit Kooperationsrestaurants geführt, CAS mit wählbarem Essensstandort.
+- Der Wechsel des Essensstandorts bleibt sichtbar, solange der Studienstandort mehrere Studienakademien bündelt — vorher verschwand er nach dem ersten Wechsel und war nur über die Einstellungen erreichbar.
+
+### Fehlerbehebungen
+
+- Historisch falsch gespeicherte Heidenheimer Kursnamen (`DHD-…`) werden zu `HDH-…` korrigiert; der Kursplan-Endpunkt antwortet auf die alte Schreibweise mit 404.
+- Die Auswahlhaptik unter iOS funktioniert wieder: Capacitor verlangt den Dreischritt aus Start, Änderung und Ende; ein einzelnes `selectionChanged` löst kein Feedback aus.
+- Für Bad Mergentheim entfallen die acht Speiseplanlinks des Studierendenwerks. Sie zeigten auf eine einzige Platzhalterdatei mit dem Text „Derzeit kein Speiseplan vorhanden!“; verlinkt sind jetzt nur restauranteigene Seiten.
+
+### Entwicklung
+
+- Standortprofile liegen in `src/mensa/sites/`, das gemeinsame ViewModel in `src/mensa/model.ts`. Standort-Sonderfälle gehören ausschließlich in Profilfelder — `partialWithoutMain`, `partnersLabel` und `venuePicker` ersetzen die vorherigen Abfragen auf Standortcodes im Loader und in der Oberfläche.
+- Zeitlich begrenzte Angaben tragen `source` und `checkedAt`, damit feste Datumsfenster nicht unbemerkt veralten.
+- `tests/diningSites.test.ts` prüft die Abdeckung gegen `SITE_CONFIGURATIONS` statt gegen eine feste Liste; ein neuer Standort ohne Essensprofil fällt damit auf.
+- Aufbau und Erweiterung sind in `docs/MENSA_INTEGRATION.md` beschrieben.
+
 ## 1.4.0 - 2026-08-10
 
 ### Funktionen und Darstellung

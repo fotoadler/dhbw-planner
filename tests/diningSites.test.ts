@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { DhbwMensaClient, type DhbwMensaMeal, type DhbwMensaResponse } from '../src/dhbwApi/mensa';
 import { loadDiningSnapshot, mapApiDiningResponse } from '../src/mensa/loadDining';
 import { DINING_SITE_PROFILES, diningProfileForSite } from '../src/mensa/sites';
+import { configuredSiteCodes } from '../src/dhbw/siteConfiguration';
 import { parseStwHeidelbergPlan } from '../src/mensa/stwHeidelberg';
 import { MensaSection } from '../src/ui/MensaSection';
 
@@ -59,9 +60,30 @@ function response(
 
 describe('standortseparierte Mensa-Profile', () => {
   it('registriert jeden DHBW-Standort genau einmal', () => {
-    expect(Object.keys(DINING_SITE_PROFILES).sort()).toEqual([
-      'CAS', 'FN', 'HDH', 'HN', 'HORB', 'KA', 'LÖR', 'MA', 'MGH', 'MOS', 'RV', 'STG', 'VS',
-    ]);
+    // Aus der Standortkonfiguration abgeleitet: Ein neuer DHBW-Standort ohne
+    // Essensprofil faellt damit auf, statt in einem Literal unbemerkt zu fehlen.
+    const missing = configuredSiteCodes().filter((code) => !(code in DINING_SITE_PROFILES));
+    expect(missing).toEqual([]);
+    const extra = Object.keys(DINING_SITE_PROFILES).filter((code) => !configuredSiteCodes().includes(code));
+    expect(extra).toEqual([]);
+    expect(Object.entries(DINING_SITE_PROFILES).every(([code, profile]) => code === profile.site)).toBe(true);
+  });
+
+  it('haelt Standort-Sonderfaelle im Profil statt im gemeinsamen Code', () => {
+    expect(diningProfileForSite('KA').partialWithoutMain).toBe(true);
+    expect(diningProfileForSite('KA').partnersLabel).toBe('Weitere Mensen');
+    expect(diningProfileForSite('CAS').venuePicker).toBe('hidden');
+    expect(diningProfileForSite('RV').partialWithoutMain).toBeUndefined();
+  });
+
+  it('belegt zeitlich begrenzte Angaben mit Quelle und Pruefdatum', () => {
+    const periods = Object.values(DINING_SITE_PROFILES)
+      .flatMap((profile) => profile.facilities.flatMap((facility) => facility.specialPeriods ?? []));
+    expect(periods.length).toBeGreaterThan(0);
+    expect(periods.every((period) => period.from <= period.to)).toBe(true);
+    const documented = periods.filter((period) => period.source && period.checkedAt);
+    expect(documented.length).toBeGreaterThan(0);
+    expect(documented.every((period) => /^\d{4}-\d{2}-\d{2}$/.test(period.checkedAt ?? ''))).toBe(true);
   });
 
   it('modelliert Bad Mergentheim ohne API-Abruf als neun Partner mit dauerhaften Links', async () => {
@@ -74,7 +96,10 @@ describe('standortseparierte Mensa-Profile', () => {
     expect(snapshot.presentation).toBe('partner-list');
     expect(snapshot.partners).toHaveLength(9);
     expect(snapshot.voucher).toMatchObject({ price: 2.7, value: 5.4 });
-    expect(snapshot.partners.every((partner) => Boolean(partner.menuUrl))).toBe(true);
+    // Jeder Partner braucht mindestens ein Ziel; ein Speiseplanlink nur dann,
+    // wenn das Restaurant selbst einen veroeffentlicht.
+    expect(snapshot.partners.every((partner) => Boolean(partner.infoUrl || partner.menuUrl || partner.address))).toBe(true);
+    expect(snapshot.partners.some((partner) => Boolean(partner.menuUrl))).toBe(true);
   });
 
   it('erkennt den Karlsruher Schließtext als Status statt als Beilage', () => {
@@ -169,10 +194,12 @@ describe('kompakte Mensa-Darstellung', () => {
 
     expect(html).toContain('Essensmarke: 2,70');
     expect(html).toContain('Kidano Restaurant');
-    expect(html).toContain('sp-mgh-pomodoro-aktuell.pdf');
     expect(html).toContain('pomodoro-e-basilico.eatbu.com');
+    // Die acht Studierendenwerk-PDFs sind eine einzige Platzhalterdatei
+    // („Derzeit kein Speiseplan vorhanden!"), also kein Speiseplanlink.
+    expect(html).not.toContain('sp-mgh-');
+    expect(html).toContain('veröffentlicht das Studierendenwerk derzeit nicht');
     expect(html).not.toContain('Partnerrestaurants');
-    expect(html).not.toContain('aktuelle Online-Speisepläne fehlen');
   });
 
   it('führt den Heidenheimer Pausenverkauf eingeklappt statt als Mensa-Tab', () => {

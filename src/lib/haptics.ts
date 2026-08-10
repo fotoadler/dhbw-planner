@@ -10,9 +10,18 @@ function browserFallback(): void {
   if (typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(8);
 }
 
+/** Fehlgeschlagene Rueckmeldung: Ersatz ausloesen und den Zyklus zuruecksetzen. */
 function recoverHaptics(): void {
   selectionActive = false;
   browserFallback();
+}
+
+/**
+ * Fehlgeschlagenes Beenden: Der Nutzer hat seine Rueckmeldung bereits bekommen,
+ * ein zusaetzliches Vibrieren waere hier nur ein Fehlsignal.
+ */
+function resetHaptics(): void {
+  selectionActive = false;
 }
 
 /**
@@ -33,11 +42,11 @@ export function selectionHaptic(): void {
   }).catch(recoverHaptics);
 
   selectionEndTimer = setTimeout(() => {
+    selectionEndTimer = null;
     selectionQueue = selectionQueue.then(async () => {
       if (!selectionActive || generation !== selectionGeneration) return;
       await Haptics.selectionEnd();
       selectionActive = false;
-      selectionEndTimer = null;
-    }).catch(recoverHaptics);
+    }).catch(resetHaptics);
   }, SELECTION_IDLE_MS);
 }

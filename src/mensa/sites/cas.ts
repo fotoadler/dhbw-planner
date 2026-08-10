@@ -6,6 +6,9 @@ export const casDining = defineDiningSite({
   operator: 'Studierendenwerk Heidelberg',
   presentation: 'single-facility',
   venueScope: 'multi-site',
+  // Das CAS-Profil buendelt die Studienakademien; als Essensziel steht die
+  // Mensa am Bildungscampus schon unter 'HN'.
+  venuePicker: 'hidden',
   source: { kind: 'stw-heidelberg', venue: 'Mensa Bildungscampus Heilbronn', apiSite: 'CAS' },
   intro: 'Standardmäßig wird der Bildungscampus Heilbronn gezeigt. Bei Modulen an einer anderen Studienakademie kannst du den Essensstandort direkt wechseln.',
   officialInfoUrl: 'https://bildungscampus.hn/leben-am-campus/gastronomie',

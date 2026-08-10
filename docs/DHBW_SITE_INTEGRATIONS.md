@@ -31,6 +31,7 @@ Alle standortabhängigen Regeln liegen in [`src/dhbw/siteConfiguration.ts`](../s
 - `dualis.usernameMode = email-domain` ergänzt einen kurzen Accountnamen um eine verifizierte Domain.
 - `dualis.usernameMode = full-email` lässt die Eingabe unverändert und verhindert falsche Annahmen.
 - `mail` beschreibt Webmail-URL, Plattform und Login-Hinweis. `null` bedeutet, dass kein belastbarer studentischer Webmail-Login bekannt ist.
+- Bei `mail: null` beschreiben `mailUnavailableTitle`, `mailUnavailableReason` und `mailUnavailableInstructions` die Hilfe im Mail-Tab; `mailSupport` und `mailContribution` sind die zugehörigen Aktionen. Details in [MAIL_INTEGRATION.md](MAIL_INTEGRATION.md).
 
 Ein weiterer Standort wird als einzelner Eintrag in `SITE_CONFIGURATIONS` ergänzt. Für spezielle Konten, mehrere Domains oder abweichende Login-Regeln soll `full-email` verwendet werden, bis die lokale IT-Dokumentation eine sichere automatische Regel erlaubt. Das native Plugin lädt nur die URL des Profils und kennt keine Standortlogik.
 

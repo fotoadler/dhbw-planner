@@ -16,6 +16,8 @@ DHBW Planner ist keine offizielle App der DHBW.
 - iCal-/ICS-Export über das native Share-Sheet
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
 - Dualis-Login für Modulnoten, Credits, Semester und Prüfungsleistungen
+- Uni-Mail als eingebettete Ansicht des standorteigenen Webmail-Logins; Standorte ohne bestätigten Zugang zeigen dort eine Hilfe statt eines geratenen Logins
+- Helles und dunkles Design, dem Systemdesign folgend oder fest eingestellt
 - Eine Codebasis für Web, iOS und Android mit React, Vite und Capacitor
 
 ## Voraussetzungen
@@ -107,19 +109,28 @@ Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentiert
 
 ```text
 src/
-  dhbw/                     Standortprofile für Dualis- und Mail-Integrationen
-  dualis/                    Dualis-Client, Parser und Typen
+  demo/                      Lokaler Demomodus für die App Review
+  dhbw/                      Standortprofile für Dualis- und Mail-Integrationen
   dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
+  dualis/                    Dualis-Client, Parser und Typen
   ical/                      ICS-Export
-  lib/                       Zeitfunktionen für Europe/Berlin
+  lib/                       Zeit-, Theme- und Haptik-Helfer sowie Projektlinks
+  liveActivity/              Live-Aktivitäten und deren Planung
+  mail/                      Mail-Adapter und Brücke zur nativen Mailansicht
   notifications/             Planung und Registrierung lokaler Benachrichtigungen
   rapla/                     Rapla-Client und Rapla-2.0-Parser
+  schedule/                  Stundenplanmodell und Modulfilter
+  seezeit/                   Mensa-Speisepläne
   store/                     Persistente Einstellungen und Cache
   ui/                        React-Komponenten
-tests/                       Parser-, Planner-, Dualis- und ICS-Tests
+tests/                       Parser-, Planner-, Dualis-, ICS- und Layouttests
 plugins/
   capacitor-course-live-activity/
-                              Lokales Capacitor-Plugin für Live-Aktivitäten
+                             Live-Aktivitäten auf iOS
+  capacitor-embedded-mail/   Native Mailansicht über der App
+  capacitor-community-messaging/
+                             Community-Nachrichten
+  capacitor-secure-storage/  Verschlüsselte Ablage für Sitzungsgeheimnisse
 ```
 
 ## Veröffentlichung

@@ -15,9 +15,10 @@ This is a new app identity.
 
 - Web build works: `npm run build`
 - Tests pass: `npm test`
-- Capacitor sync works: `npx cap sync`
+- Capacitor sync works: `npx cap sync` (CocoaPods needs a UTF-8 locale, e.g. `LANG=en_US.UTF-8`)
 - Android debug build works with Java 21
-- iOS simulator build works
+- Signed Android release bundle works: `./gradlew bundleRelease` with `android/release-signing.properties` in place
+- iOS release build for `generic/platform=iOS` compiles; archiving and signing happen in Xcode
 - Custom app icon and splash assets are generated in `assets/` and copied into native projects
 
 ## Store Listing Draft
@@ -43,6 +44,8 @@ Funktionen:
 - Lokale Erinnerungen vor Uni-Terminen
 - Pull-to-refresh für Aktualisierungen
 - Dualis-Ansicht für Modulnoten und Prüfungen
+- Uni-Mail direkt in der App über den Webmail-Zugang des Standorts
+- Helles und dunkles Design
 
 Privacy summary:
 
@@ -56,8 +59,8 @@ Bei Problemen prüfe zuerst, ob die gewählte Kursquelle erreichbar ist. Im manu
 
 1. Create an upload keystore outside the repository.
 2. Copy `android/release-signing.example.properties` to `android/release-signing.properties`.
-3. Fill in the keystore path and passwords.
-4. Add a release signing config in `android/app/build.gradle`, or build/sign through Android Studio.
+3. Fill in the keystore path and passwords. The file is git-ignored; `android/app/build.gradle` already reads it and applies the release signing config when it exists.
+4. Bump `versionCode` and `versionName` in `android/app/build.gradle`, plus `package.json`, the iOS project and this file.
 5. Build the release app bundle:
 
 ```sh

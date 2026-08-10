@@ -14,6 +14,12 @@ public class EmbeddedMailPlugin: CAPPlugin, CAPBridgedPlugin, WKNavigationDelega
     private var mailWebView: WKWebView?
     private var bottomInset: CGFloat = 58
 
+    /// Sicherheitsnetz: Lädt die Seite nie fertig, wird die WebView trotzdem
+    /// eingeblendet — sonst bliebe der Ladehinweis der App stehen, obwohl die
+    /// Seite vielleicht längst eine Meldung anzeigt.
+    private static let revealTimeout: TimeInterval = 8
+    private var revealWorkItem: DispatchWorkItem?
+
     @objc func open(_ call: CAPPluginCall) {
         guard
             let rawURL = call.getString("url"),
@@ -44,6 +50,7 @@ public class EmbeddedMailPlugin: CAPPlugin, CAPBridgedPlugin, WKNavigationDelega
                 webView.allowsBackForwardNavigationGestures = true
                 webView.backgroundColor = .white
                 webView.isOpaque = true
+                webView.isHidden = true
                 self.mailWebView = webView
             }
 
@@ -57,6 +64,10 @@ public class EmbeddedMailPlugin: CAPPlugin, CAPBridgedPlugin, WKNavigationDelega
                 host.addSubview(webView)
             }
             self.position(webView, in: host)
+
+            // Bis zum ersten gezeichneten Bild bliebe die WebView weiß und würde
+            // den Ladehinweis der App verdecken — sie bleibt deshalb verborgen.
+            self.hideWebView()
             webView.load(URLRequest(url: url))
             call.resolve()
         }
@@ -64,12 +75,48 @@ public class EmbeddedMailPlugin: CAPPlugin, CAPBridgedPlugin, WKNavigationDelega
 
     @objc func close(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
+            self.revealWorkItem?.cancel()
+            self.revealWorkItem = nil
             self.mailWebView?.removeFromSuperview()
             call.resolve()
         }
     }
 
+    private func hideWebView() {
+        mailWebView?.isHidden = true
+        revealWorkItem?.cancel()
+
+        let work = DispatchWorkItem { [weak self] in self?.revealWebView() }
+        revealWorkItem = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.revealTimeout, execute: work)
+    }
+
+    private func revealWebView() {
+        revealWorkItem?.cancel()
+        revealWorkItem = nil
+        mailWebView?.isHidden = false
+    }
+
+    // didFinish meldet die fertig geladene Seite. Die Fehlerfälle sind nur
+    // Rückfallebenen, damit die Ansicht nie verborgen hängen bleibt.
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        revealWebView()
+    }
+
+    public func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        revealWebView()
+    }
+
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        revealWebView()
+    }
+
     deinit {
+        revealWorkItem?.cancel()
         mailWebView?.stopLoading()
         mailWebView?.navigationDelegate = nil
         mailWebView?.uiDelegate = nil

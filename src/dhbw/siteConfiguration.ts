@@ -8,6 +8,8 @@
  * Plugin anzupassen.
  */
 
+import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
+
 export type DualisUsernameMode = 'email-domain' | 'full-email';
 export type MailPlatform = 'owa' | 'roundcube' | 'modoboa' | 'webmail';
 
@@ -37,8 +39,36 @@ export interface DhbwSiteConfiguration {
   label: string;
   dualis: DualisSiteConfig;
   mail: SiteMailConfig | null;
+  /** Kurze, standortspezifische Hilfe, wenn kein Webmail-Login existiert. */
+  mailUnavailableTitle?: string;
   /** Erklärt einen bewusst nicht angebotenen Mail-Login in der UI. */
   mailUnavailableReason?: string;
+  /** Beschreibt, wo die Nachrichten stattdessen gelesen oder verwaltet werden. */
+  mailUnavailableInstructions?: string;
+  /**
+   * Optionaler Kontakt für standortspezifische Fragen zum Mailzugang.
+   *
+   * Ziel und Beschriftung stehen bewusst in einem Objekt: Als getrennte
+   * optionale Felder könnte eine Beschriftung an einem fremden Ziel landen —
+   * etwa „Webmail-Link mitteilen" über dem generischen Feedback-Formular oder
+   * „Informationen senden" über einem standortspezifischen IT-Service-Link.
+   * Ohne `href` beschriftet `label` den Feedback-Fallback.
+   */
+  mailSupport?: SiteMailAction;
+  /** Optionaler Open-Source-Beitrag zur Ergänzung des Mailzugangs. */
+  mailContribution?: SiteMailLink;
+}
+
+/** Aktion der Mailhilfe ohne eigenes Ziel: beschriftet dann den Feedback-Fallback. */
+export interface SiteMailAction {
+  href?: string;
+  label: string;
+}
+
+/** Aktion der Mailhilfe mit eigenem Ziel; ohne href gäbe es nichts zu öffnen. */
+export interface SiteMailLink {
+  href: string;
+  label: string;
 }
 
 const RAVENSBURG_DUALIS: DualisSiteConfig = {
@@ -101,7 +131,7 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
       site: 'STG',
       label: 'DHBW Stuttgart',
       platform: 'roundcube',
-      webmailUrl: 'https://lehre-webmail.dhbw-stuttgart.de/',
+      webmailUrl: 'https://lehre-webmail.dhbw-stuttgart.de/roundcubemail/',
       usernameHint: 'UserID oder DHBW-Lehre-Adresse',
     },
   },
@@ -131,10 +161,17 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
       usernameHint: 'Benutzerkennung oder vollständige DHBW-Adresse',
       description: 'Benutzerkennung genügt; @dh-karlsruhe.de wird ergänzt.',
     },
-    // Karlsruhe documents a forwarding address rather than a student
-    // mailbox/webmail login. Do not expose a misleading mail tab here.
+    // Für Karlsruhe ist noch kein verlässlicher studentischer Webmail-Einstieg
+    // bekannt. Der Tab bleibt als standortspezifischer Mitmach-Einstieg sichtbar,
+    // ohne eine unbestätigte Anmeldeseite auszuliefern.
     mail: null,
-    mailUnavailableReason: 'Der Standort stellt eine Weiterleitungsadresse bereit, aber kein studentisches Postfach mit eigenem Webmail-Login.',
+    mailUnavailableTitle: 'Mailzugang für Karlsruhe gesucht',
+    mailUnavailableReason:
+      'Für Karlsruhe ist eine Weiterleitungsadresse dokumentiert, aber kein bestätigter Webmail-Login. Wenn du dort studierst und ein Postfach mit eigenem Weblogin nutzt, teile uns bitte den Link mit.',
+    mailUnavailableInstructions:
+      'Du kennst dich mit Code aus? Dann kannst du den Zugang auch direkt im Open-Source-Projekt auf GitHub ergänzen.',
+    mailSupport: { label: 'Webmail-Link mitteilen' },
+    mailContribution: { href: PROJECT_REPOSITORY_URL, label: 'Auf GitHub beitragen' },
   },
   MA: {
     site: 'MA',

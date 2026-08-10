@@ -10,6 +10,7 @@ import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
+import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
 
 interface Props {
   settings: AppSettings;
@@ -293,6 +294,17 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
           <a className="setup__button sheet__feedback-button" href={feedbackHref}>
             Feedback senden <span aria-hidden="true">✉</span>
           </a>
+          <div className="sheet__opensource">
+            <p>DHBW Planner ist Open Source – schau dir den Code an oder entwickle mit.</p>
+            <a
+              className="setup__button sheet__feedback-button sheet__opensource-button"
+              href={PROJECT_REPOSITORY_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Projekt auf GitHub öffnen <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </section>
       </div>
     </div>

@@ -10,9 +10,9 @@ Die Anmeldung ist trotzdem nicht standortneutral. DUALIS verwendet die jeweilige
 | --- | --- | --- | --- |
 | Ravensburg | `UserID@stud.dhbw-ravensburg.de` | OWA, `webmail1.dhbw-ravensburg.de/owa` | konfiguriert |
 | Friedrichshafen | je nach Bereich unterschiedliche Ravensburg-Domain | Ravensburg-OWA | vollständige Adresse erforderlich |
-| Stuttgart | `UserID@lehre.dhbw-stuttgart.de` | Roundcube, `lehre-webmail.dhbw-stuttgart.de` | konfiguriert |
+| Stuttgart | `UserID@lehre.dhbw-stuttgart.de` | Roundcube, `lehre-webmail.dhbw-stuttgart.de/roundcubemail/` (leitet auf den Shibboleth-SSO-Login) | konfiguriert |
 | Campus Horb | `UserID@hb.dhbw-stuttgart.de` | `mail.hb.dhbw-stuttgart.de` | konfiguriert |
-| Karlsruhe | `UserID@dh-karlsruhe.de` | Weiterleitungsadresse, kein studentisches Postfach-Login | bewusst kein Mail-Tab |
+| Karlsruhe | `UserID@dh-karlsruhe.de` | dokumentiert ist eine Weiterleitungsadresse; ein studentischer Webmail-Einstieg ist nicht bestätigt | Mail-Tab zeigt Hinweis und Mitmach-Aktionen statt einer geratenen Anmeldeseite |
 | Mannheim | `UserID@student.dhbw-mannheim.de` | Studgate/Zimbra, `studgate.dhbw-mannheim.de` | konfiguriert |
 | Mosbach | `UserID@lehre.mosbach.dhbw.de` | Webmail, `webmail.lehre.mosbach.dhbw.de` | konfiguriert |
 | Bad Mergentheim | Mosbacher Accountbereich | Mosbacher Webmail | konfiguriert |

@@ -1,5 +1,6 @@
 /**
- * Schmale Wochenleiste: Mo–Fr immer, Wochenende nur bei Rapla-Terminen.
+ * Schmale Wochenleiste: Mo–Fr immer, Wochenende bei Terminen oder wenn der
+ * ausgewählte Tag selbst ein leerer Samstag/Sonntag ist.
  * Pfeile wechseln weiter wochenweise. Mehr Navigation gibt es bewusst nicht.
  */
 
@@ -23,7 +24,7 @@ export function WeekStrip({ monday, selected, today, busyDays, onSelect, onWeekC
   const days = Array.from({ length: 7 }, (_, i) => ({
     key: ymdKey(addDaysYmd(mondayYmd, i)),
     weekdayIndex: i,
-  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || busyDays.has(key));
+  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || busyDays.has(key) || key === selected);
 
   const shiftWeek = (delta: number) => onWeekChange(ymdKey(addDaysYmd(mondayYmd, delta * 7)));
 

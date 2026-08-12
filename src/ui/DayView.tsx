@@ -8,6 +8,7 @@
 
 import { useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
+import { parseYmdKey } from '../lib/berlinTime';
 import type { DiningLoadStatus, DiningSnapshot } from '../mensa/model';
 import type { DiningSiteProfile } from '../mensa/sites';
 import { EntryCard } from './EntryCard';
@@ -30,6 +31,8 @@ interface Props {
   } | null;
   onSelectEntry: (entry: ScheduleEntry) => void;
   onSwipeDay: (delta: 1 | -1) => void;
+  selectedDay: string;
+  onShowNextWeek: () => void;
   onRefresh: () => Promise<void>;
   refreshing: boolean;
 }
@@ -39,12 +42,18 @@ export function DayView({
   dining,
   onSelectEntry,
   onSwipeDay,
+  selectedDay,
+  onShowNextWeek,
   onRefresh,
   refreshing,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const touch = useRef<{ x: number; y: number; pulling: boolean } | null>(null);
   const [pull, setPull] = useState(0);
+  const { y, m, d } = parseYmdKey(selectedDay);
+  const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+  const isWeekendWithoutLectures = entries.length === 0 && (weekday === 0 || weekday === 6);
+  const weekendDayName = weekday === 6 ? 'Samstag' : 'Sonntag';
 
   const onTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
@@ -92,7 +101,23 @@ export function DayView({
         <span className="spinner" />
       </div>
       {entries.length === 0 ? (
-        <p className="dayview__empty">Keine Termine — freier Tag.</p>
+        isWeekendWithoutLectures ? (
+          <div className="dayview__weekend-state" role="status">
+            <p className="dayview__weekend-note">
+              Wochenendtage ohne Termine werden in der Leiste ausgeblendet.
+            </p>
+            <div className="dayview__weekend-empty">
+              <h2>Freier {weekendDayName}</h2>
+              <p>Für heute sind keine Vorlesungen geplant.</p>
+              <button type="button" className="dayview__next-week" onClick={onShowNextWeek}>
+                Nächste Woche anzeigen
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="dayview__empty">Keine Termine — freier Tag.</p>
+        )
       ) : (
         entries.map((e, i) => (
           <EntryCard key={`${e.start.toISOString()}-${i}`} entry={e} onSelect={onSelectEntry} />

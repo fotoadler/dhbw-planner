@@ -404,6 +404,58 @@ option {
   color: var(--ink-3);
 }
 
+.dayview__weekend-state {
+  padding-bottom: 8px;
+}
+
+.dayview__weekend-note {
+  margin: 4px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--calendar-event-accent);
+  background: var(--bg-soft);
+  color: var(--calendar-event-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.dayview__weekend-empty {
+  padding: 50px 0 22px;
+  text-align: center;
+}
+
+.dayview__weekend-empty h2 {
+  font-size: 19px;
+  line-height: 25px;
+  font-weight: 700;
+}
+
+.dayview__weekend-empty p {
+  max-width: 280px;
+  margin: 7px auto 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.dayview__next-week {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 0 17px;
+  border-radius: 10px;
+  color: var(--on-accent);
+  background: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(226, 0, 26, 0.18);
+}
+
+.dayview__next-week:active {
+  background: var(--accent-strong);
+}
+
 /* --- Termin-Karte: Uhrzeit, Titel, Dozent, Raum klar gestaffelt --- */
 
 .entry {

@@ -203,6 +203,12 @@ export function App() {
     }
   };
 
+  const showNextWeek = () => {
+    const nextMonday = ymdKey(addDaysYmd(parseYmdKey(monday), 7));
+    selectDay(nextMonday);
+    setCalendarView('week');
+  };
+
   const inCalendar = section === 'calendar';
   const inDualis = section === 'dualis';
   const inMail = section === 'mail';
@@ -347,6 +353,8 @@ export function App() {
             } : null}
             onSelectEntry={(entry) => setSelectedBlockKey(blockKey(entry))}
             onSwipeDay={shiftDay}
+            selectedDay={selectedDay}
+            onShowNextWeek={showNextWeek}
             onRefresh={refresh}
             refreshing={refreshing}
           />

@@ -13,8 +13,9 @@ struct CourseLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CourseLectureAttributes.self) { context in
             CourseLiveLockScreenView(state: context.state, isStale: activityIsStale(context))
-                .activityBackgroundTint(Color(uiColor: .systemBackground))
-                .activitySystemActionForegroundColor(.primary)
+                .environment(\.colorScheme, .dark)
+                .activityBackgroundTint(CourseLiveStyle.background)
+                .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             let isStale = activityIsStale(context)
             return DynamicIsland {
@@ -24,15 +25,18 @@ struct CourseLiveActivityWidget: Widget {
                 }
                 .contentMargins(.leading, 16)
                 DynamicIslandExpandedRegion(.trailing) {
-                    if isStale {
-                        Image(systemName: "checkmark")
-                            .foregroundStyle(Color.secondary)
-                    } else {
-                        Text(context.state.endTime, style: .time)
-                            .font(.caption.monospacedDigit().weight(.semibold))
-                            .foregroundStyle(Color.secondary)
-                            .lineLimit(1)
+                    Group {
+                        if isStale {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(Color.secondary)
+                        } else {
+                            Text(context.state.endTime, style: .time)
+                                .font(.caption.monospacedDigit().weight(.semibold))
+                                .foregroundStyle(Color.secondary)
+                                .lineLimit(1)
+                        }
                     }
+                    .environment(\.colorScheme, .dark)
                 }
                 .contentMargins(.trailing, 16)
                 DynamicIslandExpandedRegion(.bottom) {
@@ -67,6 +71,7 @@ struct CourseLiveActivityWidget: Widget {
                             }
                         }
                     }
+                    .environment(\.colorScheme, .dark)
                 }
                 .contentMargins(.horizontal, 16)
             } compactLeading: {
@@ -130,7 +135,7 @@ struct CourseLiveLockScreenView: View {
                     Spacer(minLength: 12)
                     Text("Endet \(state.endTime, style: .time)")
                         .font(.caption.weight(.medium))
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(Color.secondary)
                 }
 
                 CourseLiveProgressView(state: state)
@@ -165,6 +170,16 @@ struct CourseLiveLockScreenView: View {
 
 private enum CourseLiveStyle {
     static let accent = Color(red: 0.89, green: 0.0, blue: 0.1)
+
+    /// Die Live Activity bleibt bewusst in jedem Erscheinungsmodus dunkel.
+    ///
+    /// Eine dynamische Systemfarbe funktioniert hier nicht: Der Sperrbildschirm
+    /// stellt Live Activities immer im dunklen Schema dar, `Color.primary` wird
+    /// also weiss. Eine per `Color(uiColor:)` gebrueckte UIKit-Farbe loest
+    /// dagegen gegen die Trait-Collection des Geraets auf — im hellen Modus
+    /// ebenfalls weiss. Das Ergebnis waere weisse Schrift auf weissem Grund.
+    /// Fester Farbwert plus gepinntes `colorScheme` schliessen das aus.
+    static let background = Color(red: 0.08, green: 0.09, blue: 0.11)
 }
 
 struct CourseLiveProgressView: View {

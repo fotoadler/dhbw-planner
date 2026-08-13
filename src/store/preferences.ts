@@ -3,7 +3,8 @@
  *
  * Einstellungen sind bewusst minimal (siehe Design-Philosophie): Rapla-Link,
  * Morgen-Benachrichtigung (an/aus + Uhrzeit), Live-Aktivitaeten,
- * Vorab-Erinnerung (an/aus + Minuten) und ausgeblendete Vorlesungsmodule.
+ * Vorab-Erinnerung (an/aus + Minuten), ausgeblendete Vorlesungsmodule und
+ * die bevorzugte Kalenderansicht.
  */
 
 import { Preferences } from '@capacitor/preferences';
@@ -52,6 +53,8 @@ export interface AppSettings {
   hiddenModules: string[];
   /** Darstellung: Systemvorgabe oder manuell hell/dunkel. */
   themeMode: ThemeMode;
+  /** Ansicht, die beim Öffnen des Kalenders standardmäßig angezeigt wird. */
+  defaultCalendarView: 'day' | 'week';
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -69,6 +72,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   mensaAuto: false,
   hiddenModules: [],
   themeMode: 'auto',
+  defaultCalendarView: 'day',
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -165,6 +169,7 @@ function parseSettings(raw: unknown): AppSettings {
     mensaAuto: typeof data.mensaAuto === 'boolean' ? data.mensaAuto : DEFAULT_SETTINGS.mensaAuto,
     hiddenModules: parseHiddenModules(data.hiddenModules),
     themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
+    defaultCalendarView: data.defaultCalendarView === 'week' ? 'week' : DEFAULT_SETTINGS.defaultCalendarView,
   };
 }
 

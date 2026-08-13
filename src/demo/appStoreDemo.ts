@@ -80,6 +80,7 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
   mensaAuto: false,
   hiddenModules: [],
   themeMode: 'auto',
+  defaultCalendarView: 'day',
 };
 
 /** Ebenfalls nur Beispieldaten: keine Dualis-Informationen einer Person. */

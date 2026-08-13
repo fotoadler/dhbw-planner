@@ -32,6 +32,7 @@ import {
 } from '../demo/appStoreDemo';
 import { isReviewDemoRaplaLink } from '../demo/reviewDemo';
 import { filterScheduleEntries, listScheduleModules, ScheduleModule } from '../schedule/modules';
+import { syncWatchSchedule } from '../watch/bridge';
 
 /** Drei Monate zurück bis drei Monate voraus, damit Kursdetails beide Richtungen zeigen. */
 const WINDOW_RADIUS_DAYS = 92;
@@ -245,6 +246,7 @@ export function useSchedule() {
       );
       await syncNotifications(filled, activeSettings);
       await syncCourseLiveActivity(filled, activeSettings, now);
+      await syncWatchSchedule(filled, now);
     } catch {
       // Offline/Netzwerkfehler: letzter Cache bleibt sichtbar, Notifications
       // bleiben auf Basis des Caches geplant.
@@ -254,13 +256,12 @@ export function useSchedule() {
       setOffline(true);
       const activeSettings = settingsRef.current;
       if (activeSettings) {
-        await syncCourseLiveActivity(
-          filterScheduleEntries(
-            applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-            activeSettings.hiddenModules,
-          ),
-          activeSettings,
+        const filled = filterScheduleEntries(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          activeSettings.hiddenModules,
         );
+        await syncCourseLiveActivity(filled, activeSettings);
+        await syncWatchSchedule(filled);
       }
     } finally {
       if (generation === refreshGenerationRef.current) setRefreshing(false);
@@ -310,6 +311,7 @@ export function useSchedule() {
         );
         await syncNotifications(filled, activeSettings);
         await syncCourseLiveActivity(filled, activeSettings, now);
+        await syncWatchSchedule(filled, now);
       } catch {
         /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
       } finally {
@@ -373,6 +375,7 @@ export function useSchedule() {
         );
         await syncNotifications(filled, next);
         await syncCourseLiveActivity(filled, next);
+        await syncWatchSchedule(filled);
       }
     },
     [refresh, reviewDemo],
@@ -409,10 +412,9 @@ export function useSchedule() {
         weeksRef.current = restored;
         setWeeks(restored);
         setUpdatedAt(cache.updatedAt);
-        await syncCourseLiveActivity(
-          filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules),
-          s,
-        );
+        const filled = filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules);
+        await syncCourseLiveActivity(filled, s);
+        await syncWatchSchedule(filled, cache.updatedAt);
       }
       setSettings(s);
       settingsRef.current = s;
@@ -426,13 +428,12 @@ export function useSchedule() {
     const listener = CapApp.addListener('resume', () => {
       const s = settingsRef.current;
       if (s) {
-        void syncCourseLiveActivity(
-          filterScheduleEntries(
-            applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-            s.hiddenModules,
-          ),
-          s,
+        const filled = filterScheduleEntries(
+          applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
+          s.hiddenModules,
         );
+        void syncCourseLiveActivity(filled, s);
+        void syncWatchSchedule(filled);
       }
       const age = updatedAtRef.current ? Date.now() - updatedAtRef.current.getTime() : Infinity;
       if ((s?.rapla || (s?.scheduleSource === 'dhbw-api' && s.apiSelection)) && age > STALE_MS) void refresh();

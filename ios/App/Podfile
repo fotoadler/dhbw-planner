@@ -21,6 +21,7 @@ def capacitor_pods
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'
   pod 'DhbwCapacitorEmbeddedMail', :path => '../../plugins/capacitor-embedded-mail'
   pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
+  pod 'DhbwCapacitorWatchSync', :path => '../../plugins/capacitor-watch-sync'
   pod 'DhbwCapacitorSecureStorage', :path => '../../plugins/capacitor-secure-storage'
 end
 

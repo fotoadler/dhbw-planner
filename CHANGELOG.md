@@ -2,6 +2,12 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## Unveröffentlicht
+
+### Fehlerbehebungen
+
+- Die Live Activity auf dem Sperrbildschirm ist im hellen Erscheinungsmodus wieder lesbar und wird wie zuvor in jedem Modus dunkel dargestellt. Der Hintergrund lag zuletzt auf `Color(uiColor: .systemBackground)`. Diese gebrückte UIKit-Farbe löst gegen die Trait-Collection des Geräts auf und wird im hellen Modus weiß, während der Sperrbildschirm Live Activities immer im dunklen Schema rendert und `Color.primary` deshalb weiß bleibt — weiße Schrift auf weißem Grund. Hintergrund und Farbschema der Ansicht sind jetzt fest gesetzt, ebenso in der aufgeklappten Dynamic Island: deren Hintergrund ist hardwarebedingt immer schwarz, dort hätte `Color.primary` im hellen Modus schwarzen Text auf Schwarz ergeben.
+
 ## 1.4.1 - 2026-08-10
 
 ### Funktionen und Darstellung

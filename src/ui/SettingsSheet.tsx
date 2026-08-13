@@ -1,7 +1,8 @@
 /**
  * Einstellungen als einfaches Sheet — bewusst minimal (Design-Philosophie):
- * Rapla-Link, Mensa-Speiseplan (an/aus + Mensa-Auswahl), Morgen-Benachrichtigung
- * (an/aus + Uhrzeit), Live-Aktivitaeten, Vorab-Erinnerung (an/aus + Minuten).
+ * Rapla-Link, Kalender-Standardansicht, Mensa-Speiseplan (an/aus + Mensa-Auswahl),
+ * Morgen-Benachrichtigung (an/aus + Uhrzeit), Live-Aktivitaeten,
+ * Vorab-Erinnerung (an/aus + Minuten).
  */
 
 import { useState } from 'react';
@@ -84,6 +85,27 @@ export function SettingsSheet({ settings, availableModules, updatedAt, onChange,
               <option value="auto">Automatisch</option>
               <option value="light">Hell</option>
               <option value="dark">Dunkel</option>
+            </select>
+          </div>
+        </section>
+
+        <section className="sheet__section">
+          <div className="sheet__row">
+            <div>
+              <span>Standardansicht</span>
+              <p className="sheet__note">Diese Ansicht wird beim Öffnen des Kalenders angezeigt.</p>
+            </div>
+            <select
+              value={settings.defaultCalendarView}
+              aria-label="Standardansicht auswählen"
+              onChange={(event) => {
+                const value = event.target.value;
+                selectionHaptic();
+                if (value === 'day' || value === 'week') set({ defaultCalendarView: value });
+              }}
+            >
+              <option value="day">Tagesansicht</option>
+              <option value="week">Wochenansicht</option>
             </select>
           </div>
         </section>

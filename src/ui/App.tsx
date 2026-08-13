@@ -57,11 +57,15 @@ export function App() {
 
   const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(new Date());
   const [section, setSection] = useState<Section>(demoScreen === 'grades' ? 'dualis' : 'calendar');
-  const [calendarView, setCalendarView] = useState<CalendarView>(demoScreen === 'week' ? 'week' : 'day');
+  const [calendarView, setCalendarView] = useState<CalendarView | null>(() => {
+    if (!demoScreen) return null;
+    return demoScreen === 'week' ? 'week' : 'day';
+  });
   const [dualisPage, setDualisPage] = useState<DualisPage>(demoScreen === 'grades' ? 'exams' : 'overview');
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
   const siteConfig = siteConfigurationFor(settings?.apiSelection?.site);
   const showMailTab = Boolean(settings?.apiSelection?.site);
@@ -88,7 +92,7 @@ export function App() {
       showSettings,
       selectedBlockKey,
       section,
-      calendarView,
+      calendarView: activeCalendarView,
       dualisPage,
       dualisLoggedIn: dualis.loginState === 'logged-in',
     });
@@ -227,7 +231,7 @@ export function App() {
   } else if (selectedBlock) {
     title = selectedBlock.title;
     subtitle = `${blockEntries.length} ${blockEntries.length === 1 ? 'Termin' : 'Termine'}`;
-  } else if (calendarView === 'day') {
+  } else if (activeCalendarView === 'day') {
     title = selectedDay === today ? 'Heute' : formatDayLong(parseYmdKey(selectedDay));
     subtitle = selectedDay === today ? formatDayLong(parseYmdKey(selectedDay)) : null;
   } else {
@@ -238,8 +242,8 @@ export function App() {
   const showTodayBtn =
     inCalendar &&
     !selectedBlock &&
-    ((calendarView === 'day' && selectedDay !== today) ||
-      (calendarView === 'week' && monday !== todayMonday));
+    ((activeCalendarView === 'day' && selectedDay !== today) ||
+      (activeCalendarView === 'week' && monday !== todayMonday));
 
   return (
     <div className="app">
@@ -294,10 +298,10 @@ export function App() {
             <div className="app__offline" aria-label="Offline - gespeicherter Stand wird angezeigt.">Offline</div>
           )}
           <nav className="segmented segmented--top" aria-label="Kalenderansicht">
-            <button className={calendarView === 'day' ? 'is-active' : ''} onClick={() => setCalendarView('day')}>
+            <button className={activeCalendarView === 'day' ? 'is-active' : ''} onClick={() => setCalendarView('day')}>
               Tag
             </button>
-            <button className={calendarView === 'week' ? 'is-active' : ''} onClick={() => setCalendarView('week')}>
+            <button className={activeCalendarView === 'week' ? 'is-active' : ''} onClick={() => setCalendarView('week')}>
               Woche
             </button>
           </nav>
@@ -328,7 +332,7 @@ export function App() {
         <MailView site={settings.apiSelection?.site ?? ''} />
       ) : inCalendar && selectedBlock ? (
         <CourseView entries={blockEntries} today={today} onBack={() => setSelectedBlockKey(null)} />
-      ) : inCalendar && calendarView === 'day' ? (
+      ) : inCalendar && activeCalendarView === 'day' ? (
         <>
           <WeekStrip
             monday={monday}
@@ -413,7 +417,12 @@ export function App() {
           settings={settings}
           availableModules={availableModules}
           updatedAt={updatedAt}
-          onChange={(next) => void applySettings(next)}
+          onChange={(next) => {
+            if (next.defaultCalendarView !== settings.defaultCalendarView) {
+              setCalendarView(next.defaultCalendarView);
+            }
+            void applySettings(next);
+          }}
           onClose={() => setShowSettings(false)}
         />
       )}

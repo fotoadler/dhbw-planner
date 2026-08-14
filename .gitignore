@@ -52,5 +52,3 @@ plugins/*/android/build/
 !plugins/capacitor-course-live-activity/dist/**
 !plugins/capacitor-embedded-mail/dist/
 !plugins/capacitor-embedded-mail/dist/**
-!plugins/capacitor-watch-sync/dist/
-!plugins/capacitor-watch-sync/dist/**

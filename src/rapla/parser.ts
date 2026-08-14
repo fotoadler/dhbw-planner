@@ -58,7 +58,7 @@ function isCourseCode(resource: string): boolean {
 /** Typ-Mapping sinngemäß aus der alten App, angewendet auf Titel/Zusatz/Blocktext. */
 function detectType(text: string): EntryType {
   if (/feiertag/i.test(text)) return 'holiday';
-  if (/klausur|prüfung|pruefung|testat|klausuren|prüfungen|exam|examen/i.test(text)) return 'exam';
+  if (/klausur|prüfung|pruefung/i.test(text)) return 'exam';
   // Wortgrenze, damit z. B. "Onlinemarketing" nicht als Online-Format gilt.
   if (/\bonline\b/i.test(text)) return 'online';
   if (/vorlesung|lehrbetrieb|lehrveranstaltung/i.test(text)) return 'lecture';

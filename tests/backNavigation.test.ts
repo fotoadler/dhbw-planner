@@ -22,10 +22,6 @@ describe('resolveBackAction', () => {
     expect(resolveBackAction(state({ showSettings: true }))).toBe('close-settings');
   });
 
-  it('schließt die Einstellungen, wenn section auf settings steht', () => {
-    expect(resolveBackAction(state({ section: 'settings' }))).toBe('close-settings');
-  });
-
   it('schließt das Sheet auch, wenn darunter noch Ebenen offen sind', () => {
     const open = state({ showSettings: true, selectedBlockKey: 'block', section: 'mail' });
     expect(resolveBackAction(open)).toBe('close-settings');

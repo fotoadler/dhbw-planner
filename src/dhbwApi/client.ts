@@ -181,16 +181,11 @@ export function mapScheduleItem(item: DhbwScheduleItem): ScheduleEntry | null {
   const end = new Date(item.endTime);
   if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end <= start) return null;
 
-  const rawTitle = (item.name ?? 'Termin').trim() || 'Termin';
   const kind = (item.type ?? '').toUpperCase();
-  const fullText = `${kind} ${rawTitle}`;
-
-  const isExam = kind.includes('EXAM') || /klausur|prüfung|pruefung|testat|klausuren|prüfungen|exam|examen/i.test(fullText);
-  const isOnline = kind.includes('ONLINE') || /\bonline\b/i.test(fullText);
-  const isHoliday = kind.includes('HOLIDAY') || /feiertag|holiday/i.test(fullText);
-
   const type: ScheduleEntry['type'] =
-    isExam ? 'exam' : isOnline ? 'online' : isHoliday ? 'holiday' : item.entityType === 'EVENT' ? 'unknown' : 'lecture';
+    kind.includes('EXAM') ? 'exam' : kind.includes('ONLINE') ? 'online' : kind.includes('HOLIDAY') ? 'holiday' : item.entityType === 'EVENT' ? 'unknown' : 'lecture';
+
+  const rawTitle = (item.name ?? 'Termin').trim() || 'Termin';
   const embeddedLecturer = rawTitle.match(/^(.*?)(?:\s*<([^<>]+)>)\s*$/);
   const title = embeddedLecturer?.[1].trim() || rawTitle;
   const embeddedValue = embeddedLecturer?.[2].trim();

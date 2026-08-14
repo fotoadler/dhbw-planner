@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.DhbwPlannerWear" parent="android:style/Theme.DeviceDefault.NoActionBar">
-        <item name="android:fontFamily">sans</item>
-        <item name="android:colorAccent">#E2001A</item>
-        <item name="android:windowActionModeOverlay">true</item>
-    </style>
-</resources>

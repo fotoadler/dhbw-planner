@@ -65,9 +65,7 @@ public class SecureStoragePlugin extends Plugin {
             result.put("value", encrypted == null ? null : decrypt(encrypted));
             call.resolve(result);
         } catch (GeneralSecurityException error) {
-            preferences().edit().remove(key).apply();
-            result.put("value", null);
-            call.resolve(result);
+            call.reject("Unable to read secure value", error);
         }
     }
 
@@ -122,18 +120,11 @@ public class SecureStoragePlugin extends Plugin {
         }
 
         if (keyStore.containsAlias(KEY_ALIAS)) {
-            try {
-                KeyStore.Entry entry = keyStore.getEntry(KEY_ALIAS, null);
-                if (entry instanceof KeyStore.SecretKeyEntry) {
-                    return ((KeyStore.SecretKeyEntry) entry).getSecretKey();
-                }
-            } catch (Exception ignored) {
-                try {
-                    keyStore.deleteEntry(KEY_ALIAS);
-                } catch (Exception e) {
-                    // Ignore deletion error
-                }
+            KeyStore.Entry entry = keyStore.getEntry(KEY_ALIAS, null);
+            if (entry instanceof KeyStore.SecretKeyEntry) {
+                return ((KeyStore.SecretKeyEntry) entry).getSecretKey();
             }
+            throw new GeneralSecurityException("Secure storage key has an unexpected type");
         }
 
         KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE);

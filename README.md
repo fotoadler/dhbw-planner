@@ -85,8 +85,6 @@ Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Be
 
 Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
 
-In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages- oder Wochenansicht zeigt.
-
 ## Datenschutz
 
 Kurzfassung:

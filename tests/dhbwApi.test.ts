@@ -30,7 +30,7 @@ describe('DHBW API client', () => {
     expect(entry?.start.toISOString()).toBe('2026-08-06T07:00:00.000Z');
   });
 
-  it('maps online, exam and event entries without changing the shared UI model', () => {
+  it('maps online and event entries without changing the shared UI model', () => {
     expect(
       mapScheduleItem({
         entityType: 'LECTURE',
@@ -40,15 +40,6 @@ describe('DHBW API client', () => {
         type: 'ONLINE',
       })?.type,
     ).toBe('online');
-    expect(
-      mapScheduleItem({
-        entityType: 'LECTURE',
-        startTime: '2026-08-06T07:00:00.000Z',
-        endTime: '2026-08-06T08:00:00.000Z',
-        name: 'Klausur Mathematik I',
-        type: 'PRESENCE',
-      })?.type,
-    ).toBe('exam');
     expect(
       mapScheduleItem({
         entityType: 'EVENT',

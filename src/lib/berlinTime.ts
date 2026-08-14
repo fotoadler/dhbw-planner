@@ -154,6 +154,21 @@ const dayMonthFmt = new Intl.DateTimeFormat('de-DE', {
   month: 'long',
 });
 
+const weekdayLongFmt = new Intl.DateTimeFormat('de-DE', {
+  timeZone: TZ,
+  weekday: 'long',
+});
+
+/** z. B. "Mittwoch" für einen YMD-Kalendertag. */
+export function formatWeekdayLong(ymd: Ymd): string {
+  return weekdayLongFmt.format(new Date(Date.UTC(ymd.y, ymd.m - 1, ymd.d, 12)));
+}
+
+/** z. B. "12. August" für einen YMD-Kalendertag. */
+export function formatDateLong(ymd: Ymd): string {
+  return dayMonthFmt.format(new Date(Date.UTC(ymd.y, ymd.m - 1, ymd.d, 12)));
+}
+
 /** Wochenbereich ab Montag, z. B. "6.–12. Juli" bzw. "29. Juni – 5. Juli". */
 export function formatWeekRange(monday: Ymd): string {
   const sunday = addDaysYmd(monday, 6);
@@ -162,4 +177,38 @@ export function formatWeekRange(monday: Ymd): string {
   return monday.m === sunday.m
     ? `${monday.d}.–${dayMonthFmt.format(end)}`
     : `${dayMonthFmt.format(start)} – ${dayMonthFmt.format(end)}`;
+}
+
+/** Bestimmt, ob ein Termin ein Punkt-in-Zeit-Hinweis oder Ganztags-Eintrag ist. */
+export function isDeadlineOrAllDay(entry: { start: Date; end: Date; title?: string }): boolean {
+  const durationMs = entry.end.getTime() - entry.start.getTime();
+  if (durationMs <= 0) return true; // Punkt-in-Zeit (0 Minuten)
+
+  const durationMinutes = durationMs / 60_000;
+  const pStart = berlinParts(entry.start);
+  const pEnd = berlinParts(entry.end);
+
+  // Termin startet um Punkt 00:00 Uhr
+  if (pStart.hh === 0 && pStart.mm === 0) {
+    // Kurzer 00:00-Hinweis (<= 30 Min) ODER Ganztags-Termin (>= 23 Std. oder endet 23:59/00:00)
+    if (durationMinutes <= 30 || durationMinutes >= 23 * 60) return true;
+    if (pEnd.hh === 0 && pEnd.mm === 0) return true;
+    if (pEnd.hh === 23 && pEnd.mm >= 58) return true;
+  }
+
+  // Generischer Fallback für Abgaben/Deadlines beliebiger Uhrzeit mit <= 30 Min Dauer
+  if (durationMinutes <= 30 && /deadline|abgabe|einreichung|upload|up-load|hand-in|einsendeschluss/i.test(entry.title ?? '')) {
+    return true;
+  }
+
+  return false;
+}
+
+/** Berechnet die effektive Endzeit (ms) für die Überlappungsprüfung im Raster. */
+export function effectiveEndMs(entry: { start: Date; end: Date; title?: string }): number {
+  if (isDeadlineOrAllDay(entry)) {
+    // 00:00 Deadlines werden im Zeitraster als 15 Min. Dauer gewertet, damit sie nicht den ganzen Tag blockieren
+    return entry.start.getTime() + 15 * 60_000;
+  }
+  return entry.end.getTime();
 }

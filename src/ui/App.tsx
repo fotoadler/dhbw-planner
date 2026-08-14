@@ -1,16 +1,3 @@
-/**
- * Wurzelkomponente.
- *
- * Struktur: unten eine feste Navigation zwischen den Bereichen
- * „Kalender", „Dualis" und — für unterstützte Standorte — „Uni-Mail".
- * Oben schaltet ein kontextueller Segment-Umschalter die Unteransicht
- * (Kalender: Tag/Woche, Dualis: Übersicht/Prüfungen).
- *
- * Der Dualis-Hook lebt hier oben, damit die angemeldete Session einen
- * Bereichswechsel überlebt (sonst müsste man sich bei jedem Tab-Wechsel neu
- * anmelden, weil DualisView sonst ab- und wieder aufgebaut würde).
- */
-
 import { useEffect, useMemo, useState } from 'react';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useBackButton } from './useBackButton';
@@ -23,9 +10,10 @@ import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { CourseView } from './CourseView';
-import { SettingsSheet } from './SettingsSheet';
+import { SettingsView } from './SettingsView';
 import { DualisView } from './DualisView';
 import { MailView } from './MailView';
+import { ConfirmDialog } from './ConfirmDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
@@ -35,8 +23,10 @@ import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
   addDaysYmd,
   berlinDayKey,
+  formatDateLong,
   formatDayLong,
   formatWeekRange,
+  formatWeekdayLong,
   isoWeekNumber,
   mondayOfYmd,
   parseYmdKey,
@@ -45,7 +35,7 @@ import {
 
 export function App() {
   const demoScreen = appStoreDemoScreen();
-  const { settings, entries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
+  const { settings, entries, allEntries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
     useSchedule();
   const [systemThemeMode, setSystemThemeMode] = useState<ResolvedTheme>(() => systemTheme());
   const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
@@ -65,10 +55,18 @@ export function App() {
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHiddenModules, setShowHiddenModules] = useState(false);
+  const [confirmModuleKey, setConfirmModuleKey] = useState<string | null>(null);
+
   const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
   const siteConfig = siteConfigurationFor(settings?.apiSelection?.site);
   const showMailTab = Boolean(settings?.apiSelection?.site);
+
+  const inSettings = section === 'settings' || showSettings;
+  const inCalendar = section === 'calendar' && !inSettings;
+  const inDualis = section === 'dualis' && !inSettings;
+  const inMail = section === 'mail' && !inSettings;
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -89,7 +87,7 @@ export function App() {
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
     const action = resolveBackAction({
-      showSettings,
+      showSettings: inSettings,
       selectedBlockKey,
       section,
       calendarView: activeCalendarView,
@@ -99,6 +97,7 @@ export function App() {
     switch (action) {
       case 'close-settings':
         setShowSettings(false);
+        if (section === 'settings') setSection('calendar');
         return true;
       case 'close-course':
         setSelectedBlockKey(null);
@@ -124,24 +123,34 @@ export function App() {
     [monday],
   );
 
-  const busyDays = useMemo(() => new Set(entries.map((e) => berlinDayKey(e.start))), [entries]);
+  const displayEntries = showHiddenModules ? allEntries : entries;
+
+  const busyDays = useMemo(() => new Set(displayEntries.map((e) => berlinDayKey(e.start))), [displayEntries]);
   const dayEntries = useMemo(
-    () => entries.filter((e) => berlinDayKey(e.start) === selectedDay),
-    [entries, selectedDay],
+    () => displayEntries.filter((e) => berlinDayKey(e.start) === selectedDay),
+    [displayEntries, selectedDay],
   );
   const blockEntries = useMemo(
-    () => (selectedBlockKey ? entries.filter((e) => blockKey(e) === selectedBlockKey) : []),
-    [entries, selectedBlockKey],
+    () => (selectedBlockKey ? displayEntries.filter((e) => blockKey(e) === selectedBlockKey) : []),
+    [displayEntries, selectedBlockKey],
   );
   const entriesByDay = useMemo(() => {
-    const map: Record<string, typeof entries> = {};
-    for (const e of entries) {
+    const map: Record<string, typeof displayEntries> = {};
+    for (const e of displayEntries) {
       const key = berlinDayKey(e.start);
       (map[key] ??= []).push(e);
     }
     return map;
-  }, [entries]);
+  }, [displayEntries]);
   const selectedBlock = blockEntries[0] ?? null;
+
+  const toggleModuleKey = (mKey: string) => {
+    if (!settings || !mKey) return;
+    const hidden = new Set(settings.hiddenModules);
+    if (hidden.has(mKey)) hidden.delete(mKey);
+    else hidden.add(mKey);
+    void applySettings({ ...settings, hiddenModules: [...hidden] });
+  };
 
   if (settings === null) {
     return <div className="splash">Lade …</div>;
@@ -213,16 +222,16 @@ export function App() {
     setCalendarView('week');
   };
 
-  const inCalendar = section === 'calendar';
-  const inDualis = section === 'dualis';
-  const inMail = section === 'mail';
   const dualisLoggedIn = dualis.loginState === 'logged-in';
   const showsReviewDemo = isReviewDemo || dualis.isReviewDemo;
 
   // Kopf: Titel/Untertitel je nach Bereich und Unteransicht.
   let title: string;
   let subtitle: string | null;
-  if (inMail) {
+  if (inSettings) {
+    title = 'Einstellungen';
+    subtitle = null;
+  } else if (inMail) {
     title = 'Mail';
     subtitle = null;
   } else if (inDualis) {
@@ -232,8 +241,14 @@ export function App() {
     title = selectedBlock.title;
     subtitle = `${blockEntries.length} ${blockEntries.length === 1 ? 'Termin' : 'Termine'}`;
   } else if (activeCalendarView === 'day') {
-    title = selectedDay === today ? 'Heute' : formatDayLong(parseYmdKey(selectedDay));
-    subtitle = selectedDay === today ? formatDayLong(parseYmdKey(selectedDay)) : null;
+    if (selectedDay === today) {
+      title = 'Heute';
+      subtitle = formatDayLong(parseYmdKey(selectedDay));
+    } else {
+      const ymd = parseYmdKey(selectedDay);
+      title = formatWeekdayLong(ymd);
+      subtitle = formatDateLong(ymd);
+    }
   } else {
     title = `KW ${isoWeekNumber(parseYmdKey(monday))}`;
     subtitle = formatWeekRange(parseYmdKey(monday));
@@ -245,12 +260,29 @@ export function App() {
     ((activeCalendarView === 'day' && selectedDay !== today) ||
       (activeCalendarView === 'week' && monday !== todayMonday));
 
+  const openSettings = () => {
+    setSection('settings');
+    setShowSettings(true);
+  };
+
+  const closeSettings = () => {
+    setShowSettings(false);
+    if (section === 'settings') setSection('calendar');
+  };
+
   return (
     <div className="app">
       <header className="app__header">
         <div className="app__date">
-          {inCalendar && selectedBlock && (
-            <button className="app__backbtn" aria-label="Zurück zum Kalender" onClick={() => setSelectedBlockKey(null)}>
+          {((inCalendar && selectedBlock) || inSettings) && (
+            <button
+              className="app__backbtn"
+              aria-label={inSettings ? 'Zurück zum Kalender' : 'Zurück zum Kalender'}
+              onClick={() => {
+                if (inSettings) closeSettings();
+                else setSelectedBlockKey(null);
+              }}
+            >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="m15 18-6-6 6-6" />
               </svg>
@@ -266,22 +298,47 @@ export function App() {
             </button>
           )}
           {inCalendar && !selectedBlock && (
-            <button
-              className="iconbtn"
-              aria-label="Als Kalenderdatei teilen"
-              onClick={() => void shareIcs(entries)}
-            >
+            <>
+              {settings.hiddenModules.length > 0 && (
+                <button
+                  className={`iconbtn${showHiddenModules ? ' is-active' : ''}`}
+                  aria-label={
+                    showHiddenModules
+                      ? 'Ausgeblendete Module ausblenden'
+                      : `${settings.hiddenModules.length} ausgeblendete Module anzeigen`
+                  }
+                  title={
+                    showHiddenModules
+                      ? 'Ausgeblendete Module ausblenden'
+                      : `${settings.hiddenModules.length} ausgeblendete Module anzeigen`
+                  }
+                  onClick={() => setShowHiddenModules((prev) => !prev)}
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                  </svg>
+                  <span className="iconbtn__badge">{settings.hiddenModules.length}</span>
+                </button>
+              )}
+              <button
+                className="iconbtn"
+                aria-label="Als Kalenderdatei teilen"
+                onClick={() => void shareIcs(entries)}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+                </svg>
+              </button>
+            </>
+          )}
+          {!inSettings && (
+            <button className="iconbtn" aria-label="Einstellungen" onClick={openSettings}>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" />
               </svg>
             </button>
           )}
-          <button className="iconbtn" aria-label="Einstellungen" onClick={() => setShowSettings(true)}>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" />
-            </svg>
-          </button>
         </div>
       </header>
 
@@ -328,7 +385,20 @@ export function App() {
       )}
 
       {/* Inhalt */}
-      {inMail ? (
+      {inSettings ? (
+        <SettingsView
+          settings={settings}
+          availableModules={availableModules}
+          updatedAt={updatedAt}
+          onChange={(next) => {
+            if (next.defaultCalendarView !== settings.defaultCalendarView) {
+              setCalendarView(next.defaultCalendarView);
+            }
+            void applySettings(next);
+          }}
+          onClose={closeSettings}
+        />
+      ) : inMail ? (
         <MailView site={settings.apiSelection?.site ?? ''} />
       ) : inCalendar && selectedBlock ? (
         <CourseView entries={blockEntries} today={today} onBack={() => setSelectedBlockKey(null)} />
@@ -344,6 +414,8 @@ export function App() {
           />
           <DayView
             entries={dayEntries}
+            hiddenModuleKeys={new Set(settings.hiddenModules)}
+            onToggleModule={(mKey) => setConfirmModuleKey(mKey)}
             dining={settings.mensaEnabled ? {
               ...dining,
               selectedDay,
@@ -368,6 +440,10 @@ export function App() {
           weekDays={weekDays}
           entriesByDay={entriesByDay}
           today={today}
+          hourHeight={settings.calendarHourHeight}
+          hiddenModuleKeys={new Set(settings.hiddenModules)}
+          onToggleModule={(mKey) => setConfirmModuleKey(mKey)}
+          onHourHeightChange={(newHeight) => void applySettings({ ...settings, calendarHourHeight: newHeight })}
           onOpenDay={(day) => {
             selectDay(day);
             setCalendarView('day');
@@ -378,11 +454,39 @@ export function App() {
         <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
       )}
 
+      {/* In-App Bestätigungs-Dialog */}
+      {confirmModuleKey && (
+        <ConfirmDialog
+          title={settings.hiddenModules.includes(confirmModuleKey) ? 'Modul wieder einblenden?' : 'Modul ausblenden?'}
+          message={
+            settings.hiddenModules.includes(confirmModuleKey) ? (
+              <>
+                Möchtest du das Modul <strong>„{confirmModuleKey}“</strong> wieder im Stundenplan anzeigen?
+              </>
+            ) : (
+              <>
+                Möchtest du das Modul <strong>„{confirmModuleKey}“</strong> im Stundenplan ausblenden?
+              </>
+            )
+          }
+          confirmLabel={settings.hiddenModules.includes(confirmModuleKey) ? 'Einblenden' : 'Modul ausblenden'}
+          isDanger={!settings.hiddenModules.includes(confirmModuleKey)}
+          onConfirm={() => {
+            toggleModuleKey(confirmModuleKey);
+            setConfirmModuleKey(null);
+          }}
+          onCancel={() => setConfirmModuleKey(null)}
+        />
+      )}
+
       {/* Feste Bereichsnavigation unten */}
       <nav className="tabbar" aria-label="Bereich">
         <button
           className={`tabbar__item${inCalendar ? ' is-active' : ''}`}
-          onClick={() => setSection('calendar')}
+          onClick={() => {
+            setShowSettings(false);
+            setSection('calendar');
+          }}
         >
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
@@ -391,7 +495,10 @@ export function App() {
         </button>
         <button
           className={`tabbar__item${inDualis ? ' is-active' : ''}`}
-          onClick={() => setSection('dualis')}
+          onClick={() => {
+            setShowSettings(false);
+            setSection('dualis');
+          }}
         >
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
@@ -401,7 +508,10 @@ export function App() {
         {showMailTab && (
           <button
             className={`tabbar__item${inMail ? ' is-active' : ''}`}
-            onClick={() => setSection('mail')}
+            onClick={() => {
+              setShowSettings(false);
+              setSection('mail');
+            }}
             aria-label={`${mailProvider?.label ?? siteConfig.label} Uni-Mail`}
           >
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -411,21 +521,6 @@ export function App() {
           </button>
         )}
       </nav>
-
-      {showSettings && (
-        <SettingsSheet
-          settings={settings}
-          availableModules={availableModules}
-          updatedAt={updatedAt}
-          onChange={(next) => {
-            if (next.defaultCalendarView !== settings.defaultCalendarView) {
-              setCalendarView(next.defaultCalendarView);
-            }
-            void applySettings(next);
-          }}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
     </div>
   );
 }

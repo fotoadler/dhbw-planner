@@ -51,6 +51,8 @@ export interface AppSettings {
   mensaAuto: boolean;
   /** Titel der Module, die aus dem sichtbaren Stundenplan ausgeblendet werden. */
   hiddenModules: string[];
+  /** Stundenzellen-Höhe im Wochenkalender in Pixeln (Standard: 64, Min: 40, Max: 120). */
+  calendarHourHeight: number;
   /** Darstellung: Systemvorgabe oder manuell hell/dunkel. */
   themeMode: ThemeMode;
   /** Ansicht, die beim Öffnen des Kalenders standardmäßig angezeigt wird. */
@@ -71,6 +73,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   mensa: 'RV',
   mensaAuto: false,
   hiddenModules: [],
+  calendarHourHeight: 64,
   themeMode: 'auto',
   defaultCalendarView: 'day',
 };
@@ -142,6 +145,11 @@ function parseSettings(raw: unknown): AppSettings {
   if (!isRecord(data)) return defaultSettings();
 
   const reminderMinutes = data.reminderMinutes;
+  const rawHourHeight = data.calendarHourHeight;
+  const calendarHourHeight =
+    typeof rawHourHeight === 'number' && Number.isFinite(rawHourHeight)
+      ? Math.min(120, Math.max(40, Math.round(rawHourHeight)))
+      : DEFAULT_SETTINGS.calendarHourHeight;
   const apiSelection = parseApiSelection(data.apiSelection);
   const configuredMensa = isMensa(data.mensa) ? data.mensa : DEFAULT_SETTINGS.mensa;
   const scheduleSource: ScheduleSource =
@@ -168,6 +176,7 @@ function parseSettings(raw: unknown): AppSettings {
     mensa: mensaSiteCode(configuredMensa),
     mensaAuto: typeof data.mensaAuto === 'boolean' ? data.mensaAuto : DEFAULT_SETTINGS.mensaAuto,
     hiddenModules: parseHiddenModules(data.hiddenModules),
+    calendarHourHeight,
     themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
     defaultCalendarView: data.defaultCalendarView === 'week' ? 'week' : DEFAULT_SETTINGS.defaultCalendarView,
   };

@@ -25,12 +25,11 @@ public class SecureStoragePlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         let query = keyQuery(for: key)
-        let attributes: [String: Any] = [
-            kSecValueData as String: data,
-            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+        let updateAttributes: [String: Any] = [
+            kSecValueData as String: data
         ]
 
-        let updateStatus = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+        let updateStatus = SecItemUpdate(query as CFDictionary, updateAttributes as CFDictionary)
         if updateStatus == errSecItemNotFound {
             var item = query
             item[kSecValueData as String] = data
@@ -41,8 +40,15 @@ public class SecureStoragePlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
         } else if updateStatus != errSecSuccess {
-            call.reject("Unable to update secure value", String(updateStatus), nil)
-            return
+            _ = SecItemDelete(query as CFDictionary)
+            var item = query
+            item[kSecValueData as String] = data
+            item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            let addStatus = SecItemAdd(item as CFDictionary, nil)
+            guard addStatus == errSecSuccess else {
+                call.reject("Unable to update secure value", String(updateStatus), nil)
+                return
+            }
         }
 
         call.resolve()

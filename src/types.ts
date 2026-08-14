@@ -35,5 +35,14 @@ export function serializeEntry(e: ScheduleEntry): SerializedEntry {
 }
 
 export function deserializeEntry(e: SerializedEntry): ScheduleEntry {
-  return { ...e, start: new Date(e.start), end: new Date(e.end) };
+  const fullText = `${e.title} ${e.extra ?? ''}`;
+  let type = e.type;
+  if (type === 'lecture' || type === 'unknown') {
+    if (/klausur|prüfung|pruefung|testat|klausuren|prüfungen|exam|examen/i.test(fullText)) {
+      type = 'exam';
+    } else if (/\bonline\b/i.test(fullText)) {
+      type = 'online';
+    }
+  }
+  return { ...e, start: new Date(e.start), end: new Date(e.end), type };
 }

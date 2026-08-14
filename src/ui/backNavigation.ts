@@ -9,12 +9,12 @@
  * Der Plugin-Teil liegt in useBackButton.ts.
  */
 
-export type Section = 'calendar' | 'dualis' | 'mail';
+export type Section = 'calendar' | 'dualis' | 'mail' | 'settings';
 export type CalendarView = 'day' | 'week';
 export type DualisPage = 'overview' | 'exams';
 
 export interface BackNavigationState {
-  /** Einstellungen-Sheet liegt über allem. */
+  /** Einstellungen liegt über allen Bereichen. */
   showSettings: boolean;
   /** Kursdetail (CourseView) innerhalb des Kalenders. */
   selectedBlockKey: string | null;
@@ -34,7 +34,7 @@ export type BackAction =
   | 'exit-app';
 
 export function resolveBackAction(state: BackNavigationState): BackAction {
-  if (state.showSettings) return 'close-settings';
+  if (state.showSettings || state.section === 'settings') return 'close-settings';
   if (state.section === 'calendar' && state.selectedBlockKey) return 'close-course';
   if (state.section === 'mail') return 'to-calendar';
   if (state.section === 'dualis') {

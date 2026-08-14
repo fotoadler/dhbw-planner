@@ -35,7 +35,9 @@ function course(
   title: string,
   lecturer: string,
   room: string,
+  overrideType?: ScheduleEntry['type'],
 ): ScheduleEntry {
+  const isExam = /klausur|prüfung|pruefung|testat|exam/i.test(title);
   return {
     start: new Date(`${day}T${start}:00+02:00`),
     end: new Date(`${day}T${end}:00+02:00`),
@@ -43,7 +45,7 @@ function course(
     lecturers: [lecturer],
     rooms: [room],
     course: 'TINF-Beispiel',
-    type: 'lecture',
+    type: overrideType ?? (isExam ? 'exam' : 'lecture'),
   };
 }
 
@@ -79,6 +81,7 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
   mensa: 'RV',
   mensaAuto: false,
   hiddenModules: [],
+  calendarHourHeight: 64,
   themeMode: 'auto',
   defaultCalendarView: 'day',
 };

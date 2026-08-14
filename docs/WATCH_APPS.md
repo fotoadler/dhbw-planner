@@ -33,13 +33,26 @@ Rapla/DHBW API → useSchedule → WatchScheduleSnapshot
 Die Synchronisierung ist best-effort: Der letzte gültige Snapshot bleibt auf der
 Uhr erhalten, wenn die App gerade offline oder die Uhr nicht erreichbar ist.
 
+Der Snapshot transportiert `currentEntry`, `nextEntry` und `todayEntries` nur als
+Stand des Sync-Zeitpunkts. Verlassen dürfen sich die Uhren darauf nicht: zwischen
+zwei Syncs – und über Mitternacht hinweg erst recht – wäre das falsch. Beide
+Plattformen leiten „jetzt“, „als Nächstes“ und die Tagesliste deshalb selbst aus
+`todayEntries` + `upcomingEntries` und den Zeitstempeln ab und werten das
+minütlich neu aus.
+
 ## Apple Watch
 
-Das Xcode-Projekt enthält jetzt die Targets `DHBWPlannerWatch` und
-`DHBWPlannerWatchWidget`. Die Watch-App nutzt SwiftUI und WatchConnectivity; die
-Komplikation nutzt WidgetKit und die App Group
+Das Xcode-Projekt enthält die Targets `DHBWPlannerWatch` und
+`DHBWPlannerWatchWidget`. `DHBWPlannerWatch` ist ein eigenständiges
+watchOS-Applikations-Target (`WKApplication`), nicht das seit watchOS 9 abgelöste
+Paar aus WatchKit-App und WatchKit-Extension. Die Watch-App nutzt SwiftUI und
+WatchConnectivity; die Komplikation nutzt WidgetKit und die App Group
 `group.de.dhbw.raplaplan`. Eingebettet wird die Watch-App in das iOS-App-Produkt,
 damit sie gemeinsam mit der iPhone-App ausgeliefert werden kann.
+
+Nach jedem eingehenden Snapshot ruft die Watch-App `WidgetCenter.reloadAllTimelines()`
+auf – sonst zöge die Komplikation die neuen Daten erst mit ihrer eigenen
+Timeline-Policy nach.
 
 Die Apple-Plattform unterstützt die automatische Installation kompatibler
 Watch-Apps beim Installieren der iPhone-App, sofern die entsprechende
@@ -61,6 +74,12 @@ verwenden denselben lokalen `WatchSnapshot`:
 
 - Tile: aktueller bzw. nächster Termin, Startzeit und Raum
 - Komplikation: Startzeit als Primärwert, kurzer Veranstaltungstitel als Titel
+
+Liegt der nächste Termin nicht am laufenden Kalendertag, zeigen Tile und
+Komplikation den Wochentag statt Raum bzw. Titel – eine nackte Uhrzeit läse sich
+sonst wie „heute“. `WatchSyncService` stößt nach jedem Snapshot
+`TileService.getUpdater(...)` und `ComplicationDataSourceUpdateRequester` an,
+damit beide Flächen nicht bis zu ihrem eigenen Intervall veraltet bleiben.
 
 Für die Veröffentlichung müssen im Play-Console-App-Bundle zusätzlich die
 Wear-OS-Verpackung, Signierung, Tile-Vorschau und die Geräteauswahl geprüft

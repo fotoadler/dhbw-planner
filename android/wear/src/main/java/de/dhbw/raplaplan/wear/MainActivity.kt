@@ -13,15 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text as WearText
 import androidx.wear.compose.material.TimeText
 import kotlinx.coroutines.delay
@@ -30,19 +33,39 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WearPlannerScreen(WatchSnapshotStore.load(this))
+            WearPlannerScreen()
         }
     }
 }
 
 @Composable
-private fun WearPlannerScreen(snapshot: WatchSnapshot?) {
+private fun WearPlannerScreen() {
+    val context = LocalContext.current
+    var snapshot by remember { mutableStateOf(WatchSnapshotStore.load(context)) }
+    // Der Data-Layer schreibt den Snapshot im Hintergrund. Ohne erneutes Laden beim
+    // Zurückkehren zeigt die Uhr sonst beliebig lange den Stand des ersten Starts.
+    LifecycleResumeEffect(Unit) {
+        snapshot = WatchSnapshotStore.load(context)
+        onPauseOrDispose {}
+    }
+
+    // Minütlich neu auswerten, damit „Jetzt“/„Als Nächstes“ und die Tagesliste auch
+    // ohne frischen Sync stimmen – insbesondere über Mitternacht hinweg.
+    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(60_000)
+            now = System.currentTimeMillis()
+        }
+    }
+
     MaterialTheme {
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
         ) {
             item { TimeText() }
-            if (snapshot == null) {
+            val current = snapshot
+            if (current == null) {
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         WearText("Noch nicht synchronisiert", fontWeight = FontWeight.Bold)
@@ -50,20 +73,23 @@ private fun WearPlannerScreen(snapshot: WatchSnapshot?) {
                     }
                 }
             } else {
-                item { SummaryCard(snapshot) }
+                val dayEntries = current.entriesForDay(now)
+                item { SummaryCard(current, now) }
+                if (dayEntries.isNotEmpty()) {
+                    item {
+                        WearText(
+                            "Heute",
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            fontSize = 12.sp,
+                        )
+                    }
+                    items(dayEntries.size) { index ->
+                        EntryRow(dayEntries[index])
+                    }
+                }
                 item {
                     WearText(
-                        "Heute",
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                        fontSize = 12.sp,
-                    )
-                }
-                items(snapshot.todayEntries.size) { index ->
-                    EntryRow(snapshot.todayEntries[index])
-                }
-                item {
-                    WearText(
-                        "Stand ${formatRelative(snapshot.updatedAt)}",
+                        "Stand ${formatRelative(current.updatedAt, now)}",
                         modifier = Modifier.padding(top = 8.dp),
                         fontSize = 11.sp,
                     )
@@ -74,8 +100,9 @@ private fun WearPlannerScreen(snapshot: WatchSnapshot?) {
 }
 
 @Composable
-private fun SummaryCard(snapshot: WatchSnapshot) {
-    val entry = snapshot.currentEntry ?: snapshot.nextEntry
+private fun SummaryCard(snapshot: WatchSnapshot, now: Long) {
+    val current = snapshot.currentEntry(now)
+    val entry = current ?: snapshot.nextEntry(now)
     if (entry == null) {
         Card(onClick = {}) {
             WearText("Keine Vorlesung")
@@ -86,7 +113,7 @@ private fun SummaryCard(snapshot: WatchSnapshot) {
     Card(onClick = {}) {
         Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
             WearText(
-                if (snapshot.currentEntry != null) "Jetzt" else "Als Nächstes",
+                if (current != null) "Jetzt" else "Als Nächstes",
                 fontSize = 12.sp,
                 color = MaterialTheme.colors.secondary,
             )
@@ -96,8 +123,12 @@ private fun SummaryCard(snapshot: WatchSnapshot) {
                 WearText("–", fontSize = 12.sp)
                 WearText(formatTime(entry.endTime), fontSize = 12.sp)
             }
-            if (snapshot.currentEntry != null) {
-                CountdownLabel(entry.endTime)
+            // Ohne Tagesangabe läse sich ein Termin von morgen wie einer von heute.
+            if (entry.day != berlinDayKey(now)) {
+                WearText(formatDayLabel(entry.startTime), fontSize = 11.sp, maxLines = 1)
+            }
+            if (current != null) {
+                CountdownLabel(entry.endTime, now)
             }
             if (entry.room.isNotBlank()) {
                 WearText(entry.room, fontSize = 12.sp, maxLines = 1)
@@ -123,8 +154,8 @@ private fun EntryRow(entry: WatchEntry) {
 }
 
 @Composable
-private fun CountdownLabel(endTime: Long) {
-    var remaining by remember(endTime) { mutableLongStateOf((endTime - System.currentTimeMillis()).coerceAtLeast(0)) }
+private fun CountdownLabel(endTime: Long, now: Long) {
+    var remaining by remember(endTime) { mutableLongStateOf((endTime - now).coerceAtLeast(0)) }
     LaunchedEffect(endTime) {
         while (remaining > 0) {
             remaining = (endTime - System.currentTimeMillis()).coerceAtLeast(0)
@@ -134,11 +165,6 @@ private fun CountdownLabel(endTime: Long) {
     WearText(formatDuration(remaining), fontWeight = FontWeight.Bold, fontSize = 18.sp)
 }
 
-private fun formatTime(timestamp: Long): String =
-    java.text.SimpleDateFormat("HH:mm", java.util.Locale.GERMANY).apply {
-        timeZone = java.util.TimeZone.getTimeZone("Europe/Berlin")
-    }.format(java.util.Date(timestamp))
-
 private fun formatDuration(milliseconds: Long): String {
     val totalMinutes = (milliseconds / 60_000).coerceAtLeast(0)
     val hours = totalMinutes / 60
@@ -146,7 +172,12 @@ private fun formatDuration(milliseconds: Long): String {
     return if (hours > 0) "noch ${hours} h ${minutes.toString().padStart(2, '0')} min" else "noch ${minutes} min"
 }
 
-private fun formatRelative(timestamp: Long): String {
-    val minutes = ((System.currentTimeMillis() - timestamp) / 60_000).coerceAtLeast(0)
-    return if (minutes == 0L) "gerade eben" else "vor $minutes Min."
+private fun formatRelative(timestamp: Long, now: Long): String {
+    val minutes = ((now - timestamp) / 60_000).coerceAtLeast(0)
+    return when {
+        minutes == 0L -> "gerade eben"
+        minutes < 60 -> "vor $minutes Min."
+        minutes < 24 * 60 -> "vor ${minutes / 60} Std."
+        else -> "vom ${formatDayLabel(timestamp)}"
+    }
 }

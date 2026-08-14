@@ -36,9 +36,10 @@
             </intent-filter>
         </service>
 
+        <!-- Bewusst nicht directBootAware: der Snapshot liegt im verschlüsselten
+             App-Speicher und ist vor dem ersten Entsperren nicht lesbar. -->
         <service
             android:name=".ScheduleComplicationService"
-            android:directBootAware="true"
             android:exported="true"
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:label="DHBW Planner"

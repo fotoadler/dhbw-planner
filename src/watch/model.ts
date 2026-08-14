@@ -79,7 +79,9 @@ export function createWatchScheduleSnapshot(
   const today = berlinDayKey(now);
   const lastDay = addDays(today, UPCOMING_DAYS);
   const current = sorted.find((entry) => entry.start.getTime() <= nowMs && entry.end.getTime() > nowMs);
-  const next = sorted.find((entry) => entry.start.getTime() > (current?.end.getTime() ?? nowMs));
+  // Direkt anschließende Vorlesungen starten exakt zum Ende der laufenden, daher `>=`.
+  const nextFromMs = current?.end.getTime() ?? nowMs;
+  const next = sorted.find((entry) => entry !== current && entry.start.getTime() >= nextFromMs);
   const todayEntries = sorted
     .filter((entry) => berlinDayKey(entry.start) === today)
     .slice(0, MAX_TODAY_ENTRIES)

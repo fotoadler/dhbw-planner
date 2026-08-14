@@ -414,7 +414,9 @@ export function useSchedule() {
         setUpdatedAt(cache.updatedAt);
         const filled = filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules);
         await syncCourseLiveActivity(filled, s);
-        await syncWatchSchedule(filled, cache.updatedAt);
+        // Bewusst ohne cache.updatedAt: „jetzt“ ist der aktuelle Zeitpunkt, nicht der
+        // Schreibzeitpunkt des Caches – sonst bekommt die Uhr einen alten Tag als „Heute“.
+        await syncWatchSchedule(filled);
       }
       setSettings(s);
       settingsRef.current = s;

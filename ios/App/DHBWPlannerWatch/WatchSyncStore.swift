@@ -1,5 +1,6 @@
 import Foundation
 import WatchConnectivity
+import WidgetKit
 
 @MainActor
 final class WatchSyncStore: NSObject, ObservableObject, WCSessionDelegate {
@@ -32,6 +33,9 @@ final class WatchSyncStore: NSObject, ObservableObject, WCSessionDelegate {
         guard let next = try? JSONDecoder().decode(WatchScheduleSnapshot.self, from: data) else { return }
         snapshot = next
         defaults.set(data, forKey: snapshotKey)
+        // Ohne expliziten Reload zieht die Komplikation die neuen Daten erst mit
+        // ihrer eigenen Timeline-Policy nach – also unter Umständen Stunden später.
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     nonisolated func session(

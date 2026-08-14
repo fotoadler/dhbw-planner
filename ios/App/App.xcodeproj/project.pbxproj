@@ -22,20 +22,15 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		67CC3055795525D995BFBC9E /* DHBWPlannerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7CF9E583578ED3B00C2592 /* DHBWPlannerWatchApp.swift */; };
 		6873294309D95E17EE1613E3 /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531F68F86FC3212F9CE17A1F /* WatchModels.swift */; };
 		69B0961DD69602B56D172250 /* DHBWPlannerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7CF9E583578ED3B00C2592 /* DHBWPlannerWatchApp.swift */; };
 		7A8E86DA3EC3BCDF71B9B050 /* CourseLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527E23C2E5D38C50B5AABFB1 /* CourseLiveActivityWidget.swift */; };
 		9E0394A2C60BE5FA13C93847 /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531F68F86FC3212F9CE17A1F /* WatchModels.swift */; };
-		9EBF8FD02EEF6FAB7F322ABE /* DHBWPlannerWatchExtension.appex in Embed Watch Extension */ = {isa = PBXBuildFile; fileRef = 426FB70E3143D7D20001CA9E /* DHBWPlannerWatchExtension.appex */; };
 		A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */; };
 		A11C0DE01707202600000001 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE01707202600000002 /* ViewController.swift */; };
-		A6C4AB398C40DA4678362F5A /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531F68F86FC3212F9CE17A1F /* WatchModels.swift */; };
 		A746169EAE075974535675ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB1C8CC988F301CB5923B68 /* Foundation.framework */; };
 		B692E0EF419BDB4D05B2A0A8 /* DHBWPlannerWatchWidget.appex in Embed Watch Widgets */ = {isa = PBXBuildFile; fileRef = 24D5E5C9AB5E86489AF1F58A /* DHBWPlannerWatchWidget.appex */; };
 		C077DB99A778C9AA25315BEF /* WatchComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003E64B4627CDEA14A31D654 /* WatchComplication.swift */; };
-		FA6AFE1EE78FE9629778130F /* WatchSyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B205FF7B88E3BC308F9EA09A /* WatchSyncStore.swift */; };
-		FFB4521B3A9BF08BE4AB93E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665EF6636BFB8B4326A4B694 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,26 +48,12 @@
 			remoteGlobalIDString = C9E47946192573CA7378F1C5;
 			remoteInfo = CourseLiveActivityWidgetExtension;
 		};
-		9DF85472621B9A4866B5CA8B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ABAE9BF7E5F50F4B9F65FACE;
-			remoteInfo = DHBWPlannerWatchWidget;
-		};
 		AAC05389A8BDAD162279E761 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 51F30165D770D9F860D64A20;
 			remoteInfo = DHBWPlannerWatch;
-		};
-		FE67560ADB18A9407FE09AC5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 009AD263F9A89F305AAB6404;
-			remoteInfo = DHBWPlannerWatchExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -86,17 +67,6 @@
 				2045023AC4B0B25AFE0AE12F /* DHBWPlannerWatch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7ABAFFA11FFC004DA6933F4E /* Embed Watch Extension */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				9EBF8FD02EEF6FAB7F322ABE /* DHBWPlannerWatchExtension.appex in Embed Watch Extension */,
-			);
-			name = "Embed Watch Extension";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		83BA05FF30D2966B864A1F66 /* Embed Watch Widgets */ = {
@@ -127,7 +97,6 @@
 		003E64B4627CDEA14A31D654 /* WatchComplication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchComplication.swift; sourceTree = "<group>"; };
 		24D5E5C9AB5E86489AF1F58A /* DHBWPlannerWatchWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DHBWPlannerWatchWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
-		426FB70E3143D7D20001CA9E /* DHBWPlannerWatchExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DHBWPlannerWatchExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		487F41680C8BDD376DDB1463 /* CourseLectureAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CourseLectureAttributes.swift; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,7 +199,6 @@
 				BA717A1B3F4AEAA63E544A8E /* CourseLiveActivityWidgetExtension.appex */,
 				CE8C499060A94A692E00EE95 /* DHBWPlannerWatch.app */,
 				24D5E5C9AB5E86489AF1F58A /* DHBWPlannerWatchWidget.appex */,
-				426FB70E3143D7D20001CA9E /* DHBWPlannerWatchExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -296,24 +264,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		009AD263F9A89F305AAB6404 /* DHBWPlannerWatchExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A1B99D185219A2DCFF128AC5 /* Build configuration list for PBXNativeTarget "DHBWPlannerWatchExtension" */;
-			buildPhases = (
-				3AC024DCC0DEA71754E4E06C /* Sources */,
-				952A5D5793C90C5949DDD05B /* Frameworks */,
-				FFBDB278AC76B33706AA15F1 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DD4D6332648E11F552775D2E /* PBXTargetDependency */,
-			);
-			name = DHBWPlannerWatchExtension;
-			productName = DHBWPlannerWatchExtension;
-			productReference = 426FB70E3143D7D20001CA9E /* DHBWPlannerWatchExtension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
 		504EC3031FED79650016851F /* App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 504EC3161FED79650016851F /* Build configuration list for PBXNativeTarget "App" */;
@@ -341,20 +291,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DF7CD4CAB47119128CCD2B1A /* Build configuration list for PBXNativeTarget "DHBWPlannerWatch" */;
 			buildPhases = (
+				3AC024DCC0DEA71754E4E06C /* Sources */,
+				952A5D5793C90C5949DDD05B /* Frameworks */,
 				A2420DE14B13F3347FDC3C19 /* Resources */,
 				83BA05FF30D2966B864A1F66 /* Embed Watch Widgets */,
-				7ABAFFA11FFC004DA6933F4E /* Embed Watch Extension */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				74140CF12514FC859ABE0819 /* PBXTargetDependency */,
-				CECBFEEDCE9A862F9D566555 /* PBXTargetDependency */,
 			);
 			name = DHBWPlannerWatch;
 			productName = DHBWPlannerWatch;
 			productReference = CE8C499060A94A692E00EE95 /* DHBWPlannerWatch.app */;
-			productType = "com.apple.product-type.application.watchapp2";
+			productType = "com.apple.product-type.application";
 		};
 		ABAE9BF7E5F50F4B9F65FACE /* DHBWPlannerWatchWidget */ = {
 			isa = PBXNativeTarget;
@@ -427,7 +377,6 @@
 				C9E47946192573CA7378F1C5 /* CourseLiveActivityWidgetExtension */,
 				51F30165D770D9F860D64A20 /* DHBWPlannerWatch */,
 				ABAE9BF7E5F50F4B9F65FACE /* DHBWPlannerWatchWidget */,
-				009AD263F9A89F305AAB6404 /* DHBWPlannerWatchExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -461,13 +410,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A51642DE8494997243242EED /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FFBDB278AC76B33706AA15F1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -572,18 +514,6 @@
 			target = ABAE9BF7E5F50F4B9F65FACE /* DHBWPlannerWatchWidget */;
 			targetProxy = 1D390DA565DB0310E5A402F5 /* PBXContainerItemProxy */;
 		};
-		CECBFEEDCE9A862F9D566555 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = DHBWPlannerWatchExtension;
-			target = 009AD263F9A89F305AAB6404 /* DHBWPlannerWatchExtension */;
-			targetProxy = FE67560ADB18A9407FE09AC5 /* PBXContainerItemProxy */;
-		};
-		DD4D6332648E11F552775D2E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = DHBWPlannerWatchWidget;
-			target = ABAE9BF7E5F50F4B9F65FACE /* DHBWPlannerWatchWidget */;
-			targetProxy = 9DF85472621B9A4866B5CA8B /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -664,26 +594,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		4BFF05F26A041496E394279F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = DHBWPlannerWatch/DHBWPlannerWatch.entitlements;
-				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = TBQ83P5XKH;
-				INFOPLIST_FILE = "DHBWPlannerWatch/Extension-Info.plist";
-				MARKETING_VERSION = 1.4.1;
-				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan.watchkitapp.extension;
-				PRODUCT_NAME = DHBWPlannerWatchExtension;
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
 		};
@@ -895,25 +805,6 @@
 			};
 			name = Release;
 		};
-		D9C4DFC1E46B632BB23B21E3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = DHBWPlannerWatch/DHBWPlannerWatch.entitlements;
-				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = TBQ83P5XKH;
-				INFOPLIST_FILE = "DHBWPlannerWatch/Extension-Info.plist";
-				MARKETING_VERSION = 1.4.1;
-				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan.watchkitapp.extension;
-				PRODUCT_NAME = DHBWPlannerWatchExtension;
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -940,15 +831,6 @@
 			buildConfigurations = (
 				1FEB2D90E5800553FC02E680 /* Release */,
 				A8E48E4B8E89AD5CB5080B51 /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A1B99D185219A2DCFF128AC5 /* Build configuration list for PBXNativeTarget "DHBWPlannerWatchExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4BFF05F26A041496E394279F /* Release */,
-				D9C4DFC1E46B632BB23B21E3 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

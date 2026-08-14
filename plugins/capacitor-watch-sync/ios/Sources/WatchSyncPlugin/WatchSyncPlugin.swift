@@ -6,6 +6,9 @@ private final class WatchSyncSessionDelegate: NSObject, WCSessionDelegate {
     static let shared = WatchSyncSessionDelegate()
 
     private let logger = Logger(subsystem: "de.dhbw.raplaplan", category: "WatchSync")
+    // `queue(snapshot:)` kommt vom Capacitor-Bridge-Thread, die Delegate-Callbacks
+    // von WatchConnectivity – der Puffer braucht deshalb einen Lock.
+    private let lock = NSLock()
     private var pendingSnapshot: String?
 
     func activate() {
@@ -16,7 +19,9 @@ private final class WatchSyncSessionDelegate: NSObject, WCSessionDelegate {
     }
 
     func queue(snapshot: String) {
+        lock.lock()
         pendingSnapshot = snapshot
+        lock.unlock()
         sendIfPossible()
     }
 
@@ -28,15 +33,19 @@ private final class WatchSyncSessionDelegate: NSObject, WCSessionDelegate {
     }
 
     private func sendIfPossible() {
+        lock.lock()
+        let snapshot = pendingSnapshot
+        lock.unlock()
+
         guard
             WCSession.isSupported(),
             WCSession.default.activationState == .activated,
-            let snapshot = pendingSnapshot
+            let snapshot
         else { return }
 
         let payload: [String: Any] = [
-                "snapshot": snapshot,
-                "updatedAt": Date().timeIntervalSince1970 * 1000,
+            "snapshot": snapshot,
+            "updatedAt": Date().timeIntervalSince1970 * 1000,
         ]
 
         do {
@@ -50,7 +59,10 @@ private final class WatchSyncSessionDelegate: NSObject, WCSessionDelegate {
                     }
                 )
             }
-            pendingSnapshot = nil
+            lock.lock()
+            // Nur zurücksetzen, wenn zwischenzeitlich kein neuerer Snapshot kam.
+            if pendingSnapshot == snapshot { pendingSnapshot = nil }
+            lock.unlock()
         } catch {
             logger.error("Application context failed: \(error.localizedDescription, privacy: .public)")
         }

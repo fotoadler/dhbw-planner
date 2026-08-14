@@ -79,6 +79,7 @@ public class WatchSyncPlugin extends Plugin {
 
     private void resolveAvailability(@NonNull PluginCall call, @NonNull CapabilityInfo info) {
         JSObject result = new JSObject();
+        result.put("platform", "android");
         result.put("available", true);
         result.put("watchInstalled", !info.getNodes().isEmpty());
         call.resolve(result);

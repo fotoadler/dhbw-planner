@@ -13,10 +13,6 @@ import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.Futures
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 private const val RESOURCES_VERSION = "1"
 
@@ -29,9 +25,10 @@ class ScheduleTileService : TileService() {
                 .setTileTimeline(
                     Timeline.fromLayoutElement(
                         materialScope(this, requestParams.deviceConfiguration) {
-                            val entry = WatchSnapshotStore.load(this@ScheduleTileService)?.let {
-                                it.currentEntry ?: it.nextEntry
-                            }
+                            val now = System.currentTimeMillis()
+                            val snapshot = WatchSnapshotStore.load(this@ScheduleTileService)
+                            val current = snapshot?.currentEntry(now)
+                            val entry = current ?: snapshot?.nextEntry(now)
                             primaryLayout(
                                 titleSlot = { text("DHBW Planner".layoutString, typography = BODY_MEDIUM) },
                                 mainSlot = {
@@ -44,10 +41,9 @@ class ScheduleTileService : TileService() {
                                         )
                                         .addContent(
                                             text(
-                                                entry?.let { "${formatTime(it.startTime)} · ${it.room}" }
-                                                    ?.take(36)
-                                                    ?.layoutString
-                                                    ?: "Heute ist nichts mehr geplant.".layoutString,
+                                                (entry?.let { subtitle(it, now) } ?: "Kein weiterer Termin bekannt.")
+                                                    .take(36)
+                                                    .layoutString,
                                                 typography = BODY_MEDIUM,
                                             ),
                                         )
@@ -65,7 +61,15 @@ class ScheduleTileService : TileService() {
         Futures.immediateFuture(Resources.Builder().setVersion(RESOURCES_VERSION).build())
 }
 
-private fun formatTime(timestamp: Long): String =
-    SimpleDateFormat("HH:mm", Locale.GERMANY).apply {
-        timeZone = TimeZone.getTimeZone("Europe/Berlin")
-    }.format(Date(timestamp))
+/**
+ * Ein Termin an einem anderen Kalendertag bekommt den Tag statt des Raums – eine
+ * nackte Uhrzeit läse sich sonst wie „heute“.
+ */
+private fun subtitle(entry: WatchEntry, now: Long): String {
+    if (entry.day != berlinDayKey(now)) {
+        return "${formatDayLabel(entry.startTime)} · ${formatTime(entry.startTime)}"
+    }
+    return listOf(formatTime(entry.startTime), entry.room)
+        .filter { it.isNotBlank() }
+        .joinToString(" · ")
+}

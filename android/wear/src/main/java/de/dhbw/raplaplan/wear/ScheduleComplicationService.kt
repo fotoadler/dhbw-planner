@@ -7,10 +7,6 @@ import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 /** Kurze Startzeit bzw. aktueller Titel für kompatible Wear-OS-Zifferblätter. */
 class ScheduleComplicationService : ComplicationDataSourceService() {
@@ -23,37 +19,44 @@ class ScheduleComplicationService : ComplicationDataSourceService() {
             return
         }
 
-        val entry = WatchSnapshotStore.load(this)?.let { it.currentEntry ?: it.nextEntry }
-        listener.onComplicationData(entry?.let(::shortText) ?: NoDataComplicationData())
+        val now = System.currentTimeMillis()
+        val snapshot = WatchSnapshotStore.load(this)
+        val entry = snapshot?.let { it.currentEntry(now) ?: it.nextEntry(now) }
+        listener.onComplicationData(entry?.let { shortText(it, now) } ?: NoDataComplicationData())
     }
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? =
         if (type == ComplicationType.SHORT_TEXT) {
+            val now = System.currentTimeMillis()
             shortText(
                 WatchEntry(
                     id = "preview",
                     title = "Nächster Termin",
-                    startTime = System.currentTimeMillis(),
-                    endTime = System.currentTimeMillis(),
+                    startTime = now,
+                    endTime = now,
                     room = "WS17-0.13",
                     lecturer = "",
                     extra = "",
                     type = "lecture",
+                    day = berlinDayKey(now),
                 ),
+                now,
             )
         } else {
-            NoDataComplicationData()
-    }
+            null
+        }
 
-    private fun shortText(entry: WatchEntry): ShortTextComplicationData {
+    private fun shortText(entry: WatchEntry, now: Long): ShortTextComplicationData {
+        // Liegt der Termin an einem anderen Tag, zeigt der Titel den Wochentag statt
+        // des Veranstaltungsnamens – die Uhrzeit allein wäre sonst irreführend.
+        val title = if (entry.day != berlinDayKey(now)) {
+            formatDayLabel(entry.startTime).take(24)
+        } else {
+            entry.title.take(24)
+        }
         return ShortTextComplicationData.Builder(
             PlainComplicationText.Builder(formatTime(entry.startTime)).build(),
-            PlainComplicationText.Builder(entry.title.take(24)).build(),
+            PlainComplicationText.Builder(title).build(),
         ).build()
     }
 }
-
-private fun formatTime(timestamp: Long): String =
-    SimpleDateFormat("HH:mm", Locale.GERMANY).apply {
-        timeZone = TimeZone.getTimeZone("Europe/Berlin")
-    }.format(Date(timestamp))

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
 import { berlinParts, effectiveEndMs, formatTime, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
 import { scheduleModuleKey } from '../schedule/modules';
@@ -162,11 +162,22 @@ export function WeekView({
   onOpenDay,
   onSwipeWeek,
 }: Props) {
-  const hourPx = hourHeight;
+  // Während einer Pinch-Geste wird die Stundenhöhe nur lokal gehalten und erst
+  // beim Loslassen gespeichert: `onHourHeightChange` schreibt in die Settings und
+  // stößt dort die komplette Benachrichtigungsplanung an – das darf nicht bei
+  // jedem touchmove passieren.
+  const [pinchHourHeight, setPinchHourHeight] = useState<number | null>(null);
+  const hourPx = pinchHourHeight ?? hourHeight;
   const touch = useRef<{ x: number; y: number } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
   const initialHourHeight = useRef<number>(hourPx);
   const longPressTimer = useRef<number | null>(null);
+  const didLongPress = useRef(false);
+
+  // Sobald die gespeicherte Höhe nachgezogen ist, den Übergangswert verwerfen.
+  useEffect(() => {
+    setPinchHourHeight(null);
+  }, [hourHeight]);
 
   // Wochenende nur einblenden, wenn dort tatsächlich Termine liegen
   // (gleiche Regel wie in der Wochenleiste der Tagesansicht).
@@ -192,10 +203,19 @@ export function WeekView({
 
   const startLongPress = (entry: ScheduleEntry) => {
     if (!onToggleModule) return;
+    didLongPress.current = false;
     longPressTimer.current = window.setTimeout(() => {
+      didLongPress.current = true;
       selectionHaptic();
       onToggleModule(scheduleModuleKey(entry));
     }, 450);
+  };
+
+  /** Nach einem Long-Press folgt trotzdem ein Click – der darf nicht zusätzlich den Tag öffnen. */
+  const consumeLongPressClick = () => {
+    if (!didLongPress.current) return false;
+    didLongPress.current = false;
+    return true;
   };
 
   const cancelLongPress = () => {
@@ -210,6 +230,10 @@ export function WeekView({
       const d = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
       initialPinchDist.current = d;
       initialHourHeight.current = hourPx;
+      // Der erste Finger hat einen Swipe-Start hinterlassen. Würde der beim
+      // Loslassen noch ausgewertet, sprang das Zoomen in die Nachbarwoche.
+      touch.current = null;
+      cancelLongPress();
     } else if (e.touches.length === 1) {
       touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     }
@@ -220,12 +244,18 @@ export function WeekView({
       const d = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
       const scale = d / Math.max(1, initialPinchDist.current);
       const nextHeight = Math.min(120, Math.max(40, Math.round(initialHourHeight.current * scale)));
-      onHourHeightChange(nextHeight);
+      setPinchHourHeight(nextHeight);
     }
   };
 
   const onTouchEnd = (e: React.TouchEvent) => {
+    const wasPinching = initialPinchDist.current !== null;
     initialPinchDist.current = null;
+    if (wasPinching) {
+      // Erst jetzt persistieren – einmal pro Geste statt einmal pro Frame.
+      if (pinchHourHeight !== null && pinchHourHeight !== hourHeight) onHourHeightChange?.(pinchHourHeight);
+      return;
+    }
     if (!touch.current) return;
     if (e.changedTouches.length > 0) {
       const dx = e.changedTouches[0].clientX - touch.current.x;
@@ -346,7 +376,10 @@ export function WeekView({
                       width: 'calc(100% - 4px)',
                       ...(isHidden ? { opacity: 0.55, filter: 'grayscale(0.3)' } : {}),
                     }}
-                    onClick={() => onOpenDay(day)}
+                    onClick={() => {
+                      if (consumeLongPressClick()) return;
+                      onOpenDay(day);
+                    }}
                     onTouchStart={() => startLongPress(entry)}
                     onTouchEnd={cancelLongPress}
                     onTouchMove={cancelLongPress}

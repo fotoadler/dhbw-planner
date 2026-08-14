@@ -1,3 +1,5 @@
+import { isExamTitle, isOnlineTitle } from './schedule/entryType';
+
 /** Veranstaltungstyp — sinngemäß aus der alten App übernommen. */
 export type EntryType = 'lecture' | 'exam' | 'online' | 'holiday' | 'unknown';
 
@@ -35,13 +37,16 @@ export function serializeEntry(e: ScheduleEntry): SerializedEntry {
 }
 
 export function deserializeEntry(e: SerializedEntry): ScheduleEntry {
-  const fullText = `${e.title} ${e.extra ?? ''}`;
+  // Bereits gecachte Termine wurden ggf. mit einer älteren Erkennung
+  // eingestuft; die aktuelle Regel wird deshalb beim Laden erneut angewandt.
   let type = e.type;
-  if (type === 'lecture' || type === 'unknown') {
-    if (/klausur|prüfung|pruefung|testat|klausuren|prüfungen|exam|examen/i.test(fullText)) {
+  if (type === 'lecture' || type === 'unknown' || type === 'exam') {
+    if (isExamTitle(e.title)) {
       type = 'exam';
-    } else if (/\bonline\b/i.test(fullText)) {
+    } else if (isOnlineTitle(`${e.title} ${e.extra ?? ''}`)) {
       type = 'online';
+    } else if (type === 'exam') {
+      type = 'lecture';
     }
   }
   return { ...e, start: new Date(e.start), end: new Date(e.end), type };

@@ -557,6 +557,14 @@ option {
   vertical-align: 2px;
 }
 
+/* Der „Ausgeblendet“-Hinweis ist kein Termintyp und soll deshalb neutral
+   wirken – auch auf Prüfungskarten, die das Badge sonst einfärben. */
+.entry .entry__badge--muted {
+  color: var(--ink-3);
+  background: var(--bg-soft);
+  font-weight: 600;
+}
+
 .entry__lecturers {
   margin-top: 3px;
   font-size: 14px;

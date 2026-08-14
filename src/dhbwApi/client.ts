@@ -10,6 +10,7 @@
 
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import { mondayOf, ymdKey } from '../lib/berlinTime';
+import { isExamTitle, isHolidayTitle, isOnlineTitle } from '../schedule/entryType';
 import { ScheduleEntry } from '../types';
 
 export const DHBW_API_BASE_URL = 'https://api.dhbw.app';
@@ -183,16 +184,19 @@ export function mapScheduleItem(item: DhbwScheduleItem): ScheduleEntry | null {
 
   const rawTitle = (item.name ?? 'Termin').trim() || 'Termin';
   const kind = (item.type ?? '').toUpperCase();
-  const fullText = `${kind} ${rawTitle}`;
+  const embeddedLecturer = rawTitle.match(/^(.*?)(?:\s*<([^<>]+)>)\s*$/);
+  const title = embeddedLecturer?.[1].trim() || rawTitle;
 
-  const isExam = kind.includes('EXAM') || /klausur|prüfung|pruefung|testat|klausuren|prüfungen|exam|examen/i.test(fullText);
-  const isOnline = kind.includes('ONLINE') || /\bonline\b/i.test(fullText);
-  const isHoliday = kind.includes('HOLIDAY') || /feiertag|holiday/i.test(fullText);
+  // Der Typ wird am bereinigten Titel bestimmt: Der Zusatz in spitzen Klammern
+  // enthält Dozent oder Raum und darf die Einstufung nicht beeinflussen.
+  // `EXAM` und `HOLIDAY` liefert die API derzeit nirgends (siehe entryType.ts),
+  // werden aber weiter akzeptiert, falls sie doch einmal auftauchen.
+  const isExam = kind.includes('EXAM') || isExamTitle(title);
+  const isOnline = kind.includes('ONLINE') || isOnlineTitle(title);
+  const isHoliday = kind.includes('HOLIDAY') || isHolidayTitle(title);
 
   const type: ScheduleEntry['type'] =
     isExam ? 'exam' : isOnline ? 'online' : isHoliday ? 'holiday' : item.entityType === 'EVENT' ? 'unknown' : 'lecture';
-  const embeddedLecturer = rawTitle.match(/^(.*?)(?:\s*<([^<>]+)>)\s*$/);
-  const title = embeddedLecturer?.[1].trim() || rawTitle;
   const embeddedValue = embeddedLecturer?.[2].trim();
   const embeddedRoom = embeddedValue && /^raum\b/i.test(embeddedValue) ? embeddedValue : undefined;
   const lecturer = embeddedRoom ? undefined : embeddedValue;

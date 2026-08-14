@@ -24,6 +24,7 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
   const badge = isDeadline ? 'Deadline' : TYPE_LABEL[entry.type];
   const lecturers = entry.lecturers.join(', ');
   const timerRef = useRef<number | null>(null);
+  const didLongPress = useRef(false);
 
   const endTimeText = isPointInTime
     ? ''
@@ -33,7 +34,9 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
 
   const startLongPress = () => {
     if (!onToggleModule) return;
+    didLongPress.current = false;
     timerRef.current = window.setTimeout(() => {
+      didLongPress.current = true;
       selectionHaptic();
       onToggleModule(scheduleModuleKey(entry));
     }, 450);
@@ -56,7 +59,7 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
         <h3 className="entry__title">
           {entry.title}
           {badge && <span className="entry__badge">{badge}</span>}
-          {hidden && <span className="entry__badge" style={{ background: 'var(--border-color, rgba(255,255,255,0.2))' }}>Ausgeblendet</span>}
+          {hidden && <span className="entry__badge entry__badge--muted">Ausgeblendet</span>}
         </h3>
         {lecturers && <p className="entry__lecturers">{lecturers}</p>}
         {entry.rooms.length > 0 && <p className="entry__meta">{entry.rooms.join(', ')}</p>}
@@ -73,7 +76,15 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
         type="button"
         className={`entry entry--${entry.type} entry--button${hidden ? ' is-hidden-module' : ''}`}
         style={cardStyle}
-        onClick={() => onSelect(entry)}
+        onClick={() => {
+          // Nach einem Long-Press feuert der Browser trotzdem noch den Click.
+          // Der darf dann nicht zusätzlich die Kursansicht öffnen.
+          if (didLongPress.current) {
+            didLongPress.current = false;
+            return;
+          }
+          onSelect(entry);
+        }}
         onTouchStart={startLongPress}
         onTouchEnd={cancelLongPress}
         onTouchMove={cancelLongPress}

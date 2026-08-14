@@ -26,6 +26,12 @@ const ECHTE_PRUEFUNGEN = [
   'CCNA-2 Final Exam  (90 min)||', // KA
   'Probeklausur',
   'Klausur Informationsmanagement in der digitalen Transformation',
+  // „Prüfungsform/Prüfungswahl <Modul>“ ist der Prüfungstermin, kein Infotermin:
+  // 60–120 Minuten, je Kurs einmal, meist ohne separaten Klausur-Termin.
+  'Prüfungsform Bürgerliches Recht', // MA, MGH, MOS, RV, STG
+  'Prüfungsform Wirtschaftsrecht KLAUSUR', // MA
+  'Prüfungswahl Technische Systeme und Maschinenkunde', // MA, MOS
+  'Unbenotete Prüfungsleistung Thermodynamik',
 ];
 
 const KEINE_PRUEFUNGEN = [
@@ -53,11 +59,19 @@ const KEINE_PRUEFUNGEN = [
   'Klausurblocker',
   'Klausurwoche - Genaue Zeiten und Termine entnehmen Sie bitte aus moodle und dem Klausurterminplan',
   // Organisation
-  'Prüfungsform Bürgerliches Recht', // MA, MGH, MOS, RV, STG
   'Informationen Prüfungsamt Auswahl eines der Termine', // MOS
+  'Sitzung Prüfungsausschuss MB',
   'Ausgabe Klausuretiketten 3. Semester',
+  'Klausurräume  NPO HS: 105, SPO HS: 103',
+  'Einweisung Klausurablauf',
+  'Walkthru Prüfungsmoodle',
   'Schlüsselqualifikation 1 Klausurtechnik',
   'M10 Tutorium zur Prüfungsleistung (online)', // STG
+  'Exam Prep',
+  'Exam review 3rd semester',
+  // Schreibfehler, die im Bestand vorkommen
+  'Klausureinsciht',
+  'Teilkostenrechnung Klausurvorbreitung',
   // Modulreihen, in denen „Prüfung“ das Fachthema ist
   'Prüfungswesen II', // MA, STG
   'Auditing 2 (Wirtschaftsprüfung)', // MA
@@ -67,6 +81,11 @@ const KEINE_PRUEFUNGEN = [
   'Revision und Rechnungsprüfung', // MA
   'Risikoprüfung und Rating', // MA
   'T4SST9004 Physik III: Verpackungsprüfung: Prüflabor', // KA
+  'System- und Prozessprüfung einschließlich Anwendungsfälle', // VS
+  'Ausgewählte Fragen der Betriebsprüfung',
+  'Prüfungswesen - steuerl. Außenprüfung - Utz',
+  'Automatisierte Werkstoffprüfung (12 LE)',
+  'Datenprüfung und -analysen',
 ];
 
 describe('isExamTitle', () => {

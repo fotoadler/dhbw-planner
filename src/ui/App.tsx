@@ -401,7 +401,15 @@ export function App() {
       ) : inMail ? (
         <MailView site={settings.apiSelection?.site ?? ''} />
       ) : inCalendar && selectedBlock ? (
-        <CourseView entries={blockEntries} today={today} onBack={() => setSelectedBlockKey(null)} />
+        <CourseView
+          entries={blockEntries}
+          today={today}
+          onOpenDay={(day) => {
+            selectDay(day);
+            setCalendarView('day');
+          }}
+          onBack={() => setSelectedBlockKey(null)}
+        />
       ) : inCalendar && activeCalendarView === 'day' ? (
         <>
           <WeekStrip

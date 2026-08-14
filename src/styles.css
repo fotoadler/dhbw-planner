@@ -1158,26 +1158,39 @@ option {
 
 .courseitem {
   display: flex;
+  align-items: center;
   gap: 14px;
+  width: 100%;
   padding: 14px 0;
+  border: 0;
   border-bottom: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.courseitem:active {
+  background: var(--bg-soft);
 }
 
 .courseitem__date {
   display: flex;
-  flex: 0 0 88px;
+  flex: 0 0 62px;
   flex-direction: column;
-  text-align: right;
 }
 
-.courseitem__date span:first-child {
+.courseitem__weekday {
   font-size: 13px;
   line-height: 18px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
 }
 
-.courseitem__date span:last-child {
+.courseitem__weekday.is-today {
+  color: var(--accent);
+}
+
+.courseitem__day {
   font-size: 12px;
   line-height: 16px;
   color: var(--ink-3);
@@ -1185,19 +1198,54 @@ option {
 }
 
 .courseitem__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
 }
 
-.courseitem__lecturers {
+/* Die Uhrzeit ist die Hauptzeile: Dozent und Raum fehlen bei den meisten
+   Kursen, die Zeitspanne ist immer da. */
+.courseitem__time {
   font-size: 15px;
   line-height: 20px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.courseitem__badge {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: 1px;
+  font-variant-numeric: normal;
+}
+
+.courseitem--exam .courseitem__badge {
+  background: var(--calendar-exam-accent);
+  border-color: var(--calendar-exam-accent);
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .courseitem__meta {
   margin-top: 2px;
   font-size: 13px;
   line-height: 18px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courseitem__chevron {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 20px;
   color: var(--ink-3);
 }
 

@@ -13,10 +13,20 @@
  * und gleichzeitig darf keiner der Ausschlüsse greifen. Ohne die Ausschlüsse
  * landen vor allem Vorbereitungs-, Einsichts- und Rahmentermine sowie ganze
  * Modulreihen aus der Wirtschaftsprüfung fälschlich als Prüfung im Kalender –
- * über den Gesamtbestand sind das 9.857 Termine, also 30 % aller Treffer.
+ * über den Gesamtbestand sind das 9.187 Termine, also 28 % aller Treffer.
  *
- * Die Zahlen in den Kommentaren sind die im Gesamtbestand gezählten Termine je
- * Ausschluss.
+ * Die Ausschlussliste ist vollständig gegen den Bestand geprüft: Die 23.839
+ * verbleibenden Prüfungstermine enthalten 150 verschiedene Wortformen mit einem
+ * Suchbegriff (Klausur, Wiederholungsklausur, Nachholklausur, Prüfungstermin …);
+ * jede davon wurde einzeln durchgesehen. Die Zahlen in den Kommentaren sind die
+ * im Bestand gezählten Termine je Ausschluss.
+ *
+ * Zwei Muster sehen wie Organisation aus, sind aber die Prüfung selbst und
+ * stehen deshalb bewusst NICHT in der Liste: „Prüfungsform <Modul>“ (724) und
+ * „Prüfungswahl <Modul>“ (298). Beide dauern 60–120 Minuten, kommen je Kurs
+ * genau einmal vor, und 604 bzw. 280 davon haben keinen separaten
+ * Klausur-Termin zum selben Modul. Bei 115 steht die Prüfungsart sogar im Titel
+ * („Prüfungsform Wirtschaftsrecht KLAUSUR“).
  */
 
 /**
@@ -39,13 +49,17 @@ const NOT_AN_EXAM = new RegExp(
   [
     // Vor- und Nachbereitung – gerade nicht der Prüfungstermin selbst.
     'vorbereit', // Klausurvorbereitung (1.567)
+    'vorbreit|vorbnereit|vornbereit|voprbereit', // Schreibfehler dafür im Bestand
     'selbststudium', // Selbststudium (Prüfungsvorbereitung) (112)
     'einsicht', // Klausureinsicht (3.050)
+    'einsciht|einischt|einicht|eichsicht', // Schreibfehler für Klausureinsicht
+    'klausuransicht',
     'besprechung', // Klausurbesprechung, M2 Vorbesprechung Klausur (290)
     'nachbereit',
     'fragestunde', // Fragestunde zur Klausur IuF (31)
     'tutorium', // Freiwilliges Tutorium zur Nachholklausur M6 (193)
-    'klausurtechnik', // Schlüsselqualifikation 1 Klausurtechnik (6)
+    'klausurtechnik|klausurtraining', // Schlüsselqualifikation 1 Klausurtechnik
+    'exam prep|mock exam|exam review', // englische Entsprechungen
 
     // Rahmentermine über ganze Tage oder Wochen statt einer einzelnen Prüfung.
     'klausur(en)?(phase|woche|wochen|tage|zeit|zeitraum)', // Klausurwoche, Klausurphase (2.244)
@@ -55,20 +69,27 @@ const NOT_AN_EXAM = new RegExp(
     'vorlesungsfrei',
 
     // Organisation rund um Prüfungen.
-    'pruefungsform', // Prüfungsform Bürgerliches Recht (728)
     'pruefungsamt', // Informationen Prüfungsamt (113)
+    'pruefungsausschuss|pruefungsauschuss', // Sitzung Prüfungsausschuss Maschinenbau (9)
     'pruefungsordnung',
     'pruefungsakten',
     'pruefungsplan',
-    'pruefungsleistung', // Tutorium zur Prüfungsleistung M10 (127)
+    'pruefungsmoodle', // Anmeldung T2000 Prüfungsmoodle (13)
+    'pruefungsrecht', // Info Prüfungsrecht, Prüfungsrechtliche Regelungen
+    'pruefungsruecktritt|pruefungsinformationen|pruefungseinteilung|pruefungseinweiung|pruefungsthemen',
     'klausurplan',
     'klausuretikett',
+    'klausurraeume', // Raumzuteilung „Klausurräume NPO HS: 105“ (17)
+    'klausureinfuehrung|klausureinweisung|klausurablauf|klausurinfo|klausurbeispiel',
+    'klausursprechstunde|pruefungssprechstunde',
     'anmeldung',
     'infoveranstaltung',
     'informationsveranstaltung',
 
     // Modulnamen, in denen „Prüfung“ das Fachthema ist (Wirtschaftsprüfung,
-    // Revision). Diese Reihen laufen über ein ganzes Semester.
+    // Revision, Werkstoffkunde). Diese Reihen laufen über ein ganzes Semester;
+    // sie wiederholen sich je Kurs vier- bis elfmal und dauern rund 200 Minuten,
+    // während eine Prüfung je Kurs einmal stattfindet.
     'pruefungswesen', // Prüfungswesen II (441)
     'wirtschaftspruefung', // Auditing 2 (Wirtschaftsprüfung) (217)
     'abschlusspruefung', // Risikoorientierte Abschlussprüfung (146)
@@ -76,7 +97,10 @@ const NOT_AN_EXAM = new RegExp(
     'sonderpruefung', // Berichterstattung, Sonderprüfung (49)
     'rechnungspruefung', // Revision und Rechnungsprüfung (17)
     'risikopruefung', // Risikoprüfung und Rating (34)
-    'verpackungspruefung',
+    'prozesspruefung', // System- und Prozessprüfung (25)
+    'betriebspruefung|aussenpruefung', // Steuerrecht: Außenprüfung (29)
+    'werkstoffpruefung|werstoffpruefung|verpackungspruefung|biegezugpruefung',
+    'systempruefung|datenpruefung|sortenpruefung|ueberpruefung',
     'auditing',
   ].join('|'),
 );

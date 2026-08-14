@@ -4,7 +4,8 @@ import { formatTime, isDeadlineOrAllDay } from '../lib/berlinTime';
 import { scheduleModuleKey } from '../schedule/modules';
 import { selectionHaptic } from '../lib/haptics';
 
-const TYPE_LABEL: Partial<Record<ScheduleEntry['type'], string>> = {
+/** Badge-Beschriftung je Termintyp; auch von der Kursansicht genutzt. */
+export const ENTRY_TYPE_LABEL: Partial<Record<ScheduleEntry['type'], string>> = {
   exam: 'Prüfung',
   online: 'Online',
   holiday: 'Feiertag',
@@ -21,7 +22,7 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
   const isDeadline = isDeadlineOrAllDay(entry);
   const isPointInTime = entry.start.getTime() === entry.end.getTime();
   const isFullDay = (entry.end.getTime() - entry.start.getTime()) >= 23 * 3600 * 1000;
-  const badge = isDeadline ? 'Deadline' : TYPE_LABEL[entry.type];
+  const badge = isDeadline ? 'Deadline' : ENTRY_TYPE_LABEL[entry.type];
   const lecturers = entry.lecturers.join(', ');
   const timerRef = useRef<number | null>(null);
   const didLongPress = useRef(false);

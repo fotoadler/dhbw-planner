@@ -5,9 +5,25 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.4.1` (`package.json`: `1.4.1`)
-- Current iOS build: `11`
-- Current Android versionCode: `8`
+- Current app version: `1.4.2` (`package.json`: `1.4.2`)
+- Current iOS build: `12`
+- Current Android versionCode: `9`
+
+## Version 1.4.2 — Update descriptions
+
+### Google Play „Was ist neu“
+
+Verbesserte Navigation und Darstellung:
+
+- Horizontale Wischbewegungen wechseln jetzt zuverlässig zwischen Tagen und Wochen.
+- Die Wochenansicht scrollt nicht mehr unbeabsichtigt über den oberen Stundenplanrand.
+- Falsche Dozentenangaben wie „Online“ werden nicht mehr angezeigt.
+- Live Activities bleiben besser lesbar.
+- Einstellungen und Startbildschirm wurden optisch überarbeitet.
+
+### App Store „Neu in dieser Version“
+
+Diese Version verbessert die Navigation zwischen Tagen und Wochen, verhindert unbeabsichtigtes vertikales Scrollen bei horizontalen Wischbewegungen und korrigiert falsche Dozentenanzeigen. Außerdem wurden Live Activities, der Startbildschirm und die Einstellungen weiter überarbeitet.
 
 This is a new app identity.
 

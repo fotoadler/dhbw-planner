@@ -2,6 +2,20 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## 1.4.2 - 2026-08-20
+
+### Funktionen und Darstellung
+
+- Die Einstellungen sind im unteren Bereich einheitlich ausgerichtet und nennen jetzt die freundliche Unterstützung durch [dhbw.app](https://dhbw.app/).
+- Der vollständige App-Name „DHBW Planner“ wird bereits auf dem Startbildschirm angezeigt.
+
+### Fehlerbehebungen
+
+- Horizontale Wischbewegungen wechseln in Tages- und Wochenansicht zuverlässig, ohne dabei den Stundenplan vertikal mitzuscrollen.
+- Die Wochenansicht verhindert Overscroll oberhalb der frühesten angezeigten Stunde.
+- Technische Werte wie „Online“ werden nicht mehr als Dozentenname angezeigt. Gültige lokal gespeicherte Dozentennamen bleiben offline verfügbar.
+- Live Activities bleiben in allen Darstellungsmodi lesbar.
+
 ## Unveröffentlicht
 
 ### Funktionen und Darstellung

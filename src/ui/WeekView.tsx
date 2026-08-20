@@ -1,21 +1,9 @@
-/**
- * Wochenübersicht als Zeitraster (Mo–Fr, Wochenende nur bei Terminen) —
- * in der Designsprache der App: weiße Fläche, feine Linien, Karten mit
- * Akzent-Balken statt der roten Block-Optik der alten App.
- *
- * Tippen auf einen Termin oder Tageskopf öffnet die Tagesansicht;
- * Die Wochenpfeile wechseln die Woche; horizontales Wischen bleibt als
- * optionale, schnelle Navigation erhalten. Die Kalenderfläche selbst ist
- * nicht horizontal scrollbar.
- */
-
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
-import { berlinParts, formatTime, parseYmdKey } from '../lib/berlinTime';
+import { berlinParts, effectiveEndMs, formatTime, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
+import { scheduleModuleKey } from '../schedule/modules';
+import { selectionHaptic } from '../lib/haptics';
 
-// Etwas großzügiger als eine reine Tabellenansicht: Lange Kurstitel bleiben
-// dadurch auch bei fünf sichtbaren Wochentagen lesbar.
-const HOUR_PX = 64;
 const SWIPE_THRESHOLD = 60;
 const WEEKDAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
@@ -24,6 +12,10 @@ interface Props {
   weekDays: string[];
   entriesByDay: Record<string, ScheduleEntry[]>;
   today: string;
+  hourHeight?: number;
+  hiddenModuleKeys?: Set<string>;
+  onToggleModule?: (moduleKey: string) => void;
+  onHourHeightChange?: (newHeight: number) => void;
   onOpenDay: (day: string) => void;
   onSwipeWeek: (delta: 1 | -1) => void;
 }
@@ -43,7 +35,11 @@ interface Positioned {
 
 /** Überlappende Termine nebeneinander legen (greedy Lane-Zuweisung pro Cluster). */
 function layoutDay(entries: ScheduleEntry[]): Positioned[] {
-  const sorted = [...entries].sort((a, b) => a.start.getTime() - b.start.getTime());
+  const sorted = [...entries].sort((a, b) => {
+    const startDiff = a.start.getTime() - b.start.getTime();
+    if (startDiff !== 0) return startDiff;
+    return effectiveEndMs(a) - effectiveEndMs(b);
+  });
   const result: Positioned[] = [];
   let cluster: Positioned[] = [];
   let laneEnds: number[] = []; // Ende (ms) des letzten Termins je Lane
@@ -58,15 +54,16 @@ function layoutDay(entries: ScheduleEntry[]): Positioned[] {
   };
 
   for (const entry of sorted) {
+    const endMs = effectiveEndMs(entry);
     if (entry.start.getTime() >= clusterEnd) {
       flush();
       clusterId += 1;
     }
     let lane = laneEnds.findIndex((end) => end <= entry.start.getTime());
     if (lane === -1) lane = laneEnds.length;
-    laneEnds[lane] = entry.end.getTime();
+    laneEnds[lane] = endMs;
     cluster.push({ entry, lane, laneCount: 1, clusterId });
-    clusterEnd = Math.max(clusterEnd, entry.end.getTime());
+    clusterEnd = Math.max(clusterEnd, endMs);
   }
   flush();
   return result;
@@ -154,8 +151,33 @@ function AdaptiveEventTitle({ children }: { children: string }) {
   );
 }
 
-export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek }: Props) {
+export function WeekView({
+  weekDays,
+  entriesByDay,
+  today,
+  hourHeight = 64,
+  hiddenModuleKeys,
+  onToggleModule,
+  onHourHeightChange,
+  onOpenDay,
+  onSwipeWeek,
+}: Props) {
+  // Während einer Pinch-Geste wird die Stundenhöhe nur lokal gehalten und erst
+  // beim Loslassen gespeichert: `onHourHeightChange` schreibt in die Settings und
+  // stößt dort die komplette Benachrichtigungsplanung an – das darf nicht bei
+  // jedem touchmove passieren.
+  const [pinchHourHeight, setPinchHourHeight] = useState<number | null>(null);
+  const hourPx = pinchHourHeight ?? hourHeight;
   const touch = useRef<{ x: number; y: number } | null>(null);
+  const initialPinchDist = useRef<number | null>(null);
+  const initialHourHeight = useRef<number>(hourPx);
+  const longPressTimer = useRef<number | null>(null);
+  const didLongPress = useRef(false);
+
+  // Sobald die gespeicherte Höhe nachgezogen ist, den Übergangswert verwerfen.
+  useEffect(() => {
+    setPinchHourHeight(null);
+  }, [hourHeight]);
 
   // Wochenende nur einblenden, wenn dort tatsächlich Termine liegen
   // (gleiche Regel wie in der Wochenleiste der Tagesansicht).
@@ -179,21 +201,74 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
   const displayLastHour = lastHour + 1;
   const hours = Array.from({ length: displayLastHour - firstHour }, (_, i) => firstHour + i);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  const startLongPress = (entry: ScheduleEntry) => {
+    if (!onToggleModule) return;
+    didLongPress.current = false;
+    longPressTimer.current = window.setTimeout(() => {
+      didLongPress.current = true;
+      selectionHaptic();
+      onToggleModule(scheduleModuleKey(entry));
+    }, 450);
   };
+
+  /** Nach einem Long-Press folgt trotzdem ein Click – der darf nicht zusätzlich den Tag öffnen. */
+  const consumeLongPressClick = () => {
+    if (!didLongPress.current) return false;
+    didLongPress.current = false;
+    return true;
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current !== null) {
+      window.clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const d = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+      initialPinchDist.current = d;
+      initialHourHeight.current = hourPx;
+      // Der erste Finger hat einen Swipe-Start hinterlassen. Würde der beim
+      // Loslassen noch ausgewertet, sprang das Zoomen in die Nachbarwoche.
+      touch.current = null;
+      cancelLongPress();
+    } else if (e.touches.length === 1) {
+      touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && initialPinchDist.current !== null && onHourHeightChange) {
+      const d = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+      const scale = d / Math.max(1, initialPinchDist.current);
+      const nextHeight = Math.min(120, Math.max(40, Math.round(initialHourHeight.current * scale)));
+      setPinchHourHeight(nextHeight);
+    }
+  };
+
   const onTouchEnd = (e: React.TouchEvent) => {
+    const wasPinching = initialPinchDist.current !== null;
+    initialPinchDist.current = null;
+    if (wasPinching) {
+      // Erst jetzt persistieren – einmal pro Geste statt einmal pro Frame.
+      if (pinchHourHeight !== null && pinchHourHeight !== hourHeight) onHourHeightChange?.(pinchHourHeight);
+      return;
+    }
     if (!touch.current) return;
-    const dx = e.changedTouches[0].clientX - touch.current.x;
-    const dy = e.changedTouches[0].clientY - touch.current.y;
-    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      onSwipeWeek(dx < 0 ? 1 : -1);
+    if (e.changedTouches.length > 0) {
+      const dx = e.changedTouches[0].clientX - touch.current.x;
+      const dy = e.changedTouches[0].clientY - touch.current.y;
+      if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        onSwipeWeek(dx < 0 ? 1 : -1);
+      }
     }
     touch.current = null;
   };
 
   return (
-    <div className="weekview" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div className="weekview" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
       <div className="weekview__header" style={{ gridTemplateColumns: gridColumns }}>
         <div className="weekview__gutter">
           <button
@@ -229,11 +304,11 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
       <div className="weekview__scroll">
         <div
           className="weekview__grid"
-          style={{ height: hours.length * HOUR_PX, gridTemplateColumns: gridColumns }}
+          style={{ height: hours.length * hourPx, gridTemplateColumns: gridColumns }}
         >
           <div className="weekview__times">
             {hours.map((h) => (
-              <span key={h} className="weekview__hour" style={{ top: (h - firstHour) * HOUR_PX }}>
+              <span key={h} className="weekview__hour" style={{ top: (h - firstHour) * hourPx }}>
                 {String(h).padStart(2, '0')}:00
               </span>
             ))}
@@ -241,11 +316,11 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
           {dayLayouts.map(({ key: day, positioned }) => (
             <div key={day} className={`weekview__col${day === today ? ' is-today' : ''}`}>
               {groupPositionedEntries(positioned).map((cluster, clusterIndex) => {
-                  if (cluster.length > 1) {
+                if (cluster.length > 1) {
                   const start = new Date(Math.min(...cluster.map(({ entry }) => entry.start.getTime())));
-                  const end = new Date(Math.max(...cluster.map(({ entry }) => entry.end.getTime())));
-                  const top = ((minutesOfDay(start) - firstHour * 60) / 60) * HOUR_PX;
-                  const height = Math.max(40, ((end.getTime() - start.getTime()) / 3_600_000) * HOUR_PX);
+                  const end = new Date(Math.max(...cluster.map(({ entry }) => effectiveEndMs(entry))));
+                  const top = ((minutesOfDay(start) - firstHour * 60) / 60) * hourPx;
+                  const height = Math.max(40, ((end.getTime() - start.getTime()) / 3_600_000) * hourPx);
                   const titles = cluster.map(({ entry }) => entry.title);
                   return (
                     <button
@@ -257,7 +332,7 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                     >
                       <span className="weekview__parallel-summary">
                         <span className="weekview__parallel-count">{cluster.length}</span>
-                        <span className="weekview__parallel-label">Termine parallel</span>
+                        <span className="weekview__parallel-label">Termine</span>
                       </span>
                       <span className="weekview__parallel-time">ab {formatTime(start)}</span>
                       <span className="weekview__parallel-items">
@@ -270,15 +345,17 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                 }
 
                 const [{ entry, laneCount }] = cluster;
-                const top = ((minutesOfDay(entry.start) - firstHour * 60) / 60) * HOUR_PX;
+                const top = ((minutesOfDay(entry.start) - firstHour * 60) / 60) * hourPx;
+                const endMs = effectiveEndMs(entry);
+                const rawDurationHours = (endMs - entry.start.getTime()) / 3_600_000;
+                const isDeadline = isDeadlineOrAllDay(entry);
                 const height = Math.max(
                   28,
-                  ((entry.end.getTime() - entry.start.getTime()) / 3_600_000) * HOUR_PX,
+                  Math.min(isDeadline ? 36 : Infinity, rawDurationHours * hourPx),
                 );
                 const lecturers = entry.lecturers.join(', ');
                 const isCompact = height < 52;
-                // Der Titel ist die wichtigste Information. Namen erscheinen
-                // nur dann in der Karte, wenn sie ihm keinen Leseraum nehmen.
+                const isHidden = hiddenModuleKeys?.has(scheduleModuleKey(entry));
                 const showLecturers = Boolean(lecturers) && height >= 176 && laneCount < 3;
                 return (
                   <button
@@ -288,16 +365,32 @@ export function WeekView({ weekDays, entriesByDay, today, onOpenDay, onSwipeWeek
                       `weekview__event--${entry.type}`,
                       showLecturers ? 'has-lecturers' : '',
                       isCompact ? 'is-compact' : '',
+                      isHidden ? 'is-hidden-module' : '',
                     ]
                       .filter(Boolean)
                       .join(' ')}
-                    style={{ top, height, left: '2px', width: 'calc(100% - 4px)' }}
-                    onClick={() => onOpenDay(day)}
-                    aria-label={`${entry.title}, ${formatTime(entry.start)} bis ${formatTime(entry.end)}${lecturers ? `, ${lecturers}` : ''}`}
+                    style={{
+                      top,
+                      height,
+                      left: '2px',
+                      width: 'calc(100% - 4px)',
+                      ...(isHidden ? { opacity: 0.55, filter: 'grayscale(0.3)' } : {}),
+                    }}
+                    onClick={() => {
+                      if (consumeLongPressClick()) return;
+                      onOpenDay(day);
+                    }}
+                    onTouchStart={() => startLongPress(entry)}
+                    onTouchEnd={cancelLongPress}
+                    onTouchMove={cancelLongPress}
+                    onMouseDown={() => startLongPress(entry)}
+                    onMouseUp={cancelLongPress}
+                    onMouseLeave={cancelLongPress}
+                    aria-label={`${entry.title}, ${formatTime(entry.start)} bis ${formatTime(entry.end)}${lecturers ? `, ${lecturers}` : ''}${isHidden ? ' (ausgeblendetes Modul)' : ''}`}
                   >
                     <span className="weekview__etime">{formatTime(entry.start)}</span>
                     <AdaptiveEventTitle>
-                      {entry.title + (lecturers && isCompact && laneCount < 3 ? ` · ${lecturers}` : '')}
+                      {(isHidden ? '[Ausgeblendet] ' : '') + entry.title + (lecturers && isCompact && laneCount < 3 ? ` · ${lecturers}` : '')}
                     </AdaptiveEventTitle>
                     {showLecturers && <span className="weekview__emeta">{lecturers}</span>}
                   </button>

@@ -39,6 +39,11 @@
   --calendar-event-text: #102f3a;
   --calendar-event-muted: #315864;
   --calendar-event-meta: #486773;
+  --calendar-exam: #fff7ed;
+  --calendar-exam-border: #fed7aa;
+  --calendar-exam-accent: #ea580c;
+  --calendar-exam-text: #7c2d12;
+  --calendar-exam-muted: #c2410c;
   --success: #16803a;
   --field-placeholder: #737373;
   --event-shadow: rgba(14, 39, 50, 0.08);
@@ -69,6 +74,11 @@
   --calendar-event-text: #e8f7fa;
   --calendar-event-muted: #b9dce2;
   --calendar-event-meta: #a7cbd1;
+  --calendar-exam: #341509;
+  --calendar-exam-border: #7c2d12;
+  --calendar-exam-accent: #fb923c;
+  --calendar-exam-text: #ffedd5;
+  --calendar-exam-muted: #fdba74;
   --success: #65d28b;
   --field-placeholder: #a7aeb9;
   --event-shadow: rgba(0, 0, 0, 0.28);
@@ -244,13 +254,34 @@ option {
 }
 
 .iconbtn {
+  position: relative;
   padding: 8px;
   color: var(--ink-2);
   border-radius: 8px;
 }
 
-.iconbtn:active {
+.iconbtn:active,
+.iconbtn.is-active {
+  color: var(--accent);
   background: var(--bg-soft);
+}
+
+.iconbtn__badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  height: 14px;
+  min-width: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .app__offline {
@@ -475,6 +506,21 @@ option {
   background: var(--bg-soft);
 }
 
+.entry--exam {
+  border-left: 4px solid var(--calendar-exam-accent);
+  background: var(--calendar-exam);
+  border-radius: 10px;
+  padding-left: 14px;
+  padding-right: 14px;
+  margin-bottom: 4px;
+}
+
+.entry--exam .entry__badge {
+  background: var(--calendar-exam-accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
 .entry__time {
   display: flex;
   flex-direction: column;
@@ -509,6 +555,14 @@ option {
   border-radius: 4px;
   padding: 1px 5px;
   vertical-align: 2px;
+}
+
+/* Der „Ausgeblendet“-Hinweis ist kein Termintyp und soll deshalb neutral
+   wirken – auch auf Prüfungskarten, die das Badge sonst einfärben. */
+.entry .entry__badge--muted {
+  color: var(--ink-3);
+  background: var(--bg-soft);
+  font-weight: 600;
 }
 
 .entry__lecturers {
@@ -932,18 +986,21 @@ option {
 .weekview__event--parallel-group {
   background: var(--calendar-event-group);
   border-left-color: var(--calendar-event-group-accent);
-  gap: 4px;
+  gap: 2px;
+  padding: 4px 4px 4px 6px;
 }
 
 .weekview__parallel-summary {
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   color: var(--calendar-event-group-accent);
-  font-size: 10px;
-  line-height: 13px;
+  font-size: 11px;
+  line-height: 14px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .weekview__parallel-count {
@@ -963,8 +1020,9 @@ option {
 
 .weekview__parallel-label {
   min-width: 0;
-  overflow: visible;
-  white-space: normal;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .weekview__parallel-time {
@@ -972,6 +1030,9 @@ option {
   font-size: 10px;
   line-height: 13px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .weekview__parallel-items {
@@ -1003,6 +1064,25 @@ option {
   border-left-color: var(--ink-3);
   background: var(--bg-soft);
   border-color: var(--line);
+}
+
+.weekview__event--exam {
+  border-left-color: var(--calendar-exam-accent);
+  background: var(--calendar-exam);
+  border-color: var(--calendar-exam-border);
+}
+
+.weekview__event--exam .weekview__etime {
+  color: var(--calendar-exam-muted);
+}
+
+.weekview__event--exam .weekview__etitle {
+  color: var(--calendar-exam-text);
+  font-weight: 700;
+}
+
+.weekview__event--exam .weekview__emeta {
+  color: var(--calendar-exam-muted);
 }
 
 .weekview__etime {
@@ -1078,26 +1158,39 @@ option {
 
 .courseitem {
   display: flex;
+  align-items: center;
   gap: 14px;
+  width: 100%;
   padding: 14px 0;
+  border: 0;
   border-bottom: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.courseitem:active {
+  background: var(--bg-soft);
 }
 
 .courseitem__date {
   display: flex;
-  flex: 0 0 88px;
+  flex: 0 0 62px;
   flex-direction: column;
-  text-align: right;
 }
 
-.courseitem__date span:first-child {
+.courseitem__weekday {
   font-size: 13px;
   line-height: 18px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
 }
 
-.courseitem__date span:last-child {
+.courseitem__weekday.is-today {
+  color: var(--accent);
+}
+
+.courseitem__day {
   font-size: 12px;
   line-height: 16px;
   color: var(--ink-3);
@@ -1105,19 +1198,54 @@ option {
 }
 
 .courseitem__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
 }
 
-.courseitem__lecturers {
+/* Die Uhrzeit ist die Hauptzeile: Dozent und Raum fehlen bei den meisten
+   Kursen, die Zeitspanne ist immer da. */
+.courseitem__time {
   font-size: 15px;
   line-height: 20px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.courseitem__badge {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: 1px;
+  font-variant-numeric: normal;
+}
+
+.courseitem--exam .courseitem__badge {
+  background: var(--calendar-exam-accent);
+  border-color: var(--calendar-exam-accent);
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .courseitem__meta {
   margin-top: 2px;
   font-size: 13px;
   line-height: 18px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courseitem__chevron {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 20px;
   color: var(--ink-3);
 }
 
@@ -1787,6 +1915,15 @@ option {
   font-weight: 600;
 }
 
+/* --- Einstellungen (Seite) --- */
+
+.settings-page {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px calc(24px + var(--safe-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
 /* --- Einstellungen (Sheet) --- */
 
 .sheet-backdrop {
@@ -2328,4 +2465,105 @@ option {
 
 .dualis-mrow--tap.is-expanded .dualis-mrow__name::after {
   transform: rotate(90deg);
+}
+
+/* --- In-App Confirm Modal Dialog --- */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim, rgba(0, 0, 0, 0.45));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: dialog-fade-in 0.15s ease-out;
+}
+
+.dialog-card {
+  background: var(--bg, #ffffff);
+  color: var(--ink, #000000);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  border-radius: 20px;
+  width: 100%;
+  max-width: 340px;
+  padding: 22px 20px 18px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: dialog-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .dialog-card {
+  background: #1c1c1e;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+}
+
+.dialog-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.dialog-message {
+  font-size: 14px;
+  color: var(--ink-2, #666666);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.dialog-message strong {
+  color: var(--ink, #000000);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.dialog-btn {
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.dialog-btn:active {
+  transform: scale(0.97);
+}
+
+.dialog-btn--secondary {
+  background: var(--bg-soft, rgba(0, 0, 0, 0.06));
+  color: var(--ink, #000000);
+}
+
+:root[data-theme='dark'] .dialog-btn--secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.dialog-btn--primary {
+  background: var(--accent, #e02828);
+  color: #ffffff;
+}
+
+@keyframes dialog-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-pop-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
 }

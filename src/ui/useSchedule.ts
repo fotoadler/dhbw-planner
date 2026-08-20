@@ -465,6 +465,7 @@ export function useSchedule() {
   return {
     settings,
     entries,
+    allEntries,
     availableModules,
     updatedAt,
     refreshing,

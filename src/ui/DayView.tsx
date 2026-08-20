@@ -11,6 +11,7 @@ import { ScheduleEntry } from '../types';
 import { parseYmdKey } from '../lib/berlinTime';
 import type { DiningLoadStatus, DiningSnapshot } from '../mensa/model';
 import type { DiningSiteProfile } from '../mensa/sites';
+import { scheduleModuleKey } from '../schedule/modules';
 import { EntryCard } from './EntryCard';
 import { MensaSection } from './MensaSection';
 
@@ -19,6 +20,8 @@ const PULL_THRESHOLD = 70;
 
 interface Props {
   entries: ScheduleEntry[];
+  hiddenModuleKeys?: Set<string>;
+  onToggleModule?: (moduleKey: string) => void;
   dining: {
     profile: DiningSiteProfile;
     snapshot: DiningSnapshot | null;
@@ -39,6 +42,8 @@ interface Props {
 
 export function DayView({
   entries,
+  hiddenModuleKeys,
+  onToggleModule,
   dining,
   onSelectEntry,
   onSwipeDay,
@@ -120,7 +125,13 @@ export function DayView({
         )
       ) : (
         entries.map((e, i) => (
-          <EntryCard key={`${e.start.toISOString()}-${i}`} entry={e} onSelect={onSelectEntry} />
+          <EntryCard
+            key={`${e.start.toISOString()}-${i}`}
+            entry={e}
+            hidden={hiddenModuleKeys?.has(scheduleModuleKey(e))}
+            onSelect={onSelectEntry}
+            onToggleModule={onToggleModule}
+          />
         ))
       )}
       {dining && <MensaSection {...dining} />}

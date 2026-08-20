@@ -1,7 +1,7 @@
 {
   "name": "dhbw-planner",
   "private": true,
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Schlanke DHBW-App für Rapla-Stundenpläne, Dualis, Kalenderexport und lokale Benachrichtigungen.",
   "license": "GPL-3.0-or-later",
   "type": "module",

@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+
+android {
+    namespace 'de.dhbw.raplaplan.wear'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        // Wear OS and the phone use the same package/signing identity so the
+        // Data Layer can authenticate the companion pair.
+        applicationId 'de.dhbw.raplaplan'
+        minSdkVersion 30
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1008
+        versionName '1.4.1-wear'
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    implementation 'androidx.activity:activity-compose:1.10.1'
+    implementation 'androidx.compose.ui:ui:1.7.8'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.7.8'
+    implementation 'androidx.compose.material:material:1.7.8'
+    implementation 'androidx.wear.compose:compose-material:1.4.1'
+    implementation 'androidx.wear.compose:compose-foundation:1.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
+    implementation 'androidx.wear:wear:1.3.0'
+    implementation 'androidx.wear.tiles:tiles:1.6.2'
+    implementation 'androidx.wear.protolayout:protolayout:1.4.2'
+    implementation 'androidx.wear.protolayout:protolayout-material3:1.4.2'
+    implementation 'androidx.wear.protolayout:protolayout-expression:1.4.2'
+    implementation 'androidx.wear.watchface:watchface-complications-data-source:1.2.1'
+    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
+    implementation 'com.google.guava:guava:33.4.8-android'
+}

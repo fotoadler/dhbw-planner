@@ -27,6 +27,8 @@ PODS:
     - Capacitor
   - DhbwCapacitorSecureStorage (0.1.0):
     - Capacitor
+  - DhbwCapacitorWatchSync (0.1.0):
+    - Capacitor
   - FirebaseCore (11.15.0):
     - FirebaseCoreInternal (~> 11.15.0)
     - GoogleUtilities/Environment (~> 8.1)
@@ -96,6 +98,7 @@ DEPENDENCIES:
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
   - DhbwCapacitorEmbeddedMail (from `../../plugins/capacitor-embedded-mail`)
   - DhbwCapacitorSecureStorage (from `../../plugins/capacitor-secure-storage`)
+  - DhbwCapacitorWatchSync (from `../../plugins/capacitor-watch-sync`)
 
 SPEC REPOS:
   trunk:
@@ -136,6 +139,8 @@ EXTERNAL SOURCES:
     :path: "../../plugins/capacitor-embedded-mail"
   DhbwCapacitorSecureStorage:
     :path: "../../plugins/capacitor-secure-storage"
+  DhbwCapacitorWatchSync:
+    :path: "../../plugins/capacitor-watch-sync"
 
 SPEC CHECKSUMS:
   Capacitor: 8ef25ba872436d2c5ac2a4791f7255529bdcd93b
@@ -151,6 +156,7 @@ SPEC CHECKSUMS:
   DhbwCapacitorCourseLiveActivity: 1e8360e163b9ab5c59e95d4c75111c3934c3d3e2
   DhbwCapacitorEmbeddedMail: 76db687861342708c08840c943675e94a5601810
   DhbwCapacitorSecureStorage: f0fdfb0914750fc61e410697dbe5074b212d3a88
+  DhbwCapacitorWatchSync: 8a12b7986c5c4f2593884a4d7808e2930c499399
   FirebaseCore: efb3893e5b94f32b86e331e3bd6dadf18b66568e
   FirebaseCoreInternal: 9afa45b1159304c963da48addb78275ef701c6b4
   FirebaseInstallations: 317270fec08a5d418fdbc8429282238cab3ac843
@@ -161,6 +167,6 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
 
-PODFILE CHECKSUM: 72c9d400b171986dcbfa34d7bc10ec3cbc54cc83
+PODFILE CHECKSUM: efbd73688f9d105e13c9e2b3a7383cb560af4abb
 
 COCOAPODS: 1.16.2

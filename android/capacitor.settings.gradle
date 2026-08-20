@@ -32,5 +32,8 @@ project(':dhbw-capacitor-embedded-mail').projectDir = new File('../plugins/capac
 include ':dhbw-capacitor-community-messaging'
 project(':dhbw-capacitor-community-messaging').projectDir = new File('../plugins/capacitor-community-messaging/android')
 
+include ':dhbw-capacitor-watch-sync'
+project(':dhbw-capacitor-watch-sync').projectDir = new File('../plugins/capacitor-watch-sync/android')
+
 include ':dhbw-capacitor-secure-storage'
 project(':dhbw-capacitor-secure-storage').projectDir = new File('../plugins/capacitor-secure-storage/android')

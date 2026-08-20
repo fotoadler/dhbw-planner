@@ -53,7 +53,7 @@ export function DayView({
   refreshing,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const touch = useRef<{ x: number; y: number; pulling: boolean } | null>(null);
+  const touch = useRef<{ x: number; y: number; pulling: boolean; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const [pull, setPull] = useState(0);
   const { y, m, d } = parseYmdKey(selectedDay);
   const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
@@ -62,7 +62,12 @@ export function DayView({
 
   const onTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
-    touch.current = { x: t.clientX, y: t.clientY, pulling: (scrollRef.current?.scrollTop ?? 0) <= 0 };
+    touch.current = {
+      x: t.clientX,
+      y: t.clientY,
+      pulling: (scrollRef.current?.scrollTop ?? 0) <= 0,
+      axis: null,
+    };
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
@@ -70,6 +75,15 @@ export function DayView({
     const t = e.touches[0];
     const dy = t.clientY - touch.current.y;
     const dx = t.clientX - touch.current.x;
+    if (!touch.current.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 8) {
+      touch.current.axis = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+    }
+    if (touch.current.axis === 'horizontal') {
+      // Der horizontale Swipe darf keinen vertikalen Scroll-Impuls an den
+      // nativen Scroll-Container weitergeben.
+      e.preventDefault();
+      return;
+    }
     if (touch.current.pulling && dy > 0 && Math.abs(dy) > Math.abs(dx) && !refreshing) {
       setPull(Math.min(dy * 0.4, 90)); // gedämpfter Zug
     }
@@ -84,7 +98,7 @@ export function DayView({
     if (pull >= PULL_THRESHOLD * 0.4) {
       // Schwelle (in gedämpften Pixeln) erreicht → Refresh
       void onRefresh();
-    } else if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    } else if (touch.current.axis === 'horizontal' && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
       onSwipeDay(dx < 0 ? 1 : -1);
     }
     setPull(0);

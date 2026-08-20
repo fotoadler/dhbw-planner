@@ -168,7 +168,7 @@ export function WeekView({
   // jedem touchmove passieren.
   const [pinchHourHeight, setPinchHourHeight] = useState<number | null>(null);
   const hourPx = pinchHourHeight ?? hourHeight;
-  const touch = useRef<{ x: number; y: number } | null>(null);
+  const touch = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
   const initialHourHeight = useRef<number>(hourPx);
   const longPressTimer = useRef<number | null>(null);
@@ -235,16 +235,29 @@ export function WeekView({
       touch.current = null;
       cancelLongPress();
     } else if (e.touches.length === 1) {
-      touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, axis: null };
     }
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
     if (e.touches.length === 2 && initialPinchDist.current !== null && onHourHeightChange) {
+      e.preventDefault();
       const d = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
       const scale = d / Math.max(1, initialPinchDist.current);
       const nextHeight = Math.min(120, Math.max(40, Math.round(initialHourHeight.current * scale)));
       setPinchHourHeight(nextHeight);
+      return;
+    }
+    if (e.touches.length === 1 && touch.current) {
+      const dx = e.touches[0].clientX - touch.current.x;
+      const dy = e.touches[0].clientY - touch.current.y;
+      if (!touch.current.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 8) {
+        touch.current.axis = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+      }
+      if (touch.current.axis === 'horizontal') {
+        // Horizontale Sprünge dürfen den vertikalen Stundenplan nicht mitziehen.
+        e.preventDefault();
+      }
     }
   };
 
@@ -260,7 +273,7 @@ export function WeekView({
     if (e.changedTouches.length > 0) {
       const dx = e.changedTouches[0].clientX - touch.current.x;
       const dy = e.changedTouches[0].clientY - touch.current.y;
-      if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (touch.current.axis === 'horizontal' && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
         onSwipeWeek(dx < 0 ? 1 : -1);
       }
     }

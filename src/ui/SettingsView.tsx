@@ -321,6 +321,10 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
             >
               Projekt auf GitHub öffnen <span aria-hidden="true">↗</span>
             </a>
+            <p className="sheet__support">
+              Mit freundlicher Unterstützung von{' '}
+              <a href="https://dhbw.app/" target="_blank" rel="noreferrer">dhbw.app</a>
+            </p>
           </div>
         </section>
     </div>

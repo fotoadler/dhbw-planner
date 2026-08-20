@@ -35,6 +35,14 @@ describe('lecturer directory', () => {
     expect(directory).toEqual({});
   });
 
+  it('speichert technische Angaben wie Online nicht als Dozent', () => {
+    const { directory, changed } = updateLecturerDirectory({}, [
+      entry({ title: 'Arbeitsrecht', lecturers: ['Online'] }),
+    ]);
+    expect(changed).toBe(false);
+    expect(directory).toEqual({});
+  });
+
   it('meldet keine Änderung, wenn der Dozent identisch bleibt', () => {
     const start = { onlinemarketing: ['Maximilian Zorg'] };
     const { changed } = updateLecturerDirectory(start, [
@@ -68,6 +76,14 @@ describe('lecturer directory', () => {
       dir,
     );
     expect(filled.lecturers).toEqual(['Echter Dozent']);
+  });
+
+  it('blendet einen bereits gespeicherten Wert Online aus', () => {
+    const [filled] = applyLecturerDirectory(
+      [entry({ title: 'Arbeitsrecht', lecturers: [] })],
+      { arbeitsrecht: ['Online'] },
+    );
+    expect(filled.lecturers).toEqual([]);
   });
 
   it('verknüpft eine verschobene Vorlesung mit demselben Titel', () => {

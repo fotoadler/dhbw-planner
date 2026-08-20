@@ -404,6 +404,8 @@ option {
   overflow-y: auto;
   padding: 12px 20px calc(24px + var(--safe-bottom));
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
 }
 
 .dayview__pull {
@@ -865,6 +867,7 @@ option {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  touch-action: pan-y;
 }
 
 .weekview__header {
@@ -926,6 +929,8 @@ option {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
   padding: 0 12px calc(24px + var(--safe-bottom)) 0;
 }
 
@@ -2177,6 +2182,7 @@ option {
 
 .sheet__feedback {
   margin-top: 12px;
+  text-align: center;
 }
 
 .sheet__feedback-button {
@@ -2201,6 +2207,21 @@ option {
   color: var(--on-accent);
   font-size: 15px;
   line-height: normal;
+}
+
+.sheet__support {
+  margin: 4px 0 0;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 17px;
+  text-align: center;
+}
+
+.sheet__support a,
+.sheet__support a:visited {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* --- Feste Bereichsnavigation unten (Kalender / Dualis) --- */

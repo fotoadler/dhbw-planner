@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ScheduleEntry } from '../types';
-import { berlinParts, effectiveEndMs, formatTime, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
+import { berlinDayKey, berlinParts, effectiveEndMs, formatTime, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
 import { scheduleModuleKey } from '../schedule/modules';
 import { selectionHaptic } from '../lib/haptics';
 
@@ -24,6 +24,12 @@ interface Props {
 function minutesOfDay(date: Date): number {
   const p = berlinParts(date);
   return p.hh * 60 + p.mm;
+}
+
+/** Position der Jetzt-Linie in Berliner Wandzeit; außerhalb der angezeigten Woche gibt es keine Linie. */
+export function currentTimeLineTop(now: Date, weekDays: string[], firstHour: number, hourHeight: number): number | null {
+  if (!weekDays.includes(berlinDayKey(now))) return null;
+  return ((minutesOfDay(now) - firstHour * 60) / 60) * hourHeight;
 }
 
 interface Positioned {
@@ -167,7 +173,20 @@ export function WeekView({
   // stößt dort die komplette Benachrichtigungsplanung an – das darf nicht bei
   // jedem touchmove passieren.
   const [pinchHourHeight, setPinchHourHeight] = useState<number | null>(null);
+  const [now, setNow] = useState(() => new Date());
   const hourPx = pinchHourHeight ?? hourHeight;
+
+  // Am nächsten Minutenwechsel aktualisieren, damit Linie und Zeitlabel mitlaufen.
+  useEffect(() => {
+    let timer: number;
+    const updateNow = () => {
+      const current = new Date();
+      setNow(current);
+      timer = window.setTimeout(updateNow, 60_000 - (current.getTime() % 60_000));
+    };
+    timer = window.setTimeout(updateNow, 60_000 - (Date.now() % 60_000));
+    return () => window.clearTimeout(timer);
+  }, []);
   const touch = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
   const initialHourHeight = useRef<number>(hourPx);
@@ -179,11 +198,16 @@ export function WeekView({
     setPinchHourHeight(null);
   }, [hourHeight]);
 
-  // Wochenende nur einblenden, wenn dort tatsächlich Termine liegen
-  // (gleiche Regel wie in der Wochenleiste der Tagesansicht).
+  const currentDayKey = berlinDayKey(now);
+  const hasCurrentDay = weekDays.includes(currentDayKey);
+
+  // Das Wochenende nur bei Terminen einblenden; der heutige Tag bleibt sichtbar,
+  // damit die Jetzt-Linie auch an einem terminfreien Samstag oder Sonntag erscheint.
   const days = weekDays
     .map((key, weekdayIndex) => ({ key, weekdayIndex }))
-    .filter(({ key, weekdayIndex }) => weekdayIndex < 5 || (entriesByDay[key]?.length ?? 0) > 0);
+    .filter(({ key, weekdayIndex }) =>
+      weekdayIndex < 5 || key === currentDayKey || (entriesByDay[key]?.length ?? 0) > 0,
+    );
   const dayLayouts = days.map(({ key }) => ({ key, positioned: layoutDay(entriesByDay[key] ?? []) }));
   const gridColumns = `44px repeat(${days.length}, minmax(0, 1fr))`;
 
@@ -196,9 +220,17 @@ export function WeekView({
       lastHour = Math.max(lastHour, Math.ceil(minutesOfDay(e.end) / 60));
     }
   }
+  // Die aktuelle Stunde bei Bedarf aufnehmen, damit die Linie auch vor 08:00
+  // oder nach dem regulären Tagesraster innerhalb des sichtbaren Rasters liegt.
+  if (hasCurrentDay) {
+    const currentHour = Math.floor(minutesOfDay(now) / 60);
+    firstHour = Math.min(firstHour, currentHour);
+    lastHour = Math.max(lastHour, currentHour);
+  }
   // Eine abschließende Rasterstunde hält die letzte horizontale Linie sichtbar,
   // auch wenn ein Termin genau auf einer vollen Stunde endet.
   const displayLastHour = lastHour + 1;
+  const nowLineTop = currentTimeLineTop(now, weekDays, firstHour, hourPx);
   const hours = Array.from({ length: displayLastHour - firstHour }, (_, i) => firstHour + i);
 
   const startLongPress = (entry: ScheduleEntry) => {
@@ -328,6 +360,14 @@ export function WeekView({
           </div>
           {dayLayouts.map(({ key: day, positioned }) => (
             <div key={day} className={`weekview__col${day === today ? ' is-today' : ''}`}>
+              {day === currentDayKey && nowLineTop !== null && (
+                <div
+                  className="weekview__nowline"
+                  style={{ top: nowLineTop }}
+                  role="img"
+                  aria-label={`Aktuelle Uhrzeit: ${formatTime(now)}`}
+                />
+              )}
               {groupPositionedEntries(positioned).map((cluster, clusterIndex) => {
                 if (cluster.length > 1) {
                   const start = new Date(Math.min(...cluster.map(({ entry }) => entry.start.getTime())));

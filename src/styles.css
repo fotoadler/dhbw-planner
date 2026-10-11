@@ -924,6 +924,61 @@ option {
   color: var(--accent);
 }
 
+.monthview {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0 12px calc(16px + var(--safe-bottom));
+  overscroll-behavior-y: contain;
+}
+
+.monthview__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.monthview__navigation button { width: 44px; height: 44px; flex-shrink: 0; font-size: 24px; color: var(--ink); }
+.monthview__navigation span { font-size: 12px; color: var(--ink-3); text-align: center; }
+.monthview__weekdays, .monthview__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.monthview__weekdays span { text-align: center; font-size: 11px; color: var(--ink-3); padding: 4px 0 10px; }
+.monthview__grid { flex: 1; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.monthview__day {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  padding: 5px 3px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-align: left;
+}
+.monthview__day.is-outside { background: var(--bg-soft); color: var(--ink-3); }
+.monthview__day.is-today { background: var(--calendar-today); }
+.monthview__day.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
+.monthview__number { align-self: center; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 600; }
+.monthview__day.is-today .monthview__number { background: var(--accent); color: var(--on-accent); }
+.monthview__entries { display: flex; flex-direction: column; gap: 3px; }
+.monthview__entry { display: flex; flex-direction: column; padding: 3px; border-radius: 4px; background: var(--calendar-event); color: var(--calendar-event-text); font-size: 10px; line-height: 13px; }
+.monthview__entry.is-exam { background: var(--calendar-exam); color: var(--calendar-exam-text); }
+.monthview__entry > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.monthview__more { font-size: 10px; color: var(--ink-3); text-align: center; }
+.monthview__compact { display: none; }
+.monthview button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+@media (max-width: 480px) {
+  .monthview__entries { display: none; }
+  .monthview__compact { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 9px; line-height: 12px; color: var(--ink-2); }
+  .monthview__dots { display: flex; gap: 3px; }
+  .monthview__dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--calendar-event-accent); }
+  .monthview__dots i.is-exam { background: var(--calendar-exam-accent); }
+}
+
 .weekview__scroll {
   flex: 1;
   overflow-y: auto;
@@ -2472,7 +2527,7 @@ option {
   color: var(--accent);
 }
 
-/* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */
+/* --- Oberer Segment-Umschalter (Tag/Woche/Monat, mittig) --- */
 
 .app__viewbar {
   position: relative;
@@ -2484,12 +2539,15 @@ option {
 
 .segmented--top {
   flex: 0 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 260px;
-  max-width: calc(100% - 150px);
+  max-width: 100%;
   margin: 0;
   padding: 3px;
   border-radius: 10px;
 }
+
+.app__viewbar.is-offline { padding-left: 56px; }
 
 .segmented--top button {
   min-height: 34px;

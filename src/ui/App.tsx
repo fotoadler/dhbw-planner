@@ -9,6 +9,8 @@ import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
+import { MonthView } from './MonthView';
+import { monthTitle, monthWeekKeys, shiftMonth } from './monthLayout';
 import { WeekEventSheet } from './WeekEventSheet';
 import type { ScheduleEntry } from '../types';
 import { CourseView } from './CourseView';
@@ -126,6 +128,13 @@ export function App() {
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
   useEffect(() => { setWeekDetails(null); }, [monday, section, activeCalendarView, inSettings]);
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
+  const selectedMonth = selectedDay.slice(0, 7);
+  useEffect(() => {
+    if (!inCalendar || activeCalendarView !== 'month') return;
+    // Rapla loads individual weeks, including the neighbouring days in the grid.
+    // ensureWeek deduplicates requests and is a no-op for the full-course API.
+    for (const key of monthWeekKeys(`${selectedMonth}-01`)) void ensureWeek(key);
+  }, [selectedMonth, inCalendar, activeCalendarView, ensureWeek, settings?.rapla, settings?.apiSelection]);
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => ymdKey(addDaysYmd(parseYmdKey(monday), i))),
     [monday],
@@ -257,6 +266,9 @@ export function App() {
       title = formatWeekdayLong(ymd);
       subtitle = formatDateLong(ymd);
     }
+  } else if (activeCalendarView === 'month') {
+    title = monthTitle(selectedDay);
+    subtitle = 'Monatsübersicht';
   } else {
     title = `KW ${isoWeekNumber(parseYmdKey(monday))}`;
     subtitle = formatWeekRange(parseYmdKey(monday));
@@ -266,7 +278,8 @@ export function App() {
     inCalendar &&
     !selectedBlock &&
     ((activeCalendarView === 'day' && selectedDay !== today) ||
-      (activeCalendarView === 'week' && monday !== todayMonday));
+      (activeCalendarView === 'week' && monday !== todayMonday) ||
+      (activeCalendarView === 'month' && selectedMonth !== today.slice(0, 7)));
 
   const openSettings = () => {
     setSection('settings');
@@ -358,7 +371,7 @@ export function App() {
 
       {/* Kontextueller Segment-Umschalter für die Unteransicht */}
       {inCalendar && !selectedBlock && (
-        <div className="app__viewbar">
+        <div className={`app__viewbar${offline ? ' is-offline' : ''}`}>
           {offline && (
             <div className="app__offline" aria-label="Offline - gespeicherter Stand wird angezeigt.">Offline</div>
           )}
@@ -368,6 +381,9 @@ export function App() {
             </button>
             <button className={activeCalendarView === 'week' ? 'is-active' : ''} onClick={() => setCalendarView('week')}>
               Woche
+            </button>
+            <button className={activeCalendarView === 'month' ? 'is-active' : ''} onClick={() => setCalendarView('month')}>
+              Monat
             </button>
           </nav>
         </div>
@@ -451,6 +467,10 @@ export function App() {
             refreshing={refreshing}
           />
         </>
+      ) : inCalendar && activeCalendarView === 'month' ? (
+        <MonthView selectedDay={selectedDay} today={today} entriesByDay={entriesByDay}
+          onOpenDay={(day) => { selectDay(day); setCalendarView('day'); }}
+          onShiftMonth={(delta) => selectDay(shiftMonth(selectedDay, delta))} />
       ) : inCalendar ? (
         <WeekView
           weekDays={weekDays}

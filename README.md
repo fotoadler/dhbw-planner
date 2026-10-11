@@ -1,6 +1,6 @@
 # DHBW Planner
 
-DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Stundenpläne können entweder geführt über Standort, Studiengang und Kurs aus der öffentlichen DHBW-API ausgewählt oder weiterhin über einen persönlichen Rapla-Link eingebunden werden. Die App bereitet beide Quellen als Tages- und Wochenansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
+DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Stundenpläne können entweder geführt über Standort, Studiengang und Kurs aus der öffentlichen DHBW-API ausgewählt oder weiterhin über einen persönlichen Rapla-Link eingebunden werden. Die App bereitet beide Quellen als Tages-, Wochen- und Monatsansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
 
 Die App arbeitet ohne eigenes Backend. Rapla- und Dualis-Daten werden direkt vom Gerät aus abgerufen; gespeicherte Einstellungen und der Stundenplan-Cache liegen lokal auf dem Gerät.
 
@@ -11,7 +11,7 @@ DHBW Planner ist keine offizielle App der DHBW.
 ## Features
 
 - Geführte Kursauswahl über Standort, Studiengang und Kurs — ohne Rapla-Link
-- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
+- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Monatsansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
 - iCal-/ICS-Export über das native Share-Sheet
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
@@ -85,7 +85,7 @@ Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Be
 
 Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
 
-In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages- oder Wochenansicht zeigt.
+In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages-, Wochen- oder Monatsansicht zeigt. Die Monatsansicht zeigt vollständige Wochen von Montag bis Sonntag. Auf Smartphones markieren Punkte und Zähler die Termine, auf größeren Displays erscheinen zusätzlich Uhrzeiten und Titel. Ein Tipp auf einen Tag öffnet die Tagesansicht; die Pfeile wechseln den Monat und „Heute“ führt zum aktuellen Monat zurück.
 
 ## Datenschutz
 

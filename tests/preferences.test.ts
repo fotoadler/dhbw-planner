@@ -28,7 +28,7 @@ describe('Kalender-Standardansicht in den Preferences', () => {
 
   it('verwendet für alte oder ungültige Werte die Wochenansicht', async () => {
     preferencesGet.mockResolvedValue({
-      value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'month' } }),
+      value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'year' } }),
     });
 
     await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'week' });
@@ -37,5 +37,10 @@ describe('Kalender-Standardansicht in den Preferences', () => {
   it('behält eine ausdrücklich gewählte Tagesansicht', async () => {
     preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'day' } }) });
     await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'day' });
+  });
+
+  it('lädt die gespeicherte Monatsansicht', async () => {
+    preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'month' } }) });
+    await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'month' });
   });
 });

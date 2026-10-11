@@ -94,11 +94,12 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
               onChange={(event) => {
                 const value = event.target.value;
                 selectionHaptic();
-                if (value === 'day' || value === 'week') set({ defaultCalendarView: value });
+                if (value === 'day' || value === 'week' || value === 'month') set({ defaultCalendarView: value });
               }}
             >
               <option value="day">Tagesansicht</option>
               <option value="week">Wochenansicht</option>
+              <option value="month">Monatsansicht</option>
             </select>
           </div>
         </section>

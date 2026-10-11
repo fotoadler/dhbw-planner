@@ -56,7 +56,7 @@ export interface AppSettings {
   /** Darstellung: Systemvorgabe oder manuell hell/dunkel. */
   themeMode: ThemeMode;
   /** Ansicht, die beim Öffnen des Kalenders standardmäßig angezeigt wird. */
-  defaultCalendarView: 'day' | 'week';
+  defaultCalendarView: 'day' | 'week' | 'month';
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -178,7 +178,7 @@ function parseSettings(raw: unknown): AppSettings {
     hiddenModules: parseHiddenModules(data.hiddenModules),
     calendarHourHeight,
     themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
-    defaultCalendarView: data.defaultCalendarView === 'day' || data.defaultCalendarView === 'week' ? data.defaultCalendarView : DEFAULT_SETTINGS.defaultCalendarView,
+    defaultCalendarView: data.defaultCalendarView === 'day' || data.defaultCalendarView === 'week' || data.defaultCalendarView === 'month' ? data.defaultCalendarView : DEFAULT_SETTINGS.defaultCalendarView,
   };
 }
 

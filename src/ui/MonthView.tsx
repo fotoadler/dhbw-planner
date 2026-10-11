@@ -7,11 +7,11 @@ interface Props {
   selectedDay: string;
   today: string;
   entriesByDay: Record<string, ScheduleEntry[]>;
-  onOpenDay: (day: string) => void;
+  onSelectDay: (day: string) => void;
   onShiftMonth: (delta: 1 | -1) => void;
 }
 
-export function MonthView({ selectedDay, today, entriesByDay, onOpenDay, onShiftMonth }: Props) {
+export function MonthView({ selectedDay, today, entriesByDay, onSelectDay, onShiftMonth }: Props) {
   const month = selectedDay.slice(0, 7);
   const days = monthDays(selectedDay);
   return (
@@ -31,7 +31,7 @@ export function MonthView({ selectedDay, today, entriesByDay, onOpenDay, onShift
           return (
             <button key={day} type="button" data-day={day}
               className={['monthview__day', day.slice(0, 7) !== month && 'is-outside', day === today && 'is-today', day === selectedDay && 'is-selected'].filter(Boolean).join(' ')}
-              onClick={() => onOpenDay(day)}
+              onClick={() => onSelectDay(day)}
               aria-current={day === today ? 'date' : undefined}
               aria-label={`${date}, ${entries.length === 0 ? 'keine Termine' : `${entries.length} ${entries.length === 1 ? 'Termin' : 'Termine'}`}${day === today ? ', heute' : ''}`}>
               <span className="monthview__number" aria-hidden="true">{parseYmdKey(day).d}</span>

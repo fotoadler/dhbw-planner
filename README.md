@@ -85,7 +85,7 @@ Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Be
 
 Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
 
-In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages-, Wochen- oder Monatsansicht zeigt. Die Monatsansicht zeigt vollständige Wochen von Montag bis Sonntag. Auf Smartphones markieren Punkte und Zähler die Termine, auf größeren Displays erscheinen zusätzlich Uhrzeiten und Titel. Ein Tipp auf einen Tag öffnet die Tagesansicht; die Pfeile wechseln den Monat und „Heute“ führt zum aktuellen Monat zurück.
+In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages-, Wochen- oder Monatsansicht zeigt. Die Monatsansicht zeigt vollständige Wochen von Montag bis Sonntag. Auf Smartphones markieren Punkte und Zähler die Termine, auf größeren Displays erscheinen zusätzlich Uhrzeiten und Titel. Ein Tipp auf einen Tag öffnet das Detailfenster mit allen Terminen des Tages und einem Button zur Tagesansicht; die Pfeile wechseln den Monat und „Heute“ führt zum aktuellen Monat zurück.
 
 ## Datenschutz
 

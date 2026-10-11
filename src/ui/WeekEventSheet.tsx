@@ -10,9 +10,11 @@ interface Props {
   entries: ScheduleEntry[];
   onClose: () => void;
   onOpenDay: (day: string) => void;
+  scope?: 'selection' | 'day';
 }
 
-export function WeekEventSheet({ day, entries, onClose, onOpenDay }: Props) {
+export function WeekEventSheet({ day, entries, onClose, onOpenDay, scope = 'selection' }: Props) {
+  const sortedEntries = [...entries].sort((a, b) => a.start.getTime() - b.start.getTime());
   const dialogRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const onCloseRef = useRef(onClose);
@@ -85,14 +87,15 @@ export function WeekEventSheet({ day, entries, onClose, onOpenDay }: Props) {
           <span className="weekdetails__handle" aria-hidden="true" />
           <div className="weekdetails__heading">
             <div>
-              <h2 id="weekdetails-title">{entries.length > 1 ? `${entries.length} überschneidende Termine` : 'Termindetails'}</h2>
+              <h2 id="weekdetails-title">{scope === 'day' ? 'Termine des Tages' : entries.length > 1 ? `${entries.length} überschneidende Termine` : 'Termindetails'}</h2>
               <p>{formatDayLong(parseYmdKey(day))}</p>
             </div>
             <button ref={closeRef} type="button" className="weekdetails__close" aria-label="Details schließen" onClick={onClose}>×</button>
           </div>
         </header>
         <div className="weekdetails__content">
-          {entries.map((entry, index) => (
+          {entries.length === 0 && <p>An diesem Tag sind keine Termine.</p>}
+          {sortedEntries.map((entry, index) => (
             <article key={index} className={`weekdetails__entry weekdetails__entry--${entry.type}`}>
               <p className="weekdetails__time">{timeLabel(entry)}{ENTRY_TYPE_LABEL[entry.type] && ` · ${ENTRY_TYPE_LABEL[entry.type]}`}</p>
               <h3>{entry.title}</h3>

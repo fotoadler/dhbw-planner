@@ -49,9 +49,9 @@ describe('Monatsansicht', () => {
     (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     container = document.createElement('div'); document.body.append(container);
     root = createRoot(container);
-    const onOpenDay = vi.fn(); const onShiftMonth = vi.fn();
+    const onSelectDay = vi.fn(); const onShiftMonth = vi.fn();
     const entries: ScheduleEntry[] = [0, 1, 2].map((i) => ({ start: new Date(`2026-10-11T${10 + i}:00:00+02:00`), end: new Date(`2026-10-11T${11 + i}:00:00+02:00`), title: `Termin ${i}`, type: i === 2 ? 'exam' : 'lecture', lecturers: [], rooms: [] }));
-    act(() => root!.render(createElement(MonthView, { selectedDay: '2026-10-01', today: '2026-10-11', entriesByDay: { '2026-10-11': entries }, onOpenDay, onShiftMonth })));
+    act(() => root!.render(createElement(MonthView, { selectedDay: '2026-10-01', today: '2026-10-11', entriesByDay: { '2026-10-11': entries }, onSelectDay, onShiftMonth })));
     const today = container.querySelector<HTMLButtonElement>('[data-day="2026-10-11"]')!;
     expect(container.querySelectorAll('.monthview__day')).toHaveLength(35);
     expect(today.getAttribute('aria-current')).toBe('date');
@@ -59,12 +59,12 @@ describe('Monatsansicht', () => {
     expect(today.querySelector('.monthview__more')?.textContent).toBe('+1 weitere');
     expect(today.querySelector('.monthview__dots .is-exam')).not.toBeNull();
     expect(container.querySelector('[data-day="2026-09-28"]')?.classList.contains('is-outside')).toBe(true);
-    act(() => today.click()); expect(onOpenDay).toHaveBeenCalledWith('2026-10-11');
+    act(() => today.click()); expect(onSelectDay).toHaveBeenCalledWith('2026-10-11');
     act(() => container.querySelector<HTMLButtonElement>('[aria-label="Vorheriger Monat"]')!.click());
     act(() => container.querySelector<HTMLButtonElement>('[aria-label="Nächster Monat"]')!.click());
     expect(onShiftMonth.mock.calls).toEqual([[-1], [1]]);
     const empty = container.querySelector<HTMLButtonElement>('[data-day="2026-09-28"]')!;
     expect(empty.getAttribute('aria-label')).toContain('keine Termine');
-    act(() => empty.click()); expect(onOpenDay).toHaveBeenCalledWith('2026-09-28');
+    act(() => empty.click()); expect(onSelectDay).toHaveBeenCalledWith('2026-09-28');
   });
 });

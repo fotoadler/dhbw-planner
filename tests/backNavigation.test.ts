@@ -67,6 +67,10 @@ describe('resolveBackAction', () => {
     expect(resolveBackAction(state({ calendarView: 'month' }))).toBe('to-calendar-day');
   });
 
+  it('schließt vor einem Ansichtswechsel das Tagesdetailfenster im Monat', () => {
+    expect(resolveBackAction(state({ calendarView: 'month', weekDetailsOpen: true }))).toBe('close-week-details');
+  });
+
   it('schließt zuerst die Wochendetails und bleibt dabei in der Wochenansicht', () => {
     expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: true }))).toBe('close-week-details');
     expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: false }))).toBe('to-calendar-day');

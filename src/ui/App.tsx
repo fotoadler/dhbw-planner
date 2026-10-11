@@ -37,6 +37,10 @@ import {
   ymdKey,
 } from '../lib/berlinTime';
 
+type CalendarDetails =
+  | { day: string; scope: 'selection'; entries: ScheduleEntry[] }
+  | { day: string; scope: 'day' };
+
 export function App() {
   const demoScreen = appStoreDemoScreen();
   const { settings, entries, allEntries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
@@ -61,7 +65,7 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showHiddenModules, setShowHiddenModules] = useState(false);
   const [confirmModuleKey, setConfirmModuleKey] = useState<string | null>(null);
-  const [weekDetails, setWeekDetails] = useState<{ day: string; entries: ScheduleEntry[] } | null>(null);
+  const [calendarDetails, setCalendarDetails] = useState<CalendarDetails | null>(null);
 
   const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
@@ -93,7 +97,7 @@ export function App() {
   useBackButton(() => {
     const action = resolveBackAction({
       showSettings: inSettings,
-      weekDetailsOpen: Boolean(weekDetails),
+      weekDetailsOpen: Boolean(calendarDetails),
       selectedBlockKey,
       section,
       calendarView: activeCalendarView,
@@ -102,7 +106,7 @@ export function App() {
     });
     switch (action) {
       case 'close-week-details':
-        setWeekDetails(null);
+        setCalendarDetails(null);
         return true;
       case 'close-settings':
         setShowSettings(false);
@@ -126,7 +130,7 @@ export function App() {
   });
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
-  useEffect(() => { setWeekDetails(null); }, [monday, section, activeCalendarView, inSettings]);
+  useEffect(() => { setCalendarDetails(null); }, [monday, selectedDay.slice(0, 7), section, activeCalendarView, inSettings]);
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
   const selectedMonth = selectedDay.slice(0, 7);
   useEffect(() => {
@@ -469,7 +473,7 @@ export function App() {
         </>
       ) : inCalendar && activeCalendarView === 'month' ? (
         <MonthView selectedDay={selectedDay} today={today} entriesByDay={entriesByDay}
-          onOpenDay={(day) => { selectDay(day); setCalendarView('day'); }}
+          onSelectDay={(day) => setCalendarDetails({ day, scope: 'day' })}
           onShiftMonth={(delta) => selectDay(shiftMonth(selectedDay, delta))} />
       ) : inCalendar ? (
         <WeekView
@@ -484,17 +488,18 @@ export function App() {
             selectDay(day);
             setCalendarView('day');
           }}
-          onSelectEntries={(day, selectedEntries) => setWeekDetails({ day, entries: selectedEntries })}
+          onSelectEntries={(day, selectedEntries) => setCalendarDetails({ day, scope: 'selection', entries: selectedEntries })}
           onSwipeWeek={(delta) => selectDay(ymdKey(addDaysYmd(parseYmdKey(monday), delta * 7)))}
         />
       ) : (
         <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
       )}
 
-      {weekDetails && inCalendar && activeCalendarView === 'week' && (
-        <WeekEventSheet day={weekDetails.day} entries={weekDetails.entries}
-          onClose={() => setWeekDetails(null)}
-          onOpenDay={(day) => { setWeekDetails(null); selectDay(day); setCalendarView('day'); }} />
+      {calendarDetails && inCalendar && (activeCalendarView === 'week' || activeCalendarView === 'month') && (
+        <WeekEventSheet day={calendarDetails.day} scope={calendarDetails.scope}
+          entries={calendarDetails.scope === 'day' ? entriesByDay[calendarDetails.day] ?? [] : calendarDetails.entries}
+          onClose={() => setCalendarDetails(null)}
+          onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
 
       {/* In-App Bestätigungs-Dialog */}

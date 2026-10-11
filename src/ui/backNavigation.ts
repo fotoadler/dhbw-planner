@@ -37,7 +37,7 @@ export type BackAction =
 
 export function resolveBackAction(state: BackNavigationState): BackAction {
   if (state.showSettings || state.section === 'settings') return 'close-settings';
-  if (state.section === 'calendar' && state.calendarView === 'week' && state.weekDetailsOpen) return 'close-week-details';
+  if (state.section === 'calendar' && (state.calendarView === 'week' || state.calendarView === 'month') && state.weekDetailsOpen) return 'close-week-details';
   if (state.section === 'calendar' && state.selectedBlockKey) return 'close-course';
   if (state.section === 'mail') return 'to-calendar';
   if (state.section === 'dualis') {

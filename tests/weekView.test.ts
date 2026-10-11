@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { weekTitleLineCapacity } from '../src/ui/WeekView';
+import { currentTimeLineTop, weekTitleLineCapacity } from '../src/ui/WeekView';
 import { effectiveEndMs, isDeadlineOrAllDay } from '../src/lib/berlinTime';
 
 describe('weekTitleLineCapacity', () => {
@@ -32,5 +32,34 @@ describe('weekTitleLineCapacity', () => {
     };
     expect(isDeadlineOrAllDay(regularLecture)).toBe(false);
     expect(effectiveEndMs(regularLecture)).toBe(regularLecture.end.getTime());
+  });
+});
+
+
+describe('currentTimeLineTop', () => {
+  it('shows no line when the displayed week does not contain the current Berlin day', () => {
+    expect(currentTimeLineTop(new Date('2026-10-11T10:30:00Z'), ['2026-10-05', '2026-10-06'], 8, 64)).toBeNull();
+  });
+
+  it('uses Berlin wall time and scales the position with each grid zoom level', () => {
+    // 08:30 UTC is 10:30 CEST on 11 October 2026.
+    const now = new Date('2026-10-11T08:30:00Z');
+    const week = ['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09', '2026-10-10', '2026-10-11'];
+    expect(currentTimeLineTop(now, week, 8, 40)).toBe(100);
+    expect(currentTimeLineTop(now, week, 8, 64)).toBe(160);
+    expect(currentTimeLineTop(now, week, 8, 120)).toBe(300);
+  });
+
+  it('follows the spring DST jump in Europe/Berlin', () => {
+    // 01:30 UTC becomes 03:30 CEST on the spring transition day.
+    expect(currentTimeLineTop(new Date('2026-03-29T01:30:00Z'), ['2026-03-29'], 0, 60)).toBe(210);
+  });
+
+  it('places both occurrences of the repeated autumn DST hour at the same wall-clock position', () => {
+    const week = ['2026-10-25'];
+    const before = currentTimeLineTop(new Date('2026-10-25T00:30:00Z'), week, 0, 60);
+    const after = currentTimeLineTop(new Date('2026-10-25T01:30:00Z'), week, 0, 60);
+    expect(before).toBe(150);
+    expect(after).toBe(150);
   });
 });

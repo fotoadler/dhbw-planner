@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { closeEmbeddedMail, isEmbeddedMailAvailable, openEmbeddedMail } from '../mail/embedded';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
+import { FEEDBACK_EMAIL } from '../lib/projectLinks';
 
 interface Props {
   site: string;
@@ -10,7 +11,7 @@ interface Props {
 export function MailView({ site }: Props) {
   const siteConfig = siteConfigurationFor(site);
   const provider = mailProviderForSite(site);
-  const feedbackHref = `mailto:christian@fotoadler.com?subject=${encodeURIComponent(
+  const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
     'DHBW Planner – Mailzugang',
   )}&body=${encodeURIComponent(
     `Standort: ${siteConfig.label}${siteConfig.site ? ` (${siteConfig.site})` : ''}\n\nMailprovider oder Anmeldeseite:\n`,

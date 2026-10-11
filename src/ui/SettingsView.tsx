@@ -10,7 +10,7 @@ import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
-import { PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
+import { FEEDBACK_EMAIL, PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
 import { selectionHaptic } from '../lib/haptics';
 
 interface Props {
@@ -50,7 +50,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
   };
 
   const set = (patch: Partial<AppSettings>) => onChange({ ...settings, ...patch });
-  const feedbackHref = `mailto:christian@fotoadler.com?subject=${encodeURIComponent(
+  const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
     'DHBW Planner – App-Feedback',
   )}&body=${encodeURIComponent(
     'Hallo Christian,\n\nmein Feedback zur DHBW Planner App:\n\n',

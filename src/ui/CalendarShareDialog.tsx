@@ -46,7 +46,7 @@ export function CalendarShareDialog({ enabled, demo, onEnable, onRefresh, onDisa
     message={<>
       {message ? <p role="status">{message}</p> : <p>
         {enabled ? 'Dein Stundenplan ist mit dem Kalender „DHBW Planner“ verbunden.' : 'Mit Kalenderzugriff überträgt die App deinen Stundenplan in den Kalender „DHBW Planner“.'}
-        {' '}{available ? 'Änderungen werden nach Aktualisierungen in der App automatisch übernommen.' : 'Verfügbar in der installierten App außerhalb der Demo.'}
+        {available && ' Änderungen werden nach Aktualisierungen in der App automatisch übernommen.'}
       </p>}
       {enabled && <button type="button" className="dialog-btn dialog-btn--secondary" disabled={busy || !available}
         title="Bereits übertragene Termine bleiben erhalten" onClick={() => {

@@ -1,0 +1,28 @@
+{
+  "name": "@dhbw/capacitor-calendar-sync",
+  "version": "0.1.0",
+  "description": "Owned device-calendar synchronization for DHBW Planner.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "android",
+    "ios",
+    "index.js",
+    "index.d.ts",
+    "DhbwCapacitorCalendarSync.podspec"
+  ],
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=7.0.0"
+  }
+}

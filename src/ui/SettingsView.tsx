@@ -12,6 +12,9 @@ import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
 import { FEEDBACK_EMAIL, PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
 import { selectionHaptic } from '../lib/haptics';
+import { CalendarSyncSettings } from './CalendarSyncSettings';
+import { isAppStoreDemo } from '../demo/appStoreDemo';
+import { isReviewDemoRaplaLink } from '../demo/reviewDemo';
 
 interface Props {
   settings: AppSettings;
@@ -58,6 +61,10 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
 
   return (
     <div className="settings-page">
+
+        <CalendarSyncSettings enabled={settings.calendarSyncEnabled}
+          demo={isAppStoreDemo() || isReviewDemoRaplaLink(settings.raplaLink)}
+          onChange={(calendarSyncEnabled) => set({ calendarSyncEnabled })} />
 
 
         <section className="sheet__section">

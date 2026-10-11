@@ -12,15 +12,14 @@ def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
-  pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorLocalNotifications', :path => '../../node_modules/@capacitor/local-notifications'
   pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
-  pod 'CapacitorShare', :path => '../../node_modules/@capacitor/share'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+  pod 'DhbwCapacitorCalendarSync', :path => '../../plugins/capacitor-calendar-sync'
+  pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'
   pod 'DhbwCapacitorEmbeddedMail', :path => '../../plugins/capacitor-embedded-mail'
-  pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorSecureStorage', :path => '../../plugins/capacitor-secure-storage'
 end
 

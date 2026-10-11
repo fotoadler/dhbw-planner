@@ -4,18 +4,15 @@ PODS:
   - CapacitorApp (7.1.2):
     - Capacitor
   - CapacitorCordova (7.6.7)
-  - CapacitorFilesystem (7.1.8):
-    - Capacitor
-    - IONFilesystemLib (~> 1.1.1)
   - CapacitorHaptics (7.0.5):
     - Capacitor
   - CapacitorLocalNotifications (7.0.7):
     - Capacitor
   - CapacitorPreferences (7.0.4):
     - Capacitor
-  - CapacitorShare (7.0.4):
-    - Capacitor
   - CapacitorStatusBar (7.0.6):
+    - Capacitor
+  - DhbwCapacitorCalendarSync (0.1.0):
     - Capacitor
   - DhbwCapacitorCommunityMessaging (0.1.0):
     - Capacitor
@@ -74,7 +71,6 @@ PODS:
   - GoogleUtilities/UserDefaults (8.1.2):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - IONFilesystemLib (1.1.2)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
@@ -86,12 +82,11 @@ DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
-  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
-  - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - DhbwCapacitorCalendarSync (from `../../plugins/capacitor-calendar-sync`)
   - DhbwCapacitorCommunityMessaging (from `../../plugins/capacitor-community-messaging`)
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
   - DhbwCapacitorEmbeddedMail (from `../../plugins/capacitor-embedded-mail`)
@@ -105,7 +100,6 @@ SPEC REPOS:
     - FirebaseMessaging
     - GoogleDataTransport
     - GoogleUtilities
-    - IONFilesystemLib
     - nanopb
     - PromisesObjC
 
@@ -116,18 +110,16 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
-  CapacitorFilesystem:
-    :path: "../../node_modules/@capacitor/filesystem"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorLocalNotifications:
     :path: "../../node_modules/@capacitor/local-notifications"
   CapacitorPreferences:
     :path: "../../node_modules/@capacitor/preferences"
-  CapacitorShare:
-    :path: "../../node_modules/@capacitor/share"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  DhbwCapacitorCalendarSync:
+    :path: "../../plugins/capacitor-calendar-sync"
   DhbwCapacitorCommunityMessaging:
     :path: "../../plugins/capacitor-community-messaging"
   DhbwCapacitorCourseLiveActivity:
@@ -141,12 +133,11 @@ SPEC CHECKSUMS:
   Capacitor: 8ef25ba872436d2c5ac2a4791f7255529bdcd93b
   CapacitorApp: f01a913211780e0718dae9750442c3e23f96e106
   CapacitorCordova: 139e2ed3d91c54b5aeae7941135c9f9aefc6da1d
-  CapacitorFilesystem: c63fc54df41e5a6761785a7f3c49dc696c22e296
   CapacitorHaptics: 1b145fa83c622e5383a3bac04ea81e2514f0b0f5
   CapacitorLocalNotifications: 71124afe526ac00585314bff34651bd023f86e37
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
-  CapacitorShare: 25f7fc5dd0e4edbde5d6801c6de5d14a8b450a41
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
+  DhbwCapacitorCalendarSync: 16d0759c39a2576ff7d5eb65c74fdafcea4aabed
   DhbwCapacitorCommunityMessaging: ba5f1d98f6423195e583f5b017d93b74248b7bcb
   DhbwCapacitorCourseLiveActivity: 1e8360e163b9ab5c59e95d4c75111c3934c3d3e2
   DhbwCapacitorEmbeddedMail: 76db687861342708c08840c943675e94a5601810
@@ -157,10 +148,9 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 3b26e2cee503815e01c3701236b020aa9b576f09
   GoogleDataTransport: a24e58982ab3ba2f64d79613e027fe7f57e88539
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
-  IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
 
-PODFILE CHECKSUM: 72c9d400b171986dcbfa34d7bc10ec3cbc54cc83
+PODFILE CHECKSUM: 10c26e01d863b784fc0034120edc0b17b51d2cb8
 
 COCOAPODS: 1.16.2

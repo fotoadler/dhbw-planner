@@ -24,6 +24,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>DHBW Planner synchronisiert deinen Stundenplan in einem eigenen Kalender und lässt persönliche Termine unverändert.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>DHBW Planner benötigt Kalenderzugriff, um eigene Stundenplantermine anzulegen, zu aktualisieren und zu entfernen.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

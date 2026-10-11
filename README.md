@@ -13,7 +13,7 @@ DHBW Planner ist keine offizielle App der DHBW.
 - Geführte Kursauswahl über Standort, Studiengang und Kurs — ohne Rapla-Link
 - Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Monatsansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
-- iCal-/ICS-Export über das native Share-Sheet
+- Optionale Synchronisierung mit dem Gerätekalender in der Android- und iOS-App
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
 - Dualis-Login für Modulnoten, Credits, Semester und Prüfungsleistungen
 - Uni-Mail als eingebettete Ansicht des standorteigenen Webmail-Logins; Standorte ohne bestätigten Zugang zeigen dort eine Hilfe statt eines geratenen Logins
@@ -89,6 +89,12 @@ In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öff
 
 ## Datenschutz
 
+In den installierten Android- und iOS-Apps lässt sich in den Einstellungen die Synchronisierung mit dem Gerätekalender aktivieren. Nach Freigabe des Kalenderzugriffs legt die App einen eigenen Kalender „DHBW Planner“ an. Nach erfolgreichen Stundenplanabrufen werden die sichtbaren Termine von sieben Tagen zurück bis 90 Tage voraus abgeglichen. Nur app-eigene, markierte Termine werden bearbeitet; Löschungen erfolgen erst nach einem vollständigen erfolgreichen Abruf. Teilabrufe ergänzen Termine, ohne bestehende zu löschen. Ältere Termine bleiben erhalten. Beim Deaktivieren pausiert der Abgleich, bereits übertragene Termine bleiben bestehen. Eine Aktualisierung bei geschlossener App ist nicht garantiert.
+
+Der Kalender-Button führt zur Aktivierung der Synchronisierung. Der frühere ICS-Export wurde entfernt, weil importierte Dateien keine automatische Aktualisierung ermöglichen. Im Browser steht die native Synchronisierung nicht zur Verfügung. Bereits früher importierte Termine gehören nicht zum neuen App-Kalender und werden nicht verändert; sie können vor der Aktivierung manuell entfernt werden, um Doppelanzeigen zu vermeiden.
+
+Abgleichsregeln, lokale Prüfergebnisse und noch erforderliche Geräteprüfungen stehen in [docs/CALENDAR_SYNC.md](docs/CALENDAR_SYNC.md).
+
 Kurzfassung:
 
 - Kein Tracking
@@ -112,10 +118,10 @@ Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentiert
 ```text
 src/
   demo/                      Lokaler Demomodus für die App Review
+  calendar/                  Abgleich mit dem nativen Gerätekalender
   dhbw/                      Standortprofile für Dualis- und Mail-Integrationen
   dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
   dualis/                    Dualis-Client, Parser und Typen
-  ical/                      ICS-Export
   lib/                       Zeit-, Theme- und Haptik-Helfer sowie Projektlinks
   liveActivity/              Live-Aktivitäten und deren Planung
   mail/                      Mail-Adapter und Brücke zur nativen Mailansicht
@@ -126,8 +132,9 @@ src/
   seezeit/                   Seezeit-Speisepläne für Ravensburg und Friedrichshafen
   store/                     Persistente Einstellungen und Cache
   ui/                        React-Komponenten
-tests/                       Parser-, Planner-, Dualis-, ICS- und Layouttests
+tests/                       Parser-, Planner-, Dualis-, Kalender- und Layouttests
 plugins/
+  capacitor-calendar-sync/  EventKit / Android Calendar Provider
   capacitor-course-live-activity/
                              Live-Aktivitäten auf iOS
   capacitor-embedded-mail/   Native Mailansicht über der App

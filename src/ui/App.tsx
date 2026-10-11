@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useBackButton } from './useBackButton';
 import { resolveBackAction, type CalendarView, type DualisPage, type Section } from './backNavigation';
@@ -21,7 +22,6 @@ import { ConfirmDialog } from './ConfirmDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
-import { shareIcs } from '../ical/export';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
@@ -345,15 +345,16 @@ export function App() {
                   <span className="iconbtn__badge">{settings.hiddenModules.length}</span>
                 </button>
               )}
-              <button
+              {Capacitor.isNativePlatform() && <button
                 className="iconbtn"
-                aria-label="Als Kalenderdatei teilen"
-                onClick={() => void shareIcs(entries)}
+                aria-label="Kalendersynchronisierung"
+                title="Kalendersynchronisierung einrichten"
+                onClick={openSettings}
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+                  <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M9 16h6m-2-2 2 2-2 2" />
                 </svg>
-              </button>
+              </button>}
             </>
           )}
           {!inSettings && (

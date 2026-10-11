@@ -40,6 +40,8 @@ Die öffentliche DHBW-API kann bei einzelnen Terminen unvollständige Daten lief
 
 DHBW Planner enthält kein Tracking, keine Analytics-SDKs und keine Werbe-SDKs.
 
-## Kalenderexport und Benachrichtigungen
+## Gerätekalender und Benachrichtigungen
 
-ICS-Export und lokale Benachrichtigungen werden auf dem Gerät erzeugt. Beim Teilen einer Kalenderdatei entscheidet der Nutzer selbst, mit welcher App die Datei weiterverarbeitet wird.
+Lokale Benachrichtigungen werden auf dem Gerät erzeugt.
+
+Die optionale Gerätekalender-Synchronisierung benötigt unter Android Lese- und Schreibzugriff auf Kalender und unter iOS vollständigen Kalenderzugriff. Die App fragt erst beim Aktivieren danach. Sie liest und bearbeitet ausschließlich ihre markierten Termine im eigenen Kalender „DHBW Planner“. Übertragen werden Titel, Beginn, Ende, Raum, Dozenten und Kursangaben. Die Kalenderkennung und die Aktivierung werden lokal gespeichert. Je nach verwendetem Kalenderkonto und Systemeinstellungen kann das Betriebssystem die Termine mit dem Kontenanbieter synchronisieren. Die App betreibt dafür keinen eigenen Server. Beim Deaktivieren bleiben bereits übertragene Termine erhalten.

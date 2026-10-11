@@ -43,4 +43,13 @@ describe('Kalender-Standardansicht in den Preferences', () => {
     preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'month' } }) });
     await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'month' });
   });
+
+  it('aktiviert den Gerätekalender nur bei ausdrücklich gespeichertem true', async () => {
+    for (const value of [undefined, false, 'true', 1]) {
+      preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { calendarSyncEnabled: value } }) });
+      await expect(loadSettings()).resolves.toMatchObject({ calendarSyncEnabled: false });
+    }
+    preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { calendarSyncEnabled: true } }) });
+    await expect(loadSettings()).resolves.toMatchObject({ calendarSyncEnabled: true });
+  });
 });

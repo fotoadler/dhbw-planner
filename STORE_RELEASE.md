@@ -41,7 +41,7 @@ This is a new app identity.
 
 Short description:
 
-DHBW Planner zeigt deinen DHBW-Stundenplan kompakt als Tages- und Wochenansicht mit Kalenderexport und lokalen Erinnerungen — geführt über Standort, Studiengang und Kurs oder alternativ über deinen Rapla-Link.
+DHBW Planner zeigt deinen DHBW-Stundenplan kompakt als Tages-, Wochen- und Monatsansicht mit optionaler Gerätekalender-Synchronisierung und lokalen Erinnerungen — geführt über Standort, Studiengang und Kurs oder alternativ über deinen Rapla-Link.
 
 Full description:
 
@@ -65,7 +65,7 @@ Funktionen:
 
 Privacy summary:
 
-Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Passwörter werden nicht dauerhaft gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Kalenderexport und lokale Benachrichtigungen werden nur auf dem Gerät verarbeitet.
+Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Passwörter werden nicht dauerhaft gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
 
 Support text:
 

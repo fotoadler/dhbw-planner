@@ -84,6 +84,7 @@ export const APP_STORE_DEMO_SETTINGS: AppSettings = {
   calendarHourHeight: 64,
   themeMode: 'auto',
   defaultCalendarView: 'day',
+  calendarSyncEnabled: false,
 };
 
 /** Ebenfalls nur Beispieldaten: keine Dualis-Informationen einer Person. */

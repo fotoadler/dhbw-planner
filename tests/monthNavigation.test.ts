@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { Capacitor } from '@capacitor/core';
 import { DEFAULT_SETTINGS } from '../src/store/preferences';
 import { monthWeekKeys } from '../src/ui/monthLayout';
 import type { ScheduleEntry } from '../src/types';
@@ -107,5 +108,17 @@ describe('Monatsnavigation in der App', () => {
     expect([...select.options].map((option) => option.value)).toEqual(['day', 'week', 'month']);
     act(() => { select.value = 'month'; select.dispatchEvent(new Event('change', { bubbles: true })); });
     expect(applySettings).toHaveBeenCalledWith(expect.objectContaining({ defaultCalendarView: 'month' }));
+  });
+
+  it('führt in der nativen App zu den Kalender-Einstellungen und bietet keinen ICS-Export mehr an', () => {
+    expect(container.querySelector('[aria-label="Als Kalenderdatei teilen"]')).toBeNull();
+    expect(container.querySelector('[aria-label="Kalendersynchronisierung"]')).toBeNull();
+    const native = vi.spyOn(Capacitor, 'isNativePlatform').mockReturnValue(true);
+    try {
+      act(() => root.render(createElement(App)));
+      click('[aria-label="Kalendersynchronisierung"]');
+      expect(container.textContent).toContain('Mit Gerätekalender synchronisieren');
+      expect(container.querySelector('[aria-label="Als Kalenderdatei teilen"]')).toBeNull();
+    } finally { native.mockRestore(); }
   });
 });

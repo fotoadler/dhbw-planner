@@ -25,6 +25,7 @@ import {
 } from '../store/lecturerDirectory';
 import { initNotifications, syncNotifications } from '../notifications/scheduler';
 import { nextLiveActivityTransition, syncCourseLiveActivity } from '../liveActivity/scheduler';
+import { syncDeviceCalendar } from '../calendar/sync';
 import {
   APP_STORE_DEMO_ENTRIES,
   APP_STORE_DEMO_SETTINGS,
@@ -245,6 +246,7 @@ export function useSchedule() {
       );
       await syncNotifications(filled, activeSettings);
       await syncCourseLiveActivity(filled, activeSettings, now);
+      await syncDeviceCalendar(filled, activeSettings, failedWeeks.length === 0, now);
     } catch {
       // Offline/Netzwerkfehler: letzter Cache bleibt sichtbar, Notifications
       // bleiben auf Basis des Caches geplant.
@@ -310,6 +312,7 @@ export function useSchedule() {
         );
         await syncNotifications(filled, activeSettings);
         await syncCourseLiveActivity(filled, activeSettings, now);
+        await syncDeviceCalendar(filled, activeSettings, false, now);
       } catch {
         /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
       } finally {
@@ -373,6 +376,7 @@ export function useSchedule() {
         );
         await syncNotifications(filled, next);
         await syncCourseLiveActivity(filled, next);
+        await syncDeviceCalendar(filled, next);
       }
     },
     [refresh, reviewDemo],

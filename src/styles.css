@@ -2588,3 +2588,26 @@ option {
   from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
 }
+
+
+/* Aktuelle Uhrzeit in der Wochenansicht (nur in der Spalte des heutigen Tages). */
+.weekview__nowline {
+  position: absolute;
+  z-index: 4;
+  left: -1px;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.weekview__nowline::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}

@@ -2,6 +2,16 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## 1.5.0 - 2026-10-11
+
+- Monatsansicht mit Wischnavigation und Tagesübersicht im Detailfenster.
+- Jetzt-Linie in Berliner Ortszeit und passende Wochenendanzeige in der aktuellen Woche.
+- Direkter automatischer Abgleich geladener Termine mit dem Gerätekalender, einschließlich Kurswechsel und Modulfilter; ICS-Export entfällt.
+- Verbesserte Dualis-Navigation und Notenanzeige sowie Terminfarben und Rasterdarstellung.
+- iOS-27-Startabsturz durch Einführung des Scene-Lebenszyklus behoben; native Buildkonfiguration modernisiert.
+- Android-Mailansicht fordert die mobile Webmail-Seite auch auf Tablets an; Viewport wird korrekt eingepasst.
+- Android-16-Zurück-Geste aus Issue #33 bleibt auf einem realen Gerät unbestätigt.
+
 ## 1.4.2 - 2026-08-20
 
 ### Funktionen und Darstellung

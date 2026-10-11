@@ -5,11 +5,18 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.4.2` (`package.json`: `1.4.2`)
-- Current iOS build: `12`
-- Current Android versionCode: `9`
+- Current app version: `1.5.0` (`package.json`: `1.5.0`)
+- Current iOS build: `13`
+- Current Android versionCode: `11`
+- Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
 
-## Version 1.4.2 — Update descriptions
+## Version 1.5.0 — Update descriptions
+
+### Google Play „Was ist neu“ und App Store „Neu in dieser Version“
+
+Neue Monatsansicht mit Wischnavigation und Tagesdetails sowie eine Jetzt-Linie in der Wochenansicht. Dazu kommen die automatische Gerätekalender-Synchronisierung und Verbesserungen bei Wochenenden, Dualis und Stabilität.
+
+## Version 1.4.2 — Previous update descriptions
 
 ### Google Play „Was ist neu“
 
@@ -25,17 +32,23 @@ Verbesserte Navigation und Darstellung:
 
 Diese Version verbessert die Navigation zwischen Tagen und Wochen, verhindert unbeabsichtigtes vertikales Scrollen bei horizontalen Wischbewegungen und korrigiert falsche Dozentenanzeigen. Außerdem wurden Live Activities, der Startbildschirm und die Einstellungen weiter überarbeitet.
 
-This is a new app identity.
+## Validation — 11 October 2026
 
-## Current Local Status
+- Web production build and all 360 tests (38 files) passed.
+- Capacitor sync passed for Android and iOS; plugin sources are versioned.
+- Signed Android release APK and bundle built with OpenJDK 21: version 1.5.0, versionCode 11, target API 36.
+- Android build 11 installed and launched on a physical Samsung Galaxy Tab A7 Lite (SM-T220). Ravensburg OWA now renders its mobile login view with all form controls visible; horizontal swipe does not shift the page. Authentication and mailbox contents were not tested.
+- Four existing embedded-mail native layout regression tests passed after the Android fix.
+- Signed iOS release archive: version 1.5.0, build 13, app minimum iOS 15; App Store Connect upload succeeded.
+- Android 16 back gesture from issue #33 remains unverified on a physical Android 16 device.
 
-- Web build works: `npm run build`
-- Tests pass: `npm test`
-- Capacitor sync works: `npx cap sync` (CocoaPods needs a UTF-8 locale, e.g. `LANG=en_US.UTF-8`)
-- Android debug build works with Java 21
-- Signed Android release bundle works: `./gradlew bundleRelease` with `android/release-signing.properties` in place
-- iOS release build for `generic/platform=iOS` compiles; archiving and signing happen in Xcode
-- Custom app icon and splash assets are generated in `assets/` and copied into native projects
+## Store submission — 11 October 2026
+
+- App Store Connect: 1.5.0 (13) uploaded and submitted; status **Warten auf Prüfung**. Submission ID: `9ce5aa9c-9b17-4a35-8945-507ee435333d`. Automatic release after approval.
+- Google Play: production release 1.5.0 with bundle 11 sent; status **Änderungen, die überprüft werden** (automated prechecks still running). Full rollout after approval; managed publishing remains off.
+- Bundle 10 was superseded before submission by bundle 11 with the physical-tablet webmail correction. Bundle 9 (1.4.2 / API 23) stays included for older devices; Google reports no loss of available device models. New 1.5.0 updates require API 24.
+- Only Play warnings: missing R8/ProGuard mapping for bundles 9 and 11; release builds do not enable minification, so no mapping file exists.
+- Both stores received the brief German update description above. Approval and live availability are pending.
 
 ## Store Listing Draft
 
@@ -45,7 +58,7 @@ DHBW Planner zeigt deinen DHBW-Stundenplan kompakt als Tages-, Wochen- und Monat
 
 Full description:
 
-DHBW Planner ist eine schlanke App für Studierende der DHBW. Im geführten Modus wählst du Standort, Studiengang und Kurs direkt in der App aus; ein Rapla-Link kann weiterhin als manueller Modus verwendet werden. Der Stundenplan wird lokal auf deinem Gerät gespeichert und in einer schnellen Tages- und Wochenansicht angezeigt. Vergangene Wochen sind verfügbar, soweit die jeweilige Quelle die Termine bereitstellt. Optional können Modulnoten und Prüfungsleistungen direkt aus Dualis angezeigt werden.
+DHBW Planner ist eine schlanke App für Studierende der DHBW. Im geführten Modus wählst du Standort, Studiengang und Kurs direkt in der App aus; ein Rapla-Link kann weiterhin als manueller Modus verwendet werden. Der Stundenplan wird lokal auf deinem Gerät gespeichert und in einer schnellen Tages-, Wochen- und Monatsansicht angezeigt. Vergangene Wochen sind verfügbar, soweit die jeweilige Quelle die Termine bereitstellt. Optional können Modulnoten und Prüfungsleistungen direkt aus Dualis angezeigt werden.
 
 Funktionen:
 
@@ -56,7 +69,7 @@ Funktionen:
 - Automatische Mensa passend zum DHBW-Standort mit manueller Auswahlmöglichkeit
 - Suchbare Modulfilter zum Ausblenden einzelner Vorlesungen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
-- Export als Kalenderdatei
+- Optionale automatische Synchronisierung mit dem Gerätekalender
 - Lokale Erinnerungen vor Uni-Terminen
 - Pull-to-refresh für Aktualisierungen
 - Dualis-Ansicht für Modulnoten und Prüfungen
@@ -65,7 +78,7 @@ Funktionen:
 
 Privacy summary:
 
-Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Passwörter werden nicht dauerhaft gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
+Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Zugangsdaten werden nur auf Wunsch im geschützten Gerätespeicher gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
 
 Support text:
 

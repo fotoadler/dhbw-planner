@@ -277,7 +277,7 @@ export function App() {
     }
   } else if (activeCalendarView === 'month') {
     title = monthTitle(selectedDay);
-    subtitle = 'Monatsübersicht';
+    subtitle = null;
   } else {
     title = `KW ${isoWeekNumber(parseYmdKey(monday))}`;
     subtitle = formatWeekRange(parseYmdKey(monday));

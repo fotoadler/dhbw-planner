@@ -942,7 +942,6 @@ option {
   margin-bottom: 8px;
 }
 .monthview__navigation button { width: 44px; height: 44px; flex-shrink: 0; font-size: 24px; color: var(--ink); }
-.monthview__navigation span { font-size: 12px; color: var(--ink-3); text-align: center; }
 .monthview__weekdays, .monthview__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .monthview__weekdays span { text-align: center; font-size: 11px; color: var(--ink-3); padding: 4px 0 10px; }
 .monthview__grid { flex: 1; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }

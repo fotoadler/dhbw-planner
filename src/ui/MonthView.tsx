@@ -18,7 +18,6 @@ export function MonthView({ selectedDay, today, entriesByDay, onSelectDay, onShi
     <section className="monthview" aria-label="Monatsansicht">
       <nav className="monthview__navigation" aria-label="Monat wechseln">
         <button type="button" onClick={() => onShiftMonth(-1)} aria-label="Vorheriger Monat">‹</button>
-        <span>Tag antippen für Details</span>
         <button type="button" onClick={() => onShiftMonth(1)} aria-label="Nächster Monat">›</button>
       </nav>
       <div className="monthview__weekdays" aria-hidden="true">

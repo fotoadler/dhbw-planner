@@ -127,3 +127,38 @@ describe('Dualis-Cookie-Transport unter Android', () => {
     ]);
   });
 });
+
+describe('Dualis-Anmeldung für VS unter iOS', () => {
+  it('folgt weiteren Refresh-Headern bis zum Studentenmenü und normalisiert die Matrikelnummer', async () => {
+    platform = 'ios';
+    httpGet.mockResolvedValueOnce({ status: 200, data: '<html></html>', headers: { Refresh: `0; URL=/scripts/mgrqispi.dll?PRGNAME=MENU&ARGUMENTS=-N${TOKEN}` } });
+    httpGet.mockResolvedValueOnce({ status: 200, data: MAIN_PAGE, headers: {} });
+    const client = new DualisClient('VS');
+    await client.login({ username: '1234567', password: 'synthetic-test-only' });
+    expect(new URLSearchParams(httpPost.mock.calls[0][0].data).get('usrname')).toBe('d1234567h@dhbw-vs.de');
+    expect(httpGet).toHaveBeenCalledTimes(2);
+    expect(client.isLoggedIn).toBe(true);
+  });
+  it('erkennt ein zurückgeliefertes Loginformular als abgelehnte Anmeldung', async () => {
+    platform = 'ios';
+    httpGet.mockResolvedValue({ status: 200, data: '<form id="newLogin"><input name="usrname"><input name="pass" type="password"></form>', headers: {} });
+    const client = new DualisClient('VS');
+    await expect(client.login({ username: '1234567', password: 'synthetic-test-only' })).rejects.toMatchObject({ reason: 'login-failed' });
+    expect(client.isLoggedIn).toBe(false);
+  });
+  it('behält bei unbekanntem Menü keine erfolgreich wirkende Sitzung zurück', async () => {
+    platform = 'ios';
+    httpGet.mockResolvedValue({ status: 200, data: '<html>Unbekanntes Menü</html>', headers: {} });
+    const client = new DualisClient('VS');
+    await expect(client.login({ username: '1234567', password: 'synthetic-test-only' })).rejects.toMatchObject({ reason: 'parse-failed' });
+    expect(client.isLoggedIn).toBe(false);
+  });
+  it('begrenzt eine zyklische Weiterleitung und gibt die Sitzung frei', async () => {
+    platform = 'ios';
+    httpGet.mockResolvedValue({ status: 200, data: '', headers: { Refresh: `0; URL=${DISPATCH}` } });
+    const client = new DualisClient('VS');
+    await expect(client.login({ username: '1234567', password: 'synthetic-test-only' })).rejects.toMatchObject({ reason: 'parse-failed' });
+    expect(httpGet).toHaveBeenCalledOnce();
+    expect(client.isLoggedIn).toBe(false);
+  });
+});

@@ -180,7 +180,7 @@ function parseBlock(cell: Element, y: number, m: number, d: number): ScheduleEnt
   }
 
   const course = resources.find(isCourseCode);
-  const rooms = resources.filter((r) => r !== course);
+  const rooms = resources.filter((r) => !isCourseCode(r));
 
   return {
     start: berlinToUtc(y, m, d, +sh, +sm),

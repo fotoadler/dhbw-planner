@@ -20,6 +20,13 @@ describe('Dualis username input', () => {
     expect(normalizeDualisUsername('h.mueller', 'MOS')).toBe('h.mueller@lehre.mosbach.dhbw.de');
   });
 
+  it('normalizes VS matriculation numbers to the officially documented Dualis ID', () => {
+    expect(normalizeDualisUsername('1234567', 'VS')).toBe('d1234567h@dhbw-vs.de');
+    expect(normalizeDualisUsername('d1234567h', 'VS')).toBe('d1234567h@dhbw-vs.de');
+    expect(normalizeDualisUsername('d1234567h@dhbw-vs.de', 'VS')).toBe('d1234567h@dhbw-vs.de');
+    expect(normalizeDualisUsername('1234567', 'RV')).toBe('1234567@stud.dhbw-ravensburg.de');
+  });
+
   it('does not guess a domain for a site with multiple account domains', () => {
     expect(normalizeDualisUsername('student123', 'FN')).toBe('student123');
     expect(normalizeDualisUsername('student123@it.dhbw-ravensburg.de', 'FN')).toBe(

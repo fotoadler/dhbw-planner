@@ -75,7 +75,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   hiddenModules: [],
   calendarHourHeight: 64,
   themeMode: 'auto',
-  defaultCalendarView: 'day',
+  defaultCalendarView: 'week',
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -178,7 +178,7 @@ function parseSettings(raw: unknown): AppSettings {
     hiddenModules: parseHiddenModules(data.hiddenModules),
     calendarHourHeight,
     themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
-    defaultCalendarView: data.defaultCalendarView === 'week' ? 'week' : DEFAULT_SETTINGS.defaultCalendarView,
+    defaultCalendarView: data.defaultCalendarView === 'day' || data.defaultCalendarView === 'week' ? data.defaultCalendarView : DEFAULT_SETTINGS.defaultCalendarView,
   };
 }
 

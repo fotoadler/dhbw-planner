@@ -9,6 +9,8 @@ import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
+import { WeekEventSheet } from './WeekEventSheet';
+import type { ScheduleEntry } from '../types';
 import { CourseView } from './CourseView';
 import { SettingsView } from './SettingsView';
 import { DualisView } from './DualisView';
@@ -57,6 +59,7 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showHiddenModules, setShowHiddenModules] = useState(false);
   const [confirmModuleKey, setConfirmModuleKey] = useState<string | null>(null);
+  const [weekDetails, setWeekDetails] = useState<{ day: string; entries: ScheduleEntry[] } | null>(null);
 
   const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
@@ -88,6 +91,7 @@ export function App() {
   useBackButton(() => {
     const action = resolveBackAction({
       showSettings: inSettings,
+      weekDetailsOpen: Boolean(weekDetails),
       selectedBlockKey,
       section,
       calendarView: activeCalendarView,
@@ -95,6 +99,9 @@ export function App() {
       dualisLoggedIn: dualis.loginState === 'logged-in',
     });
     switch (action) {
+      case 'close-week-details':
+        setWeekDetails(null);
+        return true;
       case 'close-settings':
         setShowSettings(false);
         if (section === 'settings') setSection('calendar');
@@ -117,6 +124,7 @@ export function App() {
   });
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
+  useEffect(() => { setWeekDetails(null); }, [monday, section, activeCalendarView, inSettings]);
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => ymdKey(addDaysYmd(parseYmdKey(monday), i))),
@@ -456,10 +464,17 @@ export function App() {
             selectDay(day);
             setCalendarView('day');
           }}
+          onSelectEntries={(day, selectedEntries) => setWeekDetails({ day, entries: selectedEntries })}
           onSwipeWeek={(delta) => selectDay(ymdKey(addDaysYmd(parseYmdKey(monday), delta * 7)))}
         />
       ) : (
         <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
+      )}
+
+      {weekDetails && inCalendar && activeCalendarView === 'week' && (
+        <WeekEventSheet day={weekDetails.day} entries={weekDetails.entries}
+          onClose={() => setWeekDetails(null)}
+          onOpenDay={(day) => { setWeekDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
 
       {/* In-App Bestätigungs-Dialog */}

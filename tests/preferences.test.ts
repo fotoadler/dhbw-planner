@@ -26,11 +26,16 @@ describe('Kalender-Standardansicht in den Preferences', () => {
     await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'week' });
   });
 
-  it('verwendet für alte oder ungültige Werte die Tagesansicht', async () => {
+  it('verwendet für alte oder ungültige Werte die Wochenansicht', async () => {
     preferencesGet.mockResolvedValue({
       value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'month' } }),
     });
 
+    await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'week' });
+  });
+
+  it('behält eine ausdrücklich gewählte Tagesansicht', async () => {
+    preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { defaultCalendarView: 'day' } }) });
     await expect(loadSettings()).resolves.toMatchObject({ defaultCalendarView: 'day' });
   });
 });

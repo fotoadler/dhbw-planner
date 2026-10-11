@@ -31,6 +31,13 @@ describe('parseRaplaWeek (Rapla 2.0 DOM)', () => {
     expect(e.rooms).toEqual(['WS17-0.13 Hörsaal']);
   });
 
+  it('klassifiziert bei gemeinsamen Veranstaltungen keinen zweiten Kurs als Raum', () => {
+    const fixture = WEEK_FIXTURE.replace('<span class="resource">DH-WINF24A</span>', '<span class="resource">FN-TMK25-1</span><span class="resource">FN-TMK25-2</span>');
+    const entry = parseRaplaWeek(fixture).find((e) => e.title === 'Onlinemarketing')!;
+    expect(entry.course).toBe('FN-TMK25-1');
+    expect(entry.rooms).toEqual(['WS17-0.13 Hörsaal']);
+  });
+
   it('trennt den Zusatz in spitzen Klammern vom Titel', () => {
     const e = entries.find((x) => x.title === 'Onlinemarketing')!;
     expect(e.extra).toBe('Maximilian Zorg');

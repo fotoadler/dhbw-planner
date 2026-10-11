@@ -63,6 +63,11 @@ describe('resolveBackAction', () => {
     expect(resolveBackAction(state({ calendarView: 'week' }))).toBe('to-calendar-day');
   });
 
+  it('schließt zuerst die Wochendetails und bleibt dabei in der Wochenansicht', () => {
+    expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: true }))).toBe('close-week-details');
+    expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: false }))).toBe('to-calendar-day');
+  });
+
   it('baut den Zustand Ebene für Ebene ab, statt mehrere zu überspringen', () => {
     const deep = state({
       showSettings: true,

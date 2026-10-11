@@ -227,8 +227,8 @@ export const SITE_CONFIGURATIONS: Readonly<Record<string, DhbwSiteConfiguration>
     dualis: {
       usernameMode: 'email-domain',
       emailDomain: 'dhbw-vs.de',
-      usernameHint: 'DHBW-UserID oder vollständige DHBW-Adresse',
-      description: 'UserID genügt; @dhbw-vs.de wird ergänzt.',
+      usernameHint: 'Matrikelnummer, DHBW-UserID oder Dualis-Adresse',
+      description: 'Dualis nutzt d<Matrikelnummer>h@dhbw-vs.de. Eine reine Matrikelnummer wird automatisch ergänzt.',
     },
     mail: {
       site: 'VS',
@@ -310,6 +310,7 @@ export function dualisUsernameFor(username: string, site: string | undefined = '
   const value = username.trim();
   const dualis = siteConfigurationFor(site).dualis;
   if (!value || value.includes('@') || dualis.usernameMode !== 'email-domain' || !dualis.emailDomain) return value;
+  if (normalizeSiteCode(site) === 'VS' && /^\d+$/.test(value)) return `d${value}h@${dualis.emailDomain}`;
   return `${value}@${dualis.emailDomain}`;
 }
 

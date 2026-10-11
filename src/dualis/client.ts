@@ -27,6 +27,7 @@ interface HttpResponse {
   status: number;
   data: string;
   headers: Record<string, string>;
+  url?: string;
 }
 
 export class DualisError extends Error {
@@ -58,6 +59,18 @@ export class DualisClient {
   }
 
   async login(credentials: DualisCredentials): Promise<void> {
+    try {
+      await this.performLogin(credentials);
+    } catch (error) {
+      this.credentials = null;
+      this.urls = { semesters: {} };
+      this.accessToken = null;
+      this.cookies.clear();
+      throw error;
+    }
+  }
+
+  private async performLogin(credentials: DualisCredentials): Promise<void> {
     const normalizedCredentials = {
       ...credentials,
       username: normalizeDualisUsername(credentials.username, this.site),
@@ -75,9 +88,8 @@ export class DualisClient {
       PRGNAME: 'LOGINCHECK',
       ARGUMENTS: 'clino,usrname,pass,menuno,menu_type,browser,platform',
       clino: '000000000000001',
-      // This is the menu number submitted by the current Dualis login form.
-      // 000324 is the public Home menu and can lead to a successful-looking
-      // redirect without an authenticated student menu.
+      // Use the student entry point. The public Home form uses 000324;
+      // its dispatch can look successful without an authenticated student menu.
       menuno: '000000',
       menu_type: 'classic',
       browser: '',
@@ -91,33 +103,44 @@ export class DualisClient {
     // CampusNet has returned both a Refresh header and an HTML/JavaScript
     // redirect over time. Supporting both variants keeps native logins from
     // failing merely because the redirect transport changed.
-    const redirectUrl =
+    const initialRedirect =
       extractRefreshUrl(header(loginResponse.headers, 'refresh')) ?? extractRedirectUrl(loginResponse.data);
-    if (!redirectUrl) {
+    if (!initialRedirect) {
       throw new DualisError(
         `Anmeldung abgelehnt. ${siteConfigurationFor(this.site).dualis.description}`,
         'login-failed',
       );
     }
 
-    const redirectPage = await this.request('GET', redirectUrl);
-    const mainUrl = extractRedirectUrl(redirectPage.data) ??
-      (extractAccessToken(redirectUrl) ? redirectUrl : null);
-    if (!mainUrl) {
-      throw new DualisError('Dualis-Hauptseite konnte nach dem Login nicht gefunden werden.', 'login-failed');
+    let redirectUrl: string = initialRedirect;
+    const visited = new Set<string>();
+    for (let hop = 0; hop < 6; hop += 1) {
+      if (visited.has(redirectUrl)) break;
+      visited.add(redirectUrl);
+      const target = new URL(redirectUrl);
+      if (target.origin !== DUALIS_ENDPOINT) {
+        throw new DualisError('Dualis hat eine unerwartete Anmeldeseite geliefert.', 'login-failed');
+      }
+      const page = await this.request('GET', redirectUrl);
+      const pageUrl: string = page.url ?? redirectUrl;
+      if (page.status !== 200 || isTimeoutOrAccessDenied(page.data)) {
+        throw new DualisError(`Anmeldung abgelehnt. ${siteConfigurationFor(this.site).dualis.description}`, 'login-failed');
+      }
+      const urls = parseMainPageUrls(page.data);
+      // A dispatch page can redirect again by header OR HTML. Do not treat it
+      // as the student's menu, nor request a successfully parsed menu twice.
+      if (urls.studentResults && urls.courseResults) {
+        const token = extractAccessToken(pageUrl) ?? extractAccessToken(urls.studentResults);
+        if (!token) throw new DualisError('Dualis hat keine gültige Sitzung geliefert.', 'login-failed');
+        this.accessToken = token;
+        this.urls = { ...urls, main: pageUrl, semesters: {} };
+        return;
+      }
+      const next: string | null = extractRefreshUrl(header(page.headers, 'refresh'), pageUrl) ?? extractRedirectUrl(page.data, pageUrl);
+      if (!next) throw new DualisError('Dualis-Menüpunkte konnten nicht gelesen werden.', 'parse-failed');
+      redirectUrl = next;
     }
-
-    this.accessToken = extractAccessToken(mainUrl);
-    const mainPage = await this.request('GET', mainUrl);
-    this.urls = { ...parseMainPageUrls(mainPage.data), main: mainUrl, semesters: {} };
-
-    if (isTimeoutOrAccessDenied(mainPage.data)) {
-      throw new DualisError('Dualis-Anmeldung ist abgelaufen oder wurde abgelehnt.', 'login-failed');
-    }
-
-    if (!this.urls.studentResults || !this.urls.courseResults) {
-      throw new DualisError('Dualis-Menüpunkte konnten nicht gelesen werden.', 'parse-failed');
-    }
+    throw new DualisError('Dualis-Weiterleitung konnte nicht abgeschlossen werden.', 'parse-failed');
   }
 
   async logout(): Promise<void> {
@@ -215,12 +238,13 @@ export class DualisClient {
         this.storeCookies(response.headers);
         await this.discardNativeCookieJar(currentUrl);
 
-        if (!Capacitor.isNativePlatform() || !isRedirect(response.status)) return response;
+        if (!Capacitor.isNativePlatform() || !isRedirect(response.status)) return { ...response, url: response.url ?? currentUrl };
 
         const location = header(response.headers, 'location');
         if (!location) return response;
 
         currentUrl = new URL(location, currentUrl).toString();
+        if (new URL(currentUrl).origin !== DUALIS_ENDPOINT) throw new DualisError('Unerwartete Dualis-Weiterleitung.', 'network');
         if (response.status === 301 || response.status === 302 || response.status === 303) {
           currentMethod = 'GET';
           currentBody = undefined;
@@ -276,6 +300,7 @@ export class DualisClient {
       status: res.status,
       data: await res.text(),
       headers: normalizeHeaders(Object.fromEntries(res.headers.entries())),
+      url: res.url ? res.url.replace(/^.*\/dualis(?=\/)/, DUALIS_ENDPOINT) : url,
     };
   }
 

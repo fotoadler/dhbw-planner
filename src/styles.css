@@ -942,12 +942,52 @@ option {
   background: repeating-linear-gradient(
     to bottom,
     var(--line) 0 1px,
-    transparent 1px 64px
+    transparent 1px var(--weekview-hour-height, 64px)
   );
 }
 
 .weekview__times {
   position: relative;
+}
+
+.weekview__now {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+  color: var(--accent-strong);
+}
+
+.weekview__now-label {
+  position: absolute;
+  width: 42px;
+  box-sizing: border-box;
+  padding: 1px 2px;
+  transform: translateY(-50%);
+  background: var(--bg);
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__now-line {
+  position: absolute;
+  left: 44px;
+  right: 0;
+  border-top: 2px solid currentColor;
+  transform: translateY(-1px);
+}
+
+.weekview__now-dot {
+  position: absolute;
+  top: -4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .weekview__hour {
@@ -1049,7 +1089,8 @@ option {
 }
 
 .weekview__parallel-item {
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1059,11 +1100,72 @@ option {
   font-weight: 600;
 }
 
+.weekview__parallel-item > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weekview__notices {
+  display: grid;
+  padding-right: 12px;
+  border-bottom: 1px solid var(--line);
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.weekview__notice-label { font-size: 9px; color: var(--ink-3); padding: 6px 2px; }
+.weekview__notice-day { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding: 4px 2px; border-left: 1px solid var(--line); }
+.weekview__notice { min-width: 0; padding: 5px 3px; border-radius: 5px; font-size: 10px; line-height: 13px; background: var(--bg-soft); color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.weekview__notice--exam { background: var(--calendar-exam); color: var(--calendar-exam-text); }
+
+.weekdetails-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgb(0 0 0 / 18%);
+  display: flex;
+  align-items: flex-end;
+}
+
+.weekdetails {
+  width: 100%;
+  height: 36dvh;
+  min-height: 240px;
+  max-height: calc(100dvh - 24px - var(--safe-top));
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 32px rgb(0 0 0 / 16%);
+  padding-bottom: var(--safe-bottom);
+}
+
+.weekdetails__header { padding: 8px 18px 10px; touch-action: none; cursor: grab; }
+.weekdetails__handle { display: block; width: 36px; height: 4px; margin: 0 auto 10px; border-radius: 8px; background: var(--ink-3); }
+.weekdetails__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.weekdetails__heading h2 { margin: 0; font-size: 15px; }
+.weekdetails__heading p { margin: 3px 0 0; font-size: 12px; color: var(--ink-3); }
+.weekdetails__close { flex: 0 0 40px; height: 40px; font-size: 26px; color: var(--ink-3); }
+.weekdetails__content { overflow-y: auto; overscroll-behavior-y: contain; padding: 0 18px; min-height: 0; flex: 1; }
+.weekdetails__entry { border-left: 3px solid var(--calendar-event-accent); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; background: var(--bg-soft); }
+.weekdetails__entry--exam { border-left-color: var(--calendar-exam-accent); background: var(--calendar-exam); color: var(--calendar-exam-text); }
+.weekdetails__entry h3 { font-size: 15px; margin: 0 0 5px; }
+.weekdetails__entry p { font-size: 12px; margin: 3px 0; overflow-wrap: anywhere; }
+.weekdetails__entry .weekdetails__time { font-weight: 600; font-variant-numeric: tabular-nums; margin: 0 0 5px; }
+.weekdetails__footer { padding: 10px 18px; border-top: 1px solid var(--line); }
+.weekdetails__footer button { color: var(--accent); font-weight: 600; font-size: 13px; padding: 5px 0; }
+.weekdetails button:focus-visible, .weekview button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 .weekview__event.is-compact {
   gap: 0;
   padding-top: 3px;
   padding-bottom: 3px;
 }
+
+.weekview__event.is-tiny { padding: 0 2px; gap: 0; justify-content: center; }
+.weekview__event.is-tiny .weekview__etitle { display: none; }
+.weekview__event.is-tiny .weekview__etime { font-size: 9px; line-height: 11px; }
 
 .weekview__event--holiday {
   border-left-color: var(--ink-3);

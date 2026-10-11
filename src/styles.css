@@ -994,11 +994,12 @@ option {
   display: grid;
   border-bottom: 1px solid var(--line);
   /* Feine Stundenlinien über die ganze Breite */
-  background: repeating-linear-gradient(
+  --weekview-hour-lines: repeating-linear-gradient(
     to bottom,
     var(--line) 0 1px,
     transparent 1px var(--weekview-hour-height, 64px)
   );
+  background: var(--weekview-hour-lines);
 }
 
 .weekview__times {
@@ -1063,7 +1064,8 @@ option {
 }
 
 .weekview__col.is-today {
-  background: var(--calendar-today);
+  /* Die Heute-Farbe darf das Stundenraster nicht überdecken. */
+  background: var(--weekview-hour-lines) var(--calendar-today);
 }
 
 .weekview__event {

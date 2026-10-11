@@ -150,6 +150,7 @@ export function useSchedule() {
   const updatedAtRef = useRef(updatedAt);
   updatedAtRef.current = updatedAt;
   const refreshGenerationRef = useRef(0);
+  const calendarSnapshotCompleteRef = useRef(false);
   const inFlightWeeksRef = useRef(new Map<string, Promise<void>>());
   const cacheWriteChainRef = useRef(Promise.resolve());
   const cacheMetaRef = useRef<{ sourceKey?: string; etag?: string }>({});
@@ -244,9 +245,13 @@ export function useSchedule() {
         applyLecturerDirectory(flatten(merged), nextDir),
         activeSettings.hiddenModules,
       );
-      await syncNotifications(filled, activeSettings);
-      await syncCourseLiveActivity(filled, activeSettings, now);
-      await syncDeviceCalendar(filled, activeSettings, failedWeeks.length === 0, now);
+      calendarSnapshotCompleteRef.current = failedWeeks.length === 0;
+      // Calendar writes must not wait for notification permission or Live Activity work.
+      await Promise.all([
+        syncDeviceCalendar(filled, activeSettings, calendarSnapshotCompleteRef.current, now),
+        syncNotifications(filled, activeSettings),
+        syncCourseLiveActivity(filled, activeSettings, now),
+      ]);
     } catch {
       // Offline/Netzwerkfehler: letzter Cache bleibt sichtbar, Notifications
       // bleiben auf Basis des Caches geplant.
@@ -310,9 +315,11 @@ export function useSchedule() {
           applyLecturerDirectory(flatten(merged), nextDir),
           activeSettings.hiddenModules,
         );
-        await syncNotifications(filled, activeSettings);
-        await syncCourseLiveActivity(filled, activeSettings, now);
-        await syncDeviceCalendar(filled, activeSettings, false, now);
+        await Promise.all([
+          syncDeviceCalendar(filled, activeSettings, false, now),
+          syncNotifications(filled, activeSettings),
+          syncCourseLiveActivity(filled, activeSettings, now),
+        ]);
       } catch {
         /* Woche bleibt leer — Offline-Banner zeigt der reguläre Refresh. */
       } finally {
@@ -361,6 +368,7 @@ export function useSchedule() {
       settingsRef.current = next;
       await saveSettings(next);
       if (sourceChanged) {
+        calendarSnapshotCompleteRef.current = false;
         refreshGenerationRef.current += 1;
         cacheMetaRef.current = {};
         setWeeks({});
@@ -374,9 +382,11 @@ export function useSchedule() {
           applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
           next.hiddenModules,
         );
-        await syncNotifications(filled, next);
-        await syncCourseLiveActivity(filled, next);
-        await syncDeviceCalendar(filled, next);
+        await Promise.all([
+          syncDeviceCalendar(filled, next, calendarSnapshotCompleteRef.current),
+          syncNotifications(filled, next),
+          syncCourseLiveActivity(filled, next),
+        ]);
       }
     },
     [refresh, reviewDemo],

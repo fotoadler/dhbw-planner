@@ -4,15 +4,15 @@ Die installierte App synchronisiert nach ausdrücklicher Aktivierung einen eigen
 
 ## Abgleich
 
-- Zeitraum: Berliner Mitternacht sieben Tage zurück bis 90 Tage voraus. Diese Obergrenze liegt auch sonntags innerhalb des vollständig geladenen Rapla-Fensters.
+- Zeitraum: sämtliche geladenen Termine einschließlich vergangener Semester. Der bisher geschriebene Datumsbereich wird gespeichert und bei späteren Kurswechseln mit geprüft. EventKit-Abfragen werden in Abschnitte von höchstens drei Jahren unterteilt, damit dessen Vierjahresgrenze keine Termine auslässt.
 - Gefilterte Module werden berücksichtigt. Titel, Zeiten, Räume, Dozenten und Kursangaben werden übertragen.
 - Android verwendet einen lokalen Kalender mit fester App-Kennung. iOS speichert die Kennung des angelegten EventKit-Kalenders und bevorzugt eine lokale Quelle; alternativ wird die Quelle des Standardkalenders verwendet.
 - Nur Termine mit gültiger App-Markierung im eigenen Kalender werden geändert oder gelöscht. Andere Kalender und manuelle Einträge bleiben bestehen.
 - Identität: SHA-256 aus Beginn, Titel und Kurs. Raum-/Dozenten-/Endzeitänderungen aktualisieren denselben Termin; ein verschobener oder umbenannter Termin ersetzt den bisherigen beim vollständigen Abgleich.
 - Native Schreibvorgänge laufen seriell. Überholte, noch nicht gestartete Snapshots werden übersprungen. Zuerst werden alle aktuellen Termine gespeichert, danach darf gelöscht werden.
-- Löschungen erfolgen ausschließlich nach vollständigen erfolgreichen Abrufen. Einstellungen, Cache- und einzelne Wochenabrufe dürfen ergänzen, aber nicht löschen. Kalenderfehler ändern den Online-Status des Stundenplans nicht.
+- Löschungen erfolgen ausschließlich nach vollständigen erfolgreichen Abrufen. Filteränderungen dürfen nach einem bestätigten vollständigen Abruf ebenfalls nicht mehr sichtbare App-Termine entfernen. Cache- und einzelne Wochenabrufe dürfen ergänzen, aber nicht löschen. Kalenderfehler ändern den Online-Status des Stundenplans nicht.
 - Ganztagsdaten werden als UTC-Datumswerte übertragen: Android erwartet diese Darstellung; iOS stellt Berliner Tagesgrenzen wieder her und setzt das Ganztagsmerkmal nach den Datumswerten. Sommerzeit kann einen Kalendertag auf 23 oder 25 Stunden begrenzen.
-- Deaktivierung pausiert den Abgleich und lässt vorhandene Termine bestehen. Historische Termine außerhalb des Fensters bleiben erhalten. Eine Aktualisierung bei geschlossener App wird nicht garantiert.
+- Deaktivierung pausiert den Abgleich und lässt vorhandene Termine bestehen. Eine Aktualisierung bei geschlossener App wird nicht garantiert.
 
 ## Lokale Prüfung am 11. Oktober 2026
 
@@ -22,7 +22,7 @@ Im Android-16-Emulator (API 36.1) wurde der native Capacitor-Aufruf in der gebau
 
 Auf einem frischen iOS-26.5-Simulator wurden dieselben Abgleichsfälle in einem isolierten EventKit-Testprogramm mit dem kompilierten Kalender-Plugin geprüft. Der Ganztagstermin am 29. März 2026 blieb auf den korrekten Berliner Datumstag begrenzt. Der Kalenderzugriff wurde dort über `simctl privacy` freigegeben; der iOS-Berechtigungsdialog selbst ist damit noch nicht geprüft.
 
-Android-Debug- und iOS-Simulator-Build wurden geprüft. Mit Xcode 27 benötigen bestehende Pods eine höhere Build-Mindestversion; der Simulator-Build verwendet daher den lokalen Parameter `IPHONEOS_DEPLOYMENT_TARGET=16.2`. Die Mindestversionen des Projekts werden dadurch nicht geändert.
+Android-Debug- und iOS-Simulator-Build wurden geprüft. Der versionierte Podfile-Hook hebt ältere Dependency-Targets auf die bestehende App-Mindestversion iOS 15 an; Xcode-27-Builds benötigen keinen lokalen Deployment-Target-Override. Die App verwendet den erforderlichen Scene-Lebenszyklus.
 
 ## Vor Veröffentlichung auf echten Geräten
 
@@ -36,3 +36,7 @@ Android-Debug- und iOS-Simulator-Build wurden geprüft. Mit Xcode 27 benötigen 
 ## Integration bei Capacitor-Builds
 
 Die native Implementierung liegt als lokales Paket unter `plugins/capacitor-calendar-sync`, wird in `package.json` referenziert und über die Capacitor-Metadaten automatisch registriert. Android-Berechtigungen stammen aus dem Plugin-Manifest; die iOS-Nutzungstexte stehen in der versionierten App-`Info.plist`. Native Quelltexte und Podspec werden nicht in generierte Build- oder Web-Asset-Dateien geschrieben. Ein erneutes `npx cap sync` erzeugt die Projektverweise und Registrierung aus diesen Quellen. Am 11. Oktober 2026 wurden zwei aufeinanderfolgende Sync-Läufe geprüft: Plugin-Quellen und iOS-Berechtigungstexte blieben unverändert; beide Plattformen enthielten weiterhin die Plugin-Registrierung.
+
+## Automatischer Abgleich über die echte iOS-Brücke
+
+Ein isolierter Simulator verwendet synthetische API-Antworten, aber den echten `useSchedule`-Hook, JavaScript-Abgleich, Preferences und EventKit-Plugin über die Capacitor-Brücke. Native Kalendereinträge wurden direkt in der Simulator-Kalenderdatenbank nachgewiesen: historischer Termin aus 2020 und aktueller Termin beim Start, Änderung/Entfernung bei normalem Refresh, Austausch sämtlicher alter Kurstermine beim Kurswechsel und Entfernung beim Ausblenden aller Module. Der geprüfte Datumsbereich reicht von 2020 bis 2027 und überschreitet damit die EventKit-Grenze einer einzelnen Abfrage. Der Teilen-Dialog wird dafür nicht aufgerufen. Benachrichtigungsplanung und Live Activities blockieren den Start des Kalenderabgleichs nicht.

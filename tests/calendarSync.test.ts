@@ -3,6 +3,11 @@ import { webcrypto } from 'node:crypto';
 import { DEFAULT_SETTINGS } from '../src/store/preferences';
 import type { ScheduleEntry } from '../src/types';
 const { native, getStatus, sync } = vi.hoisted(() => ({ native: vi.fn(), getStatus: vi.fn(), sync: vi.fn() }));
+const savedRange = new Map<string, string>();
+vi.mock('@capacitor/preferences', () => ({ Preferences: {
+  get: vi.fn(async ({ key }: { key: string }) => ({ value: savedRange.get(key) ?? null })),
+  set: vi.fn(async ({ key, value }: { key: string; value: string }) => { savedRange.set(key, value); }),
+} }));
 vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: native } }));
 vi.mock('@dhbw/capacitor-calendar-sync', () => ({ CalendarSync: { getStatus, sync } }));
 import { calendarEvent, calendarSyncRange, syncDeviceCalendar } from '../src/calendar/sync';
@@ -12,6 +17,7 @@ function entry(start = '2026-10-12T08:00:00+02:00', end = '2026-10-12T10:00:00+0
   return { start: new Date(start), end: new Date(end), title: 'Vorlesung', rooms: ['A1'], lecturers: ['Dozent Beispiel'], course: 'TINF', type: 'lecture' };
 }
 beforeEach(() => {
+  savedRange.clear();
   vi.stubGlobal('crypto', webcrypto); native.mockReturnValue(true);
   getStatus.mockResolvedValue({ available: true, permission: 'granted' });
   sync.mockResolvedValue({ count: 1 }); sync.mockClear(); getStatus.mockClear();
@@ -27,11 +33,11 @@ describe('Gerätekalender-Abgleich', () => {
     native.mockReturnValue(true); getStatus.mockResolvedValue({ available: true, permission: 'denied' });
     await syncDeviceCalendar([entry()], enabled, true, now); expect(sync).not.toHaveBeenCalled();
   });
-  it('dedupliziert Termine und begrenzt den Abgleich auf das bestätigte Zeitfenster', async () => {
+  it('dedupliziert Termine und übernimmt auch die in der App geladenen historischen Termine', async () => {
     await syncDeviceCalendar([entry(), entry(), entry('2026-01-01T08:00:00Z', '2026-01-01T09:00:00Z')], enabled, true, now);
     expect(sync).toHaveBeenCalledOnce();
-    expect(sync.mock.calls[0][0].events).toHaveLength(1);
-    expect(sync.mock.calls[0][0]).toMatchObject({ allowDelete: true, ...calendarSyncRange(now) });
+    expect(sync.mock.calls[0][0].events).toHaveLength(2);
+    expect(sync.mock.calls[0][0]).toMatchObject({ allowDelete: true, ...calendarSyncRange(now, [entry(), entry('2026-01-01T08:00:00Z', '2026-01-01T09:00:00Z')]) });
   });
   it('erlaubt bei Cache- und Teilabrufen keine Löschungen', async () => {
     await syncDeviceCalendar([], enabled, false, now);
@@ -69,4 +75,14 @@ describe('Gerätekalender-Abgleich', () => {
     const deadline = await calendarEvent(entry('2026-10-12T10:00:00+02:00', '2026-10-12T10:00:00+02:00'));
     expect(deadline.allDay).toBe(false); expect(deadline.end - deadline.start).toBe(60_000);
   });
+});
+
+it('bereinigt beim Kurswechsel auch frühere Kursdaten außerhalb des neuen Zeitbereichs', async () => {
+  const old = entry('2025-06-01T08:00:00Z', '2025-06-01T09:00:00Z');
+  await syncDeviceCalendar([old], enabled, true, now);
+  const firstRange = sync.mock.calls[0][0].rangeStart;
+  await syncDeviceCalendar([entry()], enabled, true, now);
+  expect(sync.mock.calls[1][0].rangeStart).toBe(firstRange);
+  expect(sync.mock.calls[1][0].events).toHaveLength(1);
+  expect(sync.mock.calls[1][0].allowDelete).toBe(true);
 });

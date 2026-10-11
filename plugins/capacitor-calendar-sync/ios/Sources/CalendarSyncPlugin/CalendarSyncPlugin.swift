@@ -76,10 +76,20 @@ public class CalendarSyncPlugin: CAPPlugin, CAPBridgedPlugin {
                 }
                 let calendar = try self.ownCalendar()
                 let from = Date(timeIntervalSince1970: start / 1000), to = Date(timeIntervalSince1970: end / 1000)
-                let predicate = self.store.predicateForEvents(withStart: from, end: to, calendars: [calendar])
+                // EventKit limits one predicate to four years. Query smaller
+                // chunks so historical courses and later course switches remain complete.
+                var queried: [EKEvent] = []
+                var cursor = from
+                let dates = Calendar(identifier: .gregorian)
+                while cursor < to {
+                    let next = min(dates.date(byAdding: .year, value: 3, to: cursor)!, to)
+                    let predicate = self.store.predicateForEvents(withStart: cursor, end: next, calendars: [calendar])
+                    queried += self.store.events(matching: predicate).filter { $0.startDate >= cursor && $0.startDate < next }
+                    cursor = next
+                }
                 var existing: [String: EKEvent] = [:]
                 var obsolete: [EKEvent] = []
-                for event in self.store.events(matching: predicate) {
+                for event in queried {
                     guard event.startDate >= from, event.startDate < to, let marker = event.url?.absoluteString, marker.hasPrefix(self.prefix) else { continue }
                     let key = String(marker.dropFirst(self.prefix.count))
                     guard key.range(of: "^[a-f0-9]{64}$", options: .regularExpression) != nil else { continue }

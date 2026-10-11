@@ -1,14 +1,23 @@
 import { Capacitor } from '@capacitor/core';
+import { Preferences } from '@capacitor/preferences';
 import { CalendarSync, type CalendarEvent } from '@dhbw/capacitor-calendar-sync';
 import { addDaysYmd, berlinParts, berlinToUtc, isDeadlineOrAllDay } from '../lib/berlinTime';
 import type { AppSettings } from '../store/preferences';
 import type { ScheduleEntry } from '../types';
 
-export function calendarSyncRange(now: Date) {
+export function calendarSyncRange(now: Date, entries: ScheduleEntry[] = []) {
   const first = addDaysYmd(berlinParts(now), -7);
   // Stay inside the fully fetched Rapla window even when today is Sunday.
   const last = addDaysYmd(berlinParts(now), 90);
-  return { rangeStart: berlinToUtc(first.y, first.m, first.d, 0, 0).getTime(), rangeEnd: berlinToUtc(last.y, last.m, last.d, 0, 0).getTime() };
+  let rangeStart = berlinToUtc(first.y, first.m, first.d, 0, 0).getTime();
+  let rangeEnd = berlinToUtc(last.y, last.m, last.d, 0, 0).getTime();
+  for (const entry of entries) {
+    const start = berlinParts(entry.start);
+    const end = addDaysYmd(berlinParts(entry.end), 1);
+    rangeStart = Math.min(rangeStart, berlinToUtc(start.y, start.m, start.d, 0, 0).getTime());
+    rangeEnd = Math.max(rangeEnd, berlinToUtc(end.y, end.m, end.d, 0, 0).getTime());
+  }
+  return { rangeStart, rangeEnd };
 }
 
 export async function calendarEvent(entry: ScheduleEntry): Promise<CalendarEvent> {
@@ -29,6 +38,7 @@ export async function calendarEvent(entry: ScheduleEntry): Promise<CalendarEvent
     notes: [entry.lecturers.length ? `Dozent: ${entry.lecturers.join(', ')}` : '', entry.course ? `Kurs: ${entry.course}` : '', entry.extra ?? ''].filter(Boolean).join('\n') };
 }
 
+const RANGE_KEY = 'deviceCalendar.syncRange.v1';
 let queue: Promise<unknown> = Promise.resolve();
 let revision = 0;
 /** Serialize native writes and skip superseded snapshots. Never prompt during refresh. */
@@ -41,11 +51,23 @@ export function syncDeviceCalendar(entries: ScheduleEntry[], settings: AppSettin
       window.dispatchEvent(new CustomEvent('device-calendar-sync', { detail: { success: false } }));
       return;
     }
-    const range = calendarSyncRange(now);
-    const visible = entries.filter((entry) => entry.start.getTime() >= range.rangeStart && entry.start.getTime() < range.rangeEnd);
-    const events = await Promise.all(visible.map(calendarEvent));
+    const range = calendarSyncRange(now, entries);
+    // Include previously written dates so a course/filter switch also removes
+    // owned entries outside the new course's dates, including after app restart.
+    const { value } = await Preferences.get({ key: RANGE_KEY });
+    if (value) {
+      try {
+        const previous = JSON.parse(value);
+        if (Number.isFinite(previous.rangeStart) && Number.isFinite(previous.rangeEnd) && previous.rangeEnd > previous.rangeStart) {
+          range.rangeStart = Math.min(range.rangeStart, previous.rangeStart);
+          range.rangeEnd = Math.max(range.rangeEnd, previous.rangeEnd);
+        }
+      } catch { /* Ignore malformed synchronization metadata. */ }
+    }
+    const events = await Promise.all(entries.map(calendarEvent));
     if (currentRevision !== revision) return;
     await CalendarSync.sync({ events: [...new Map(events.map((event) => [event.key, event])).values()], ...range, allowDelete });
+    await Preferences.set({ key: RANGE_KEY, value: JSON.stringify(range) });
     window.dispatchEvent(new CustomEvent('device-calendar-sync', { detail: { success: true } }));
   };
   const operation = queue.then(run);

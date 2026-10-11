@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { ScheduleEntry } from '../types';
 import { formatDayLong, parseYmdKey } from '../lib/berlinTime';
 import { timeLabel } from './CourseView';
@@ -12,6 +13,60 @@ interface Props {
 }
 
 export function MonthView({ selectedDay, today, entriesByDay, onSelectDay, onShiftMonth }: Props) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
+  const suppressTap = useRef(false);
+  const shiftRef = useRef(onShiftMonth);
+  shiftRef.current = onShiftMonth;
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const start = (event: TouchEvent) => {
+      suppressTap.current = event.touches.length !== 1;
+      gesture.current = event.touches.length === 1
+        ? { x: event.touches[0].clientX, y: event.touches[0].clientY, axis: null }
+        : null;
+    };
+    const move = (event: TouchEvent) => {
+      if (event.touches.length !== 1) {
+        gesture.current = null;
+        suppressTap.current = true;
+        return;
+      }
+      const current = gesture.current;
+      if (!current) return;
+      const dx = event.touches[0].clientX - current.x;
+      const dy = event.touches[0].clientY - current.y;
+      if (!current.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 8) {
+        current.axis = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+        suppressTap.current = true;
+      }
+      if (current.axis === 'horizontal' && event.cancelable) event.preventDefault();
+    };
+    const end = (event: TouchEvent) => {
+      const current = gesture.current;
+      gesture.current = null;
+      if (!current || event.touches.length || !event.changedTouches.length) return;
+      const dx = event.changedTouches[0].clientX - current.x;
+      const dy = event.changedTouches[0].clientY - current.y;
+      if (current.axis === 'horizontal' && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        shiftRef.current(dx < 0 ? 1 : -1);
+      }
+    };
+    const cancel = () => { gesture.current = null; suppressTap.current = true; };
+    grid.addEventListener('touchstart', start, { passive: true });
+    grid.addEventListener('touchmove', move, { passive: false });
+    grid.addEventListener('touchend', end);
+    grid.addEventListener('touchcancel', cancel);
+    return () => {
+      grid.removeEventListener('touchstart', start);
+      grid.removeEventListener('touchmove', move);
+      grid.removeEventListener('touchend', end);
+      grid.removeEventListener('touchcancel', cancel);
+    };
+  }, []);
+
   const month = selectedDay.slice(0, 7);
   const days = monthDays(selectedDay);
   return (
@@ -23,7 +78,12 @@ export function MonthView({ selectedDay, today, entriesByDay, onSelectDay, onShi
       <div className="monthview__weekdays" aria-hidden="true">
         {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((day) => <span key={day}>{day}</span>)}
       </div>
-      <div className="monthview__grid" style={{ gridTemplateRows: `repeat(${days.length / 7}, minmax(88px, 1fr))` }}>
+      <div ref={gridRef} className="monthview__grid" onClickCapture={(event) => {
+        // Swiping must not open the day under the finger; keyboard activation remains available.
+        if (suppressTap.current && event.detail !== 0) {
+          event.preventDefault(); event.stopPropagation(); suppressTap.current = false;
+        }
+      }} style={{ gridTemplateRows: `repeat(${days.length / 7}, minmax(88px, 1fr))` }}>
         {days.map((day) => {
           const entries = [...(entriesByDay[day] ?? [])].sort((a, b) => a.start.getTime() - b.start.getTime());
           const date = formatDayLong(parseYmdKey(day));

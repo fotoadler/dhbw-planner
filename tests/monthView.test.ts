@@ -68,3 +68,37 @@ describe('Monatsansicht', () => {
     act(() => empty.click()); expect(onSelectDay).toHaveBeenCalledWith('2026-09-28');
   });
 });
+
+function mountSwipe() {
+  (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  container = document.createElement('div'); document.body.append(container); root = createRoot(container);
+  const onSelectDay = vi.fn(), onShiftMonth = vi.fn();
+  act(() => root!.render(createElement(MonthView, { selectedDay: '2026-10-01', today: '2026-10-11', entriesByDay: {}, onSelectDay, onShiftMonth })));
+  return { onSelectDay, onShiftMonth, day: container.querySelector<HTMLButtonElement>('[data-day="2026-10-11"]')! };
+}
+function touch(target: Element, type: string, points: number[][]) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+  const touches = points.map(([clientX, clientY]) => ({ clientX, clientY }));
+  Object.defineProperties(event, { touches: { value: type === 'touchend' ? [] : touches }, changedTouches: { value: touches } });
+  act(() => target.dispatchEvent(event)); return event;
+}
+it.each([[-100, 1], [100, -1]])('wechselt beim horizontalen Wischen %s genau einen Monat ohne Tagespopup', (dx, delta) => {
+  const { day, onShiftMonth, onSelectDay } = mountSwipe();
+  touch(day, 'touchstart', [[160, 200]]);
+  expect(touch(day, 'touchmove', [[160 + dx, 205]]).defaultPrevented).toBe(true);
+  touch(day, 'touchend', [[160 + dx, 205]]);
+  act(() => day.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 })));
+  expect(onShiftMonth.mock.calls).toEqual([[delta]]); expect(onSelectDay).not.toHaveBeenCalled();
+  touch(day, 'touchstart', [[160, 200]]); touch(day, 'touchend', [[160, 200]]);
+  act(() => day.click()); expect(onSelectDay).toHaveBeenCalledOnce();
+});
+it('lässt vertikales Scrollen zu und ignoriert kurze, abgebrochene und Mehrfinger-Gesten', () => {
+  const { day, onShiftMonth } = mountSwipe();
+  touch(day, 'touchstart', [[160, 200]]);
+  expect(touch(day, 'touchmove', [[165, 300]]).defaultPrevented).toBe(false);
+  touch(day, 'touchend', [[165, 300]]);
+  touch(day, 'touchstart', [[160, 200]]); touch(day, 'touchmove', [[140, 200]]); touch(day, 'touchend', [[140, 200]]);
+  touch(day, 'touchstart', [[160, 200]]); touch(day, 'touchmove', [[60, 200]]); touch(day, 'touchcancel', []); touch(day, 'touchend', [[60, 200]]);
+  touch(day, 'touchstart', [[160, 200]]); touch(day, 'touchstart', [[160, 200], [180, 200]]); touch(day, 'touchmove', [[60, 200]]); touch(day, 'touchend', [[60, 200]]);
+  expect(onShiftMonth).not.toHaveBeenCalled();
+});

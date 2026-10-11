@@ -1,4 +1,4 @@
-import { berlinDayKey, berlinParts, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
+import { berlinDayKey, berlinParts, isDeadlineOrAllDay, parseYmdKey, mondayOfYmd, ymdKey } from '../lib/berlinTime';
 import type { ScheduleEntry } from '../types';
 
 export const WEEK_FIRST_HOUR = 8;
@@ -8,6 +8,12 @@ export function isWeekendDay(day: string): boolean {
   const { y, m, d } = parseYmdKey(day);
   const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
   return weekday === 0 || weekday === 6;
+}
+
+/** Empty weekends appear only in the week containing today's weekend. */
+export function isCurrentWeekendWeek(day: string, today: string): boolean {
+  return isWeekendDay(today)
+    && ymdKey(mondayOfYmd(parseYmdKey(day))) === ymdKey(mondayOfYmd(parseYmdKey(today)));
 }
 
 export function wallMinutes(date: Date): number {

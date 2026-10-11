@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { ScheduleEntry } from '../types';
 import { berlinDayKey, formatTime, parseYmdKey } from '../lib/berlinTime';
 import { weekNowMarker } from './weekNow';
-import { entryMinuteRange, isUntimedEntry, isWeekendDay, timedGeometry, weekClusters, WEEK_FIRST_HOUR } from './weekLayout';
+import { entryMinuteRange, isUntimedEntry, isCurrentWeekendWeek, timedGeometry, weekClusters, WEEK_FIRST_HOUR } from './weekLayout';
 import { useCurrentTime } from './useCurrentTime';
 import { timeLabel } from './CourseView';
 import { scheduleModuleKey } from '../schedule/modules';
@@ -123,7 +123,7 @@ export function WeekView({
   const clock = useCurrentTime(suppliedNow === undefined);
   const now = suppliedNow ?? clock;
   const currentDay = berlinDayKey(now);
-  const showWeekend = isWeekendDay(currentDay);
+  const showWeekend = weekDays.length > 0 && isCurrentWeekendWeek(weekDays[0], currentDay);
   const highlightedDay = suppliedNow ? today : currentDay;
   const touch = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
@@ -152,7 +152,7 @@ export function WeekView({
     setPinchHourHeight(null);
   }, [hourHeight]);
 
-  // Both weekend days stay visible throughout Saturday/Sunday. Scheduled days
+  // Both weekend days stay visible during the current week’s Saturday/Sunday. Scheduled days
   // always stay visible, including notices and entries hidden by module filters.
   const days = weekDays
     .map((key, weekdayIndex) => ({ key, weekdayIndex }))

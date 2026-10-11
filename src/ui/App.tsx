@@ -5,7 +5,7 @@ import { useBackButton } from './useBackButton';
 import { resolveBackAction, type CalendarView, type DualisPage, type Section } from './backNavigation';
 import { useSchedule } from './useSchedule';
 import { useCurrentTime } from './useCurrentTime';
-import { isWeekendDay } from './weekLayout';
+import { isWeekendDay, isCurrentWeekendWeek } from './weekLayout';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { SetupWizard } from './SetupWizard';
@@ -221,7 +221,7 @@ export function App() {
   }
 
   const isVisiblePlanDay = (day: string): boolean => {
-    return !isWeekendDay(day) || isWeekendDay(today) || scheduledDays.has(day);
+    return !isWeekendDay(day) || isCurrentWeekendWeek(day, today) || scheduledDays.has(day);
   };
 
   const selectDay = (day: string) => {

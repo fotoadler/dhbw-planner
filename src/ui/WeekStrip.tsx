@@ -1,12 +1,12 @@
 /**
- * Schmale Wochenleiste: Mo–Fr immer, beide Wochenendtage am Wochenende,
+ * Schmale Wochenleiste: Mo–Fr immer, beide Wochenendtage am aktuellen Wochenende,
  * sonst Wochenende bei Terminen oder wenn der
  * ausgewählte Tag selbst ein leerer Samstag/Sonntag ist.
  * Pfeile wechseln weiter wochenweise. Mehr Navigation gibt es bewusst nicht.
  */
 
 import { addDaysYmd, parseYmdKey, ymdKey } from '../lib/berlinTime';
-import { isWeekendDay } from './weekLayout';
+import { isCurrentWeekendWeek } from './weekLayout';
 
 const WEEKDAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
@@ -27,7 +27,7 @@ export function WeekStrip({ monday, selected, today, busyDays, scheduledDays, on
   const days = Array.from({ length: 7 }, (_, i) => ({
     key: ymdKey(addDaysYmd(mondayYmd, i)),
     weekdayIndex: i,
-  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || isWeekendDay(today) || busyDays.has(key) || scheduledDays?.has(key) || key === selected);
+  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || isCurrentWeekendWeek(key, today) || busyDays.has(key) || scheduledDays?.has(key) || key === selected);
 
   const shiftWeek = (delta: number) => onWeekChange(ymdKey(addDaysYmd(mondayYmd, delta * 7)));
 

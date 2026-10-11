@@ -2,8 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { WeekView } from '../src/ui/WeekView';
+import { WeekStrip } from '../src/ui/WeekStrip';
 import { weekNowMarker } from '../src/ui/weekNow';
-import { wallMinutes } from '../src/ui/weekLayout';
+import { wallMinutes, isCurrentWeekendWeek } from '../src/ui/weekLayout';
 import { berlinDayKey, formatTime } from '../src/lib/berlinTime';
 import { parseRaplaWeek } from '../src/rapla/parser';
 import { WEEK_FIXTURE } from './fixtures';
@@ -96,6 +97,25 @@ describe('dynamische Jetzt-Linie', () => {
     expect(container.textContent).toContain('Sa11.');
     expect(container.textContent).toContain('So12.');
   });
+  it.each(['2026-09-28', '2026-10-12'])('zeigt am aktuellen Sonntag keine leeren Wochenendtage der anderen Woche %s', (monday) => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-11T10:00:00Z'));
+    const otherDays = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(`${monday}T12:00:00Z`); date.setUTCDate(date.getUTCDate() + i);
+      return date.toISOString().slice(0, 10);
+    });
+    render({ weekDays: otherDays });
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(5);
+    render({ weekDays: otherDays, scheduledDays: new Set([otherDays[5]]) });
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(6);
+    act(() => root!.render(createElement(WeekStrip, {
+      monday, selected: monday, today: '2026-10-11', busyDays: new Set<string>(),
+      onSelect: vi.fn(), onWeekChange: vi.fn(),
+    })));
+    expect(container.querySelectorAll('.weekstrip__day')).toHaveLength(5);
+    expect(isCurrentWeekendWeek(otherDays[5], '2026-10-11')).toBe(false);
+    expect(isCurrentWeekendWeek('2026-10-10', '2026-10-11')).toBe(true);
+  });
+
   it('aktualisiert Position und Beschriftung regelmäßig und räumt den Timer auf', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-10-07T08:15:00Z'));

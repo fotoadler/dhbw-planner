@@ -21,6 +21,7 @@ import { SettingsView } from './SettingsView';
 import { DualisView } from './DualisView';
 import { MailView } from './MailView';
 import { ConfirmDialog } from './ConfirmDialog';
+import { CalendarShareDialog } from './CalendarShareDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
@@ -66,6 +67,8 @@ export function App() {
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [calendarShareOpen, setCalendarShareOpen] = useState(false);
+  const [calendarShareBusy, setCalendarShareBusy] = useState(false);
   const [showHiddenModules, setShowHiddenModules] = useState(false);
   const [confirmModuleKey, setConfirmModuleKey] = useState<string | null>(null);
   const [calendarDetails, setCalendarDetails] = useState<CalendarDetails | null>(null);
@@ -98,6 +101,7 @@ export function App() {
 
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
+    if (calendarShareOpen) { if (!calendarShareBusy) setCalendarShareOpen(false); return true; }
     const action = resolveBackAction({
       showSettings: inSettings,
       weekDetailsOpen: Boolean(calendarDetails),
@@ -348,12 +352,12 @@ export function App() {
               )}
               {Capacitor.isNativePlatform() && <button
                 className="iconbtn"
-                aria-label="Kalendersynchronisierung"
-                title="Kalendersynchronisierung einrichten"
-                onClick={openSettings}
+                aria-label="Stundenplan teilen"
+                title="Stundenplan mit Kalender teilen"
+                onClick={() => setCalendarShareOpen(true)}
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M9 16h6m-2-2 2 2-2 2" />
+                  <path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
                 </svg>
               </button>}
             </>
@@ -508,6 +512,12 @@ export function App() {
       )}
 
       {/* In-App Bestätigungs-Dialog */}
+      {calendarShareOpen && <CalendarShareDialog enabled={settings.calendarSyncEnabled}
+        onBusyChange={setCalendarShareBusy}
+        demo={Boolean(demoScreen) || showsReviewDemo}
+        onClose={() => setCalendarShareOpen(false)} onRefresh={refresh}
+        onEnable={() => applySettings({ ...settings, calendarSyncEnabled: true })}
+        onDisable={() => applySettings({ ...settings, calendarSyncEnabled: false })} />}
       {confirmModuleKey && (
         <ConfirmDialog
           title={settings.hiddenModules.includes(confirmModuleKey) ? 'Modul wieder einblenden?' : 'Modul ausblenden?'}

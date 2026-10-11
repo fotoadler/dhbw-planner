@@ -1,6 +1,6 @@
 # Gerätekalender-Synchronisierung
 
-Die installierte App synchronisiert nach ausdrücklicher Aktivierung einen eigenen Kalender „DHBW Planner“. Es wird keine Abo-URL benötigt. Der Kalender-Button öffnet die Einstellungen; nach Freigabe des Zugriffs erfolgt der erste Abgleich mit den vorhandenen Daten. Jeder erfolgreiche Stundenplanabruf synchronisiert erneut. Im Browser und im Demomodus ist die Aktivierung gesperrt. Der bisherige ICS-Export entfällt. Alte ICS-Importe werden nicht verändert und müssen bei Bedarf manuell entfernt werden.
+Die installierte App synchronisiert nach ausdrücklicher Aktivierung einen eigenen Kalender „DHBW Planner“. Es wird keine Abo-URL benötigt. Der Teilen-Button öffnet einen erklärenden Dialog in der Kalenderansicht. Erst dessen Bestätigung fordert über dasselbe Capacitor-Plugin die native Android- beziehungsweise iOS-Kalenderberechtigung an. Nach Freigabe erfolgt der erste Abgleich mit den vorhandenen Daten. Bei bestehender Aktivierung zeigt der Button die Verwaltung zum Aktualisieren und Pausieren; die Einführung entfällt. Die Einstellungen enthalten keine separate Aktivierung mehr. Jeder erfolgreiche Stundenplanabruf synchronisiert erneut. Im Browser und im Demomodus ist die Aktivierung gesperrt. Der bisherige ICS-Export entfällt. Alte ICS-Importe werden nicht verändert und müssen bei Bedarf manuell entfernt werden.
 
 ## Abgleich
 
@@ -32,3 +32,7 @@ Android-Debug- und iOS-Simulator-Build wurden geprüft. Mit Xcode 27 benötigen 
 4. Offline-Abruf und Teilfehler prüfen: keine vorhandenen Termine verschwinden. Manuelle Einträge im App-Kalender und Einträge anderer Kalender bleiben erhalten.
 5. Abgleich deaktivieren: keine weiteren Aktualisierungen, bisherige Termine bleiben. Zugriff im Betriebssystem entziehen: der Stundenplan bleibt nutzbar.
 6. iCloud-/Google-/Exchange-Konten und verfügbare lokale Kalender prüfen. Simulatorergebnisse ersetzen keine Geräte- oder Kontoprüfung.
+
+## Integration bei Capacitor-Builds
+
+Die native Implementierung liegt als lokales Paket unter `plugins/capacitor-calendar-sync`, wird in `package.json` referenziert und über die Capacitor-Metadaten automatisch registriert. Android-Berechtigungen stammen aus dem Plugin-Manifest; die iOS-Nutzungstexte stehen in der versionierten App-`Info.plist`. Native Quelltexte und Podspec werden nicht in generierte Build- oder Web-Asset-Dateien geschrieben. Ein erneutes `npx cap sync` erzeugt die Projektverweise und Registrierung aus diesen Quellen. Am 11. Oktober 2026 wurden zwei aufeinanderfolgende Sync-Läufe geprüft: Plugin-Quellen und iOS-Berechtigungstexte blieben unverändert; beide Plattformen enthielten weiterhin die Plugin-Registrierung.

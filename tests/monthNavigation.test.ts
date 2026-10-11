@@ -135,14 +135,18 @@ describe('Monatsnavigation in der App', () => {
     expect(applySettings).toHaveBeenCalledWith(expect.objectContaining({ defaultCalendarView: 'month' }));
   });
 
-  it('führt in der nativen App zu den Kalender-Einstellungen und bietet keinen ICS-Export mehr an', () => {
+  it('öffnet vom nativen Teilen-Button die Erklärung im Kalender und bietet keinen ICS-Export an', () => {
     expect(container.querySelector('[aria-label="Als Kalenderdatei teilen"]')).toBeNull();
-    expect(container.querySelector('[aria-label="Kalendersynchronisierung"]')).toBeNull();
+    expect(container.querySelector('[aria-label="Stundenplan teilen"]')).toBeNull();
     const native = vi.spyOn(Capacitor, 'isNativePlatform').mockReturnValue(true);
     try {
       act(() => root.render(createElement(App)));
-      click('[aria-label="Kalendersynchronisierung"]');
-      expect(container.textContent).toContain('Mit Gerätekalender synchronisieren');
+      click('[aria-label="Stundenplan teilen"]');
+      expect(container.querySelector('[role="dialog"]')?.textContent).toContain('Kalender verbinden');
+      expect(container.querySelector('.settings-page')).toBeNull();
+      expect(applySettings).not.toHaveBeenCalled();
+      act(() => { expect(backHandler.current!()).toBe(true); });
+      expect(container.querySelector('[role="dialog"]')).toBeNull();
       expect(container.querySelector('[aria-label="Als Kalenderdatei teilen"]')).toBeNull();
     } finally { native.mockRestore(); }
   });

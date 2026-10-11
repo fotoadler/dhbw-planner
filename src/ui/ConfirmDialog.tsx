@@ -6,6 +6,9 @@ interface Props {
   confirmLabel: string;
   cancelLabel?: string;
   isDanger?: boolean;
+  confirmDisabled?: boolean;
+  cancelDisabled?: boolean;
+  className?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -16,6 +19,9 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel = 'Abbrechen',
   isDanger = true,
+  confirmDisabled = false,
+  cancelDisabled = false,
+  className = '',
   onConfirm,
   onCancel,
 }: Props) {
@@ -29,15 +35,16 @@ export function ConfirmDialog({
 
   return (
     <div className="dialog-backdrop" onClick={onCancel} role="dialog" aria-modal="true">
-      <div className="dialog-card" onClick={(e) => e.stopPropagation()}>
+      <div className={`dialog-card ${className}`} onClick={(e) => e.stopPropagation()}>
         <h3 className="dialog-title">{title}</h3>
         <div className="dialog-message">{message}</div>
         <div className="dialog-actions">
-          <button type="button" className="dialog-btn dialog-btn--secondary" onClick={onCancel}>
+          <button type="button" className="dialog-btn dialog-btn--secondary" disabled={cancelDisabled} onClick={onCancel}>
             {cancelLabel}
           </button>
           <button
             type="button"
+            disabled={confirmDisabled}
             className={`dialog-btn dialog-btn--primary${isDanger ? ' is-danger' : ''}`}
             onClick={onConfirm}
           >

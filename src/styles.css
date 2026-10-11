@@ -2159,9 +2159,8 @@ option {
   text-align: right;
 }
 
-.calendar-sync__row { gap: 12px; flex-wrap: wrap; align-items: flex-start; }
-.calendar-sync__row > div { flex: 1 1 220px; min-width: 0; }
-.calendar-sync__row > button { flex: 0 0 auto; }
+.calendar-share-dialog { max-height: 85dvh; overflow-y: auto; }
+.calendar-share-dialog .dialog-actions { flex-wrap: wrap; }
 
 .sheet__note {
   color: var(--ink-3);

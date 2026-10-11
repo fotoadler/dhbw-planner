@@ -190,6 +190,21 @@ public class EmbeddedMailPlugin extends Plugin {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
+        // Wie ein mobiler Browser den Viewport der Mailseite berücksichtigen.
+        // Ohne Viewport-Angabe werden ältere OWA-Seiten auf die View-Breite
+        // eingepasst, statt mit ihrem Desktop-Layout seitlich überzulaufen.
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        // OWA stuft den WebView-UA (Version/4.0; wv) als Desktop-Browser ein.
+        // Die aktuelle Chromium-Version behalten, aber die mobile Browseransicht
+        // anfordern – auch auf Tablets. Keine feste/veraltete Chrome-Version.
+        String userAgent = settings.getUserAgentString()
+            .replace("; wv", "")
+            .replace("Version/4.0 ", "");
+        if (!userAgent.contains("Mobile")) {
+            userAgent = userAgent.replace("Safari/", "Mobile Safari/");
+        }
+        settings.setUserAgentString(userAgent);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
         settings.setSupportMultipleWindows(false);

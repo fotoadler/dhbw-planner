@@ -56,7 +56,9 @@ export interface AppSettings {
   /** Darstellung: Systemvorgabe oder manuell hell/dunkel. */
   themeMode: ThemeMode;
   /** Ansicht, die beim Öffnen des Kalenders standardmäßig angezeigt wird. */
-  defaultCalendarView: 'day' | 'week';
+  defaultCalendarView: 'day' | 'week' | 'month';
+  /** Opt-in: den eigenen Gerätekalender nach erfolgreichen Abrufen abgleichen. */
+  calendarSyncEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -75,7 +77,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   hiddenModules: [],
   calendarHourHeight: 64,
   themeMode: 'auto',
-  defaultCalendarView: 'day',
+  defaultCalendarView: 'week',
+  calendarSyncEnabled: false,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -178,7 +181,8 @@ function parseSettings(raw: unknown): AppSettings {
     hiddenModules: parseHiddenModules(data.hiddenModules),
     calendarHourHeight,
     themeMode: isThemeMode(data.themeMode) ? data.themeMode : DEFAULT_SETTINGS.themeMode,
-    defaultCalendarView: data.defaultCalendarView === 'week' ? 'week' : DEFAULT_SETTINGS.defaultCalendarView,
+    defaultCalendarView: data.defaultCalendarView === 'day' || data.defaultCalendarView === 'week' || data.defaultCalendarView === 'month' ? data.defaultCalendarView : DEFAULT_SETTINGS.defaultCalendarView,
+    calendarSyncEnabled: data.calendarSyncEnabled === true,
   };
 }
 

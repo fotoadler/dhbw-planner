@@ -10,12 +10,13 @@
  */
 
 export type Section = 'calendar' | 'dualis' | 'mail' | 'settings';
-export type CalendarView = 'day' | 'week';
+export type CalendarView = 'day' | 'week' | 'month';
 export type DualisPage = 'overview' | 'exams';
 
 export interface BackNavigationState {
   /** Einstellungen liegt über allen Bereichen. */
   showSettings: boolean;
+  weekDetailsOpen?: boolean;
   /** Kursdetail (CourseView) innerhalb des Kalenders. */
   selectedBlockKey: string | null;
   section: Section;
@@ -27,6 +28,7 @@ export interface BackNavigationState {
 
 export type BackAction =
   | 'close-settings'
+  | 'close-week-details'
   | 'close-course'
   | 'to-calendar'
   | 'to-dualis-overview'
@@ -35,11 +37,12 @@ export type BackAction =
 
 export function resolveBackAction(state: BackNavigationState): BackAction {
   if (state.showSettings || state.section === 'settings') return 'close-settings';
+  if (state.section === 'calendar' && (state.calendarView === 'week' || state.calendarView === 'month') && state.weekDetailsOpen) return 'close-week-details';
   if (state.section === 'calendar' && state.selectedBlockKey) return 'close-course';
   if (state.section === 'mail') return 'to-calendar';
   if (state.section === 'dualis') {
     return state.dualisPage === 'exams' && state.dualisLoggedIn ? 'to-dualis-overview' : 'to-calendar';
   }
-  if (state.calendarView === 'week') return 'to-calendar-day';
+  if (state.calendarView === 'week' || state.calendarView === 'month') return 'to-calendar-day';
   return 'exit-app';
 }

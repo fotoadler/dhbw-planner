@@ -1,23 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useBackButton } from './useBackButton';
 import { resolveBackAction, type CalendarView, type DualisPage, type Section } from './backNavigation';
 import { useSchedule } from './useSchedule';
+import { useCurrentTime } from './useCurrentTime';
+import { isWeekendDay, isCurrentWeekendWeek } from './weekLayout';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { SetupWizard } from './SetupWizard';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
+import { MonthView } from './MonthView';
+import { monthTitle, monthWeekKeys, shiftMonth } from './monthLayout';
+import { WeekEventSheet } from './WeekEventSheet';
+import type { ScheduleEntry } from '../types';
 import { CourseView } from './CourseView';
 import { SettingsView } from './SettingsView';
 import { DualisView } from './DualisView';
 import { MailView } from './MailView';
 import { ConfirmDialog } from './ConfirmDialog';
+import { CalendarShareDialog } from './CalendarShareDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
-import { shareIcs } from '../ical/export';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
@@ -33,6 +40,10 @@ import {
   ymdKey,
 } from '../lib/berlinTime';
 
+type CalendarDetails =
+  | { day: string; scope: 'selection'; entries: ScheduleEntry[] }
+  | { day: string; scope: 'day' };
+
 export function App() {
   const demoScreen = appStoreDemoScreen();
   const { settings, entries, allEntries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
@@ -45,7 +56,8 @@ export function App() {
   );
   const dualis = useDualis(settings?.apiSelection?.site);
 
-  const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(new Date());
+  const now = useCurrentTime();
+  const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(now);
   const [section, setSection] = useState<Section>(demoScreen === 'grades' ? 'dualis' : 'calendar');
   const [calendarView, setCalendarView] = useState<CalendarView | null>(() => {
     if (!demoScreen) return null;
@@ -55,8 +67,11 @@ export function App() {
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [calendarShareOpen, setCalendarShareOpen] = useState(false);
+  const [calendarShareBusy, setCalendarShareBusy] = useState(false);
   const [showHiddenModules, setShowHiddenModules] = useState(false);
   const [confirmModuleKey, setConfirmModuleKey] = useState<string | null>(null);
+  const [calendarDetails, setCalendarDetails] = useState<CalendarDetails | null>(null);
 
   const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
   const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
@@ -86,8 +101,10 @@ export function App() {
 
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
+    if (calendarShareOpen) { if (!calendarShareBusy) setCalendarShareOpen(false); return true; }
     const action = resolveBackAction({
       showSettings: inSettings,
+      weekDetailsOpen: Boolean(calendarDetails),
       selectedBlockKey,
       section,
       calendarView: activeCalendarView,
@@ -95,6 +112,9 @@ export function App() {
       dualisLoggedIn: dualis.loginState === 'logged-in',
     });
     switch (action) {
+      case 'close-week-details':
+        setCalendarDetails(null);
+        return true;
       case 'close-settings':
         setShowSettings(false);
         if (section === 'settings') setSection('calendar');
@@ -117,7 +137,15 @@ export function App() {
   });
 
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
+  useEffect(() => { setCalendarDetails(null); }, [monday, selectedDay.slice(0, 7), section, activeCalendarView, inSettings]);
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
+  const selectedMonth = selectedDay.slice(0, 7);
+  useEffect(() => {
+    if (!inCalendar || activeCalendarView !== 'month') return;
+    // Rapla loads individual weeks, including the neighbouring days in the grid.
+    // ensureWeek deduplicates requests and is a no-op for the full-course API.
+    for (const key of monthWeekKeys(`${selectedMonth}-01`)) void ensureWeek(key);
+  }, [selectedMonth, inCalendar, activeCalendarView, ensureWeek, settings?.rapla, settings?.apiSelection]);
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => ymdKey(addDaysYmd(parseYmdKey(monday), i))),
     [monday],
@@ -126,6 +154,7 @@ export function App() {
   const displayEntries = showHiddenModules ? allEntries : entries;
 
   const busyDays = useMemo(() => new Set(displayEntries.map((e) => berlinDayKey(e.start))), [displayEntries]);
+  const scheduledDays = useMemo(() => new Set(allEntries.map((e) => berlinDayKey(e.start))), [allEntries]);
   const dayEntries = useMemo(
     () => displayEntries.filter((e) => berlinDayKey(e.start) === selectedDay),
     [displayEntries, selectedDay],
@@ -192,10 +221,7 @@ export function App() {
   }
 
   const isVisiblePlanDay = (day: string): boolean => {
-    const { y, m, d } = parseYmdKey(day);
-    const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
-    const isWeekend = weekday === 0 || weekday === 6;
-    return !isWeekend || busyDays.has(day);
+    return !isWeekendDay(day) || isCurrentWeekendWeek(day, today) || scheduledDays.has(day);
   };
 
   const selectDay = (day: string) => {
@@ -249,6 +275,9 @@ export function App() {
       title = formatWeekdayLong(ymd);
       subtitle = formatDateLong(ymd);
     }
+  } else if (activeCalendarView === 'month') {
+    title = monthTitle(selectedDay);
+    subtitle = null;
   } else {
     title = `KW ${isoWeekNumber(parseYmdKey(monday))}`;
     subtitle = formatWeekRange(parseYmdKey(monday));
@@ -258,7 +287,8 @@ export function App() {
     inCalendar &&
     !selectedBlock &&
     ((activeCalendarView === 'day' && selectedDay !== today) ||
-      (activeCalendarView === 'week' && monday !== todayMonday));
+      (activeCalendarView === 'week' && monday !== todayMonday) ||
+      (activeCalendarView === 'month' && selectedMonth !== today.slice(0, 7)));
 
   const openSettings = () => {
     setSection('settings');
@@ -320,15 +350,16 @@ export function App() {
                   <span className="iconbtn__badge">{settings.hiddenModules.length}</span>
                 </button>
               )}
-              <button
+              {Capacitor.isNativePlatform() && <button
                 className="iconbtn"
-                aria-label="Als Kalenderdatei teilen"
-                onClick={() => void shareIcs(entries)}
+                aria-label="Stundenplan teilen"
+                title="Stundenplan mit Kalender teilen"
+                onClick={() => setCalendarShareOpen(true)}
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
                 </svg>
-              </button>
+              </button>}
             </>
           )}
           {!inSettings && (
@@ -350,7 +381,7 @@ export function App() {
 
       {/* Kontextueller Segment-Umschalter für die Unteransicht */}
       {inCalendar && !selectedBlock && (
-        <div className="app__viewbar">
+        <div className={`app__viewbar${offline ? ' is-offline' : ''}`}>
           {offline && (
             <div className="app__offline" aria-label="Offline - gespeicherter Stand wird angezeigt.">Offline</div>
           )}
@@ -360,6 +391,9 @@ export function App() {
             </button>
             <button className={activeCalendarView === 'week' ? 'is-active' : ''} onClick={() => setCalendarView('week')}>
               Woche
+            </button>
+            <button className={activeCalendarView === 'month' ? 'is-active' : ''} onClick={() => setCalendarView('month')}>
+              Monat
             </button>
           </nav>
         </div>
@@ -417,6 +451,7 @@ export function App() {
             selected={selectedDay}
             today={today}
             busyDays={busyDays}
+            scheduledDays={scheduledDays}
             onSelect={selectDay}
             onWeekChange={(newMonday) => selectDay(newMonday)}
           />
@@ -443,12 +478,18 @@ export function App() {
             refreshing={refreshing}
           />
         </>
+      ) : inCalendar && activeCalendarView === 'month' ? (
+        <MonthView selectedDay={selectedDay} today={today} entriesByDay={entriesByDay}
+          onSelectDay={(day) => setCalendarDetails({ day, scope: 'day' })}
+          onShiftMonth={(delta) => selectDay(shiftMonth(selectedDay, delta))} />
       ) : inCalendar ? (
         <WeekView
           weekDays={weekDays}
           entriesByDay={entriesByDay}
           today={today}
           hourHeight={settings.calendarHourHeight}
+          now={now}
+          scheduledDays={scheduledDays}
           hiddenModuleKeys={new Set(settings.hiddenModules)}
           onToggleModule={(mKey) => setConfirmModuleKey(mKey)}
           onHourHeightChange={(newHeight) => void applySettings({ ...settings, calendarHourHeight: newHeight })}
@@ -456,13 +497,27 @@ export function App() {
             selectDay(day);
             setCalendarView('day');
           }}
+          onSelectEntries={(day, selectedEntries) => setCalendarDetails({ day, scope: 'selection', entries: selectedEntries })}
           onSwipeWeek={(delta) => selectDay(ymdKey(addDaysYmd(parseYmdKey(monday), delta * 7)))}
         />
       ) : (
         <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
       )}
 
+      {calendarDetails && inCalendar && (activeCalendarView === 'week' || activeCalendarView === 'month') && (
+        <WeekEventSheet day={calendarDetails.day} scope={calendarDetails.scope}
+          entries={calendarDetails.scope === 'day' ? entriesByDay[calendarDetails.day] ?? [] : calendarDetails.entries}
+          onClose={() => setCalendarDetails(null)}
+          onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
+      )}
+
       {/* In-App Bestätigungs-Dialog */}
+      {calendarShareOpen && <CalendarShareDialog enabled={settings.calendarSyncEnabled}
+        onBusyChange={setCalendarShareBusy}
+        demo={Boolean(demoScreen) || showsReviewDemo}
+        onClose={() => setCalendarShareOpen(false)} onRefresh={refresh}
+        onEnable={() => applySettings({ ...settings, calendarSyncEnabled: true })}
+        onDisable={() => applySettings({ ...settings, calendarSyncEnabled: false })} />}
       {confirmModuleKey && (
         <ConfirmDialog
           title={settings.hiddenModules.includes(confirmModuleKey) ? 'Modul wieder einblenden?' : 'Modul ausblenden?'}

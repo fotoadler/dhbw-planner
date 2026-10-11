@@ -1,5 +1,6 @@
 ext {
-    minSdkVersion = 23
+    // Play's enabled automatic protection requires Android 7 (API 24).
+    minSdkVersion = 24
     compileSdkVersion = 36
     targetSdkVersion = 36
     androidxActivityVersion = '1.9.2'

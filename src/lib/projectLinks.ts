@@ -1,9 +1,9 @@
 /**
  * Zentrale Projektlinks.
  *
- * Die Repository-Adresse taucht in mehreren Oberflächen auf (Mailhilfe,
- * Einstellungen). Eine gemeinsame Konstante verhindert, dass eine Stelle bei
- * einem Umzug des Repositorys zurückbleibt.
+ * Repository und Feedback-Adresse werden in Mailhilfe und Einstellungen
+ * gemeinsam verwendet, damit Änderungen an allen Stellen ankommen.
  */
 
 export const PROJECT_REPOSITORY_URL = 'https://github.com/fotoadler/dhbw-planner';
+export const FEEDBACK_EMAIL = 'dhbwapp@fotoadler.com';

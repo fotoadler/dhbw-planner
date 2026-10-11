@@ -924,6 +924,60 @@ option {
   color: var(--accent);
 }
 
+.monthview {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0 12px calc(16px + var(--safe-bottom));
+  overscroll-behavior-y: contain;
+}
+
+.monthview__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.monthview__navigation button { width: 44px; height: 44px; flex-shrink: 0; font-size: 24px; color: var(--ink); }
+.monthview__weekdays, .monthview__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.monthview__weekdays span { text-align: center; font-size: 11px; color: var(--ink-3); padding: 4px 0 10px; }
+.monthview__grid { flex: 1; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.monthview__day {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  padding: 5px 3px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-align: left;
+}
+.monthview__day.is-outside { background: var(--bg-soft); color: var(--ink-3); }
+.monthview__day.is-today { background: var(--calendar-today); }
+.monthview__day.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
+.monthview__number { align-self: center; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 600; }
+.monthview__day.is-today .monthview__number { background: var(--accent); color: var(--on-accent); }
+.monthview__entries { display: flex; flex-direction: column; gap: 3px; }
+.monthview__entry { display: flex; flex-direction: column; padding: 3px; border-radius: 4px; background: var(--calendar-event); color: var(--calendar-event-text); font-size: 10px; line-height: 13px; }
+.monthview__entry.is-exam { background: var(--calendar-exam); color: var(--calendar-exam-text); }
+.monthview__entry > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.monthview__more { font-size: 10px; color: var(--ink-3); text-align: center; }
+.monthview__compact { display: none; }
+.monthview button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+@media (max-width: 480px) {
+  .monthview__entries { display: none; }
+  .monthview__compact { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 9px; line-height: 12px; color: var(--ink-2); }
+  .monthview__dots { display: flex; gap: 3px; }
+  .monthview__dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--calendar-event-accent); }
+  .monthview__dots i.is-exam { background: var(--calendar-exam-accent); }
+}
+
 .weekview__scroll {
   flex: 1;
   overflow-y: auto;
@@ -939,15 +993,56 @@ option {
   display: grid;
   border-bottom: 1px solid var(--line);
   /* Feine Stundenlinien über die ganze Breite */
-  background: repeating-linear-gradient(
+  --weekview-hour-lines: repeating-linear-gradient(
     to bottom,
     var(--line) 0 1px,
-    transparent 1px 64px
+    transparent 1px var(--weekview-hour-height, 64px)
   );
+  background: var(--weekview-hour-lines);
 }
 
 .weekview__times {
   position: relative;
+}
+
+.weekview__now {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+  color: var(--accent-strong);
+}
+
+.weekview__now-label {
+  position: absolute;
+  width: 42px;
+  box-sizing: border-box;
+  padding: 1px 2px;
+  transform: translateY(-50%);
+  background: var(--bg);
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekview__now-line {
+  position: absolute;
+  left: 44px;
+  right: 0;
+  border-top: 2px solid currentColor;
+  transform: translateY(-1px);
+}
+
+.weekview__now-dot {
+  position: absolute;
+  top: -4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .weekview__hour {
@@ -968,7 +1063,8 @@ option {
 }
 
 .weekview__col.is-today {
-  background: var(--calendar-today);
+  /* Die Heute-Farbe darf das Stundenraster nicht überdecken. */
+  background: var(--weekview-hour-lines) var(--calendar-today);
 }
 
 .weekview__event {
@@ -1049,7 +1145,8 @@ option {
 }
 
 .weekview__parallel-item {
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1059,11 +1156,72 @@ option {
   font-weight: 600;
 }
 
+.weekview__parallel-item > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weekview__notices {
+  display: grid;
+  padding-right: 12px;
+  border-bottom: 1px solid var(--line);
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.weekview__notice-label { font-size: 9px; color: var(--ink-3); padding: 6px 2px; }
+.weekview__notice-day { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding: 4px 2px; border-left: 1px solid var(--line); }
+.weekview__notice { min-width: 0; padding: 5px 3px; border-radius: 5px; font-size: 10px; line-height: 13px; background: var(--bg-soft); color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.weekview__notice--exam { background: var(--calendar-exam); color: var(--calendar-exam-text); }
+
+.weekdetails-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgb(0 0 0 / 18%);
+  display: flex;
+  align-items: flex-end;
+}
+
+.weekdetails {
+  width: 100%;
+  height: auto;
+  min-height: min(240px, 80dvh);
+  max-height: min(80dvh, calc(100dvh - 24px - var(--safe-top)));
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 32px rgb(0 0 0 / 16%);
+  padding-bottom: var(--safe-bottom);
+}
+
+.weekdetails__header { flex-shrink: 0; padding: 8px 18px 10px; touch-action: none; cursor: grab; }
+.weekdetails__handle { display: block; width: 36px; height: 4px; margin: 0 auto 10px; border-radius: 8px; background: var(--ink-3); }
+.weekdetails__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.weekdetails__heading h2 { margin: 0; font-size: 15px; }
+.weekdetails__heading p { margin: 3px 0 0; font-size: 12px; color: var(--ink-3); }
+.weekdetails__close { flex: 0 0 40px; height: 40px; font-size: 26px; color: var(--ink-3); }
+.weekdetails__content { overflow-y: auto; overscroll-behavior-y: contain; padding: 0 18px; min-height: 0; flex: 1 1 auto; }
+.weekdetails__entry { border-left: 3px solid var(--calendar-event-accent); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; background: var(--bg-soft); }
+.weekdetails__entry--exam { border-left-color: var(--calendar-exam-accent); background: var(--calendar-exam); color: var(--calendar-exam-text); }
+.weekdetails__entry h3 { font-size: 15px; margin: 0 0 5px; }
+.weekdetails__entry p { font-size: 12px; margin: 3px 0; overflow-wrap: anywhere; }
+.weekdetails__entry .weekdetails__time { font-weight: 600; font-variant-numeric: tabular-nums; margin: 0 0 5px; }
+.weekdetails__footer { flex-shrink: 0; padding: 10px 18px; border-top: 1px solid var(--line); }
+.weekdetails__footer button { color: var(--accent); font-weight: 600; font-size: 13px; padding: 5px 0; }
+.weekdetails button:focus-visible, .weekview button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 .weekview__event.is-compact {
   gap: 0;
   padding-top: 3px;
   padding-bottom: 3px;
 }
+
+.weekview__event.is-tiny { padding: 0 2px; gap: 0; justify-content: center; }
+.weekview__event.is-tiny .weekview__etitle { display: none; }
+.weekview__event.is-tiny .weekview__etime { font-size: 9px; line-height: 11px; }
 
 .weekview__event--holiday {
   border-left-color: var(--ink-3);
@@ -2002,6 +2160,9 @@ option {
   text-align: right;
 }
 
+.calendar-share-dialog { max-height: 85dvh; overflow-y: auto; }
+.calendar-share-dialog .dialog-actions { flex-wrap: wrap; }
+
 .sheet__note {
   color: var(--ink-3);
   font-size: 12px;
@@ -2370,7 +2531,7 @@ option {
   color: var(--accent);
 }
 
-/* --- Oberer Segment-Umschalter (Tag/Woche, mittig) --- */
+/* --- Oberer Segment-Umschalter (Tag/Woche/Monat, mittig) --- */
 
 .app__viewbar {
   position: relative;
@@ -2382,12 +2543,15 @@ option {
 
 .segmented--top {
   flex: 0 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 260px;
-  max-width: calc(100% - 150px);
+  max-width: 100%;
   margin: 0;
   padding: 3px;
   border-radius: 10px;
 }
+
+.app__viewbar.is-offline { padding-left: 56px; }
 
 .segmented--top button {
   min-height: 34px;

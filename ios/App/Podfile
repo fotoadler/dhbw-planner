@@ -12,15 +12,14 @@ def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
-  pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorLocalNotifications', :path => '../../node_modules/@capacitor/local-notifications'
   pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
-  pod 'CapacitorShare', :path => '../../node_modules/@capacitor/share'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+  pod 'DhbwCapacitorCalendarSync', :path => '../../plugins/capacitor-calendar-sync'
+  pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'
   pod 'DhbwCapacitorEmbeddedMail', :path => '../../plugins/capacitor-embedded-mail'
-  pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorSecureStorage', :path => '../../plugins/capacitor-secure-storage'
 end
 
@@ -31,4 +30,34 @@ end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+  # Xcode 27's recommendation for the generated Pods project was reviewed:
+  # parallelize independent targets while retaining the existing iOS floor.
+  installer.pods_project.root_object.attributes['BuildIndependentTargetsInParallel'] = 'YES'
+  installer.pods_project.root_object.attributes['LastUpgradeCheck'] = '2700'
+  # Xcode 27 no longer builds iOS 14 targets. Match the app's iOS 15 floor
+  # for generated dependency targets after every pod install / cap sync.
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if deployment_target && Gem::Version.new(deployment_target) < Gem::Version.new('15.0')
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
+    end
+  end
+end
+
+post_integrate do |installer|
+  # Capacitor deliberately disables CocoaPods input/output paths above.
+  # Declare that these phases always run, instead of asking Xcode to infer
+  # dependencies without outputs. Reapply after every pod install / cap sync.
+  installer.aggregate_targets.map(&:user_project).uniq.each do |project|
+    project.targets.each do |target|
+      target.shell_script_build_phases.each do |phase|
+        if phase.name == '[CP] Embed Pods Frameworks' && Array(phase.output_paths).empty? && Array(phase.output_file_list_paths).empty?
+          phase.always_out_of_date = '1'
+        end
+      end
+    end
+    project.save
+  end
 end

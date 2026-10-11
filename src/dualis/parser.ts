@@ -17,14 +17,17 @@ export function extractRefreshUrl(refreshHeader: string | undefined, endpoint = 
   if (!refreshHeader) return null;
   const urlPart = refreshHeader.match(/url=([^;]+)/i)?.[1]?.trim();
   if (!urlPart) return null;
-  return absoluteUrl(urlPart.replace(/^['"]|['"]$/g, ''), endpoint);
+  try { return absoluteUrl(decodeHtml(urlPart.replace(/^['"]|['"]$/g, '')), endpoint); }
+  catch { return null; }
 }
 
 export function extractRedirectUrl(html: string, endpoint = DUALIS_ENDPOINT): string | null {
-  const fromMeta = html.match(/http-equiv=["']refresh["'][^>]*content=["'][^"']*url=([^"']+)["']/i)?.[1];
-  if (fromMeta) return absoluteUrl(decodeHtml(fromMeta.trim()), endpoint);
+  const doc = parseHtml(html);
+  const meta = Array.from(doc.querySelectorAll('meta')).find((element) => element.getAttribute('http-equiv')?.toLowerCase() === 'refresh');
+  const fromMeta = extractRefreshUrl(meta?.getAttribute('content') ?? undefined, endpoint);
+  if (fromMeta) return fromMeta;
 
-  const fromLocation = html.match(/location\.href\s*=\s*["']([^"']+)["']/i)?.[1];
+  const fromLocation = html.match(/(?:window\.)?location(?:\.href)?\s*=\s*["']([^"']+)["']/i)?.[1];
   if (fromLocation) return absoluteUrl(decodeHtml(fromLocation.trim()), endpoint);
 
   const fromReplace = html.match(/location\.replace\(["']([^"']+)["']\)/i)?.[1];
@@ -201,11 +204,13 @@ export function parseExams(html: string): DualisExam[] {
 
 export function isTimeoutOrAccessDenied(html: string): boolean {
   const text = cleanText(html).toLowerCase();
+  const doc = parseHtml(html);
   return (
     text.includes('session') && text.includes('abgelaufen') ||
     text.includes('access denied') ||
     text.includes('zugriff verweigert') ||
-    text.includes('cn_loginform')
+    text.includes('cn_loginform') ||
+    Boolean(doc.querySelector('form input[name="usrname"]') && doc.querySelector('form input[name="pass"]'))
   );
 }
 

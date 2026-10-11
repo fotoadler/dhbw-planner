@@ -47,3 +47,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
+// Keep scene ownership in the tracked app sources, independent of cap sync.
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard scene is UIWindowScene else { return }
+        // UIKit creates the existing Capacitor controller from Main.storyboard.
+        (UIApplication.shared.delegate as? AppDelegate)?.window = window
+        open(connectionOptions.urlContexts)
+        for activity in connectionOptions.userActivities {
+            forward(activity)
+        }
+    }
+
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        open(URLContexts)
+    }
+
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        forward(userActivity)
+    }
+
+    private func open(_ contexts: Set<UIOpenURLContext>) {
+        for context in contexts {
+            var options: [UIApplication.OpenURLOptionsKey: Any] = [.openInPlace: context.options.openInPlace]
+            if let source = context.options.sourceApplication {
+                options[.sourceApplication] = source
+            }
+            _ = ApplicationDelegateProxy.shared.application(UIApplication.shared, open: context.url, options: options)
+        }
+    }
+
+    private func forward(_ activity: NSUserActivity) {
+        _ = ApplicationDelegateProxy.shared.application(UIApplication.shared, continue: activity, restorationHandler: { _ in })
+    }
+}

@@ -1,10 +1,12 @@
 /**
- * Schmale Wochenleiste: Mo–Fr immer, Wochenende bei Terminen oder wenn der
+ * Schmale Wochenleiste: Mo–Fr immer, beide Wochenendtage am aktuellen Wochenende,
+ * sonst Wochenende bei Terminen oder wenn der
  * ausgewählte Tag selbst ein leerer Samstag/Sonntag ist.
  * Pfeile wechseln weiter wochenweise. Mehr Navigation gibt es bewusst nicht.
  */
 
 import { addDaysYmd, parseYmdKey, ymdKey } from '../lib/berlinTime';
+import { isCurrentWeekendWeek } from './weekLayout';
 
 const WEEKDAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
@@ -15,16 +17,17 @@ interface Props {
   today: string;
   /** Tage (ymdKey) mit mindestens einem Termin. */
   busyDays: Set<string>;
+  scheduledDays?: Set<string>;
   onSelect: (day: string) => void;
   onWeekChange: (monday: string) => void;
 }
 
-export function WeekStrip({ monday, selected, today, busyDays, onSelect, onWeekChange }: Props) {
+export function WeekStrip({ monday, selected, today, busyDays, scheduledDays, onSelect, onWeekChange }: Props) {
   const mondayYmd = parseYmdKey(monday);
   const days = Array.from({ length: 7 }, (_, i) => ({
     key: ymdKey(addDaysYmd(mondayYmd, i)),
     weekdayIndex: i,
-  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || busyDays.has(key) || key === selected);
+  })).filter(({ key, weekdayIndex }) => weekdayIndex < 5 || isCurrentWeekendWeek(key, today) || busyDays.has(key) || scheduledDays?.has(key) || key === selected);
 
   const shiftWeek = (delta: number) => onWeekChange(ymdKey(addDaysYmd(mondayYmd, delta * 7)));
 

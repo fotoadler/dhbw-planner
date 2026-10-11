@@ -1,6 +1,6 @@
 # DHBW Planner
 
-DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Stundenpläne können entweder geführt über Standort, Studiengang und Kurs aus der öffentlichen DHBW-API ausgewählt oder weiterhin über einen persönlichen Rapla-Link eingebunden werden. Die App bereitet beide Quellen als Tages- und Wochenansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
+DHBW Planner ist eine schlanke, plattformübergreifende App für Studierende der DHBW. Stundenpläne können entweder geführt über Standort, Studiengang und Kurs aus der öffentlichen DHBW-API ausgewählt oder weiterhin über einen persönlichen Rapla-Link eingebunden werden. Die App bereitet beide Quellen als Tages-, Wochen- und Monatsansicht auf, ergänzt lokale Erinnerungen und bietet zusätzlich eine Dualis-Ansicht für Noten und Prüfungen.
 
 Die App arbeitet ohne eigenes Backend. Rapla- und Dualis-Daten werden direkt vom Gerät aus abgerufen; gespeicherte Einstellungen und der Stundenplan-Cache liegen lokal auf dem Gerät.
 
@@ -11,9 +11,9 @@ DHBW Planner ist keine offizielle App der DHBW.
 ## Features
 
 - Geführte Kursauswahl über Standort, Studiengang und Kurs — ohne Rapla-Link
-- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
+- Rapla-2.0-Stundenplan als manueller Fallback mit Tagesansicht, Wochenansicht, Monatsansicht, Kursdetails, Räumen und — sofern die Quelle sie liefert — Dozentennamen
 - Offline-Anzeige des zuletzt geladenen Stundenplans
-- iCal-/ICS-Export über das native Share-Sheet
+- Optionale Synchronisierung mit dem Gerätekalender in der Android- und iOS-App
 - Lokale Benachrichtigungen für Morgenübersichten, Live-Hinweise und Vorab-Erinnerungen
 - Dualis-Login für Modulnoten, Credits, Semester und Prüfungsleistungen
 - Uni-Mail als eingebettete Ansicht des standorteigenen Webmail-Logins; Standorte ohne bestätigten Zugang zeigen dort eine Hilfe statt eines geratenen Logins
@@ -85,9 +85,17 @@ Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Be
 
 Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
 
-In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages- oder Wochenansicht zeigt.
+In den Einstellungen kann außerdem festgelegt werden, ob der Kalender beim Öffnen standardmäßig die Tages-, Wochen- oder Monatsansicht zeigt. Die Monatsansicht zeigt vollständige Wochen von Montag bis Sonntag. Auf Smartphones markieren Punkte und Zähler die Termine, auf größeren Displays erscheinen zusätzlich Uhrzeiten und Titel. Ein Tipp auf einen Tag öffnet das Detailfenster mit allen Terminen des Tages und einem Button zur Tagesansicht; die Pfeile wechseln den Monat und „Heute“ führt zum aktuellen Monat zurück.
+
+Am Samstag und Sonntag zeigt die Wochenansicht immer beide Wochenendtage. Unter der Woche bleiben Samstag beziehungsweise Sonntag sichtbar, sobald dort ein geladener Termin liegt – auch ein Ganztagshinweis oder ein Termin eines ausgeblendeten Moduls. Nur leere Wochenendtage werden ausgeblendet. Dieselbe Regel gilt für die Tagesleiste und Tagesnavigation. Der heutige Tag und die Sichtbarkeit aktualisieren sich in Berliner Ortszeit, auch nach Mitternacht oder beim Zurückkehren zur App.
 
 ## Datenschutz
+
+In den installierten Android- und iOS-Apps lässt sich über den Teilen-Button die Synchronisierung mit dem Gerätekalender aktivieren. Ein Dialog erklärt zuerst den Abgleich; erst nach Bestätigung wird die native Kalenderberechtigung angefordert. Nach Freigabe des Kalenderzugriffs legt die App einen eigenen Kalender „DHBW Planner“ an. Nach erfolgreichen Stundenplanabrufen werden alle geladenen, nicht ausgeblendeten Termine einschließlich vergangener Semester abgeglichen. Nur app-eigene, markierte Termine werden bearbeitet; Löschungen erfolgen erst nach einem vollständigen erfolgreichen Abruf. Teilabrufe ergänzen Termine, ohne bestehende zu löschen. Ein Kurswechsel ersetzt die bisherigen app-eigenen Kurstermine nach erfolgreichem Abruf automatisch. Beim Deaktivieren pausiert der Abgleich, bereits übertragene Termine bleiben bestehen. Eine Aktualisierung bei geschlossener App ist nicht garantiert.
+
+Der Teilen-Button öffnet zunächst die Erklärung und nach der Aktivierung die Verwaltung zum Aktualisieren oder Pausieren. Der frühere ICS-Export wurde entfernt, weil importierte Dateien keine automatische Aktualisierung ermöglichen. Im Browser steht die native Synchronisierung nicht zur Verfügung. Bereits früher importierte Termine gehören nicht zum neuen App-Kalender und werden nicht verändert; sie können vor der Aktivierung manuell entfernt werden, um Doppelanzeigen zu vermeiden.
+
+Abgleichsregeln, lokale Prüfergebnisse und noch erforderliche Geräteprüfungen stehen in [docs/CALENDAR_SYNC.md](docs/CALENDAR_SYNC.md).
 
 Kurzfassung:
 
@@ -112,10 +120,10 @@ Für die Apple App Review gibt es einen vollständig lokalen, offen dokumentiert
 ```text
 src/
   demo/                      Lokaler Demomodus für die App Review
+  calendar/                  Abgleich mit dem nativen Gerätekalender
   dhbw/                      Standortprofile für Dualis- und Mail-Integrationen
   dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
   dualis/                    Dualis-Client, Parser und Typen
-  ical/                      ICS-Export
   lib/                       Zeit-, Theme- und Haptik-Helfer sowie Projektlinks
   liveActivity/              Live-Aktivitäten und deren Planung
   mail/                      Mail-Adapter und Brücke zur nativen Mailansicht
@@ -126,8 +134,9 @@ src/
   seezeit/                   Seezeit-Speisepläne für Ravensburg und Friedrichshafen
   store/                     Persistente Einstellungen und Cache
   ui/                        React-Komponenten
-tests/                       Parser-, Planner-, Dualis-, ICS- und Layouttests
+tests/                       Parser-, Planner-, Dualis-, Kalender- und Layouttests
 plugins/
+  capacitor-calendar-sync/  EventKit / Android Calendar Provider
   capacitor-course-live-activity/
                              Live-Aktivitäten auf iOS
   capacitor-embedded-mail/   Native Mailansicht über der App

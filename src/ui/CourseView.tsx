@@ -25,7 +25,10 @@ function isPast(entry: ScheduleEntry, now: Date): boolean {
  */
 export function timeLabel(entry: ScheduleEntry): string {
   if (entry.start.getTime() === entry.end.getTime()) return formatTime(entry.start);
-  if (isDeadlineOrAllDay(entry)) return 'Ganztägig';
+  if (isDeadlineOrAllDay(entry)) {
+    const { hh, mm } = berlinParts(entry.start);
+    return hh === 0 && mm === 0 ? 'Ganztägig' : formatTime(entry.start);
+  }
   return `${formatTime(entry.start)}–${formatTime(entry.end)}`;
 }
 

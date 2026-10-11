@@ -18,6 +18,12 @@ describe('timeLabel', () => {
   it('zeigt bei Deadlines nur den Zeitpunkt', () => {
     expect(timeLabel(entry('2026-09-15T08:00:00Z', '2026-09-15T08:00:00Z'))).toBe('10:00');
   });
+
+  it('bezeichnet eine kurze Abgabe mit Uhrzeit nicht als ganztägig', () => {
+    const deadline = entry('2026-10-05T10:00:00+02:00', '2026-10-05T10:15:00+02:00');
+    deadline.title = 'Abgabe Projekt';
+    expect(timeLabel(deadline)).toBe('10:00');
+  });
 });
 
 describe('courseDateLabel', () => {

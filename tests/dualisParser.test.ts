@@ -131,6 +131,11 @@ describe('Dualis parser', () => {
     );
   });
 
+  it('liest umgekehrte Meta-Attribute, HTML-Entities und relative Weiterleitungen', () => {
+    expect(extractRedirectUrl('<META content="0; URL=next?x=1&amp;y=2" HTTP-EQUIV="Refresh">', 'https://dualis.dhbw.de/scripts/start')).toBe('https://dualis.dhbw.de/scripts/next?x=1&y=2');
+    expect(extractRedirectUrl('<script>window.location = "/scripts/menu";</script>')).toBe('https://dualis.dhbw.de/scripts/menu');
+  });
+
   it('extrahiert die wichtigen Hauptseiten-URLs', () => {
     const urls = parseMainPageUrls(MAIN_PAGE);
     expect(urls.courseResults).toContain('COURSERESULTS');

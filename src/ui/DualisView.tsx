@@ -180,8 +180,8 @@ function DualisOverview({ loading, summary, modules, onRefresh }: OverviewProps)
   return (
     <>
       <section className="dualis-metrics">
-        <Metric value={formatValue(summary?.gpaTotal)} label="GPA gesamt" />
-        <Metric value={formatValue(summary?.gpaMainModules)} label="Hauptmodule" />
+        <Metric value={formatGpa(summary?.gpaTotal)} label="GPA gesamt" />
+        <Metric value={formatGpa(summary?.gpaMainModules)} label="Hauptmodule" />
         <Metric
           value={
             summary?.creditsGained != null && summary?.creditsTotal != null
@@ -349,4 +349,9 @@ function ModuleRow({ module, tappable = false, expanded = false }: {
 function formatValue(value: number | null | undefined): string {
   if (value === null || value === undefined) return '–';
   return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(value);
+}
+
+export function formatGpa(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '–';
+  return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(value);
 }

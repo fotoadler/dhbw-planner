@@ -63,6 +63,19 @@ describe('resolveBackAction', () => {
     expect(resolveBackAction(state({ calendarView: 'week' }))).toBe('to-calendar-day');
   });
 
+  it('wechselt von der Monats- in die Tagesansicht', () => {
+    expect(resolveBackAction(state({ calendarView: 'month' }))).toBe('to-calendar-day');
+  });
+
+  it('schließt vor einem Ansichtswechsel das Tagesdetailfenster im Monat', () => {
+    expect(resolveBackAction(state({ calendarView: 'month', weekDetailsOpen: true }))).toBe('close-week-details');
+  });
+
+  it('schließt zuerst die Wochendetails und bleibt dabei in der Wochenansicht', () => {
+    expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: true }))).toBe('close-week-details');
+    expect(resolveBackAction(state({ calendarView: 'week', weekDetailsOpen: false }))).toBe('to-calendar-day');
+  });
+
   it('baut den Zustand Ebene für Ebene ab, statt mehrere zu überspringen', () => {
     const deep = state({
       showSettings: true,

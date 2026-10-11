@@ -2,7 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { ScheduleEntry } from '../types';
 import { berlinDayKey, formatTime, parseYmdKey } from '../lib/berlinTime';
 import { weekNowMarker } from './weekNow';
-import { entryMinuteRange, isUntimedEntry, timedGeometry, weekClusters, WEEK_FIRST_HOUR } from './weekLayout';
+import { entryMinuteRange, isUntimedEntry, isWeekendDay, timedGeometry, weekClusters, WEEK_FIRST_HOUR } from './weekLayout';
+import { useCurrentTime } from './useCurrentTime';
 import { timeLabel } from './CourseView';
 import { scheduleModuleKey } from '../schedule/modules';
 import { selectionHaptic } from '../lib/haptics';
@@ -15,6 +16,9 @@ interface Props {
   weekDays: string[];
   entriesByDay: Record<string, ScheduleEntry[]>;
   today: string;
+  now?: Date;
+  /** Unfiltered schedule days keep weekends visible even with hidden modules. */
+  scheduledDays?: Set<string>;
   hourHeight?: number;
   hiddenModuleKeys?: Set<string>;
   onToggleModule?: (moduleKey: string) => void;
@@ -100,6 +104,8 @@ export function WeekView({
   weekDays,
   entriesByDay,
   today,
+  now: suppliedNow,
+  scheduledDays,
   hourHeight = 64,
   hiddenModuleKeys,
   onToggleModule,
@@ -114,8 +120,11 @@ export function WeekView({
   // jedem touchmove passieren.
   const [pinchHourHeight, setPinchHourHeight] = useState<number | null>(null);
   const hourPx = pinchHourHeight ?? hourHeight;
-  const [now, setNow] = useState(() => new Date());
+  const clock = useCurrentTime(suppliedNow === undefined);
+  const now = suppliedNow ?? clock;
   const currentDay = berlinDayKey(now);
+  const showWeekend = isWeekendDay(currentDay);
+  const highlightedDay = suppliedNow ? today : currentDay;
   const touch = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
   const initialHourHeight = useRef<number>(hourPx);
@@ -124,22 +133,6 @@ export function WeekView({
   const suppressTap = useRef(false);
   const viewRef = useRef<HTMLDivElement>(null);
   const moveHandlerRef = useRef<((event: TouchEvent) => void) | null>(null);
-
-  useEffect(() => {
-    const refresh = () => setNow(new Date());
-    const onVisible = () => { if (document.visibilityState === 'visible') refresh(); };
-    const timer = window.setInterval(refresh, 30_000);
-    // Background tabs/WebViews may suspend timers. Refresh immediately on return.
-    document.addEventListener('visibilitychange', onVisible);
-    window.addEventListener('focus', refresh);
-    window.addEventListener('pageshow', refresh);
-    return () => {
-      window.clearInterval(timer);
-      document.removeEventListener('visibilitychange', onVisible);
-      window.removeEventListener('focus', refresh);
-      window.removeEventListener('pageshow', refresh);
-    };
-  }, []);
 
   useEffect(() => {
     const view = viewRef.current;
@@ -159,10 +152,11 @@ export function WeekView({
     setPinchHourHeight(null);
   }, [hourHeight]);
 
-  // Leere Wochenendtage ausblenden; heute bleibt für die Jetzt-Markierung sichtbar.
+  // Both weekend days stay visible throughout Saturday/Sunday. Scheduled days
+  // always stay visible, including notices and entries hidden by module filters.
   const days = weekDays
     .map((key, weekdayIndex) => ({ key, weekdayIndex }))
-    .filter(({ key, weekdayIndex }) => weekdayIndex < 5 || key === currentDay || (entriesByDay[key]?.length ?? 0) > 0);
+    .filter(({ key, weekdayIndex }) => weekdayIndex < 5 || showWeekend || scheduledDays?.has(key) || (entriesByDay[key]?.length ?? 0) > 0);
   const dayLayouts = days.map(({ key }) => {
     const entries = entriesByDay[key] ?? [];
     return {
@@ -300,7 +294,7 @@ export function WeekView({
           return (
             <button
               key={day}
-              className={`weekview__dayhead${day === today ? ' is-today' : ''}`}
+              className={`weekview__dayhead${day === highlightedDay ? ' is-today' : ''}`}
               onClick={() => onOpenDay(day)}
             >
               <span className="weekview__wd">{WEEKDAY_SHORT[weekdayIndex]}</span>
@@ -350,7 +344,7 @@ export function WeekView({
             ))}
           </div>
           {dayLayouts.map(({ key: day, clusters }) => (
-            <div key={day} className={`weekview__col${day === today ? ' is-today' : ''}`}>
+            <div key={day} className={`weekview__col${day === highlightedDay ? ' is-today' : ''}`}>
               {clusters.map((cluster, clusterIndex) => {
                 if (cluster.entries.length > 1) {
                   const top = ((Math.max(firstHour * 60, cluster.start) - firstHour * 60) / 60) * hourPx;

@@ -1,7 +1,14 @@
-import { berlinDayKey, berlinParts, isDeadlineOrAllDay } from '../lib/berlinTime';
+import { berlinDayKey, berlinParts, isDeadlineOrAllDay, parseYmdKey } from '../lib/berlinTime';
 import type { ScheduleEntry } from '../types';
 
 export const WEEK_FIRST_HOUR = 8;
+
+/** Input is a Berlin calendar date, independent of the device time zone. */
+export function isWeekendDay(day: string): boolean {
+  const { y, m, d } = parseYmdKey(day);
+  const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+  return weekday === 0 || weekday === 6;
+}
 
 export function wallMinutes(date: Date): number {
   const { hh, mm, ss } = berlinParts(date);

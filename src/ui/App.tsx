@@ -4,6 +4,8 @@ import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme
 import { useBackButton } from './useBackButton';
 import { resolveBackAction, type CalendarView, type DualisPage, type Section } from './backNavigation';
 import { useSchedule } from './useSchedule';
+import { useCurrentTime } from './useCurrentTime';
+import { isWeekendDay } from './weekLayout';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { SetupWizard } from './SetupWizard';
@@ -53,7 +55,8 @@ export function App() {
   );
   const dualis = useDualis(settings?.apiSelection?.site);
 
-  const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(new Date());
+  const now = useCurrentTime();
+  const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(now);
   const [section, setSection] = useState<Section>(demoScreen === 'grades' ? 'dualis' : 'calendar');
   const [calendarView, setCalendarView] = useState<CalendarView | null>(() => {
     if (!demoScreen) return null;
@@ -147,6 +150,7 @@ export function App() {
   const displayEntries = showHiddenModules ? allEntries : entries;
 
   const busyDays = useMemo(() => new Set(displayEntries.map((e) => berlinDayKey(e.start))), [displayEntries]);
+  const scheduledDays = useMemo(() => new Set(allEntries.map((e) => berlinDayKey(e.start))), [allEntries]);
   const dayEntries = useMemo(
     () => displayEntries.filter((e) => berlinDayKey(e.start) === selectedDay),
     [displayEntries, selectedDay],
@@ -213,10 +217,7 @@ export function App() {
   }
 
   const isVisiblePlanDay = (day: string): boolean => {
-    const { y, m, d } = parseYmdKey(day);
-    const weekday = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
-    const isWeekend = weekday === 0 || weekday === 6;
-    return !isWeekend || busyDays.has(day);
+    return !isWeekendDay(day) || isWeekendDay(today) || scheduledDays.has(day);
   };
 
   const selectDay = (day: string) => {
@@ -446,6 +447,7 @@ export function App() {
             selected={selectedDay}
             today={today}
             busyDays={busyDays}
+            scheduledDays={scheduledDays}
             onSelect={selectDay}
             onWeekChange={(newMonday) => selectDay(newMonday)}
           />
@@ -482,6 +484,8 @@ export function App() {
           entriesByDay={entriesByDay}
           today={today}
           hourHeight={settings.calendarHourHeight}
+          now={now}
+          scheduledDays={scheduledDays}
           hiddenModuleKeys={new Set(settings.hiddenModules)}
           onToggleModule={(mKey) => setConfirmModuleKey(mKey)}
           onHourHeightChange={(newHeight) => void applySettings({ ...settings, calendarHourHeight: newHeight })}

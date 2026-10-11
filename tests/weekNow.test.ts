@@ -5,6 +5,13 @@ import { WeekView } from '../src/ui/WeekView';
 import { weekNowMarker } from '../src/ui/weekNow';
 import { wallMinutes } from '../src/ui/weekLayout';
 import { berlinDayKey, formatTime } from '../src/lib/berlinTime';
+import { parseRaplaWeek } from '../src/rapla/parser';
+import { WEEK_FIXTURE } from './fixtures';
+const resume = vi.hoisted(() => ({ current: undefined as (() => void) | undefined }));
+vi.mock('@capacitor/app', () => ({ App: { addListener: vi.fn((_name: string, handler: () => void) => {
+  resume.current = handler;
+  return Promise.resolve({ remove: vi.fn() });
+}) } }));
 
 const weekDays = ['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09', '2026-10-10', '2026-10-11'];
 
@@ -76,6 +83,19 @@ afterEach(() => {
 });
 
 describe('dynamische Jetzt-Linie', () => {
+  it('behält Samstagstermine und sonntägliche Mitternachts-Hinweise aus Rapla auch am Dienstag sichtbar', () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-07-07T08:00:00Z'));
+    const entries = parseRaplaWeek(WEEK_FIXTURE.replace('Do 09.07.', 'So 12.07.').replace('Fr 10.07.', 'Sa 11.07.'));
+    const entriesByDay: Record<string, typeof entries> = {};
+    for (const entry of entries) (entriesByDay[berlinDayKey(entry.start)] ??= []).push(entry);
+    expect(entriesByDay['2026-07-11'][0].title).toBe('Selbststudium');
+    expect(entriesByDay['2026-07-12'][0].title).toContain('Deadline');
+    render({ weekDays: ['2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10', '2026-07-11', '2026-07-12'], entriesByDay });
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__notice')?.textContent).toContain('Deadline');
+    expect(container.textContent).toContain('Sa11.');
+    expect(container.textContent).toContain('So12.');
+  });
   it('aktualisiert Position und Beschriftung regelmäßig und räumt den Timer auf', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-10-07T08:15:00Z'));
@@ -105,13 +125,58 @@ describe('dynamische Jetzt-Linie', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-10-10T08:00:00Z'));
     render();
-    expect(container.querySelectorAll('.weekview__col')).toHaveLength(6);
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
     expect(marker()).not.toBeNull();
-    expect(container.querySelector<HTMLElement>('.weekview__now-dot')?.style.left).toBe(`${5 / 6 * 100}%`);
+    expect(container.querySelector<HTMLElement>('.weekview__now-dot')?.style.left).toBe(`${5 / 7 * 100}%`);
+    expect(container.querySelector('.weekview__dayhead.is-today')?.textContent).toBe('Sa10.');
     act(() => vi.advanceTimersByTime(24 * 60 * 60_000));
     expect(marker()).not.toBeNull();
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__dayhead.is-today')?.textContent).toBe('So11.');
     render({ weekDays: ['2026-10-12'] });
     expect(marker()).toBeNull();
+  });
+
+  it('blendet beide leeren Wochenendtage ab Berliner Samstag ein, obwohl UTC noch Freitag ist', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-09T21:59:59Z')); render();
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(5);
+    vi.setSystemTime(new Date('2026-10-09T22:00:00Z'));
+    act(() => window.dispatchEvent(new Event('focus')));
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__dayhead.is-today')?.textContent).toBe('Sa10.');
+  });
+
+  it('zeigt beim nativen App-Resume sofort das Wochenende nach einem suspendierten Freitag', () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-09T18:00:00Z')); render();
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(5);
+    vi.setSystemTime(new Date('2026-10-10T08:00:00Z'));
+    act(() => resume.current!());
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__dayhead.is-today')?.textContent).toBe('Sa10.');
+  });
+
+  it.each([
+    ['2026-10-10', '09:00', '10:00', 'weekview__event'],
+    ['2026-10-11', '09:00', '10:00', 'weekview__event'],
+    ['2026-10-10', '00:00', '23:59', 'weekview__notice'],
+    ['2026-10-11', '00:00', '00:00', 'weekview__notice'],
+  ])('zeigt unter der Woche den belegten Wochenendtag %s auch für Hinweise', (day, start, end, cssClass) => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-07T08:00:00Z'));
+    const entry = { title: 'Rapla-Termin', start: new Date(`${day}T${start}:00+02:00`), end: new Date(`${day}T${end}:00+02:00`), rooms: [], lecturers: [], type: 'lecture' as const };
+    render({ entriesByDay: { [day]: [entry] } });
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(6);
+    expect([...container.querySelectorAll('.weekview__dayhead')].map(el => el.textContent)).toContain(day.endsWith('10') ? 'Sa10.' : 'So11.');
+    expect(container.querySelector(`.${cssClass}`)?.textContent).toContain('Rapla-Termin');
+  });
+
+  it('hält beide belegten Wochenendtage auch nach dem Wechsel zum Montag sichtbar', () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-11T21:59:59Z'));
+    render({ scheduledDays: new Set(['2026-10-10', '2026-10-11']) });
+    vi.setSystemTime(new Date('2026-10-11T22:00:00Z'));
+    act(() => window.dispatchEvent(new Event('focus')));
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__dayhead.is-today')).toBeNull();
   });
 
   it('entfernt die Linie bei Berliner Wochenwechsel auch mit veraltetem today-Prop', () => {

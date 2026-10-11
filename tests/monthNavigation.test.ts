@@ -7,11 +7,11 @@ import { monthWeekKeys } from '../src/ui/monthLayout';
 import type { ScheduleEntry } from '../src/types';
 
 const { ensureWeek, applySettings } = vi.hoisted(() => ({ ensureWeek: vi.fn(), applySettings: vi.fn() }));
-const scheduleState = vi.hoisted(() => ({ entries: [] as ScheduleEntry[] }));
+const scheduleState = vi.hoisted(() => ({ entries: [] as ScheduleEntry[], allEntries: undefined as ScheduleEntry[] | undefined }));
 const backHandler = vi.hoisted(() => ({ current: undefined as (() => boolean) | undefined }));
 vi.mock('../src/ui/useSchedule', () => ({ useSchedule: () => ({
   settings: { ...DEFAULT_SETTINGS, rapla: { baseUrl: 'https://example.test', user: 'test', file: 'test' }, mensaEnabled: false },
-  entries: scheduleState.entries, allEntries: scheduleState.entries, availableModules: [], updatedAt: null, refreshing: false, offline: false, isReviewDemo: false,
+  entries: scheduleState.entries, allEntries: scheduleState.allEntries ?? scheduleState.entries, availableModules: [], updatedAt: null, refreshing: false, offline: false, isReviewDemo: false,
   ensureWeek, applySettings, refresh: vi.fn(),
 }) }));
 vi.mock('../src/ui/useMensa', () => ({ useMensa: () => ({}) }));
@@ -27,6 +27,7 @@ beforeEach(() => {
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
   ensureWeek.mockReset(); applySettings.mockReset();
   scheduleState.entries = [];
+  scheduleState.allEntries = undefined;
   (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   container = document.createElement('div'); container.id = 'root'; document.body.append(container);
   root = createRoot(container);
@@ -39,6 +40,30 @@ afterEach(() => {
 function click(selector: string) { act(() => container.querySelector<HTMLButtonElement>(selector)!.click()); }
 
 describe('Monatsnavigation in der App', () => {
+  it('aktualisiert beide Wochenendtage und den heutigen Tag auch in der Tagesleiste beim Wiederöffnen', () => {
+    vi.setSystemTime(new Date('2026-04-03T22:00:00Z'));
+    act(() => window.dispatchEvent(new Event('focus')));
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(7);
+    expect(container.querySelector('.weekview__dayhead.is-today')?.textContent).toBe('Sa4.');
+    click('.segmented button:nth-child(1)');
+    expect(container.querySelectorAll('.weekstrip__day')).toHaveLength(7);
+    expect(container.querySelector('.weekstrip__day.is-today')?.textContent).toBe('Sa4');
+    vi.setSystemTime(new Date('2026-04-05T22:00:00Z'));
+    act(() => window.dispatchEvent(new Event('focus')));
+    expect(container.querySelectorAll('.weekstrip__day')).toHaveLength(5);
+    click('.segmented button:nth-child(2)');
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(5);
+  });
+
+  it('behält Wochenendtage mit ausgeblendeten Terminen in Raster und Tagesleiste', () => {
+    scheduleState.allEntries = [{ title: 'Ausgeblendetes Modul', start: new Date('2026-04-04T09:00:00+02:00'), end: new Date('2026-04-04T10:00:00+02:00'), rooms: [], lecturers: [], type: 'lecture' }];
+    act(() => root.render(createElement(App)));
+    expect(container.querySelectorAll('.weekview__col')).toHaveLength(6);
+    expect(container.querySelector('.weekview__event')).toBeNull();
+    click('.segmented button:nth-child(1)');
+    expect(container.querySelectorAll('.weekstrip__day')).toHaveLength(6);
+    expect(container.textContent).toContain('Sa4');
+  });
   it('lädt alle sichtbaren Wochen, wechselt Monate und springt über Heute zurück', () => {
     expect(container.querySelectorAll('.segmented button')).toHaveLength(3);
     click('.segmented button:nth-child(3)');

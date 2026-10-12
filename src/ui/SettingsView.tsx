@@ -19,9 +19,10 @@ interface Props {
   updatedAt: Date | null;
   onChange: (next: AppSettings) => void;
   onClose?: () => void;
+  onChangeSource?: () => void;
 }
 
-export function SettingsView({ settings, availableModules, updatedAt, onChange }: Props) {
+export function SettingsView({ settings, availableModules, updatedAt, onChange, onChangeSource }: Props) {
   const [link, setLink] = useState(settings.raplaLink);
   const [linkError, setLinkError] = useState(false);
   const [moduleQuery, setModuleQuery] = useState('');
@@ -118,7 +119,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
           )}
           <button
             className="sheet__textbtn"
-            onClick={() => onChange({
+            onClick={() => onChangeSource ? onChangeSource() : onChange({
               ...settings,
               raplaLink: '',
               rapla: null,
@@ -127,7 +128,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
               hiddenModules: [],
             })}
           >
-            Stundenplan ändern
+            {onChangeSource ? 'Kurs hinzufügen' : 'Stundenplan ändern'}
           </button>
         </section>
 

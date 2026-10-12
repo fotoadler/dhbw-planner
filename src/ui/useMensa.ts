@@ -32,6 +32,13 @@ export function useMensa(mensa: Mensa, enabled: boolean) {
     try {
       const fresh = await loadDiningSnapshot(requestedProfile);
       if (siteRef.current !== requestedSite) return;
+      // A failed additional source keeps its own cached days without hiding other facilities.
+      const previous = snapshotRef.current;
+      if (previous?.site === requestedSite) {
+        for (const facility of fresh.facilities) {
+          if (facility.loadError) facility.days = previous.facilities.find(old => old.id === facility.id)?.days ?? {};
+        }
+      }
       const updatedAt = Date.now();
       setSnapshot(fresh);
       setStatus('ready');

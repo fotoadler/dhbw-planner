@@ -141,6 +141,9 @@ describe('Monatsnavigation in der App', () => {
     const native = vi.spyOn(Capacitor, 'isNativePlatform').mockReturnValue(true);
     try {
       act(() => root.render(createElement(App)));
+      const actions = [...container.querySelectorAll('.app__actions > button[aria-label]')].map(button => button.getAttribute('aria-label'));
+      expect(actions.slice(-3)).toEqual(['Kursprofile', 'Stundenplan teilen', 'Einstellungen']);
+      expect(container.querySelector('.course-switcher')).toBeNull();
       click('[aria-label="Stundenplan teilen"]');
       expect(container.querySelector('[role="dialog"]')?.textContent).toContain('Kalender verbinden');
       expect(container.querySelector('.settings-page')).toBeNull();

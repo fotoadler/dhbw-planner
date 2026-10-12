@@ -53,3 +53,17 @@ describe('Kalender-Standardansicht in den Preferences', () => {
     await expect(loadSettings()).resolves.toMatchObject({ calendarSyncEnabled: true });
   });
 });
+
+it('validiert gespeicherte Profile und stellt einen ungültigen aktiven Kurs auf den Hauptkurs zurück', async () => {
+  preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: {
+    scheduleSource: 'dhbw-api', apiSelection: { site: 'RV', degree: 'QA', course: 'QA-A' }, hiddenModules: ['hidden'],
+    viewedProfileId: 'missing', courseProfiles: [
+      { id: 'bad', scheduleSource: 'dhbw-api', apiSelection: { site: '', degree: '', course: '' } },
+      { id: 'parallel', name: 'Parallelkurs', scheduleSource: 'dhbw-api', apiSelection: { site: 'FN', degree: 'QA', course: 'QA-B' }, hiddenModules: [] },
+    ],
+  } }) });
+  const settings = await loadSettings();
+  expect(settings.courseProfiles).toHaveLength(2);
+  expect(settings.viewedProfileId).toBe(settings.primaryProfileId);
+  expect(settings.courseProfiles?.find(p => p.id === settings.primaryProfileId)?.hiddenModules).toEqual(['hidden']);
+});

@@ -10,6 +10,7 @@ type Step = 'site' | 'degree' | 'course' | 'manual';
 
 interface Props {
   initialLink?: string;
+  onCancel?: () => void;
   onSaveRapla: (link: string, config: RaplaConfig) => void;
   onSaveApi: (selection: ApiSelection) => void;
 }
@@ -162,7 +163,7 @@ function PickerFooter({
   );
 }
 
-export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props) {
+export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi, onCancel }: Props) {
   const [step, setStep] = useState<Step>('site');
   const [sites, setSites] = useState<DhbwSite[]>([]);
   const [courses, setCourses] = useState<DhbwCourse[]>([]);
@@ -243,7 +244,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
   };
 
   if (step === 'manual') {
-    return <LinkSetup initialLink={initialLink} onSave={onSaveRapla} onBack={() => { setError(null); setStep('site'); }} />;
+    return <><div className="course-setup-cancel">{onCancel && <button type="button" className="sheet__textbtn" onClick={onCancel}>Abbrechen</button>}</div><LinkSetup initialLink={initialLink} onSave={onSaveRapla} onBack={() => { setError(null); setStep('site'); }} /></>;
   }
 
   const stepNumber = step === 'site' ? 1 : step === 'degree' ? 2 : 3;
@@ -259,7 +260,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
   return (
     <main className="setup setup--guided">
       <div className="setup__top">
-        <div className="setup__brandline"><span className="setup__step">Schritt {stepNumber} von 3</span></div>
+        <div className="setup__brandline"><span className="setup__step">Schritt {stepNumber} von 3</span>{onCancel && <button type="button" className="sheet__textbtn" onClick={onCancel}>Abbrechen</button>}</div>
         {step !== 'site' && (
           <button className="setup__back" type="button" onClick={goBack}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
@@ -268,7 +269,7 @@ export function SetupWizard({ initialLink = '', onSaveRapla, onSaveApi }: Props)
         )}
         {context && <p className="setup__context">{context}</p>}
         <h1 className="setup__title">
-          {step === 'site' && 'Wo studierst du?'}
+          {step === 'site' && (onCancel ? 'Standort' : 'Wo studierst du?')}
           {step === 'degree' && 'Studiengang'}
           {step === 'course' && 'Kurs'}
         </h1>

@@ -15,6 +15,7 @@ import type {
   DiningSnapshot,
 } from './model';
 import type { DiningFacilityProfile, DiningSiteProfile } from './sites/types';
+import { fetchMyMensaPlan } from './myMensa';
 import { fetchStwHeidelbergPlan } from './stwHeidelberg';
 
 const DEFAULT_CATEGORIES: Record<DiningApiBucket, string> = {
@@ -30,6 +31,30 @@ interface ApiMealWithBucket {
 }
 
 export async function loadDiningSnapshot(
+  profile: DiningSiteProfile,
+  client = new DhbwMensaClient(),
+): Promise<DiningSnapshot> {
+  const additional = profile.facilities.filter(facility => facility.source?.kind === 'my-mensa');
+  if (!additional.length) return loadBaseDiningSnapshot(profile, client);
+  const baseProfile = { ...profile, facilities: profile.facilities.filter(facility => !facility.source) };
+  const [base, ...plans] = await Promise.allSettled([
+    loadBaseDiningSnapshot(baseProfile, client),
+    ...additional.map(facility => fetchMyMensaPlan(facility.source!.mensaId, facility.id)),
+  ]);
+  if (base.status === 'rejected' && plans.every(plan => plan.status === 'rejected')) throw base.reason;
+  const snapshot = base.status === 'fulfilled' ? base.value as DiningSnapshot : emptySnapshot(baseProfile);
+  if (base.status === 'rejected') snapshot.facilities.forEach(facility => { facility.loadError = 'Speiseplan konnte nicht geladen werden.'; });
+  additional.forEach((facility, index) => {
+    const mapped = mapFacility(profile, facility);
+    const plan = plans[index];
+    if (plan.status === 'fulfilled') mapped.days = plan.value as Record<string, DiningDay>;
+    else mapped.loadError = 'Speiseplan konnte nicht geladen werden.';
+    snapshot.facilities.push(mapped);
+  });
+  return snapshot;
+}
+
+async function loadBaseDiningSnapshot(
   profile: DiningSiteProfile,
   client = new DhbwMensaClient(),
 ): Promise<DiningSnapshot> {

@@ -13,6 +13,7 @@ import { DEFAULT_BASE_URL, type RaplaConfig } from '../rapla/client';
 import { Mensa, mensaSiteCode } from '../seezeit/types';
 import type { DiningSnapshot } from '../mensa/model';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
+import { withCourseProfiles, type CourseProfile } from './courseProfiles';
 import { canonicalCourseName } from '../dhbwApi/courseName';
 
 const SETTINGS_KEY = 'settings.v4';
@@ -31,6 +32,9 @@ export interface ApiSelection {
 }
 
 export interface AppSettings {
+  courseProfiles?: CourseProfile[];
+  primaryProfileId?: string;
+  viewedProfileId?: string;
   /** Der vom Nutzer eingetragene Rapla-Link (Original, für die Anzeige). */
   raplaLink: string;
   rapla: RaplaConfig | null;
@@ -134,6 +138,23 @@ function parseHiddenModules(value: unknown): string[] {
   return [...new Set(value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean))];
 }
 
+function parseCourseProfiles(value: unknown): CourseProfile[] {
+  if (!Array.isArray(value)) return [];
+  const profiles: CourseProfile[] = [];
+  for (const item of value) {
+    if (!isRecord(item) || typeof item.id !== 'string' || !item.id.trim() || profiles.some(p => p.id === item.id)) continue;
+    const apiSelection = parseApiSelection(item.apiSelection);
+    const rapla = parseRaplaConfig(item.rapla);
+    const scheduleSource = item.scheduleSource === 'dhbw-api' ? 'dhbw-api' : 'rapla';
+    if (scheduleSource === 'dhbw-api' ? !apiSelection : !rapla) continue;
+    profiles.push({ id: item.id, name: typeof item.name === 'string' && item.name.trim() ? item.name.trim().slice(0, 60) : apiSelection?.course || rapla?.file || 'Rapla',
+      scheduleSource, apiSelection: scheduleSource === 'dhbw-api' ? apiSelection : null,
+      rapla: scheduleSource === 'rapla' ? rapla : null,
+      raplaLink: typeof item.raplaLink === 'string' ? item.raplaLink : '', hiddenModules: parseHiddenModules(item.hiddenModules) });
+  }
+  return profiles;
+}
+
 function defaultSettings(): AppSettings {
   return { ...DEFAULT_SETTINGS };
 }
@@ -159,6 +180,9 @@ function parseSettings(raw: unknown): AppSettings {
     data.scheduleSource === 'dhbw-api' && apiSelection ? 'dhbw-api' : 'rapla';
 
   return {
+    courseProfiles: parseCourseProfiles(data.courseProfiles),
+    primaryProfileId: typeof data.primaryProfileId === 'string' ? data.primaryProfileId : undefined,
+    viewedProfileId: typeof data.viewedProfileId === 'string' ? data.viewedProfileId : undefined,
     raplaLink: typeof data.raplaLink === 'string' ? data.raplaLink : DEFAULT_SETTINGS.raplaLink,
     rapla: parseRaplaConfig(data.rapla),
     scheduleSource,
@@ -197,7 +221,7 @@ export async function loadSettings(): Promise<AppSettings> {
       }
     }
     if (!value) return defaultSettings();
-    return parseSettings(JSON.parse(value) as unknown);
+    return withCourseProfiles(parseSettings(JSON.parse(value) as unknown));
   } catch {
     return defaultSettings();
   }
@@ -272,15 +296,15 @@ function parseCache(
   };
 }
 
-export async function loadCache(expectedSourceKey?: string): Promise<{
+export async function loadCache(expectedSourceKey?: string, perSource = false): Promise<{
   updatedAt: Date;
   weeks: Record<string, ScheduleEntry[]>;
   sourceKey?: string;
   etag?: string;
 } | null> {
   try {
-    const current = await Preferences.get({ key: CACHE_KEY });
-    const legacy = current.value ? null : await Preferences.get({ key: LEGACY_CACHE_KEY });
+    const current = await Preferences.get({ key: perSource && expectedSourceKey ? `${CACHE_KEY}:${encodeURIComponent(expectedSourceKey)}` : CACHE_KEY });
+    const legacy = perSource || current.value ? null : await Preferences.get({ key: LEGACY_CACHE_KEY });
     const value = current.value ?? legacy?.value;
     if (!value) return null;
     return parseCache(JSON.parse(value) as unknown, expectedSourceKey);
@@ -293,6 +317,7 @@ export async function saveCache(
   weeks: Record<string, ScheduleEntry[]>,
   updatedAt: Date,
   metadata: { sourceKey?: string; etag?: string } = {},
+  perSource = false,
 ): Promise<void> {
   const raw: ScheduleCache = {
     version: 2,
@@ -304,7 +329,7 @@ export async function saveCache(
   for (const [key, entries] of Object.entries(weeks)) {
     raw.weeks[key] = entries.map(serializeEntry);
   }
-  await Preferences.set({ key: CACHE_KEY, value: JSON.stringify(raw) });
+  await Preferences.set({ key: perSource && metadata.sourceKey ? `${CACHE_KEY}:${encodeURIComponent(metadata.sourceKey)}` : CACHE_KEY, value: JSON.stringify(raw) });
 }
 
 /** Mensa-Cache: verlustfreier Standort-Snapshot + Zeitstempel (ms). */

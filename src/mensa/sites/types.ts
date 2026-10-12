@@ -14,6 +14,7 @@ export type DiningSource =
   | { kind: 'partners' };
 
 export interface DiningFacilityProfile {
+  source?: { kind: 'my-mensa'; mensaId: string };
   id: string;
   apiId?: number;
   kind?: DiningFacilityKind;

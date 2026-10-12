@@ -36,6 +36,12 @@ export default defineConfig({
         secure: true,
         rewrite: (path) => path.replace(/^\/dhbw-api/, ''),
       },
+      '/my-mensa': {
+        target: 'https://zuf.my-mensa.de',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/my-mensa/, ''),
+      },
       '/stw-heidelberg': {
         target: 'https://www.stw.uni-heidelberg.de',
         changeOrigin: true,

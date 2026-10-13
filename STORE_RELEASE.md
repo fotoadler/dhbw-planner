@@ -23,8 +23,9 @@ Based on production 1.5.0 (GitHub main `2c05c4f2`), with saved course profiles, 
 - 378 tests (41 files), production web build and Capacitor sync passed on 13 October.
 - Signed Android release APK/AAB: 1.5.1, versionCode 13, API 24 minimum / target API 36. AAB SHA-256: `a8de50dc72fdfb020441b4cf10d008ddb9eabfe9be6cc9f17d1611747dadca0d`.
 - Google Play: production 1.5.1 (13 plus legacy bundle 9) sent for review, full rollout after approval, managed publishing off. UI shows “Änderungen, die überprüft werden”; automatic prechecks still running. No device-support loss; only existing mapping-file warnings (minification disabled).
-- Signed iOS archive: 1.5.1 (14), minimum iOS 15. App Store Connect upload succeeded; build processing is still running. Version metadata is saved, review submission pending build availability.
+- Signed iOS archive: 1.5.1 (14), minimum iOS 15. App Store Connect upload succeeded; build processed and attached. Version 1.5.1 (14) submitted on 13 October, status **Warten auf Prüfung**, automatic release after approval. Submission ID: `0da958e1-c81e-4248-8099-ce22365c2165`.
 - The web bundle hash matches across `dist`, the Android assets and the iOS archive.
+- Store submission screenshots: `Google-Play-Pruefung.png` and `App-Store-Pruefung.png` in the artifact folder.
 - Copies of signed artifacts are saved in `~/Downloads/DHBW-Planner-1.5.1/`.
 - Release approval and public 1.5.1 availability are not confirmed.
 

@@ -2,6 +2,13 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## 1.5.1 - 2026-10-13
+
+- Gespeicherte Kursprofile direkt im Kalender wechseln, hinzufügen und löschen.
+- Hauptprofil für Erinnerungen, Live-Aktivitäten, Kalenderabgleich, Mail und Dualis festlegen. Weitere Profile bleiben reine Stundenplanansichten; beim erneuten Öffnen erscheint das Hauptprofil.
+- Zeppelin-Universität-Speiseplan zusätzlich zu Seezeit in Friedrichshafen, mit Tageszuordnung und DHBW-Preisen.
+- Fokusrahmen im Profil-Pop-up innerhalb der Kurszeile anzeigen.
+
 ## 1.5.0 - 2026-10-11
 
 - Monatsansicht mit Wischnavigation und Tagesübersicht im Detailfenster.

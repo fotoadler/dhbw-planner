@@ -2789,6 +2789,7 @@ option {
   color: var(--accent);
 }
 .course-profiles-popup button:hover { background: var(--bg-soft); }
+.course-profiles-popup button:focus-visible { outline-offset: -2px; }
 
 .course-setup-cancel { display: flex; justify-content: flex-end; padding: 12px 20px 0; }
 .setup__brandline { justify-content: space-between; }

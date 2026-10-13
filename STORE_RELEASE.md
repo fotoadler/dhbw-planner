@@ -5,10 +5,28 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.5.0` (`package.json`: `1.5.0`)
-- Current iOS build: `13`
-- Current Android versionCode: `11`
+- Current app version: `1.5.1` (`package.json`: `1.5.1`)
+- Current iOS build: `14`
+- Current Android versionCode: `13`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
+
+## Version 1.5.1 — Update descriptions
+
+Kursprofile lassen sich jetzt direkt im Kalender speichern, wechseln und löschen. Ein Hauptprofil steuert Erinnerungen, Live-Aktivitäten, Kalenderabgleich, Mail und Dualis; zusätzliche Profile dienen nur zur Stundenplanansicht. In Friedrichshafen ist außerdem der Speiseplan der Zeppelin Universität mit DHBW-Preisen verfügbar.
+
+### Scope
+
+Based on production 1.5.0 (GitHub main `2c05c4f2`), with saved course profiles, Zeppelin menus and the profile focus correction. The separate Community branch is not included. Google Play production 1.5.0 (11, plus retained legacy bundle 9) and iOS 1.5.0 (13) were verified live on 13 October. Android internal-test Community bundle 12 is retained on its existing track; the update uses bundle 13. iOS uses build 14.
+
+### Submission status
+
+- 378 tests (41 files), production web build and Capacitor sync passed on 13 October.
+- Signed Android release APK/AAB: 1.5.1, versionCode 13, API 24 minimum / target API 36. AAB SHA-256: `a8de50dc72fdfb020441b4cf10d008ddb9eabfe9be6cc9f17d1611747dadca0d`.
+- Google Play: production 1.5.1 (13 plus legacy bundle 9) sent for review, full rollout after approval, managed publishing off. UI shows “Änderungen, die überprüft werden”; automatic prechecks still running. No device-support loss; only existing mapping-file warnings (minification disabled).
+- Signed iOS archive: 1.5.1 (14), minimum iOS 15. App Store Connect upload succeeded; build processing is still running. Version metadata is saved, review submission pending build availability.
+- The web bundle hash matches across `dist`, the Android assets and the iOS archive.
+- Copies of signed artifacts are saved in `~/Downloads/DHBW-Planner-1.5.1/`.
+- Release approval and public 1.5.1 availability are not confirmed.
 
 ## Version 1.5.0 — Update descriptions
 

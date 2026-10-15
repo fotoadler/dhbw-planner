@@ -14,10 +14,23 @@ Der Mail-Tab verwendet eine native WebView. iOS hat bereits den persistenten `WK
 - Android verwendet einen AES-GCM-Datensatz, dessen Schlüssel im Android Keystore liegt. Der verschlüsselte Datensatz liegt in einem privaten App-Speicher.
 - Die normale Preferences-Datei enthält weiterhin niemals das Passwort.
 - Beim App-Start wird nur bei aktivierter Option und passendem Standortprofil automatisch neu angemeldet.
-- Ein Netzwerkfehler behält den gespeicherten Datensatz. Wird das gespeicherte Passwort vom Dualis-Server abgelehnt, wird der gespeicherte Datensatz gelöscht und eine erneute Eingabe verlangt.
-- **Abmelden** löscht die laufende Dualis-Session und die gespeicherten Dualis-Zugangsdaten.
-- Der Mail-Tab speichert keine Mail-Passwörter. iOS nutzt den persistenten WebKit-Datenspeicher; Android akzeptiert die WebView-Cookies und ruft beim Schließen, Pausieren und Zerstören `CookieManager.flush()` auf.
+- Ein Netzwerkfehler behält den gespeicherten Datensatz. Wird das gespeicherte Passwort vom Dualis-Server abgelehnt, wird die Löschung des gespeicherten Datensatzes angefordert und eine erneute Eingabe verlangt.
+- **Abmelden** verwirft die lokale Dualis-Session, deaktiviert die Wiederanmeldung und fordert die Löschung der gespeicherten Dualis-Zugangsdaten an (Grenzen siehe unten).
+- Der Planner-Anwendungscode kopiert keine Mail-Passwörter in einen eigenen Zugangsdaten-Speicher. iOS nutzt den persistenten WebKit-Datenspeicher; Android akzeptiert die WebView-Cookies und ruft beim Schließen, Pausieren und Zerstören `CookieManager.flush()` auf.
 - Mail-Anbieter mit kurzlebigen Sessions oder zusätzlicher MFA können trotzdem eine erneute Anmeldung verlangen. Das entscheidet der jeweilige Mailserver.
+
+## Implementierungsgrenzen
+
+- `src/ui/useDualis.ts` steuert Speichern und Wiederanmelden; `src/store/dualis.ts` trennt normale Preferences (`dualis.prefs.v1`) und Secure Storage (`dualis.credentials.v1`). Die Login-UI in `src/ui/DualisView.tsx` bietet die Option nur nativ an. Die Standardeinstellung ist deaktiviert.
+- Nach erfolgreichem Login **ohne** Speicheroption liefert der Löschzweig derzeit `true` zurück und übernimmt diesen Wert in `prefs.rememberCredentials`. Das Optionsflag kann deshalb trotz abgewählter Option `true` sein. Dieser Pfad speichert kein neues Passwort; für die Wiederanmeldung muss zusätzlich ein lesbarer Datensatz mit passendem Standort vorliegen. Falls dessen Löschung scheitert, kann ein alter Datensatz verbleiben. Dies ist ein offener Codebefund, keine zugesicherte korrekte Abbildung der Einwilligung.
+- `clearStoredDualisCredentials()` fängt Fehler beim Entfernen ab. Abmelden garantiert deshalb nicht, dass der persistente Datensatz tatsächlich gelöscht wurde. Der native Android-Aufruf entfernt mit asynchronem `apply()`. Ein Standortwechsel verwirft nur die laufende Session und behält den gespeicherten Datensatz.
+- Ein Fehler beim Speichern verhindert den aktuellen Login nicht; die UI zeigt einen Hinweis, dass die Zugangsdaten nicht gespeichert werden konnten. Netzwerkfehler während der Wiederanmeldung behalten den Datensatz. `login-failed` löst einen Löschversuch aus; diese Fehlerklasse ist kein eindeutiger Nachweis eines falschen Passworts, da auch unerwartete Loginantworten so klassifiziert werden.
+- `src/dualis/client.ts` hält Zugangsdaten für erneutes Login, Access-Token, Session-URLs und Cookie-Map im Arbeitsspeicher. `src/ui/useDualis.ts` hält Noten und Prüfungen im React-Zustand. „Nur Arbeitsspeicher“ bedeutet keine dauerhafte Ablage durch diese Codepfade, keine zugesicherte sichere Überschreibung von Speicher beim Logout.
+- `plugins/capacitor-secure-storage` enthält die nativen Implementierungen. iOS setzt `AfterFirstUnlockThisDeviceOnly`; Android verwendet AES-GCM mit zufälligem 12-Byte-IV und 128-Bit-Authentifizierungstag. Eine biometrische Freigabe pro Abruf und eine bestimmte Hardwareabsicherung werden nicht erzwungen.
+- `capacitor.config.ts` deaktiviert die Cookie-Integration und Capacitor-Logging (`loggingBehavior: 'none'`). `src/dualis/client.ts` bereinigt native Cookies beim Login/Logout auf beiden Plattformen, nach jeder Antwort nur auf Android; Fehler werden abgefangen. Die Cookie-Map bleibt im RAM, eine vorübergehende native Cookie-Ablage ist nicht ausgeschlossen.
+- Die native Mail-WebView verwendet persistenten Website-Speicher. Dualis-Abmelden löscht ihn nicht. Die Aussage zur Passwortspeicherung betrifft den Planner-Code, nicht das Verhalten des Webmail-Anbieters oder der Plattform.
+
+Dieser Abgleich bezieht sich auf den Quellcode, nicht auf eine nachgewiesene Prüfung eines veröffentlichten App-Binaries. Eine offizielle DHBW-IT-Prüfung oder Freigabe ist damit nicht belegt. Die nachfolgende Prüfliste bleibt vor Veröffentlichung auf realen Geräten abzuarbeiten; insbesondere sind Löschfehler und der Optionsstatus gesondert zu prüfen.
 
 ## Warum Mail keine universelle Passwort-Automatik erhält
 

@@ -78,7 +78,7 @@ Funktionen:
 
 Privacy summary:
 
-Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Zugangsdaten werden nur auf Wunsch im geschützten Gerätespeicher gespeichert. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
+Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Zugangsdaten werden bei ausdrücklich gewähltem „Angemeldet bleiben“ nach erfolgreichem Login auf iOS/Android im nativen Secure Storage gespeichert; ohne diese Option bleibt das Passwort im Arbeitsspeicher. Die Mail-WebView hält Sitzungsdaten persistent. Löschversuche und Implementierungsgrenzen sind in `docs/AUTHENTICATION_PERSISTENCE.md` beschrieben. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
 
 Support text:
 

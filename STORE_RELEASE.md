@@ -12,7 +12,7 @@
 
 ## Version 1.5.2 — Hochgeladen am 17. Oktober 2026
 
-Wahlkurse, Seminare, Studienschwerpunkte und Gruppen lassen sich jetzt direkt nach der Kurswahl und später in den Einstellungen konfigurieren. Gemeinsame und vergangene Termine bleiben enthalten. Bereits eingerichtete Profile weisen auf eine offene Auswahl hin. Außerdem wurde das Ausblenden von Modulen bei überlappenden Terminen und per langem Drücken verbessert.
+Wahlkurse, WPS, Schwerpunkte und Gruppen jetzt bei der Einrichtung und in den Einstellungen auswählen – u. a. in Villingen-Schwenningen, Stuttgart, Mannheim, Mosbach, Heidenheim und Friedrichshafen. Gemeinsame und vergangene Termine bleiben enthalten. Bestehende Profile erkennen eine offene Kurswahl. Außerdem verbessert: Module bei überlappenden Terminen und per langem Drücken ausblenden, ohne versehentliche Textmarkierung.
 
 - Signierte Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
 - [PR #37](https://github.com/fotoadler/dhbw-planner/pull/37) am 17. Oktober in `main` gemergt; Buildquellen: `a92f4e1274cb8c393fe6d86af3d6e06752dd2ec1`. Community-/Watch-Branches bleiben außerhalb dieses Releases.
@@ -20,8 +20,8 @@ Wahlkurse, Seminare, Studienschwerpunkte und Gruppen lassen sich jetzt direkt na
 - iOS-Simulator-Build erfolgreich; native Bedienprüfung mit FN-TIM24/FN-TIM23 auf iPhone 17 Pro / iOS 26.5 ohne beobachteten Absturz. Einzelheiten und Grenzen: [Release-QA](docs/RELEASE_1_5_2_QA.md).
 - GitHub `web-quality` und `Android main beta` für den Merge-Commit erfolgreich.
 - Android: signiertes APK/AAB erstellt, versionCode 14, minSdk 24 / targetSdk 36. AAB SHA-256: `6368d8e532f39a7e1e2afb82bf2eb2f6655fcde141ed6542936b60f4f7b6a693`. APK-Signatur (v2) geprüft.
-- Google Play: Bundle 14 (1.5.2) verarbeitet, deutsche Versionshinweise gespeichert, Produktionsrelease 1.5.2 in „Veröffentlichungen – Übersicht“. Legacy-Bundle 9 bleibt enthalten; keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen für 9 und 14 (Minifizierung deaktiviert). **Noch nicht zur Prüfung eingereicht und nicht veröffentlicht**; automatische Vorabprüfungen laufen.
-- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. **Keine abgeschlossene Verarbeitung, App-Review-Einreichung oder öffentliche Verfügbarkeit bestätigt.**
+- Google Play: Bundle 14 (1.5.2) verarbeitet, deutsche Versionshinweise gespeichert, Produktionsrelease 1.5.2 in „Veröffentlichungen – Übersicht“. Legacy-Bundle 9 bleibt enthalten; keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen für 9 und 14 (Minifizierung deaktiviert). **Zur Prüfung abgeschickt**, Übersicht zeigt „Änderungen, die überprüft werden“ und „Deine Änderungen werden jetzt überprüft“. Verwaltete Veröffentlichung aus, vollständiger Roll-out nach Freigabe. Versionshinweise nennen sechs belegte Standorte als Beispiele.
+- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. **Noch nicht zur App-Prüfung eingereicht**: Die Browser-Anmeldung an App Store Connect benötigt die lokale Passkey-/Mac-Bestätigung. Deutsche Versionsbeschreibung mit den belegten Standorten ist vorbereitet; weder Speicherung in App Store Connect noch automatische Release-Einstellung sind bestätigt.
 - Web-Assets in APK, AAB und iOS-Archiv bytegleich zum geprüften `dist`-Build.
 - Signierte Pakete, Archiv, lokale Simulator-/Uploadnachweise, Buildlogs, `BUILD_MANIFEST.json` und `SHA256SUMS.txt`: `~/Downloads/DHBW-Planner-1.5.2/`.
 

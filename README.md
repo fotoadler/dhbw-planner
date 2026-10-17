@@ -73,7 +73,7 @@ Zusätzlich werden öffentliche Rapla-Freigabelinks mit den Parametern `key` und
 
 ## Geführter Modus und DHBW-API
 
-Der geführte Modus verwendet den öffentlichen Kurskatalog und den Kursplan der [DHBW-API](https://api.dhbw.app/api). Die Auswahl speichert nur Standort, Studiengang und Kurskennung; der Stundenplan wird anschließend direkt vom Gerät geladen. Ein eigenes Backend ist dafür nicht erforderlich.
+Der geführte Modus verwendet den öffentlichen Kurskatalog und den Kursplan der [DHBW-API](https://api.dhbw.app/api). Die Auswahl speichert Standort, Studiengang, Kurskennung und die persönliche Modul-/Gruppenauswahl je Profil; der Stundenplan wird anschließend direkt vom Gerät geladen. Ein eigenes Backend ist dafür nicht erforderlich.
 
 Die App fragt den Kursplan zunächst vollständig für den ausgewählten Kurs ab und verwendet bei späteren Aktualisierungen den HTTP-`ETag`. Dadurch werden unveränderte Pläne nicht erneut übertragen. Die Delta-/Sync-Endpunkte werden bewusst nicht benötigt; der Rapla-Link bleibt als unabhängige Alternative erhalten.
 
@@ -82,6 +82,8 @@ Der verwendete Kursplan-Endpunkt liefert mit `archived=true` auch vergangene Ter
 Der Mensa-Plan wird im geführten Modus automatisch anhand des gewählten Standorts geladen. In den Einstellungen kann jederzeit eine andere Mensa manuell ausgewählt werden — beispielsweise, wenn man an einem anderen Standort zu Mittag isst. Weil die Standorte unterschiedliche Betreiber und Datenlagen haben, beschreibt jeder Standort sein Angebot als eigenes Profil; Aufbau und Erweiterung stehen in [docs/MENSA_INTEGRATION.md](docs/MENSA_INTEGRATION.md).
 
 Die Nutzung der öffentlichen DHBW-API wurde dem Projekt von Max Hardtke, dem Betreiber von [dhbw.app](https://dhbw.app/), ausdrücklich gestattet. Die technische Dokumentation und die verwendeten Endpunkte stehen in [docs/DHBW_API.md](docs/DHBW_API.md); private Kontaktdaten und der Mailverkehr werden nicht im Repository veröffentlicht.
+
+Bei erkannten Wahlangeboten folgt nach der Kurswahl ein zusätzlicher Schritt „Deine Kurswahl“. Persönliche Seminare, Schwerpunkte, Wahlmodule und Gruppen lassen sich dort auswählen; gemeinsame und historische Termine bleiben enthalten. Bestehende Profile erhalten bei offener Konfiguration einen Hinweis. Details und Erkennungsgrenzen stehen in [docs/ELECTIVES_CONCEPT.md](docs/ELECTIVES_CONCEPT.md).
 
 Geladene Vorlesungsmodule können in den Einstellungen einzeln ausgeblendet werden. Der Filter gilt unabhängig davon, ob der Stundenplan über die DHBW-API oder über einen Rapla-Link geladen wurde.
 
@@ -124,6 +126,7 @@ src/
   dhbw/                      Standortprofile für Dualis- und Mail-Integrationen
   dhbwApi/                   Öffentlicher DHBW-Kurskatalog und Kursplan-Adapter
   dualis/                    Dualis-Client, Parser und Typen
+  features/study-options/    Gemeinsame Kurswahl für Einrichtung und Einstellungen
   lib/                       Zeit-, Theme- und Haptik-Helfer sowie Projektlinks
   liveActivity/              Live-Aktivitäten und deren Planung
   mail/                      Mail-Adapter und Brücke zur nativen Mailansicht
@@ -134,6 +137,8 @@ src/
   seezeit/                   Seezeit-Speisepläne für Ravensburg und Friedrichshafen
   store/                     Persistente Einstellungen und Cache
   ui/                        React-Komponenten
+prototypes/                  Getrennte historische Konzeptvorschauen
+docs/                        Funktionsdokumentation, Prüfberichte und Screenshots
 tests/                       Parser-, Planner-, Dualis-, Kalender- und Layouttests
 plugins/
   capacitor-calendar-sync/  EventKit / Android Calendar Provider

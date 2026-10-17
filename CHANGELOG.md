@@ -2,6 +2,22 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## 1.5.2 - 2026-10-17
+
+- Persönliche Wahlpflichtseminare, Wahlmodule, Studienschwerpunkte und Gruppen direkt nach der Kurswahl und je Profil in den Einstellungen konfigurieren.
+- Passende Sammel- und Gruppenpläne automatisch zuordnen; gemeinsame und historische Termine erhalten.
+- Bestehende Profile auf noch offene Wahlkonfiguration prüfen, auch nach Profilwechsel und Planaktualisierung.
+- Campusübergreifende Erkennung um WF/WPF, Pluralformen, Gruppenabkürzungen, römische Kennungen und belegte Studienrichtungskürzel erweitern.
+- Module bei überlappenden Wochenterminen gezielt ausblenden; Aktion auch in der Terminübersicht verfügbar.
+- Langes Drücken öffnet den Ausblenden-Dialog erst nach Loslassen und verhindert versehentliche Textmarkierungen.
+
+## 1.5.1 - 2026-10-13
+
+- Gespeicherte Kursprofile direkt im Kalender wechseln, hinzufügen und löschen.
+- Hauptprofil für Erinnerungen, Live-Aktivitäten, Kalenderabgleich, Mail und Dualis festlegen. Weitere Profile bleiben reine Stundenplanansichten; beim erneuten Öffnen erscheint das Hauptprofil.
+- Zeppelin-Universität-Speiseplan zusätzlich zu Seezeit in Friedrichshafen, mit Tageszuordnung und DHBW-Preisen.
+- Fokusrahmen im Profil-Pop-up innerhalb der Kurszeile anzeigen.
+
 ## 1.5.0 - 2026-10-11
 
 - Monatsansicht mit Wischnavigation und Tagesübersicht im Detailfenster.

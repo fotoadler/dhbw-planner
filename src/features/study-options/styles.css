@@ -1,0 +1,43 @@
+/* Zusatzpläne und Wahlmodule bleiben Teil der bestehenden Modulauswahl. */
+.study-options__save { display: flex; gap: 12px; align-items: center; padding: 12px 0 4px; }
+.study-options__save button { font-size: 13px; padding: 12px; border-radius: 8px; }
+.study-options__save button:first-child { background: var(--ink); color: var(--on-ink); font-weight: 600; }
+.study-options__save button:disabled { opacity: .5; }
+
+.study-options__save { border-top: 1px solid var(--line); padding: 10px 12px; background: var(--bg); }
+
+/* One offer picker, one search; shared modules stay out of the decision list. */
+.study-choice__content { max-height: min(52dvh, 460px); overflow-y: auto; padding: 12px; }
+.study-choice__groups, .study-choice__offers { border: 0; min-width: 0; margin: 10px 0 16px; }
+.study-choice__groups legend, .study-choice__offers legend { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
+.study-choice__common { margin-top: 16px; border-top: 1px solid var(--line); }
+.study-choice__common summary { padding: 14px 0; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.study-setup { max-width: 720px; margin: 0 auto; }
+.study-setup__status { padding: 20px; color: var(--ink-2); font-size: 14px; }
+.study-choice--setup { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.study-choice--setup .study-choice__content { flex: 1; min-height: 0; max-height: none; padding: 0 20px 24px; }
+.study-choice--setup .study-options__save { padding: 16px 20px max(20px, var(--safe-bottom)); }
+.study-choice--setup .study-options__save > button { width: 100%; min-height: 48px; }
+.study-choice__selection { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 8px; }
+.study-choice__selection button { flex-shrink: 0; font-size: 12px; }
+
+/* Group elective choices without separating their historical dates. */
+.study-choice__category { border-bottom: 1px solid var(--line); }
+.study-choice__category > summary { display: flex; align-items: center; gap: 12px; min-height: 64px; list-style: none; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--ink); }
+.study-choice__category > summary::-webkit-details-marker { display: none; }
+.study-choice__category > summary::after { content: ''; width: 7px; height: 7px; border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); transform: rotate(45deg); margin: -4px 4px 0 2px; }
+.study-choice__category[open] > summary::after { transform: rotate(225deg); margin-top: 4px; }
+.study-choice__count { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.study-choice__count--selected { color: var(--accent); font-weight: 600; }
+.study-choice__category .study-choice__offers { padding: 0; margin: 0 0 12px; }
+.study-choice__category .study-choice__offers legend { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.study-choice__row { cursor: pointer; padding: 13px 10px; gap: 12px; border-radius: 0; color: var(--ink); line-height: 1.45; }
+.study-choice__row + .study-choice__row { border-top: 1px solid var(--line); }
+.study-choice__row:has(input:checked) { background: var(--bg-soft); }
+.study-choice__row small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 11px; }
+.study-choice__row input { appearance: none; -webkit-appearance: none; position: relative; width: 20px; height: 20px; border: 1.5px solid var(--ink-3); border-radius: 6px; margin-top: 1px; background: var(--bg); }
+.study-choice__row input:checked { border-color: var(--accent); background: var(--accent); }
+.study-choice__row input:checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 5px; height: 10px; border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.study-choice__row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.study-choice__included { padding: 20px 0; font-size: 12px; color: var(--ink-3); }
+.study-choice--setup .sheet__module-search { margin-bottom: 6px; }

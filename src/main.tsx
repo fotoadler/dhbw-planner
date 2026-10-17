@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { bootstrapTheme } from './lib/theme';
 import { App } from './ui/App';
 import './styles.css';
+import './features/study-options/styles.css';
 
 bootstrapTheme();
 

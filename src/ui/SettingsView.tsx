@@ -5,10 +5,12 @@
  */
 
 import { useState } from 'react';
+import { ModuleSelection } from '../features/study-options';
+import type { ScheduleEntry } from '../types';
 import { AppSettings } from '../store/preferences';
 import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
-import { ScheduleModule } from '../schedule/modules';
+import { filterScheduleEntries, listScheduleModules, ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
 import { FEEDBACK_EMAIL, PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
 import { selectionHaptic } from '../lib/haptics';
@@ -17,19 +19,17 @@ interface Props {
   settings: AppSettings;
   availableModules: ScheduleModule[];
   updatedAt: Date | null;
+  scheduleEntries?: ScheduleEntry[];
+  openModules?: boolean;
   onChange: (next: AppSettings) => void;
   onClose?: () => void;
+  onChangeSource?: () => void;
 }
 
-export function SettingsView({ settings, availableModules, updatedAt, onChange }: Props) {
+export function SettingsView({ settings, availableModules, updatedAt, onChange, onChangeSource, scheduleEntries, openModules }: Props) {
   const [link, setLink] = useState(settings.raplaLink);
   const [linkError, setLinkError] = useState(false);
-  const [moduleQuery, setModuleQuery] = useState('');
-  const visibleModuleCount = availableModules.filter((module) => !settings.hiddenModules.includes(module.key)).length;
-  const normalizedModuleQuery = moduleQuery.trim().toLocaleLowerCase('de-DE');
-  const filteredModules = normalizedModuleQuery
-    ? availableModules.filter((module) => module.label.toLocaleLowerCase('de-DE').includes(normalizedModuleQuery))
-    : availableModules;
+  const visibleModuleCount = scheduleEntries ? listScheduleModules(filterScheduleEntries(scheduleEntries,settings.hiddenModules,settings.apiSelection)).length : availableModules.filter(module => !settings.hiddenModules.includes(module.key)).length;
 
   const saveLink = () => {
     const config = parseRaplaLink(link);
@@ -118,7 +118,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
           )}
           <button
             className="sheet__textbtn"
-            onClick={() => onChange({
+            onClick={() => onChangeSource ? onChangeSource() : onChange({
               ...settings,
               raplaLink: '',
               rapla: null,
@@ -127,7 +127,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
               hiddenModules: [],
             })}
           >
-            Stundenplan ändern
+            {onChangeSource ? 'Kurs hinzufügen' : 'Stundenplan ändern'}
           </button>
         </section>
 
@@ -141,57 +141,10 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange }
             )}
           </div>
           <p className="sheet__note">
-            Blende einzelne Module aus, von denen du befreit bist. Die Auswahl gilt für den angezeigten Plan und seine Erinnerungen.
+            Wähle deine Wahlkurse, Gruppen und übrigen Module. Die Auswahl gilt für dieses Kursprofil.
           </p>
-          {availableModules.length > 0 ? (
-            <details className="sheet__module-picker">
-              <summary>
-                <span>Module auswählen</span>
-                <span className="sheet__module-picker-count">{visibleModuleCount}/{availableModules.length}</span>
-              </summary>
-              <div className="sheet__modules">
-                <input
-                  className="sheet__module-search"
-                  type="search"
-                  value={moduleQuery}
-                  placeholder="Module durchsuchen"
-                  aria-label="Module durchsuchen"
-                  onFocus={(event) => {
-                    const input = event.currentTarget;
-                    window.setTimeout(() => input.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 220);
-                  }}
-                  onChange={(event) => setModuleQuery(event.target.value)}
-                />
-                {filteredModules.map((module) => {
-                  const checked = !settings.hiddenModules.includes(module.key);
-                  return (
-                    <label className="sheet__module" key={module.key}>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(event) => {
-                          const hidden = new Set(settings.hiddenModules);
-                          if (event.target.checked) hidden.delete(module.key);
-                          else hidden.add(module.key);
-                          set({ hiddenModules: [...hidden] });
-                        }}
-                      />
-                      <span>{module.label}</span>
-                    </label>
-                  );
-                })}
-                {filteredModules.length === 0 && <p className="sheet__note">Kein passendes Modul gefunden.</p>}
-                <div className="sheet__module-actions">
-                  <button type="button" onClick={() => set({ hiddenModules: [] })}>Alle anzeigen</button>
-                  <button type="button" onClick={() => set({ hiddenModules: availableModules.map((module) => module.key) })}>
-                    Alle ausblenden
-                  </button>
-                </div>
-              </div>
-            </details>
-          ) : (
-            <p className="sheet__note">Module werden nach dem ersten Planabruf angezeigt.</p>
-          )}
+          <ModuleSelection key={settings.apiSelection?.course ?? settings.raplaLink} settings={settings} modules={availableModules}
+            entries={scheduleEntries} initiallyOpen={openModules} onChange={onChange} />
         </section>
 
         {settings.scheduleSource === 'rapla' && (

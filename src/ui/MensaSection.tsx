@@ -145,7 +145,11 @@ function FacilityView({
       {facility.notice && <p className="mensa__notice">{facility.notice}</p>}
       {facility.orderUrl && <ExternalLink href={facility.orderUrl} label="Vorbestellen" button />}
 
-      {facility.kind === 'external-menu' ? (
+      {facility.loadError ? <>
+        <StatusCard tone="warning" title="Speiseplan nicht erreichbar" text={day ? 'Der zuletzt gespeicherte Stand wird angezeigt.' : undefined} />
+        {facility.menuUrl && <ExternalLink href={facility.menuUrl} label="Speiseplan öffnen" compact />}
+        {day && <DayMenu day={day} nextDay={nextDay} />}
+      </> : facility.kind === 'external-menu' ? (
         <StatusCard title="Externer Wochenplan" text="Der aktuelle Plan wird von der Einrichtung selbst veröffentlicht." />
       ) : period && day?.status === 'closed' ? null : (
         <DayMenu day={day} nextDay={nextDay} />

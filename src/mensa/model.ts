@@ -51,6 +51,7 @@ export interface DiningDay {
 }
 
 export interface DiningFacility {
+  loadError?: string;
   id: string;
   sourceId?: number;
   kind: DiningFacilityKind;

@@ -1,0 +1,102 @@
+[
+  {
+    "course": "FN-TIM24",
+    "title": "Lab GR 1 (A-K)  Datenbanksysteme TIM+TIS",
+    "category": "Gruppen"
+  },
+  {
+    "course": "FN-TIT24",
+    "title": "Praktische Datenverarbeitung (Labor Gr.2  M-Z)",
+    "category": "Gruppen"
+  },
+  {
+    "course": "VS-WIN24B",
+    "title": "Wirtschaftsenglisch I a Gruppe II -",
+    "category": "Gruppen"
+  },
+  {
+    "course": "MA-WIB25A",
+    "title": "Communicating in Businesses Gruppe S3 (Velásquez)",
+    "category": "Gruppen"
+  },
+  {
+    "course": "MOS-WON21",
+    "title": "B3 - Integriertes Management \"Persönlichkeitstypen\" Gruppe A1",
+    "category": "Gruppen"
+  },
+  {
+    "course": "HDH-TWIW2025A",
+    "title": "Labor Werkstoffkunde (nur Gruppe II) Ort: Technische Schule Heidenheim, Clichystraße 115, Treffpunkt Raum W020, 89518 Heidenheim an der Brenz",
+    "category": "Gruppen"
+  },
+  {
+    "course": "RV-WIN222",
+    "title": "Business English Gr. 1",
+    "category": "Gruppen"
+  },
+  {
+    "course": "MA-TCT23",
+    "title": "WF Diagnostik",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "MA-TCT22",
+    "title": "Diagnostik (WPF)",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "KA-GTPA23B1",
+    "title": "ERSATZ ONLINE WPF Chirurige",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "HDH-TWIW2023TRW",
+    "title": "Data Science WF (Prof. C)",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "MOS-TMT20A",
+    "title": "Wahlfächer: Bionik",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "FN-TFE23-2",
+    "title": "Ausgewählte Themen der EIT (Wahlangebot 2)",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "HN-WDLM23-2",
+    "title": "Vorlesung DLM SR-WF II Digit. Technologien",
+    "category": "Wahlmodule"
+  },
+  {
+    "course": "MA-TCT24",
+    "title": "Biochemie (TAC)",
+    "category": "Studienschwerpunkte"
+  },
+  {
+    "course": "MA-TCT24",
+    "title": "Mikrobiologie (CBIW)",
+    "category": "Studienschwerpunkte"
+  },
+  {
+    "course": "MOS-WWI23A",
+    "title": "Materialwirtschaft Schwerpunkt Handel",
+    "category": "Studienschwerpunkte"
+  },
+  {
+    "course": "MOS-WWI23A",
+    "title": "Digitale Transformation Schwerpunkt KI",
+    "category": "Studienschwerpunkte"
+  },
+  {
+    "course": "VS-WWI25C",
+    "title": "Grundlagen Business Engineering 2 (Kreditgeschäfte und Versicherung) - Vertiefung Finanzdienstleister",
+    "category": "Studienschwerpunkte"
+  },
+  {
+    "course": "VS-WWI25C",
+    "title": "Grundlagen Business Engineering 1 - Öffentliche BWL (Vertiefung Verwaltungsinformatik VI)",
+    "category": "Studienschwerpunkte"
+  }
+]

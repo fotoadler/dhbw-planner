@@ -13,8 +13,9 @@ import { App as CapApp } from '@capacitor/app';
 import { ScheduleEntry } from '../types';
 import { addDaysYmd, mondayOf, mondayOfYmd, parseYmdKey, ymdKey } from '../lib/berlinTime';
 import { fetchWeek, fetchWeeks } from '../rapla/client';
-import { getCourseSchedule, groupEntriesByWeek } from '../dhbwApi/client';
-import { canonicalCourseName } from '../dhbwApi/courseName';
+import { groupEntriesByWeek } from '../dhbwApi/client';
+import { returnToPrimaryProfile, withCourseProfiles } from '../store/courseProfiles';
+import { getStudyPlan, studyPlanKey, additionalCourses } from '../dhbwApi/studyPlan';
 import { AppSettings, loadCache, loadSettings, saveCache, saveSettings } from '../store/preferences';
 import {
   applyLecturerDirectory,
@@ -113,12 +114,12 @@ function sameRaplaConfig(
 
 function sameApiSelection(a: AppSettings['apiSelection'] | undefined, b: AppSettings['apiSelection'] | undefined): boolean {
   if (!a && !b) return true;
-  return Boolean(a && b && a.site === b.site && a.course === b.course && a.degree === b.degree);
+  return Boolean(a && b && a.site === b.site && a.course === b.course && a.degree === b.degree && JSON.stringify(additionalCourses(a)) === JSON.stringify(additionalCourses(b)));
 }
 
 function scheduleSourceKey(settings: AppSettings | null | undefined): string | undefined {
   if (settings?.scheduleSource === 'dhbw-api' && settings.apiSelection) {
-    return `api:${settings.apiSelection.site}:${settings.apiSelection.course}`;
+    return studyPlanKey(settings.apiSelection);
   }
   if (settings?.rapla) {
     return `rapla:${settings.rapla.baseUrl}:${settings.rapla.user ?? ''}:${settings.rapla.file ?? ''}:${settings.rapla.key ?? ''}:${settings.rapla.salt ?? ''}`;
@@ -128,6 +129,10 @@ function scheduleSourceKey(settings: AppSettings | null | undefined): string | u
 
 function sameScheduleSource(a: AppSettings | null | undefined, b: AppSettings | null | undefined): boolean {
   return sameRaplaConfig(a?.rapla, b?.rapla) && sameApiSelection(a?.apiSelection, b?.apiSelection) && a?.scheduleSource === b?.scheduleSource;
+}
+
+function synchronizationSettingsKey(settings: AppSettings | null): string {
+  return JSON.stringify(settings && { ...settings, apiSelection: settings.apiSelection ? {...settings.apiSelection, optionsNoticeSeen: undefined, optionsNoticeKey: undefined, optionsConfiguredKey: undefined} : null, courseProfiles: undefined, primaryProfileId: undefined, viewedProfileId: undefined });
 }
 
 export function useSchedule() {
@@ -153,6 +158,7 @@ export function useSchedule() {
   const calendarSnapshotCompleteRef = useRef(false);
   const inFlightWeeksRef = useRef(new Map<string, Promise<void>>());
   const cacheWriteChainRef = useRef(Promise.resolve());
+  const settingsWriteChainRef = useRef(Promise.resolve());
   const cacheMetaRef = useRef<{ sourceKey?: string; etag?: string }>({});
 
   // Preferences writes are serialized so a slower, older refresh cannot finish
@@ -173,8 +179,8 @@ export function useSchedule() {
     [weeks, directory],
   );
   const entries = useMemo(
-    () => filterScheduleEntries(allEntries, settings?.hiddenModules ?? []),
-    [allEntries, settings?.hiddenModules],
+    () => filterScheduleEntries(allEntries, settings?.hiddenModules ?? [], settings?.apiSelection),
+    [allEntries, settings?.hiddenModules, settings?.apiSelection],
   );
   const availableModules = useMemo<ScheduleModule[]>(
     () => listScheduleModules(allEntries),
@@ -193,28 +199,30 @@ export function useSchedule() {
       const sourceKey = scheduleSourceKey(s);
       let fresh: WeekMap;
       let failedWeeks: string[] = [];
+      let nextMeta: { sourceKey?: string; etag?: string };
 
       if (apiSelection) {
         const storedEtag = cacheMetaRef.current.sourceKey === sourceKey ? cacheMetaRef.current.etag : undefined;
-        const apiResult = await getCourseSchedule(canonicalCourseName(apiSelection.site, apiSelection.course), storedEtag);
+        const apiResult = await getStudyPlan(apiSelection, storedEtag);
         if (apiResult.notModified) {
           if (Object.keys(weeksRef.current).length === 0) throw new Error('DHBW-API: Kein lokaler Cache für 304-Antwort.');
           fresh = weeksRef.current;
         } else {
           fresh = groupEntriesByWeek(apiResult.entries);
         }
-        cacheMetaRef.current = { sourceKey, etag: apiResult.etag ?? storedEtag };
+        nextMeta = { sourceKey, etag: apiResult.etag ?? storedEtag };
       } else {
         const firstMonday = mondayOfYmd(addDaysYmd(mondayOf(new Date()), -WINDOW_RADIUS_DAYS));
         const freshResult = await fetchWeeks(s.rapla!, firstMonday, WINDOW_WEEKS);
         fresh = Object.fromEntries(freshResult.weeks);
         failedWeeks = freshResult.failedWeeks;
-        cacheMetaRef.current = { sourceKey };
+        nextMeta = { sourceKey };
       }
 
       if (generation !== refreshGenerationRef.current || !sameScheduleSource(settingsRef.current, s)) {
         return;
       }
+      cacheMetaRef.current = nextMeta;
       // Verzeichnis mit frisch geladenen Dozenten aktualisieren (nur im Hochschulnetz nicht leer).
       const { directory: nextDir, changed } = updateLecturerDirectory(
         directoryRef.current,
@@ -243,7 +251,7 @@ export function useSchedule() {
       }
       const filled = filterScheduleEntries(
         applyLecturerDirectory(flatten(merged), nextDir),
-        activeSettings.hiddenModules,
+        activeSettings.hiddenModules, activeSettings.apiSelection,
       );
       calendarSnapshotCompleteRef.current = failedWeeks.length === 0;
       // Calendar writes must not wait for notification permission or Live Activity work.
@@ -264,7 +272,7 @@ export function useSchedule() {
         await syncCourseLiveActivity(
           filterScheduleEntries(
             applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-            activeSettings.hiddenModules,
+            activeSettings.hiddenModules, activeSettings.apiSelection,
           ),
           activeSettings,
         );
@@ -313,7 +321,7 @@ export function useSchedule() {
         if (!activeSettings || !sameScheduleSource(activeSettings, s)) return;
         const filled = filterScheduleEntries(
           applyLecturerDirectory(flatten(merged), nextDir),
-          activeSettings.hiddenModules,
+          activeSettings.hiddenModules, activeSettings.apiSelection,
         );
         await Promise.all([
           syncDeviceCalendar(filled, activeSettings, false, now),
@@ -334,6 +342,7 @@ export function useSchedule() {
   /** Persistiert Einstellungen; bei neuem Provider/Kurs wird der Plan neu geladen. */
   const applySettings = useCallback(
     async (next: AppSettings): Promise<void> => {
+      next = withCourseProfiles(next);
       if (isAppStoreDemo()) {
         // Store-Aufnahmen bleiben datenseitig unverändert, dürfen aber den
         // Theme-Umschalter genauso wie die echte App demonstrieren.
@@ -366,7 +375,6 @@ export function useSchedule() {
       const sourceChanged = !sameScheduleSource(prev, next);
       setSettings(next);
       settingsRef.current = next;
-      await saveSettings(next);
       if (sourceChanged) {
         calendarSnapshotCompleteRef.current = false;
         refreshGenerationRef.current += 1;
@@ -375,12 +383,20 @@ export function useSchedule() {
         weeksRef.current = {};
         setUpdatedAt(null);
         setOffline(false);
+      }
+      const write = settingsWriteChainRef.current.then(() => saveSettings(next));
+      settingsWriteChainRef.current = write.catch(() => {});
+      await write;
+      if (settingsRef.current !== next) return;
+      // Browsing or managing saved courses does not replan the main course.
+      if (synchronizationSettingsKey(prev) === synchronizationSettingsKey(next)) return;
+      if (sourceChanged) {
         await refresh();
       } else {
         // Nur Benachrichtigungsoptionen geaendert: mit vorhandenen Daten neu planen/synchronisieren.
         const filled = filterScheduleEntries(
           applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-          next.hiddenModules,
+          next.hiddenModules, next.apiSelection,
         );
         await Promise.all([
           syncDeviceCalendar(filled, next, calendarSnapshotCompleteRef.current),
@@ -411,7 +427,7 @@ export function useSchedule() {
     }
     void (async () => {
       await initNotifications();
-      const s = await loadSettings();
+      const s = returnToPrimaryProfile(await loadSettings());
       const [cache, dir] = await Promise.all([loadCache(scheduleSourceKey(s)), loadLecturerDirectory()]);
       directoryRef.current = dir;
       setDirectory(dir);
@@ -424,7 +440,7 @@ export function useSchedule() {
         setWeeks(restored);
         setUpdatedAt(cache.updatedAt);
         await syncCourseLiveActivity(
-          filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules),
+          filterScheduleEntries(applyLecturerDirectory(flatten(restored), dir), s.hiddenModules, s.apiSelection),
           s,
         );
       }
@@ -437,13 +453,24 @@ export function useSchedule() {
   // App-Resume: prüfen, ob Refresh + Neuplanung nötig sind.
   useEffect(() => {
     if (demo) return;
+    const returnToMain = () => {
+      const current = settingsRef.current;
+      if (current && current.viewedProfileId !== current.primaryProfileId) {
+        const next = returnToPrimaryProfile(current);
+        settingsRef.current = next;
+        setSettings(next);
+      }
+    };
+    const onVisible = () => { if (document.visibilityState === 'visible') returnToMain(); };
+    document.addEventListener('visibilitychange', onVisible);
     const listener = CapApp.addListener('resume', () => {
+      returnToMain();
       const s = settingsRef.current;
       if (s) {
         void syncCourseLiveActivity(
           filterScheduleEntries(
             applyLecturerDirectory(flatten(weeksRef.current), directoryRef.current),
-            s.hiddenModules,
+            s.hiddenModules, s.apiSelection,
           ),
           s,
         );
@@ -452,9 +479,12 @@ export function useSchedule() {
       if ((s?.rapla || (s?.scheduleSource === 'dhbw-api' && s.apiSelection)) && age > STALE_MS) void refresh();
     });
     return () => {
+      document.removeEventListener('visibilitychange', onVisible);
       void listener.then((l) => l.remove());
     };
   }, [demo, refresh]);
+
+  const synchronizationKey = synchronizationSettingsKey(settings);
 
   // Vor dem nächsten Kurs registriert iOS 26 einen nativen, zeitgesteuerten
   // Start. Die übrige Synchronisierung geschieht nur an Kursgrenzen statt
@@ -474,7 +504,7 @@ export function useSchedule() {
     const delay = Math.max(250, transition.getTime() - now.getTime() + 250);
     const timer = window.setTimeout(sync, delay);
     return () => window.clearTimeout(timer);
-  }, [demo, entries, settings]);
+  }, [demo, entries, synchronizationKey]);
 
   return {
     settings,

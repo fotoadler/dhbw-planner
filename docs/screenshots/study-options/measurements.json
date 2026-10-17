@@ -1,0 +1,92 @@
+[
+  {
+    "variant": "stuttgart",
+    "mode": "desktop",
+    "buttonHeight": 48,
+    "footerBottom": 900,
+    "height": 900,
+    "horizontalOverflow": false,
+    "width": 1280
+  },
+  {
+    "variant": "vs-gruppe",
+    "mode": "desktop",
+    "buttonHeight": 48,
+    "footerBottom": 900,
+    "height": 900,
+    "horizontalOverflow": false,
+    "width": 1280
+  },
+  {
+    "variant": "mosbach",
+    "mode": "desktop",
+    "buttonHeight": 48,
+    "footerBottom": 900,
+    "height": 900,
+    "horizontalOverflow": false,
+    "width": 1280
+  },
+  {
+    "variant": "friedrichshafen",
+    "mode": "desktop",
+    "buttonHeight": 48,
+    "footerBottom": 900,
+    "height": 900,
+    "horizontalOverflow": false,
+    "width": 1280
+  },
+  {
+    "variant": "mannheim",
+    "mode": "desktop",
+    "buttonHeight": 48,
+    "footerBottom": 900,
+    "height": 900,
+    "horizontalOverflow": false,
+    "width": 1280
+  },
+  {
+    "variant": "stuttgart",
+    "mode": "dark",
+    "buttonHeight": 48,
+    "footerBottom": 844,
+    "height": 844,
+    "horizontalOverflow": false,
+    "width": 390
+  },
+  {
+    "variant": "vs-gruppe",
+    "mode": "dark",
+    "buttonHeight": 48,
+    "footerBottom": 844,
+    "height": 844,
+    "horizontalOverflow": false,
+    "width": 390
+  },
+  {
+    "variant": "mosbach",
+    "mode": "dark",
+    "buttonHeight": 48,
+    "footerBottom": 844,
+    "height": 844,
+    "horizontalOverflow": false,
+    "width": 390
+  },
+  {
+    "variant": "friedrichshafen",
+    "mode": "dark",
+    "buttonHeight": 48,
+    "footerBottom": 844,
+    "height": 844,
+    "horizontalOverflow": false,
+    "width": 390
+  },
+  {
+    "variant": "mannheim",
+    "mode": "dark",
+    "buttonHeight": 48,
+    "footerBottom": 844,
+    "height": 844,
+    "horizontalOverflow": false,
+    "width": 390
+  }
+]

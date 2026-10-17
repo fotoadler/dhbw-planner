@@ -2175,7 +2175,7 @@ option {
   overflow: hidden;
 }
 
-.sheet__module-picker summary {
+.sheet__module-picker > summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2188,11 +2188,11 @@ option {
   list-style: none;
 }
 
-.sheet__module-picker summary::-webkit-details-marker {
+.sheet__module-picker > summary::-webkit-details-marker {
   display: none;
 }
 
-.sheet__module-picker summary::after {
+.sheet__module-picker > summary::after {
   content: '⌄';
   margin-left: 8px;
   color: var(--ink-3);
@@ -2201,11 +2201,11 @@ option {
   transform: translateY(-2px);
 }
 
-.sheet__module-picker[open] summary {
+.sheet__module-picker[open] > summary {
   border-bottom: 1px solid var(--line);
 }
 
-.sheet__module-picker[open] summary::after {
+.sheet__module-picker[open] > summary::after {
   transform: translateY(2px) rotate(180deg);
 }
 
@@ -2751,4 +2751,67 @@ option {
 @keyframes dialog-pop-in {
   from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
+}
+
+.course-profiles-popup {
+  position: fixed;
+  margin: 0;
+  width: min(300px, calc(100% - 32px));
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 15%);
+}
+.course-profiles-popup::backdrop { background: transparent; }
+.course-profiles-popup button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+}
+.course-profiles-popup__course[aria-pressed='true'] { background: var(--bg-soft); }
+.course-profiles-popup__site { color: var(--ink-3); font-size: 12px; min-width: 24px; }
+.course-profiles-popup__course svg { margin-left: auto; flex-shrink: 0; }
+.course-profiles-popup .course-profiles-popup__add {
+  margin-top: 6px;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 7px 7px;
+  color: var(--accent);
+}
+.course-profiles-popup button:hover { background: var(--bg-soft); }
+.course-profiles-popup button:focus-visible { outline-offset: -2px; }
+
+.course-setup-cancel { display: flex; justify-content: flex-end; padding: 12px 20px 0; }
+.setup__brandline { justify-content: space-between; }
+
+.course-profiles-popup__row { display: flex; align-items: center; }
+.course-profiles-popup .course-profiles-popup__course { flex: 1; min-width: 0; }
+.course-profiles-popup__label { min-width: 0; overflow-wrap: anywhere; }
+.course-profiles-popup__label small { display: block; color: var(--ink-3); font-size: 11px; font-weight: normal; margin-top: 2px; }
+.course-profiles-popup .course-profiles-popup__action { width: 36px; flex: 0 0 36px; padding: 8px; justify-content: center; color: var(--ink-3); }
+.course-profiles-popup__action[aria-pressed='true'] { color: var(--ink); }
+.course-profiles-popup__action:disabled { opacity: .3; cursor: default; }
+
+/* Android must not start native text selection while a press opens module actions. */
+.entry--button, .entry--button *, .weekview__event, .weekview__event *, .dialog-backdrop, .dialog-backdrop * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.weekdetails__module-action { min-height: 44px; padding: 8px 0; margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--accent); }
+
+.dialog-card input, .dialog-card textarea, .dialog-card [contenteditable='true'] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }

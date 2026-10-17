@@ -1,14 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useBackButton } from './useBackButton';
 import { resolveBackAction, type CalendarView, type DualisPage, type Section } from './backNavigation';
 import { useSchedule } from './useSchedule';
+import { useViewedSchedule } from './useViewedSchedule';
+import { CourseProfiles } from './CourseProfiles';
+import { addCourseProfile, profileFromSettings, settingsForProfile, withCourseProfiles } from '../store/courseProfiles';
+import type { AppSettings } from '../store/preferences';
 import { useCurrentTime } from './useCurrentTime';
 import { isWeekendDay, isCurrentWeekendWeek } from './weekLayout';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { SetupWizard } from './SetupWizard';
+import { StudyPlanSetup, useStudyOptions } from '../features/study-options';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
@@ -25,6 +30,7 @@ import { CalendarShareDialog } from './CalendarShareDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
+import { filterScheduleEntries, listScheduleModules } from '../schedule/modules';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
@@ -46,15 +52,30 @@ type CalendarDetails =
 
 export function App() {
   const demoScreen = appStoreDemoScreen();
-  const { settings, entries, allEntries, availableModules, updatedAt, refreshing, offline, isReviewDemo, refresh, ensureWeek, applySettings } =
-    useSchedule();
+  const mainSchedule = useSchedule();
+  const primarySettings = mainSchedule.settings ? withCourseProfiles(mainSchedule.settings) : null;
+  const profile = primarySettings?.courseProfiles?.find(p => p.id === primarySettings.viewedProfileId);
+  const browsing = Boolean(profile && profile.id !== primarySettings?.primaryProfileId && !demoScreen && !mainSchedule.isReviewDemo);
+  const viewedSchedule = useViewedSchedule(browsing ? profile : undefined);
+  const settings = browsing && primarySettings && profile ? settingsForProfile(primarySettings, profile) : primarySettings;
+  const { entries, allEntries, availableModules, updatedAt, refreshing, offline, refresh, ensureWeek } = browsing ? viewedSchedule : mainSchedule;
+  const isReviewDemo = mainSchedule.isReviewDemo;
+  const applySettings = (next: AppSettings) => {
+    if (!browsing || !primarySettings || !profile) return mainSchedule.applySettings(next);
+    // Global options stay shared; source and module filters belong to the viewed course.
+    return mainSchedule.applySettings({ ...next,
+      scheduleSource: primarySettings.scheduleSource, apiSelection: primarySettings.apiSelection,
+      raplaLink: primarySettings.raplaLink, rapla: primarySettings.rapla, hiddenModules: primarySettings.hiddenModules,
+      courseProfiles: (next.courseProfiles ?? []).map(p => p.id === profile.id ? profileFromSettings(next, p.id, p.name) : p),
+    });
+  };
   const [systemThemeMode, setSystemThemeMode] = useState<ResolvedTheme>(() => systemTheme());
   const mensaTarget = settings?.mensaAuto && settings.apiSelection ? settings.apiSelection.site : settings?.mensa ?? 'RV';
   const dining = useMensa(
     mensaTarget,
     (settings?.mensaEnabled ?? true) && Boolean(settings?.rapla || settings?.apiSelection),
   );
-  const dualis = useDualis(settings?.apiSelection?.site);
+  const dualis = useDualis(primarySettings?.apiSelection?.site);
 
   const now = useCurrentTime();
   const today = demoScreen ? APP_STORE_DEMO_DAY : berlinDayKey(now);
@@ -67,6 +88,14 @@ export function App() {
   const [selectedDay, setSelectedDay] = useState<string>(today);
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [addingCourse, setAddingCourse] = useState(false);
+  const [pendingCourse, setPendingCourse] = useState<AppSettings | null>(null);
+  const [studyNotice, setStudyNotice] = useState<string | null>(null);
+  const [openModules, setOpenModules] = useState(false);
+  const newCourseForOptions = useRef<string | null>(null);
+  const optionBaseModules = listScheduleModules(allEntries.filter(e => !(settings?.apiSelection?.additionalCourses ?? []).includes(e.course ?? '')));
+  const hasStudyOptions = useStudyOptions(settings, optionBaseModules, updatedAt);
+  const [managingCourses, setManagingCourses] = useState(false);
   const [calendarShareOpen, setCalendarShareOpen] = useState(false);
   const [calendarShareBusy, setCalendarShareBusy] = useState(false);
   const [showHiddenModules, setShowHiddenModules] = useState(false);
@@ -74,9 +103,9 @@ export function App() {
   const [calendarDetails, setCalendarDetails] = useState<CalendarDetails | null>(null);
 
   const activeCalendarView = calendarView ?? settings?.defaultCalendarView ?? 'day';
-  const mailProvider = mailProviderForSite(settings?.apiSelection?.site);
-  const siteConfig = siteConfigurationFor(settings?.apiSelection?.site);
-  const showMailTab = Boolean(settings?.apiSelection?.site);
+  const mailProvider = mailProviderForSite(primarySettings?.apiSelection?.site);
+  const siteConfig = siteConfigurationFor(primarySettings?.apiSelection?.site);
+  const showMailTab = Boolean(primarySettings?.apiSelection?.site);
 
   const inSettings = section === 'settings' || showSettings;
   const inCalendar = section === 'calendar' && !inSettings;
@@ -99,8 +128,26 @@ export function App() {
     if (section === 'mail' && !showMailTab) setSection('calendar');
   }, [section, showMailTab]);
 
+  useEffect(() => {
+    const selection = settings?.scheduleSource === 'dhbw-api' ? settings.apiSelection : null;
+    if (!settings || !selection || !hasStudyOptions || selection.optionsConfiguredKey === hasStudyOptions || selection.optionsNoticeKey === hasStudyOptions || offline || !updatedAt ||
+        demoScreen || isReviewDemo || addingCourse || managingCourses || calendarShareOpen ||
+        inSettings || calendarDetails || selectedBlockKey || section !== 'calendar') return;
+    const fresh = newCourseForOptions.current === selection.course;
+    newCourseForOptions.current = null;
+    void applySettings({...settings, apiSelection:{...selection, optionsNoticeSeen:true, optionsNoticeKey:hasStudyOptions}});
+    if (fresh) { setOpenModules(true); setShowSettings(true); }
+    else setStudyNotice(selection.course);
+  }, [settings?.apiSelection?.course, settings?.apiSelection?.optionsConfiguredKey, settings?.apiSelection?.optionsNoticeKey, hasStudyOptions,
+    offline, updatedAt, demoScreen, isReviewDemo, addingCourse, managingCourses, calendarShareOpen,
+    inSettings, calendarDetails, selectedBlockKey, section, browsing]);
+
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
+    if (pendingCourse) { setPendingCourse(null); return true; }
+    if (studyNotice) { setStudyNotice(null); return true; }
+    if (addingCourse) { setAddingCourse(false); return true; }
+    if (managingCourses) { setManagingCourses(false); return true; }
     if (calendarShareOpen) { if (!calendarShareBusy) setCalendarShareOpen(false); return true; }
     const action = resolveBackAction({
       showSettings: inSettings,
@@ -136,6 +183,13 @@ export function App() {
     }
   });
 
+  useEffect(() => {
+    setSelectedBlockKey(null);
+    setCalendarDetails(null);
+    setConfirmModuleKey(null);
+    setShowHiddenModules(false);
+  }, [primarySettings?.viewedProfileId]);
+
   const monday = ymdKey(mondayOfYmd(parseYmdKey(selectedDay)));
   useEffect(() => { setCalendarDetails(null); }, [monday, selectedDay.slice(0, 7), section, activeCalendarView, inSettings]);
   const todayMonday = ymdKey(mondayOfYmd(parseYmdKey(today)));
@@ -151,10 +205,10 @@ export function App() {
     [monday],
   );
 
-  const displayEntries = showHiddenModules ? allEntries : entries;
+  const displayEntries = showHiddenModules ? filterScheduleEntries(allEntries, [], settings?.apiSelection) : entries;
 
   const busyDays = useMemo(() => new Set(displayEntries.map((e) => berlinDayKey(e.start))), [displayEntries]);
-  const scheduledDays = useMemo(() => new Set(allEntries.map((e) => berlinDayKey(e.start))), [allEntries]);
+  const scheduledDays = useMemo(() => new Set(filterScheduleEntries(allEntries, [], settings?.apiSelection).map((e) => berlinDayKey(e.start))), [allEntries, settings?.apiSelection]);
   const dayEntries = useMemo(
     () => displayEntries.filter((e) => berlinDayKey(e.start) === selectedDay),
     [displayEntries, selectedDay],
@@ -185,6 +239,35 @@ export function App() {
     return <div className="splash">Lade …</div>;
   }
 
+  if (pendingCourse) {
+    return <StudyPlanSetup settings={pendingCourse} onCancel={() => setPendingCourse(null)} onSave={source => {
+      setPendingCourse(null);
+      newCourseForOptions.current = null;
+      if (addingCourse && primarySettings) {
+        void mainSchedule.applySettings(addCourseProfile(primarySettings, source));
+        setAddingCourse(false); setShowSettings(false); setSection('calendar');
+      } else {
+        void ensurePermission();
+        void applySettings(source);
+      }
+    }} />;
+  }
+
+  if (addingCourse && primarySettings) {
+    const saveCourse = (source: AppSettings) => {
+      newCourseForOptions.current = source.apiSelection?.course ?? null;
+      void mainSchedule.applySettings(addCourseProfile(primarySettings, source));
+      setAddingCourse(false);
+      setSection('calendar');
+      setShowSettings(false);
+    };
+    return <SetupWizard onCancel={() => setAddingCourse(false)}
+      onSaveRapla={(link, config) => saveCourse({ ...primarySettings, raplaLink: link, rapla: config,
+        scheduleSource: 'rapla', apiSelection: null, hiddenModules: [] })}
+      onSaveApi={selection => setPendingCourse({ ...primarySettings, raplaLink: '', rapla: null,
+        scheduleSource: 'dhbw-api', apiSelection: selection, hiddenModules: [] })} />;
+  }
+
   // Erststart: geführter API-Modus oder manueller Rapla-Fallback.
   if (!settings.rapla && !(settings.scheduleSource === 'dhbw-api' && settings.apiSelection)) {
     return (
@@ -204,8 +287,7 @@ export function App() {
           });
         }}
         onSaveApi={(selection) => {
-          void ensurePermission();
-          void applySettings({
+          setPendingCourse({
             ...settings,
             raplaLink: '',
             rapla: null,
@@ -296,6 +378,7 @@ export function App() {
   };
 
   const closeSettings = () => {
+    setOpenModules(false);
     setShowSettings(false);
     if (section === 'settings') setSection('calendar');
   };
@@ -349,6 +432,10 @@ export function App() {
                   </svg>
                   <span className="iconbtn__badge">{settings.hiddenModules.length}</span>
                 </button>
+              )}
+              {!demoScreen && !isReviewDemo && primarySettings && (
+                <CourseProfiles settings={primarySettings} onChange={next => void mainSchedule.applySettings(next)}
+                  onAdd={() => setAddingCourse(true)} managing={managingCourses} onManage={setManagingCourses} />
               )}
               {Capacitor.isNativePlatform() && <button
                 className="iconbtn"
@@ -423,6 +510,8 @@ export function App() {
         <SettingsView
           settings={settings}
           availableModules={availableModules}
+          scheduleEntries={allEntries}
+          openModules={openModules}
           updatedAt={updatedAt}
           onChange={(next) => {
             if (next.defaultCalendarView !== settings.defaultCalendarView) {
@@ -430,10 +519,11 @@ export function App() {
             }
             void applySettings(next);
           }}
+          onChangeSource={() => setAddingCourse(true)}
           onClose={closeSettings}
         />
       ) : inMail ? (
-        <MailView site={settings.apiSelection?.site ?? ''} />
+        <MailView site={primarySettings?.apiSelection?.site ?? ''} />
       ) : inCalendar && selectedBlock ? (
         <CourseView
           entries={blockEntries}
@@ -501,15 +591,22 @@ export function App() {
           onSwipeWeek={(delta) => selectDay(ymdKey(addDaysYmd(parseYmdKey(monday), delta * 7)))}
         />
       ) : (
-        <DualisView dualis={dualis} site={settings.apiSelection?.site} page={dualisPage} />
+        <DualisView dualis={dualis} site={primarySettings?.apiSelection?.site} page={dualisPage} />
       )}
 
       {calendarDetails && inCalendar && (activeCalendarView === 'week' || activeCalendarView === 'month') && (
         <WeekEventSheet day={calendarDetails.day} scope={calendarDetails.scope}
+          onToggleModule={setConfirmModuleKey} hiddenModuleKeys={new Set(settings.hiddenModules)}
           entries={calendarDetails.scope === 'day' ? entriesByDay[calendarDetails.day] ?? [] : calendarDetails.entries}
           onClose={() => setCalendarDetails(null)}
           onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
+
+      {studyNotice === settings.apiSelection?.course && <ConfirmDialog title="Wahlkurse & Gruppen auswählen?"
+        message="Deine Wahlangebote sind noch nicht vollständig eingerichtet. Wähle deine Seminare, Übungen, Schwerpunkte oder Gruppe."
+        confirmLabel="Jetzt auswählen" cancelLabel="Später" isDanger={false}
+        onConfirm={() => {setStudyNotice(null);setOpenModules(true);setShowSettings(true);}}
+        onCancel={() => setStudyNotice(null)} />}
 
       {/* In-App Bestätigungs-Dialog */}
       {calendarShareOpen && <CalendarShareDialog enabled={settings.calendarSyncEnabled}

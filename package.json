@@ -1,8 +1,8 @@
 {
   "name": "dhbw-planner",
   "private": true,
-  "version": "1.5.0",
-  "description": "Schlanke DHBW-App für Rapla-Stundenpläne, Dualis, Gerätekalender-Synchronisierung und lokale Benachrichtigungen.",
+  "version": "1.5.2",
+  "description": "Schlanke DHBW-App f\u00fcr Rapla-Stundenpl\u00e4ne, Dualis, Ger\u00e4tekalender-Synchronisierung und lokale Benachrichtigungen.",
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {

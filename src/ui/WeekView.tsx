@@ -6,7 +6,7 @@ import { entryMinuteRange, isUntimedEntry, isCurrentWeekendWeek, timedGeometry, 
 import { useCurrentTime } from './useCurrentTime';
 import { timeLabel } from './CourseView';
 import { scheduleModuleKey } from '../schedule/modules';
-import { selectionHaptic } from '../lib/haptics';
+import { useLongPress } from './gestures/useLongPress';
 
 const SWIPE_THRESHOLD = 60;
 const WEEKDAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -128,8 +128,10 @@ export function WeekView({
   const touch = useRef<{ x: number; y: number; axis: 'horizontal' | 'vertical' | null } | null>(null);
   const initialPinchDist = useRef<number | null>(null);
   const initialHourHeight = useRef<number>(hourPx);
-  const longPressTimer = useRef<number | null>(null);
-  const didLongPress = useRef(false);
+  const pressedEntry = useRef<ScheduleEntry | null>(null);
+  const longPress = useLongPress(onToggleModule ? () => {
+    if (pressedEntry.current) onToggleModule(scheduleModuleKey(pressedEntry.current));
+  } : undefined);
   const suppressTap = useRef(false);
   const viewRef = useRef<HTMLDivElement>(null);
   const moveHandlerRef = useRef<((event: TouchEvent) => void) | null>(null);
@@ -141,10 +143,6 @@ export function WeekView({
     // need a cancellable listener so the browser cannot also scroll/zoom.
     view?.addEventListener('touchmove', move, { passive: false });
     return () => view?.removeEventListener('touchmove', move);
-  }, []);
-
-  useEffect(() => () => {
-    if (longPressTimer.current !== null) window.clearTimeout(longPressTimer.current);
   }, []);
 
   // Sobald die gespeicherte Höhe nachgezogen ist, den Übergangswert verwerfen.
@@ -182,29 +180,17 @@ export function WeekView({
   const hours = Array.from({ length: displayLastHour - firstHour }, (_, i) => firstHour + i);
   const nowMarker = weekNowMarker(now, weekDays, hourPx, displayLastHour);
 
-  const startLongPress = (entry: ScheduleEntry) => {
-    if (!onToggleModule) return;
-    didLongPress.current = false;
-    longPressTimer.current = window.setTimeout(() => {
-      didLongPress.current = true;
-      selectionHaptic();
-      onToggleModule(scheduleModuleKey(entry));
-    }, 450);
+  const startLongPress = (entry: ScheduleEntry, event: React.PointerEvent<HTMLElement>) => {
+    pressedEntry.current = entry;
+    longPress.onPointerDown(event);
   };
-
-  /** Nach einem Long-Press folgt trotzdem ein Click – der darf nicht zusätzlich den Tag öffnen. */
+  const cancelLongPress = longPress.onPointerCancel;
+  const finishLongPress = longPress.onPointerUp;
+  const moveLongPress = longPress.onPointerMove;
+  const preventPressSelection = longPress.onContextMenu;
   const consumeLongPressClick = () => {
     if (suppressTap.current) { suppressTap.current = false; return true; }
-    if (!didLongPress.current) return false;
-    didLongPress.current = false;
-    return true;
-  };
-
-  const cancelLongPress = () => {
-    if (longPressTimer.current !== null) {
-      window.clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
+    return longPress.consumeClick();
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -365,7 +351,10 @@ export function WeekView({
                       </span>
                       <span className="weekview__parallel-items">
                         {cluster.entries.map((entry, index) => (
-                          <span key={index} className="weekview__parallel-item">
+                          <span key={index} className="weekview__parallel-item"
+                            onPointerDown={(event) => startLongPress(entry, event)} onPointerUp={finishLongPress}
+                            onPointerMove={moveLongPress} onPointerLeave={cancelLongPress} onPointerCancel={cancelLongPress}
+                            onContextMenu={preventPressSelection}>
                             <span className="weekview__parallel-time">{timeLabel(entry)}</span>
                             <span>{entry.title}</span>
                             {entry.rooms.length > 0 && <span className="weekview__emeta">{entry.rooms.join(', ')}</span>}
@@ -407,12 +396,10 @@ export function WeekView({
                       if (consumeLongPressClick()) return;
                       onSelectEntries(day, [entry]);
                     }}
-                    onTouchStart={() => startLongPress(entry)}
-                    onTouchEnd={cancelLongPress}
-                    onTouchMove={cancelLongPress}
-                    onMouseDown={() => startLongPress(entry)}
-                    onMouseUp={cancelLongPress}
-                    onMouseLeave={cancelLongPress}
+                    onPointerDown={(event) => startLongPress(entry, event)}
+                    onPointerUp={finishLongPress} onPointerMove={moveLongPress}
+                    onPointerLeave={cancelLongPress} onPointerCancel={cancelLongPress}
+                    onContextMenu={preventPressSelection}
                     aria-label={`${entry.title}, ${timeLabel(entry)}${rooms ? `, Raum ${rooms}` : ''}${lecturers ? `, ${lecturers}` : ''}${isHidden ? ' (ausgeblendetes Modul)' : ''}`}
                   >
                     <span className="weekview__etime">{formatTime(entry.start)}</span>

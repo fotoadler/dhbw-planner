@@ -1,0 +1,372 @@
+{
+  "result": [
+    {
+      "tag": {
+        "datum_iso": "2026-10-12"
+      },
+      "essen": [
+        {
+          "category": "Vorspeise",
+          "title": "Salat vom Buffet, Preis pro 100g",
+          "description": "Bei Fragen zu Unver&shy;­­­&shy;träg&shy;­­­&shy;li­ch­kei&shy;ten, wenden Sie sich an das Mensa - Team",
+          "preis1": "1,30",
+          "preis2": "1,50",
+          "preis3": "1,70",
+          "einheit": "",
+          "title_clean": "Salat vom Buffet, Preis pro 100g",
+          "description_clean": "Bei Fragen zu Unver­­­träg­­­li­ch­keiten, wenden Sie sich an das Mensa - Team",
+          "preis2_eur_label": "DHBW: 1,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 1,70&nbsp;&euro;",
+          "a_id": "9514",
+          "icons2": []
+        },
+        {
+          "category": "Essen 1",
+          "title": "Schwä&shy;b&shy;i&shy;sche Linsen | Saiten&shy;wurst",
+          "description": "Eier&shy;knöpfle",
+          "preis1": "6,00",
+          "preis2": "7,50",
+          "preis3": "11,00",
+          "einheit": "",
+          "title_clean": "Schwäbische Linsen | Saitenwurst",
+          "description_clean": "Eierknöpfle",
+          "preis2_eur_label": "DHBW: 7,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 11,00&nbsp;&euro;",
+          "a_id": "9522",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "S": {
+              "text": "Schwein"
+            }
+          }
+        },
+        {
+          "category": "Vegan",
+          "title": "Falafel Küchle | Gemü&shy;se-Cous&shy;cous",
+          "description": "Erdnuss-Sauce oder Sour Cream",
+          "preis1": "5,60",
+          "preis2": "6,90",
+          "preis3": "9,50",
+          "einheit": "",
+          "title_clean": "Falafel Küchle | Gemüse-Couscous",
+          "description_clean": "Erdnuss-Sauce oder Sour Cream",
+          "preis2_eur_label": "DHBW: 6,90&nbsp;&euro;",
+          "preis3_eur_label": "extern: 9,50&nbsp;&euro;",
+          "a_id": "9523",
+          "icons2": {
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        },
+        {
+          "category": "Beilagen",
+          "title": "Beila&shy;gen&shy;teller Tage&shy;s&shy;an&shy;gebot",
+          "description": "ohne vorbe­s­&shy;tel­&shy;len, Gluten&shy;­frei und Vegan",
+          "preis1": "3,90",
+          "preis2": "5,10",
+          "preis3": "8,00",
+          "einheit": "",
+          "title_clean": "Beilagenteller Tagesangebot",
+          "description_clean": "ohne vorbe­s­tel­len, Gluten­frei und Vegan",
+          "preis2_eur_label": "DHBW: 5,10&nbsp;&euro;",
+          "preis3_eur_label": "extern: 8,00&nbsp;&euro;",
+          "a_id": "9518",
+          "icons2": {
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": {
+        "datum_iso": "2026-10-13"
+      },
+      "essen": [
+        {
+          "category": "Vorspeise",
+          "title": "Salat vom Buffet, Preis pro 100g",
+          "description": "Bei Fragen zu Unver&shy;­­­&shy;träg&shy;­­­&shy;li­ch­kei&shy;ten, wenden Sie sich an das Mensa - Team",
+          "preis1": "1,30",
+          "preis2": "1,50",
+          "preis3": "1,70",
+          "einheit": "",
+          "title_clean": "Salat vom Buffet, Preis pro 100g",
+          "description_clean": "Bei Fragen zu Unver­­­träg­­­li­ch­keiten, wenden Sie sich an das Mensa - Team",
+          "preis2_eur_label": "DHBW: 1,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 1,70&nbsp;&euro;",
+          "a_id": "9515",
+          "icons2": []
+        },
+        {
+          "category": "Essen 1",
+          "title": "Gyros von der Pute | Dip Auswahl",
+          "description": "Reis | Fladen&shy;brot",
+          "preis1": "6,00",
+          "preis2": "7,50",
+          "preis3": "11,00",
+          "einheit": "",
+          "title_clean": "Gyros von der Pute | Dip Auswahl",
+          "description_clean": "Reis | Fladenbrot",
+          "preis2_eur_label": "DHBW: 7,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 11,00&nbsp;&euro;",
+          "a_id": "9524",
+          "icons2": {
+            "G": {
+              "text": "Geflügel"
+            },
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "La": {
+              "text": "enthält Lactose"
+            }
+          }
+        },
+        {
+          "category": "Vegan",
+          "title": "Pflanz&shy;li&shy;ches Gyros | Dipaus&shy;wahl",
+          "description": "Reis | Fladen&shy;brot",
+          "preis1": "5,60",
+          "preis2": "6,90",
+          "preis3": "9,50",
+          "einheit": "",
+          "title_clean": "Pflanzliches Gyros | Dipauswahl",
+          "description_clean": "Reis | Fladenbrot",
+          "preis2_eur_label": "DHBW: 6,90&nbsp;&euro;",
+          "preis3_eur_label": "extern: 9,50&nbsp;&euro;",
+          "a_id": "9525",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        },
+        {
+          "category": "Vegetarisch",
+          "title": "Tortel&shy;lini | Anti-Pasti",
+          "description": "Paprika oder pflanz&shy;liche Kräu&shy;tersauce",
+          "preis1": "5,60",
+          "preis2": "6,90",
+          "preis3": "9,50",
+          "einheit": "",
+          "title_clean": "Tortellini | Anti-Pasti",
+          "description_clean": "Paprika oder pflanzliche Kräutersauce",
+          "preis2_eur_label": "DHBW: 6,90&nbsp;&euro;",
+          "preis3_eur_label": "extern: 9,50&nbsp;&euro;",
+          "a_id": "9526",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        },
+        {
+          "category": "Beilagen",
+          "title": "Beila&shy;gen&shy;teller Tage&shy;s&shy;an&shy;gebot",
+          "description": "ohne vorbe­s­&shy;tel­&shy;len, Gluten&shy;­frei und Vegan",
+          "preis1": "3,90",
+          "preis2": "5,10",
+          "preis3": "8,00",
+          "einheit": "",
+          "title_clean": "Beilagenteller Tagesangebot",
+          "description_clean": "ohne vorbe­s­tel­len, Gluten­frei und Vegan",
+          "preis2_eur_label": "DHBW: 5,10&nbsp;&euro;",
+          "preis3_eur_label": "extern: 8,00&nbsp;&euro;",
+          "a_id": "9519",
+          "icons2": {
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": {
+        "datum_iso": "2026-10-14"
+      },
+      "essen": [
+        {
+          "category": "Vorspeise",
+          "title": "Salat vom Buffet, Preis pro 100g",
+          "description": "Bei Fragen zu Unver&shy;­­­&shy;träg&shy;­­­&shy;li­ch­kei&shy;ten, wenden Sie sich an das Mensa - Team",
+          "preis1": "1,30",
+          "preis2": "1,50",
+          "preis3": "1,70",
+          "einheit": "",
+          "title_clean": "Salat vom Buffet, Preis pro 100g",
+          "description_clean": "Bei Fragen zu Unver­­­träg­­­li­ch­keiten, wenden Sie sich an das Mensa - Team",
+          "preis2_eur_label": "DHBW: 1,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 1,70&nbsp;&euro;",
+          "a_id": "9516",
+          "icons2": []
+        },
+        {
+          "category": "Essen 1",
+          "title": "Haus&shy;ge&shy;machtes Cordon Bleu",
+          "description": "knusp&shy;rige Kartof&shy;feln",
+          "preis1": "6,00",
+          "preis2": "7,50",
+          "preis3": "11,00",
+          "einheit": "",
+          "title_clean": "Hausgemachtes Cordon Bleu",
+          "description_clean": "knusprige Kartoffeln",
+          "preis2_eur_label": "DHBW: 7,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 11,00&nbsp;&euro;",
+          "a_id": "9527",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "La": {
+              "text": "enthält Lactose"
+            },
+            "S": {
+              "text": "Schwein"
+            }
+          }
+        },
+        {
+          "category": "Essen 2",
+          "title": "Broc&shy;coli und Pilze im Tempura&shy;mantel | Salat&shy;garnitur",
+          "description": "Wasabi oder Toma&shy;ten-Feta Dip",
+          "preis1": "5,60",
+          "preis2": "6,90",
+          "preis3": "9,50",
+          "einheit": "",
+          "title_clean": "Broccoli und Pilze im Tempuramantel | Salatgarnitur",
+          "description_clean": "Wasabi oder Tomaten-Feta Dip",
+          "preis2_eur_label": "DHBW: 6,90&nbsp;&euro;",
+          "preis3_eur_label": "extern: 9,50&nbsp;&euro;",
+          "a_id": "9528",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        },
+        {
+          "category": "Beilagen",
+          "title": "Beila&shy;gen&shy;teller Tage&shy;s&shy;an&shy;gebot",
+          "description": "ohne vorbe­s­&shy;tel­&shy;len, Gluten&shy;­frei und Vegan",
+          "preis1": "3,90",
+          "preis2": "5,10",
+          "preis3": "8,00",
+          "einheit": "",
+          "title_clean": "Beilagenteller Tagesangebot",
+          "description_clean": "ohne vorbe­s­tel­len, Gluten­frei und Vegan",
+          "preis2_eur_label": "DHBW: 5,10&nbsp;&euro;",
+          "preis3_eur_label": "extern: 8,00&nbsp;&euro;",
+          "a_id": "9520",
+          "icons2": {
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": {
+        "datum_iso": "2026-10-15"
+      },
+      "essen": [
+        {
+          "category": "Vorspeise",
+          "title": "Salat vom Buffet, Preis pro 100g",
+          "description": "Bei Fragen zu Unver&shy;­­­&shy;träg&shy;­­­&shy;li­ch­kei&shy;ten, wenden Sie sich an das Mensa - Team",
+          "preis1": "1,30",
+          "preis2": "1,50",
+          "preis3": "1,70",
+          "einheit": "",
+          "title_clean": "Salat vom Buffet, Preis pro 100g",
+          "description_clean": "Bei Fragen zu Unver­­­träg­­­li­ch­keiten, wenden Sie sich an das Mensa - Team",
+          "preis2_eur_label": "DHBW: 1,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 1,70&nbsp;&euro;",
+          "a_id": "9517",
+          "icons2": []
+        },
+        {
+          "category": "Essen 1",
+          "title": "Seelachs&shy;filet | Dill - Velouté",
+          "description": "Linsen | Pasta oder Reis",
+          "preis1": "6,00",
+          "preis2": "7,50",
+          "preis3": "11,00",
+          "einheit": "",
+          "title_clean": "Seelachsfilet | Dill - Velouté",
+          "description_clean": "Linsen | Pasta oder Reis",
+          "preis2_eur_label": "DHBW: 7,50&nbsp;&euro;",
+          "preis3_eur_label": "extern: 11,00&nbsp;&euro;",
+          "a_id": "9529",
+          "icons2": {
+            "F": {
+              "text": "Fisch"
+            },
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "La": {
+              "text": "enthält Lactose"
+            }
+          }
+        },
+        {
+          "category": "Vegetarisch",
+          "title": "Vegane Bolog&shy;nese Bianco oder allar&shy;r&shy;ab&shy;biata | Spag&shy;hetti",
+          "description": "Hart&shy;käse | Rukola",
+          "preis1": "5,60",
+          "preis2": "6,90",
+          "preis3": "9,50",
+          "einheit": "",
+          "title_clean": "Vegane Bolognese Bianco oder allarrabbiata | Spaghetti",
+          "description_clean": "Hartkäse | Rukola",
+          "preis2_eur_label": "DHBW: 6,90&nbsp;&euro;",
+          "preis3_eur_label": "extern: 9,50&nbsp;&euro;",
+          "a_id": "9530",
+          "icons2": {
+            "Gl": {
+              "text": "Glutenhaltiges Getreide"
+            },
+            "V": {
+              "text": "vegetarisch"
+            }
+          }
+        },
+        {
+          "category": "Beilagen",
+          "title": "Beila&shy;gen&shy;teller Tage&shy;s&shy;an&shy;gebot",
+          "description": "ohne vorbe­s­&shy;tel­&shy;len, Gluten&shy;­frei und Vegan",
+          "preis1": "3,90",
+          "preis2": "5,10",
+          "preis3": "8,00",
+          "einheit": "",
+          "title_clean": "Beilagenteller Tagesangebot",
+          "description_clean": "ohne vorbe­s­tel­len, Gluten­frei und Vegan",
+          "preis2_eur_label": "DHBW: 5,10&nbsp;&euro;",
+          "preis3_eur_label": "extern: 8,00&nbsp;&euro;",
+          "a_id": "9521",
+          "icons2": {
+            "VEG": {
+              "text": "vegan"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

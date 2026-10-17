@@ -57,3 +57,13 @@ Ein neuer Standort wird als Datei in `src/mensa/sites/` angelegt und in `index.t
 - **Bad Mergentheim:** Das Studierendenwerk Heidelberg führt für jedes Kooperationsrestaurant eine eigene Speiseplan-Adresse, liefert dort aber acht Mal dieselbe Datei mit „Derzeit kein Speiseplan vorhanden!". Verlinkt sind deshalb nur restauranteigene Seiten.
 - **Mosbach/Fideljo:** Der Partnerplan ist derzeit ohne Speiseplan; der Eintrag nennt Adresse und Zeiten.
 - Für Karlsruhe, Heidenheim, Lörrach und Villingen-Schwenningen sind die Schließzeiten noch ohne Beleg hinterlegt und sollten vor Ort geprüft werden.
+
+## Friedrichshafen: Zeppelin Universität
+
+Neben Seezeit wird die Mensa der Zeppelin Universität über My-Mensa geladen. Das Einrichtungsprofil verwendet `source: { kind: 'my-mensa', mensaId: 'mensa_fallenbrunnen' }`; die bestehende Auswahl zwischen Einrichtungen zeigt beide Pläne.
+
+Quelle: [My-Mensa](https://zuf.my-mensa.de/mensatogo.php?mensa=mensa_fallenbrunnen), geprüft am 12.10.2026. Der öffentliche JSON-Abruf (`getdata.php?mensa_id=mensa_fallenbrunnen&json=1&hyp=1&mode=togo&lang=de`) liefert ISO-Tagesdaten, Gerichte, Kennzeichnungen und Preisgruppen. Als Studierendenpreis wird ausschließlich die ausdrücklich als „DHBW“ beschriftete zweite Preisgruppe übernommen; „intern“ gilt nicht als DHBW-Preis. Salatpreise je 100 g bleiben entsprechend gekennzeichnet. Nicht veröffentlichte Tage werden nicht als Schließtage interpretiert.
+
+Beide Quellen werden unabhängig geladen. Bei einem einzelnen Ausfall bleibt der andere Plan verfügbar; ein zuvor gespeicherter Plan der ausgefallenen Einrichtung bleibt mit Fehlerhinweis sichtbar. Native Apps verwenden CapacitorHttp, die lokale Entwicklung den Vite-Proxy `/my-mensa`. Der öffentliche Server erlaubt derzeit Web-Abrufe mit `Access-Control-Allow-Origin: *`.
+
+Die reduzierte Quellantwort in `tests/fixtures/myMensa.json` prüft die Preisrollen und Tageszuordnung; Loader-Tests decken den Ausfall jeder Quelle und den Gesamtausfall ab.

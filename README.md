@@ -104,8 +104,8 @@ Kurzfassung:
 - Kein Tracking
 - Kein eigenes Backend
 - Rapla-Link bzw. API-Kursauswahl, Stundenplan-Cache, Mensa-Cache, ausgeblendete Module, das lokale Dozenten-Verzeichnis und optionale Dualis-Einstellungen werden lokal gespeichert
-- Dualis-Passwörter werden nicht dauerhaft gespeichert
-- Netzwerkzugriffe gehen direkt an die konfigurierten DHBW-Systeme
+- Dualis-Passwörter bleiben ohne „Angemeldet bleiben“ im Arbeitsspeicher; mit der freiwilligen Option werden die Zugangsdaten auf iOS/Android im nativen Secure Storage gespeichert
+- Netzwerkzugriffe gehen an Rapla, Dualis, die öffentliche API unter `api.dhbw.app`, Mensa-Anbieter und das jeweilige Webmail-System
 
 Details stehen in [docs/PRIVACY.md](docs/PRIVACY.md).
 

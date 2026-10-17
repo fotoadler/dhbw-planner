@@ -31,3 +31,9 @@ Dozentennamen sind nicht für jeden Termin garantiert. Das API-Feld `lecturer` k
 ## Lokale Verarbeitung
 
 Die App speichert die Kursauswahl, den lokalen Stundenplan-Cache einschließlich ETag, den Mensa-Cache, das lokale Dozenten-Verzeichnis und die vom Nutzer ausgeblendeten Module lokal auf dem Gerät. Der API-Kursplan wird nicht in ein eigenes Backend kopiert. Die Auswahl eines anderen Mensa-Standorts ist im geführten Modus jederzeit möglich; standardmäßig folgt die Mensa-Auswahl dem gewählten DHBW-Standort.
+
+## Persönliche Wahlangebote (1.5.2)
+
+Grundkurs, passende Sammelpläne und ausgewählte Gruppenpläne werden als ein persönlicher Plan geladen. ETags und Cache bleiben pro Quelle getrennt. Erst nach vollständigem erfolgreichen Abruf werden app-eigene Kalenderdaten abgeglichen; ein fehlgeschlagener Zusatzplan darf keine Löschung als scheinbar vollständigen Plan auslösen.
+
+Die gespeicherte API-Auswahl enthält zusätzlich `additionalCourses`, `selectedOptionalModules`, `selectedAdditionalModules` und den Einrichtungs-/Hinweisstatus je Kursprofil. Allgemeine Titelmarker und verifizierte Providerkonventionen klassifizieren Angebote für Onboarding, Einstellungen und Kalenderfilter gemeinsam. Die API liefert weder die persönliche Einschreibung noch eine verlässliche globale Pflicht-/Wahlfachkennung. Details: [aktuelle Kurswahl](ELECTIVES_CONCEPT.md) und [Erkennungsprüfung](STUDY_OPTION_DETECTION_AUDIT.md).

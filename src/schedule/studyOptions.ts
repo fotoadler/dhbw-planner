@@ -30,4 +30,3 @@ export function isSharedStudySource(course?: string): boolean {
 export function isChoiceModule(label: string, course?: string, labels: string[] = []): boolean {
   return choiceCategory(label, course, labels) !== null;
 }
-

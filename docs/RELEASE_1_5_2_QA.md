@@ -13,7 +13,7 @@ Prüfung am 17. Oktober 2026, iPhone 17 Pro im eigenen frischen Simulator mit iO
 - Einstellungen öffnen: Auswahlstatus und sichtbare Module stimmen.
 - Dualis-Loginansicht und native Mail-WebView bis zur OWA-Anmeldemaske öffnen, zurück zum Kalender. Keine echten Zugangsdaten eingegeben.
 - Zusätzliches Ansichtprofil FN-TIM23 einrichten; dessen eigene Wahlangebote werden abgefragt. Profilmenü zeigt TIM24 als unverändertes Hauptprofil. Wechsel zurück zu TIM24 lädt den Plan samt seinem Modulfilter.
-- App beenden und neu starten; gespeicherte Konfiguration auf erneuten Start prüfen.
+- App beenden und neu starten: Hauptprofil und gespeicherter Modulfilter bleiben erhalten, Standardansicht Woche öffnet sich.
 
 Der App-Prozess blieb während der gesamten Bedienprüfung derselbe (PID 10508); kein unbeabsichtigter Prozessneustart. Die gezielte Systemlog-Suche nach unbehandelten Ausnahmen, Fatal Errors und „Terminating app“ ergab keinen App-Absturz. Screenshots und Buildlogs werden lokal im Release-Artefaktordner aufbewahrt.
 
@@ -24,3 +24,9 @@ Der App-Prozess blieb während der gesamten Bedienprüfung derselbe (PID 10508);
 ## Aussagegrenzen
 
 Das ist ein gezielter Regressionstest, keine Garantie für jede denkbare Eingabe oder jeden Geräte-/OS-Zustand. Dualis-/Mail-Anmeldung, externe Konten, physische Android-Geräte und vollständige EventKit-Konten-Synchronisierung sind durch diesen Simulatorlauf nicht neu abgenommen. Die Überlappungs-/Gestenfälle sind zusätzlich durch Browserprüfungen und Regressionstests abgedeckt.
+
+## Build- und Uploadnachweis
+
+[PR #37](https://github.com/fotoadler/dhbw-planner/pull/37), Merge-Commit `a92f4e12`. Beide Store-Pakete wurden anschließend aus diesem Stand gebaut. Android-APK-Signatur erfolgreich geprüft, iOS-Codesign einschließlich eingebetteter Komponenten erfolgreich geprüft. Die Web-Dateien in APK, AAB und iOS-Archiv entsprechen bytegenau dem geprüften Build.
+
+Android 1.5.2 (14) wurde in Google Play als Produktionsupdate hochgeladen und gespeichert, ohne Review-Einreichung. iOS 1.5.2 (15) wurde erfolgreich an App Store Connect übertragen; die weitere Verarbeitung war beim Uploadabschluss noch offen. Aktueller Auslieferungsstand und Prüfsummen: [STORE_RELEASE.md](../STORE_RELEASE.md).

@@ -36,4 +36,3 @@ export async function getStudyPlan(selection: ApiSelection, etag?: string) {
   }));
   return {entries:mergeStudyEntries(results.flat()), notModified:false, etag:undefined};
 }
-

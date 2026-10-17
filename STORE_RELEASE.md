@@ -16,7 +16,9 @@ Wahlkurse, Seminare, Studienschwerpunkte und Gruppen lassen sich jetzt direkt na
 
 - Geplante Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
 - Veröffentlichung über einen ausdrücklich angeforderten Pull Request nach `main`; Community-/Watch-Branches bleiben außerhalb dieses Releases.
-- Native Laufzeitprüfung, Merge und Upload werden erst nach tatsächlichem Erfolg im Release-Protokoll ergänzt. Die vorliegenden Browserprüfungen ersetzen keinen Simulatorlauf.
+- 486 Tests in 49 Dateien, TypeScript/Vite-Build und Capacitor-Sync erfolgreich.
+- iOS-Simulator-Build erfolgreich; native Bedienprüfung mit FN-TIM24/FN-TIM23 auf iPhone 17 Pro / iOS 26.5 ohne beobachteten Absturz. Einzelheiten und Grenzen: [Release-QA](docs/RELEASE_1_5_2_QA.md).
+- Merge und Store-Uploads werden erst nach tatsächlichem Erfolg im Release-Protokoll ergänzt.
 
 ## Version 1.5.1 — Update descriptions
 
@@ -133,4 +135,3 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradl
 4. Set a unique App Store Connect app record with that bundle ID.
 5. Product > Archive.
 6. Distribute App > App Store Connect.
-

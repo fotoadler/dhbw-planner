@@ -1,4 +1,7 @@
+import type { ApiSelection } from '../store/preferences';
 import { ScheduleEntry } from '../types';
+import { isChoiceModule, isSharedStudySource } from './studyOptions';
+export { choiceCategory, isChoiceModule, isSharedStudySource } from './studyOptions';
 
 /** Ein im Stundenplan auswählbares Vorlesungsmodul. */
 export interface ScheduleModule {
@@ -34,8 +37,24 @@ export function listScheduleModules(entries: ScheduleEntry[]): ScheduleModule[] 
 }
 
 /** Blendet abgewählte Module aus, ohne die Einträge aus dem Cache zu löschen. */
-export function filterScheduleEntries(entries: ScheduleEntry[], hiddenModules: string[]): ScheduleEntry[] {
+export function filterScheduleEntries(entries: ScheduleEntry[], hiddenModules: string[], selection?: ApiSelection | null): ScheduleEntry[] {
   const hidden = new Set(hiddenModules.map((module) => module.trim()).filter(Boolean));
-  if (hidden.size === 0) return entries;
-  return entries.filter((entry) => !isModuleEntry(entry) || !hidden.has(scheduleModuleKey(entry)));
+  const extras = new Set((selection?.additionalCourses ?? []).filter(course=>course!==selection?.course));
+  const selected = selection?.selectedAdditionalModules ? new Set(selection.selectedAdditionalModules) : null;
+  const optional = selection?.selectedOptionalModules ? new Set(selection.selectedOptionalModules) : null;
+  if (hidden.size === 0 && !selected && !optional) return entries;
+  const labelsByCourse = new Map<string | undefined, string[]>();
+  for (const entry of entries) {
+    const labels = labelsByCourse.get(entry.course) ?? [];
+    labels.push(entry.title);
+    labelsByCourse.set(entry.course, labels);
+  }
+  return entries.filter(entry => {
+    if (!isModuleEntry(entry)) return true;
+    const key = scheduleModuleKey(entry);
+    if (hidden.has(key)) return false;
+    const choice = isChoiceModule(key, entry.course, labelsByCourse.get(entry.course));
+    if (extras.has(entry.course ?? '')) return (isSharedStudySource(entry.course) && !choice) || !selected || selected.has(key);
+    return !optional || !choice || optional.has(key);
+  });
 }

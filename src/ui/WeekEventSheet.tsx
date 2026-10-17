@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import type { ScheduleEntry } from '../types';
 import { formatDayLong, parseYmdKey } from '../lib/berlinTime';
 import { timeLabel } from './CourseView';
+import { scheduleModuleKey } from '../schedule/modules';
 import { ENTRY_TYPE_LABEL } from './EntryCard';
 
 interface Props {
@@ -11,9 +12,11 @@ interface Props {
   onClose: () => void;
   onOpenDay: (day: string) => void;
   scope?: 'selection' | 'day';
+  onToggleModule?: (moduleKey: string) => void;
+  hiddenModuleKeys?: Set<string>;
 }
 
-export function WeekEventSheet({ day, entries, onClose, onOpenDay, scope = 'selection' }: Props) {
+export function WeekEventSheet({ day, entries, onClose, onOpenDay, scope = 'selection', onToggleModule, hiddenModuleKeys }: Props) {
   const sortedEntries = [...entries].sort((a, b) => a.start.getTime() - b.start.getTime());
   const dialogRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -103,6 +106,12 @@ export function WeekEventSheet({ day, entries, onClose, onOpenDay, scope = 'sele
               {entry.lecturers.length > 0 && <p>{entry.lecturers.join(', ')}</p>}
               {entry.course && <p>Kurs: {entry.course}</p>}
               {entry.extra && <p>{entry.extra}</p>}
+              {onToggleModule && entry.course?.trim() && entry.type !== 'holiday' && <button
+                type="button" className="weekdetails__module-action"
+                aria-label={`${hiddenModuleKeys?.has(scheduleModuleKey(entry)) ? 'Modul einblenden' : 'Modul ausblenden'}: ${entry.title}`}
+                onClick={() => { onClose(); onToggleModule(scheduleModuleKey(entry)); }}>
+                {hiddenModuleKeys?.has(scheduleModuleKey(entry)) ? 'Modul einblenden' : 'Modul ausblenden'}
+              </button>}
             </article>
           ))}
         </div>

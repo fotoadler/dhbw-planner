@@ -1,19 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { App as CapApp } from '@capacitor/app';
 import { fetchWeek, fetchWeeks } from '../rapla/client';
-import { getCourseSchedule, groupEntriesByWeek } from '../dhbwApi/client';
+import { groupEntriesByWeek } from '../dhbwApi/client';
 import { addDaysYmd, mondayOf, parseYmdKey } from '../lib/berlinTime';
 import { loadCache, saveCache } from '../store/preferences';
 import { profileSourceKey, type CourseProfile } from '../store/courseProfiles';
 import { applyLecturerDirectory, loadLecturerDirectory, type LecturerDirectory } from '../store/lecturerDirectory';
 import { filterScheduleEntries, listScheduleModules } from '../schedule/modules';
+import { getStudyPlan, studyPlanKey } from '../dhbwApi/studyPlan';
 import type { ScheduleEntry } from '../types';
 
 type Snapshot = { key: string; weeks: Record<string, ScheduleEntry[]>; updatedAt: Date | null; etag?: string; offline: boolean };
 
 /** Read-only course browsing: deliberately has no notification or calendar imports. */
+function cacheKey(profile: CourseProfile): string | undefined {
+  return profile.scheduleSource === 'dhbw-api' && profile.apiSelection ? studyPlanKey(profile.apiSelection) : profileSourceKey(profile);
+}
+
 export function useViewedSchedule(profile: CourseProfile | undefined) {
-  const sourceKey = profile ? profileSourceKey(profile) : undefined;
+  const sourceKey = profile ? cacheKey(profile) : undefined;
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [loadingKey, setLoadingKey] = useState<string>();
   const [directory, setDirectory] = useState<LecturerDirectory>({});
@@ -32,7 +37,7 @@ export function useViewedSchedule(profile: CourseProfile | undefined) {
 
   const refresh = useCallback(async () => {
     const selected = currentProfile.current;
-    if (!selected || !sourceKey || profileSourceKey(selected) !== sourceKey) return;
+    if (!selected || !sourceKey || cacheKey(selected) !== sourceKey) return;
     const request = ++generation.current;
     setLoadingKey(sourceKey);
     try {
@@ -41,7 +46,7 @@ export function useViewedSchedule(profile: CourseProfile | undefined) {
       let etag: string | undefined;
       let offline = false;
       if (selected.scheduleSource === 'dhbw-api' && selected.apiSelection) {
-        const result = await getCourseSchedule(selected.apiSelection.course, cached?.etag);
+        const result = await getStudyPlan(selected.apiSelection, cached?.etag);
         if (result.notModified && !cached) throw new Error('Missing course cache');
         weeks = result.notModified ? cached!.weeks : groupEntriesByWeek(result.entries);
         etag = result.etag ?? cached?.etag;
@@ -50,7 +55,7 @@ export function useViewedSchedule(profile: CourseProfile | undefined) {
         weeks = { ...cached?.weeks, ...Object.fromEntries(result.weeks) };
         offline = result.failedWeeks.length > 0;
       }
-      if (request !== generation.current || profileSourceKey(currentProfile.current!) !== sourceKey) return;
+      if (request !== generation.current || cacheKey(currentProfile.current!) !== sourceKey) return;
       store({ key: sourceKey, weeks, etag, updatedAt: new Date(), offline });
     } catch {
       if (request === generation.current) {
@@ -105,7 +110,7 @@ export function useViewedSchedule(profile: CourseProfile | undefined) {
   // The key check clears old data in the same render as the profile switch.
   const visible = snapshot?.key === sourceKey ? snapshot : null;
   const allEntries = useMemo(() => applyLecturerDirectory(Object.values(visible?.weeks ?? {}).flat(), directory), [visible, directory]);
-  const entries = useMemo(() => filterScheduleEntries(allEntries, profile?.hiddenModules ?? []), [allEntries, profile?.hiddenModules]);
+  const entries = useMemo(() => filterScheduleEntries(allEntries, profile?.hiddenModules ?? [], profile?.apiSelection), [allEntries, profile?.hiddenModules, profile?.apiSelection]);
   const availableModules = useMemo(() => listScheduleModules(allEntries), [allEntries]);
   return { entries, allEntries, availableModules, updatedAt: visible?.updatedAt ?? null,
     offline: visible?.offline ?? false, refreshing: Boolean(sourceKey && (!visible || loadingKey === sourceKey)), refresh, ensureWeek };

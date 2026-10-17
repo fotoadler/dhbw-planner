@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 
 interface Props {
   title: string;
@@ -25,7 +25,9 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: Props) {
+  const titleId = useId();
   useEffect(() => {
+    window.getSelection()?.removeAllRanges();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onCancel();
     };
@@ -34,9 +36,9 @@ export function ConfirmDialog({
   }, [onCancel]);
 
   return (
-    <div className="dialog-backdrop" onClick={onCancel} role="dialog" aria-modal="true">
+    <div className="dialog-backdrop" onClick={onCancel} role="dialog" aria-modal="true" aria-labelledby={titleId} onContextMenu={event => { if (!(event.target as HTMLElement).closest('input, textarea, [contenteditable="true"]')) event.preventDefault(); }}>
       <div className={`dialog-card ${className}`} onClick={(e) => e.stopPropagation()}>
-        <h3 className="dialog-title">{title}</h3>
+        <h3 id={titleId} className="dialog-title">{title}</h3>
         <div className="dialog-message">{message}</div>
         <div className="dialog-actions">
           <button type="button" className="dialog-btn dialog-btn--secondary" disabled={cancelDisabled} onClick={onCancel}>

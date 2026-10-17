@@ -1,8 +1,7 @@
-import { useRef } from 'react';
 import { ScheduleEntry } from '../types';
 import { formatTime, isDeadlineOrAllDay } from '../lib/berlinTime';
 import { scheduleModuleKey } from '../schedule/modules';
-import { selectionHaptic } from '../lib/haptics';
+import { useLongPress } from './gestures/useLongPress';
 
 /** Badge-Beschriftung je Termintyp; auch von der Kursansicht genutzt. */
 export const ENTRY_TYPE_LABEL: Partial<Record<ScheduleEntry['type'], string>> = {
@@ -24,31 +23,13 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
   const isFullDay = (entry.end.getTime() - entry.start.getTime()) >= 23 * 3600 * 1000;
   const badge = isDeadline ? 'Deadline' : ENTRY_TYPE_LABEL[entry.type];
   const lecturers = entry.lecturers.join(', ');
-  const timerRef = useRef<number | null>(null);
-  const didLongPress = useRef(false);
+  const { consumeClick, ...longPressHandlers } = useLongPress(onToggleModule ? () => onToggleModule(scheduleModuleKey(entry)) : undefined);
 
   const endTimeText = isPointInTime
     ? ''
     : isFullDay
     ? 'Ganztägig'
     : formatTime(entry.end);
-
-  const startLongPress = () => {
-    if (!onToggleModule) return;
-    didLongPress.current = false;
-    timerRef.current = window.setTimeout(() => {
-      didLongPress.current = true;
-      selectionHaptic();
-      onToggleModule(scheduleModuleKey(entry));
-    }, 450);
-  };
-
-  const cancelLongPress = () => {
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  };
 
   const content = (
     <>
@@ -78,20 +59,10 @@ export function EntryCard({ entry, hidden, onSelect, onToggleModule }: Props) {
         className={`entry entry--${entry.type} entry--button${hidden ? ' is-hidden-module' : ''}`}
         style={cardStyle}
         onClick={() => {
-          // Nach einem Long-Press feuert der Browser trotzdem noch den Click.
-          // Der darf dann nicht zusätzlich die Kursansicht öffnen.
-          if (didLongPress.current) {
-            didLongPress.current = false;
-            return;
-          }
+          if (consumeClick()) return;
           onSelect(entry);
         }}
-        onTouchStart={startLongPress}
-        onTouchEnd={cancelLongPress}
-        onTouchMove={cancelLongPress}
-        onMouseDown={startLongPress}
-        onMouseUp={cancelLongPress}
-        onMouseLeave={cancelLongPress}
+        {...longPressHandlers}
         aria-label={`${entry.title} öffnen${hidden ? ' (ausgeblendet)' : ''}`}
       >
         {content}

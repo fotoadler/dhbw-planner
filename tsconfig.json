@@ -17,5 +17,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "tests", "capacitor.config.ts", "vite.config.ts"]
+  "include": ["src", "prototypes", "tests", "capacitor.config.ts", "vite.config.ts"]
 }

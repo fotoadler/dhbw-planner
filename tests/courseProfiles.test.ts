@@ -50,3 +50,16 @@ it('stellt beim Öffnen das Hauptprofil wieder her, ohne gespeicherte Profile zu
   expect(returnToPrimaryProfile({ ...changed, viewedProfileId: settings.primaryProfileId }).apiSelection).toEqual(second.apiSelection);
   expect(returnToPrimaryProfile({ ...changed, viewedProfileId: settings.primaryProfileId }).viewedProfileId).toBe(changed.primaryProfileId);
 });
+
+it('übernimmt eine erneut bestätigte Wahl für ein bestehendes Profil, ohne Profile zu duplizieren', () => {
+ const added=addCourseProfile(configured,second);
+ const reconfigured={...second,apiSelection:{...second.apiSelection!,selectedOptionalModules:['Mein Wahlfach'],optionsConfiguredKey:'configured'},hiddenModules:['Befreiung Zweitkurs']};
+ const updated=addCourseProfile(added,reconfigured);
+ expect(updated.courseProfiles).toHaveLength(2);
+ expect(updated.apiSelection).toEqual(configured.apiSelection);
+ expect(settingsForProfile(updated,updated.courseProfiles!.find(p=>p.id===updated.viewedProfileId)!).apiSelection?.selectedOptionalModules).toEqual(['Mein Wahlfach']);
+ const main=addCourseProfile(updated,{...configured,apiSelection:{...configured.apiSelection!,selectedOptionalModules:['Hauptwahlfach']}});
+ expect(main.apiSelection?.selectedOptionalModules).toEqual(['Hauptwahlfach']);
+ expect(main.courseProfiles).toHaveLength(2);
+ expect(main.primaryProfileId).toBe(main.viewedProfileId);
+});

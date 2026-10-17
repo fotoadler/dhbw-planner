@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
 import { useBackButton } from './useBackButton';
@@ -13,6 +13,7 @@ import { isWeekendDay, isCurrentWeekendWeek } from './weekLayout';
 import { useMensa } from './useMensa';
 import { useDualis } from './useDualis';
 import { SetupWizard } from './SetupWizard';
+import { StudyPlanSetup, useStudyOptions } from '../features/study-options';
 import { WeekStrip } from './WeekStrip';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
@@ -29,6 +30,7 @@ import { CalendarShareDialog } from './CalendarShareDialog';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
+import { filterScheduleEntries, listScheduleModules } from '../schedule/modules';
 import { ensureExactAlarmPermission, ensurePermission } from '../notifications/scheduler';
 import { APP_STORE_DEMO_DAY, appStoreDemoScreen } from '../demo/appStoreDemo';
 import {
@@ -87,6 +89,12 @@ export function App() {
   const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [addingCourse, setAddingCourse] = useState(false);
+  const [pendingCourse, setPendingCourse] = useState<AppSettings | null>(null);
+  const [studyNotice, setStudyNotice] = useState<string | null>(null);
+  const [openModules, setOpenModules] = useState(false);
+  const newCourseForOptions = useRef<string | null>(null);
+  const optionBaseModules = listScheduleModules(allEntries.filter(e => !(settings?.apiSelection?.additionalCourses ?? []).includes(e.course ?? '')));
+  const hasStudyOptions = useStudyOptions(settings, optionBaseModules, updatedAt);
   const [managingCourses, setManagingCourses] = useState(false);
   const [calendarShareOpen, setCalendarShareOpen] = useState(false);
   const [calendarShareBusy, setCalendarShareBusy] = useState(false);
@@ -120,8 +128,24 @@ export function App() {
     if (section === 'mail' && !showMailTab) setSection('calendar');
   }, [section, showMailTab]);
 
+  useEffect(() => {
+    const selection = settings?.scheduleSource === 'dhbw-api' ? settings.apiSelection : null;
+    if (!settings || !selection || !hasStudyOptions || selection.optionsConfiguredKey === hasStudyOptions || selection.optionsNoticeKey === hasStudyOptions || offline || !updatedAt ||
+        demoScreen || isReviewDemo || addingCourse || managingCourses || calendarShareOpen ||
+        inSettings || calendarDetails || selectedBlockKey || section !== 'calendar') return;
+    const fresh = newCourseForOptions.current === selection.course;
+    newCourseForOptions.current = null;
+    void applySettings({...settings, apiSelection:{...selection, optionsNoticeSeen:true, optionsNoticeKey:hasStudyOptions}});
+    if (fresh) { setOpenModules(true); setShowSettings(true); }
+    else setStudyNotice(selection.course);
+  }, [settings?.apiSelection?.course, settings?.apiSelection?.optionsConfiguredKey, settings?.apiSelection?.optionsNoticeKey, hasStudyOptions,
+    offline, updatedAt, demoScreen, isReviewDemo, addingCourse, managingCourses, calendarShareOpen,
+    inSettings, calendarDetails, selectedBlockKey, section, browsing]);
+
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
+    if (pendingCourse) { setPendingCourse(null); return true; }
+    if (studyNotice) { setStudyNotice(null); return true; }
     if (addingCourse) { setAddingCourse(false); return true; }
     if (managingCourses) { setManagingCourses(false); return true; }
     if (calendarShareOpen) { if (!calendarShareBusy) setCalendarShareOpen(false); return true; }
@@ -181,10 +205,10 @@ export function App() {
     [monday],
   );
 
-  const displayEntries = showHiddenModules ? allEntries : entries;
+  const displayEntries = showHiddenModules ? filterScheduleEntries(allEntries, [], settings?.apiSelection) : entries;
 
   const busyDays = useMemo(() => new Set(displayEntries.map((e) => berlinDayKey(e.start))), [displayEntries]);
-  const scheduledDays = useMemo(() => new Set(allEntries.map((e) => berlinDayKey(e.start))), [allEntries]);
+  const scheduledDays = useMemo(() => new Set(filterScheduleEntries(allEntries, [], settings?.apiSelection).map((e) => berlinDayKey(e.start))), [allEntries, settings?.apiSelection]);
   const dayEntries = useMemo(
     () => displayEntries.filter((e) => berlinDayKey(e.start) === selectedDay),
     [displayEntries, selectedDay],
@@ -215,8 +239,23 @@ export function App() {
     return <div className="splash">Lade …</div>;
   }
 
+  if (pendingCourse) {
+    return <StudyPlanSetup settings={pendingCourse} onCancel={() => setPendingCourse(null)} onSave={source => {
+      setPendingCourse(null);
+      newCourseForOptions.current = null;
+      if (addingCourse && primarySettings) {
+        void mainSchedule.applySettings(addCourseProfile(primarySettings, source));
+        setAddingCourse(false); setShowSettings(false); setSection('calendar');
+      } else {
+        void ensurePermission();
+        void applySettings(source);
+      }
+    }} />;
+  }
+
   if (addingCourse && primarySettings) {
     const saveCourse = (source: AppSettings) => {
+      newCourseForOptions.current = source.apiSelection?.course ?? null;
       void mainSchedule.applySettings(addCourseProfile(primarySettings, source));
       setAddingCourse(false);
       setSection('calendar');
@@ -225,7 +264,7 @@ export function App() {
     return <SetupWizard onCancel={() => setAddingCourse(false)}
       onSaveRapla={(link, config) => saveCourse({ ...primarySettings, raplaLink: link, rapla: config,
         scheduleSource: 'rapla', apiSelection: null, hiddenModules: [] })}
-      onSaveApi={selection => saveCourse({ ...primarySettings, raplaLink: '', rapla: null,
+      onSaveApi={selection => setPendingCourse({ ...primarySettings, raplaLink: '', rapla: null,
         scheduleSource: 'dhbw-api', apiSelection: selection, hiddenModules: [] })} />;
   }
 
@@ -248,8 +287,7 @@ export function App() {
           });
         }}
         onSaveApi={(selection) => {
-          void ensurePermission();
-          void applySettings({
+          setPendingCourse({
             ...settings,
             raplaLink: '',
             rapla: null,
@@ -340,6 +378,7 @@ export function App() {
   };
 
   const closeSettings = () => {
+    setOpenModules(false);
     setShowSettings(false);
     if (section === 'settings') setSection('calendar');
   };
@@ -471,6 +510,8 @@ export function App() {
         <SettingsView
           settings={settings}
           availableModules={availableModules}
+          scheduleEntries={allEntries}
+          openModules={openModules}
           updatedAt={updatedAt}
           onChange={(next) => {
             if (next.defaultCalendarView !== settings.defaultCalendarView) {
@@ -555,10 +596,17 @@ export function App() {
 
       {calendarDetails && inCalendar && (activeCalendarView === 'week' || activeCalendarView === 'month') && (
         <WeekEventSheet day={calendarDetails.day} scope={calendarDetails.scope}
+          onToggleModule={setConfirmModuleKey} hiddenModuleKeys={new Set(settings.hiddenModules)}
           entries={calendarDetails.scope === 'day' ? entriesByDay[calendarDetails.day] ?? [] : calendarDetails.entries}
           onClose={() => setCalendarDetails(null)}
           onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
+
+      {studyNotice === settings.apiSelection?.course && <ConfirmDialog title="Wahlkurse & Gruppen auswählen?"
+        message="Deine Wahlangebote sind noch nicht vollständig eingerichtet. Wähle deine Seminare, Übungen, Schwerpunkte oder Gruppe."
+        confirmLabel="Jetzt auswählen" cancelLabel="Später" isDanger={false}
+        onConfirm={() => {setStudyNotice(null);setOpenModules(true);setShowSettings(true);}}
+        onCancel={() => setStudyNotice(null)} />}
 
       {/* In-App Bestätigungs-Dialog */}
       {calendarShareOpen && <CalendarShareDialog enabled={settings.calendarSyncEnabled}

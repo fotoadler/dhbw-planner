@@ -26,6 +26,12 @@ const STORAGE_VERSION = 4;
 export type ScheduleSource = 'rapla' | 'dhbw-api';
 
 export interface ApiSelection {
+  additionalCourses?: string[];
+  selectedAdditionalModules?: string[];
+  selectedOptionalModules?: string[];
+  optionsNoticeSeen?: boolean;
+  optionsConfiguredKey?: string;
+  optionsNoticeKey?: string;
   site: string;
   course: string;
   degree: string;
@@ -130,6 +136,12 @@ function parseApiSelection(value: unknown): ApiSelection | null {
     site: value.site.trim(),
     course: canonicalCourseName(value.site, value.course),
     degree: value.degree.trim(),
+    additionalCourses: Array.isArray(value.additionalCourses) ? [...new Set(value.additionalCourses.filter((c): c is string => typeof c === 'string' && c.startsWith(`${value.site}-`) && c !== value.course))].slice(0, 12) : [],
+    selectedOptionalModules: Array.isArray(value.selectedOptionalModules) ? parseHiddenModules(value.selectedOptionalModules) : undefined,
+    selectedAdditionalModules: Array.isArray(value.selectedAdditionalModules) ? parseHiddenModules(value.selectedAdditionalModules) : undefined,
+    optionsNoticeSeen: value.optionsNoticeSeen === true,
+    optionsConfiguredKey: typeof value.optionsConfiguredKey === 'string' ? value.optionsConfiguredKey : undefined,
+    optionsNoticeKey: typeof value.optionsNoticeKey === 'string' ? value.optionsNoticeKey : undefined,
   };
 }
 

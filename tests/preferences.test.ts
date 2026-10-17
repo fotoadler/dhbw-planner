@@ -67,3 +67,15 @@ it('validiert gespeicherte Profile und stellt einen ungültigen aktiven Kurs auf
   expect(settings.viewedProfileId).toBe(settings.primaryProfileId);
   expect(settings.courseProfiles?.find(p => p.id === settings.primaryProfileId)?.hiddenModules).toEqual(['hidden']);
 });
+
+it('bewahrt Zusatzquellen, Modulauswahl und Einführungstatus beim Laden des Hauptprofils', async () => {
+  preferencesGet.mockResolvedValue({value:JSON.stringify({version:4,data:{scheduleSource:'dhbw-api',apiSelection:{site:'VS',course:'VS-SXX25A',degree:'Soziale Arbeit',additionalCourses:['VS-SXX25-ALLE-KURSE','VS-SXX25-ALLE-KURSE','MA-FREMD'],selectedAdditionalModules:['WPS Auswahl'],optionsNoticeSeen:true,optionsConfiguredKey:'configured-revision',optionsNoticeKey:'notice-revision'},hiddenModules:['Befreiung']}})});
+  const settings=await loadSettings();
+  expect(settings.apiSelection?.additionalCourses).toEqual(['VS-SXX25-ALLE-KURSE']);
+  expect(settings.apiSelection?.selectedAdditionalModules).toEqual(['WPS Auswahl']);
+  expect(settings.apiSelection?.optionsNoticeSeen).toBe(true);
+  expect(settings.apiSelection?.optionsConfiguredKey).toBe('configured-revision');
+  expect(settings.apiSelection?.optionsNoticeKey).toBe('notice-revision');
+  expect(settings.courseProfiles?.find(p=>p.id===settings.primaryProfileId)?.apiSelection).toEqual(settings.apiSelection);
+  expect(settings.hiddenModules).toEqual(['Befreiung']);
+});

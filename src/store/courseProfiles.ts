@@ -42,7 +42,12 @@ export function settingsForProfile(settings: AppSettings, profile: CourseProfile
 export function addCourseProfile(settings: AppSettings, source: AppSettings): AppSettings {
   const current = withCourseProfiles(settings);
   const existing = current.courseProfiles?.find(p => profileSourceKey(p) === profileSourceKey(source));
-  if (existing) return { ...current, viewedProfileId: existing.id };
+  if (existing) {
+    // Completing setup again is an explicit configuration change, even for a saved course.
+    const updated = profileFromSettings(source, existing.id, existing.name);
+    const next = { ...current, courseProfiles: current.courseProfiles!.map(profile => profile.id === existing.id ? updated : profile), viewedProfileId: existing.id };
+    return existing.id === current.primaryProfileId ? settingsForProfile(next, updated) : next;
+  }
   const profile = profileFromSettings(source, crypto.randomUUID());
   return { ...current, courseProfiles: [...(current.courseProfiles ?? []), profile], viewedProfileId: profile.id };
 }

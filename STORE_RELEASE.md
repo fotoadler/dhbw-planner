@@ -5,10 +5,18 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.5.1` (`package.json`: `1.5.1`)
-- Current iOS build: `14`
-- Current Android versionCode: `13`
+- Current app version: `1.5.2` (`package.json`: `1.5.2`)
+- Current iOS build: `15`
+- Current Android versionCode: `14`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
+
+## Version 1.5.2 — Release in Vorbereitung
+
+Wahlkurse, Seminare, Studienschwerpunkte und Gruppen lassen sich jetzt direkt nach der Kurswahl und später in den Einstellungen konfigurieren. Gemeinsame und vergangene Termine bleiben enthalten. Bereits eingerichtete Profile weisen auf eine offene Auswahl hin. Außerdem wurde das Ausblenden von Modulen bei überlappenden Terminen und per langem Drücken verbessert.
+
+- Geplante Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
+- Veröffentlichung über einen ausdrücklich angeforderten Pull Request nach `main`; Community-/Watch-Branches bleiben außerhalb dieses Releases.
+- Native Laufzeitprüfung, Merge und Upload werden erst nach tatsächlichem Erfolg im Release-Protokoll ergänzt. Die vorliegenden Browserprüfungen ersetzen keinen Simulatorlauf.
 
 ## Version 1.5.1 — Update descriptions
 
@@ -124,10 +132,3 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradl
 5. Product > Archive.
 6. Distribute App > App Store Connect.
 
-## Still Needed From You
-
-- Confirm final app name: `DHBW Planner`.
-- Provide/confirm support URL and privacy policy URL.
-- Create the new App Store Connect app record.
-- Create the new Play Console app record.
-- Decide whether I should generate a new Android upload keystore for this app.

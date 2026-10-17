@@ -1,0 +1,6130 @@
+{
+  "VS-SXX25A": [
+    {
+      "id": 2232293,
+      "name": "V M8 Behinderung/Rehabilitation",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-06T06:00:00.000Z",
+      "endTime": "2026-10-06T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2250218,
+      "name": "V M16 Einführung in die empirische Sozialforschung",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-07T06:00:00.000Z",
+      "endTime": "2026-10-07T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269182,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-07T08:45:00.000Z",
+      "endTime": "2026-10-07T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269184,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-07T12:00:00.000Z",
+      "endTime": "2026-10-07T14:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231758,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-12T06:00:00.000Z",
+      "endTime": "2026-10-12T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269188,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-12T12:00:00.000Z",
+      "endTime": "2026-10-12T14:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272621,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-13T06:00:00.000Z",
+      "endTime": "2026-10-13T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272622,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-13T08:45:00.000Z",
+      "endTime": "2026-10-13T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2315155,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-15T06:00:00.000Z",
+      "endTime": "2026-10-15T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231983,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-16T06:00:00.000Z",
+      "endTime": "2026-10-16T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232240,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-16T08:45:00.000Z",
+      "endTime": "2026-10-16T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269248,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-19T06:00:00.000Z",
+      "endTime": "2026-10-19T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269249,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-19T08:45:00.000Z",
+      "endTime": "2026-10-19T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231759,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-20T06:00:00.000Z",
+      "endTime": "2026-10-20T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269250,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-21T06:00:00.000Z",
+      "endTime": "2026-10-21T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2250221,
+      "name": "V M16 Einführung in die empirische Sozialforschung",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-21T08:45:00.000Z",
+      "endTime": "2026-10-21T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231826,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-23T06:00:00.000Z",
+      "endTime": "2026-10-23T08:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231985,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-23T08:45:00.000Z",
+      "endTime": "2026-10-23T11:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231760,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-26T07:00:00.000Z",
+      "endTime": "2026-10-26T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231828,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-27T07:00:00.000Z",
+      "endTime": "2026-10-27T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269274,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-27T09:45:00.000Z",
+      "endTime": "2026-10-27T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269275,
+      "name": "V M8 Behinderung/Reha.",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-27T13:00:00.000Z",
+      "endTime": "2026-10-27T18:00:00.000Z",
+      "rooms": [
+        "VS Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2232144,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-28T07:00:00.000Z",
+      "endTime": "2026-10-28T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269199,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-28T09:45:00.000Z",
+      "endTime": "2026-10-28T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269200,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-28T13:00:00.000Z",
+      "endTime": "2026-10-28T15:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231832,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-29T07:00:00.000Z",
+      "endTime": "2026-10-29T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231986,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-29T09:45:00.000Z",
+      "endTime": "2026-10-29T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231835,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-10-30T09:45:00.000Z",
+      "endTime": "2026-10-30T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272625,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-02T07:00:00.000Z",
+      "endTime": "2026-11-02T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272626,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-02T09:45:00.000Z",
+      "endTime": "2026-11-02T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269201,
+      "name": "V M14 Migrations- und Flüchtlingsrecht",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-02T13:00:00.000Z",
+      "endTime": "2026-11-02T15:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232295,
+      "name": "V M8 Behinderung/Rehabilitation",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-03T07:00:00.000Z",
+      "endTime": "2026-11-03T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231987,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-05T07:00:00.000Z",
+      "endTime": "2026-11-05T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269327,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-09T07:00:00.000Z",
+      "endTime": "2026-11-09T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269328,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-09T09:45:00.000Z",
+      "endTime": "2026-11-09T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2246470,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-09T13:00:00.000Z",
+      "endTime": "2026-11-09T18:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231763,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-11T07:00:00.000Z",
+      "endTime": "2026-11-11T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2315158,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-12T09:45:00.000Z",
+      "endTime": "2026-11-12T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232243,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-13T07:00:00.000Z",
+      "endTime": "2026-11-13T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231988,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-13T09:45:00.000Z",
+      "endTime": "2026-11-13T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231764,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-16T07:00:00.000Z",
+      "endTime": "2026-11-16T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269348,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-17T07:00:00.000Z",
+      "endTime": "2026-11-17T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269349,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-17T09:45:00.000Z",
+      "endTime": "2026-11-17T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232244,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-19T07:00:00.000Z",
+      "endTime": "2026-11-19T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231837,
+      "name": "V M11 Gruppenarbeit",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-19T09:45:00.000Z",
+      "endTime": "2026-11-19T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2315160,
+      "name": "V M16 Empirische Forschung in der Sozialen Arbeit I",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-20T07:00:00.000Z",
+      "endTime": "2026-11-20T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231765,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-23T07:00:00.000Z",
+      "endTime": "2026-11-23T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269356,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-24T07:00:00.000Z",
+      "endTime": "2026-11-24T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269357,
+      "name": "V M8 Psychodiagnostik/-therapie",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-24T09:45:00.000Z",
+      "endTime": "2026-11-24T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231989,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-25T07:00:00.000Z",
+      "endTime": "2026-11-25T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272631,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-26T07:00:00.000Z",
+      "endTime": "2026-11-26T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272632,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-26T09:45:00.000Z",
+      "endTime": "2026-11-26T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232219,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-27T09:45:00.000Z",
+      "endTime": "2026-11-27T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272633,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-30T07:00:00.000Z",
+      "endTime": "2026-11-30T09:15:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272634,
+      "name": "V M8 Suchterkrankung Christoph",
+      "course": "VS-SXX25A",
+      "startTime": "2026-11-30T09:45:00.000Z",
+      "endTime": "2026-11-30T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231766,
+      "name": "V M10 Individualhilfe",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-01T07:00:00.000Z",
+      "endTime": "2026-12-01T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2232298,
+      "name": "V M8 Behinderung/Rehabilitation",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-01T13:00:00.000Z",
+      "endTime": "2026-12-01T18:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231990,
+      "name": "V M14 Sozialverwaltungsrecht und Sozialdatenschutz",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-03T09:45:00.000Z",
+      "endTime": "2026-12-03T12:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333157,
+      "name": "Prüfung Modul 8",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-10T08:00:00.000Z",
+      "endTime": "2026-12-10T11:00:00.000Z",
+      "rooms": [
+        "B 102 Hörsaal (IB)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333163,
+      "name": "Prüfung Modul 13 Kurs A Teil 1",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-21T08:00:00.000Z",
+      "endTime": "2026-12-21T11:00:00.000Z",
+      "rooms": [
+        "C 3.21 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333164,
+      "name": "Prüfung Kurs A und B Teil 2",
+      "course": "VS-SXX25A",
+      "startTime": "2026-12-21T08:00:00.000Z",
+      "endTime": "2026-12-21T11:00:00.000Z",
+      "rooms": [
+        "C 3.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    }
+  ],
+  "VS-SXX25-ALLE-KURSE": [
+    {
+      "id": 2269239,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-15T12:00:00.000Z",
+      "endTime": "2026-10-15T17:00:00.000Z",
+      "rooms": [
+        "C 3.24 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269251,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-22T12:00:00.000Z",
+      "endTime": "2026-10-22T17:00:00.000Z",
+      "rooms": [
+        "C 3.24 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269256,
+      "name": "M11 WPS Gruppendynamische Prozesse 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-22T12:00:00.000Z",
+      "endTime": "2026-10-22T17:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269259,
+      "name": "M11 WPS Gruppendynamische Prozesse 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-23T12:00:00.000Z",
+      "endTime": "2026-10-23T17:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269270,
+      "name": "M11 WPS Gruppendynamische Prozesse 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-24T06:00:00.000Z",
+      "endTime": "2026-10-24T17:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269280,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-29T13:00:00.000Z",
+      "endTime": "2026-10-29T18:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269279,
+      "name": "M10 WPS Sozialarbeit mit psychisch erkrankten Menschen",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-29T13:00:00.000Z",
+      "endTime": "2026-10-29T18:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269284,
+      "name": "M11 WPS Digitalisierung in der Sozialen Arbeit",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-29T13:00:00.000Z",
+      "endTime": "2026-10-29T18:00:00.000Z",
+      "rooms": [
+        "VS Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2269290,
+      "name": "M11 WPS Digitalisierung in der Sozialen Arbeit",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-30T13:00:00.000Z",
+      "endTime": "2026-10-30T18:00:00.000Z",
+      "rooms": [
+        "VS Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2269292,
+      "name": "M10 WPS Sozialarbeit mit psychisch erkrankten Menschen",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-30T13:00:00.000Z",
+      "endTime": "2026-10-30T18:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269298,
+      "name": "M11 WPS Digitalisierung in der Sozialen Arbeit",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-31T07:00:00.000Z",
+      "endTime": "2026-10-31T18:00:00.000Z",
+      "rooms": [
+        "VS Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2269300,
+      "name": "M10 WPS Sozialarbeit mit psychisch erkrankten Menschen",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-10-31T07:00:00.000Z",
+      "endTime": "2026-10-31T18:00:00.000Z",
+      "rooms": [
+        "C 2.23 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269305,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 2",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-11-05T13:00:00.000Z",
+      "endTime": "2026-11-05T18:00:00.000Z",
+      "rooms": [
+        "C 2.21 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269333,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 2",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-11-12T13:00:00.000Z",
+      "endTime": "2026-11-12T18:00:00.000Z",
+      "rooms": [
+        "C 2.21 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269351,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 2",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-11-19T13:00:00.000Z",
+      "endTime": "2026-11-19T18:00:00.000Z",
+      "rooms": [
+        "C 2.24 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269360,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 1",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-11-26T13:00:00.000Z",
+      "endTime": "2026-11-26T18:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2269361,
+      "name": "M11 WPS Autismus und Begleiterscheinungen 2",
+      "course": "VS-SXX25-ALLE-KURSE",
+      "startTime": "2026-11-26T13:00:00.000Z",
+      "endTime": "2026-11-26T18:00:00.000Z",
+      "rooms": [
+        "C 2.25 Hörsaal (Sozialwesen)"
+      ],
+      "type": "PRESENCE"
+    }
+  ],
+  "VS-WCC25": [
+    {
+      "id": 2299143,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-01T11:00:00.000Z",
+      "endTime": "2026-10-01T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333567,
+      "name": "Beschaffungs-, Produktions- und Logistikcontrolling",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-02T07:00:00.000Z",
+      "endTime": "2026-10-02T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299146,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-05T11:00:00.000Z",
+      "endTime": "2026-10-05T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299150,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-07T07:00:00.000Z",
+      "endTime": "2026-10-07T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299151,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-07T11:00:00.000Z",
+      "endTime": "2026-10-07T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299152,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-08T07:00:00.000Z",
+      "endTime": "2026-10-08T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299153,
+      "name": "Betriebliche Steuerlehre",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-09T07:00:00.000Z",
+      "endTime": "2026-10-09T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2308990,
+      "name": "Handels- und Gesellschaftsrecht  <05.11., 04.12. Reserve>",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-09T11:00:00.000Z",
+      "endTime": "2026-10-09T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2331465,
+      "name": "Klausureinsicht",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-12T06:15:00.000Z",
+      "endTime": "2026-10-12T07:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299155,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333568,
+      "name": "Beschaffungs-, Produktions- und Logistikcontrolling",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-14T07:00:00.000Z",
+      "endTime": "2026-10-14T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299159,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-14T11:00:00.000Z",
+      "endTime": "2026-10-14T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2316750,
+      "name": "Thema Nachhaltigkeit Filmabend PERSPEKTIVEN",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-14T15:00:00.000Z",
+      "endTime": "2026-10-14T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299160,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-15T07:00:00.000Z",
+      "endTime": "2026-10-15T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299161,
+      "name": "Betriebliche Steuerlehre",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-16T07:00:00.000Z",
+      "endTime": "2026-10-16T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299162,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-16T11:00:00.000Z",
+      "endTime": "2026-10-16T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299163,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-19T07:00:00.000Z",
+      "endTime": "2026-10-19T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299167,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-21T07:00:00.000Z",
+      "endTime": "2026-10-21T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299168,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-22T07:00:00.000Z",
+      "endTime": "2026-10-22T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299170,
+      "name": "Betriebliche Steuerlehre",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-23T07:00:00.000Z",
+      "endTime": "2026-10-23T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299171,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-23T11:00:00.000Z",
+      "endTime": "2026-10-23T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299173,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-26T13:00:00.000Z",
+      "endTime": "2026-10-26T18:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299178,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-29T08:00:00.000Z",
+      "endTime": "2026-10-29T14:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299179,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-29T14:00:00.000Z",
+      "endTime": "2026-10-29T18:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299180,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-30T08:00:00.000Z",
+      "endTime": "2026-10-30T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299181,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-10-30T12:00:00.000Z",
+      "endTime": "2026-10-30T17:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299182,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-02T08:00:00.000Z",
+      "endTime": "2026-11-02T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299183,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( , Alexander Ackermann)",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-02T12:00:00.000Z",
+      "endTime": "2026-11-02T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299186,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-04T08:00:00.000Z",
+      "endTime": "2026-11-04T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299187,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( , Alexander Ackermann)",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-04T12:00:00.000Z",
+      "endTime": "2026-11-04T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299188,
+      "name": "Handels- und Gesellschaftsrecht  <Ersatztermin 05.11.>",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-05T08:00:00.000Z",
+      "endTime": "2026-11-05T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299189,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-05T12:00:00.000Z",
+      "endTime": "2026-11-05T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299190,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-06T07:00:00.000Z",
+      "endTime": "2026-11-06T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299191,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-06T12:00:00.000Z",
+      "endTime": "2026-11-06T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299192,
+      "name": "Einführung in das Consulting",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-09T12:00:00.000Z",
+      "endTime": "2026-11-09T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333569,
+      "name": "Beschaffungs-, Produktions- und Logistikcontrolling",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-11T08:00:00.000Z",
+      "endTime": "2026-11-11T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299196,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( , Alexander Ackermann)",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-11T12:00:00.000Z",
+      "endTime": "2026-11-11T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299197,
+      "name": "Einführung in das Consulting",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-12T08:00:00.000Z",
+      "endTime": "2026-11-12T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299198,
+      "name": "Betriebliche Steuerlehre",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-13T07:00:00.000Z",
+      "endTime": "2026-11-13T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299199,
+      "name": "Einführung in das Consulting",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-16T08:00:00.000Z",
+      "endTime": "2026-11-16T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299200,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-16T12:00:00.000Z",
+      "endTime": "2026-11-16T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299201,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-17T08:00:00.000Z",
+      "endTime": "2026-11-17T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299202,
+      "name": "Einführung in das Consulting",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-17T11:00:00.000Z",
+      "endTime": "2026-11-17T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299203,
+      "name": "Einführung in das Consulting",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-18T08:00:00.000Z",
+      "endTime": "2026-11-18T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299204,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( Jürgen Bleicher, )",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-18T12:00:00.000Z",
+      "endTime": "2026-11-18T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299205,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( Jürgen Bleicher, )",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-19T08:00:00.000Z",
+      "endTime": "2026-11-19T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299206,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-20T07:00:00.000Z",
+      "endTime": "2026-11-20T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299207,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-20T12:00:00.000Z",
+      "endTime": "2026-11-20T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333570,
+      "name": "Beschaffungs-, Produktions- und Logistikcontrolling",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-23T08:00:00.000Z",
+      "endTime": "2026-11-23T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2342538,
+      "name": "Kostenanalyse/ -management",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-23T12:00:00.000Z",
+      "endTime": "2026-11-23T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299210,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( , Alexander Ackermann)",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-24T08:00:00.000Z",
+      "endTime": "2026-11-24T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299211,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-25T08:00:00.000Z",
+      "endTime": "2026-11-25T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299212,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( Jürgen Bleicher, )",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-25T12:00:00.000Z",
+      "endTime": "2026-11-25T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299213,
+      "name": "Marketing-, Vertriebs-, IT- und Personalcontrolling ( Jürgen Bleicher, )",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-26T08:00:00.000Z",
+      "endTime": "2026-11-26T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299214,
+      "name": "Betriebliche Steuerlehre",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-27T08:00:00.000Z",
+      "endTime": "2026-11-27T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299215,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-27T12:00:00.000Z",
+      "endTime": "2026-11-27T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2333571,
+      "name": "Beschaffungs-, Produktions- und Logistikcontrolling",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-30T08:00:00.000Z",
+      "endTime": "2026-11-30T10:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299217,
+      "name": "Grundlagen der Makroökonomik",
+      "course": "VS-WCC25",
+      "startTime": "2026-11-30T12:00:00.000Z",
+      "endTime": "2026-11-30T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299218,
+      "name": "Bilanzierung und Grundzüge der Jahresabschlussanalyse",
+      "course": "VS-WCC25",
+      "startTime": "2026-12-01T08:00:00.000Z",
+      "endTime": "2026-12-01T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299219,
+      "name": "Handels- und Gesellschaftsrecht",
+      "course": "VS-WCC25",
+      "startTime": "2026-12-04T12:00:00.000Z",
+      "endTime": "2026-12-04T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    }
+  ],
+  "VS-WCC25-GRUPPE1": [
+    {
+      "id": 2299148,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-06T11:00:00.000Z",
+      "endTime": "2026-10-06T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299156,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-13T07:00:00.000Z",
+      "endTime": "2026-10-13T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299166,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-20T11:00:00.000Z",
+      "endTime": "2026-10-20T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299169,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-22T12:00:00.000Z",
+      "endTime": "2026-10-22T17:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299174,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-27T08:00:00.000Z",
+      "endTime": "2026-10-27T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299176,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-10-28T08:00:00.000Z",
+      "endTime": "2026-10-28T13:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299185,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-11-03T12:00:00.000Z",
+      "endTime": "2026-11-03T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299193,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE1",
+      "startTime": "2026-11-10T08:00:00.000Z",
+      "endTime": "2026-11-10T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    }
+  ],
+  "FN-TWI24-1": [
+    {
+      "id": 2293929,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T07:00:00.000Z",
+      "endTime": "2026-09-28T10:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294977,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T07:00:00.000Z",
+      "endTime": "2026-09-28T10:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293926,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T07:00:00.000Z",
+      "endTime": "2026-09-28T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293938,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T10:45:00.000Z",
+      "endTime": "2026-09-28T14:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293941,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T10:50:00.000Z",
+      "endTime": "2026-09-28T14:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293951,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T11:00:00.000Z",
+      "endTime": "2026-09-28T14:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293945,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T11:00:00.000Z",
+      "endTime": "2026-09-28T14:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293948,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T11:00:00.000Z",
+      "endTime": "2026-09-28T14:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2294686,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-28T14:30:00.000Z",
+      "endTime": "2026-09-28T17:45:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985238,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-29T06:00:00.000Z",
+      "endTime": "2026-09-29T10:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294699,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-29T11:00:00.000Z",
+      "endTime": "2026-09-29T14:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305680,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-29T13:45:00.000Z",
+      "endTime": "2026-09-29T17:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314947,
+      "name": " Angewandtes Projektmanagement Kick-off  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-30T06:00:00.000Z",
+      "endTime": "2026-09-30T07:00:00.000Z",
+      "rooms": [
+        "H222 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314950,
+      "name": " Angewandtes Projektmanagement Kick-off  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-30T07:00:00.000Z",
+      "endTime": "2026-09-30T10:15:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314952,
+      "name": " Angew. PM  - Kick-off \"Schulmarketing\"  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-30T07:30:00.000Z",
+      "endTime": "2026-09-30T09:30:00.000Z",
+      "rooms": [
+        "H215 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2328712,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-09-30T11:00:00.000Z",
+      "endTime": "2026-09-30T14:30:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294889,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-01T11:00:00.000Z",
+      "endTime": "2026-10-01T15:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294891,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-02T07:00:00.000Z",
+      "endTime": "2026-10-02T11:00:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294894,
+      "name": " Studienfahrt  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-05T07:00:00.000Z",
+      "endTime": "2026-10-05T17:45:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985259,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-06T06:00:00.000Z",
+      "endTime": "2026-10-06T10:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294897,
+      "name": " Studienfahrt  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-06T07:00:00.000Z",
+      "endTime": "2026-10-06T17:45:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294900,
+      "name": " Studienfahrt  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-07T07:00:00.000Z",
+      "endTime": "2026-10-07T17:45:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294903,
+      "name": " Studienfahrt  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-08T07:00:00.000Z",
+      "endTime": "2026-10-08T17:45:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294906,
+      "name": " Studienfahrt  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-09T07:00:00.000Z",
+      "endTime": "2026-10-09T17:45:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294984,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T10:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293954,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293963,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T10:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293966,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T10:45:00.000Z",
+      "endTime": "2026-10-12T14:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293969,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T10:50:00.000Z",
+      "endTime": "2026-10-12T14:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293976,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T11:00:00.000Z",
+      "endTime": "2026-10-12T14:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2293973,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T11:00:00.000Z",
+      "endTime": "2026-10-12T14:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294705,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-12T14:30:00.000Z",
+      "endTime": "2026-10-12T17:45:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985277,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-13T06:00:00.000Z",
+      "endTime": "2026-10-13T10:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294714,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-13T11:00:00.000Z",
+      "endTime": "2026-10-13T14:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305683,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-13T13:45:00.000Z",
+      "endTime": "2026-10-13T17:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294991,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-14T06:45:00.000Z",
+      "endTime": "2026-10-14T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294908,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-14T11:00:00.000Z",
+      "endTime": "2026-10-14T14:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294993,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-15T07:00:00.000Z",
+      "endTime": "2026-10-15T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294910,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-15T11:00:00.000Z",
+      "endTime": "2026-10-15T15:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "662-1",
+      "name": "Hochschulnacht",
+      "course": null,
+      "startTime": "2026-10-15T20:00:00.000Z",
+      "endTime": "2026-10-15T21:59:59.999Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "662-2",
+      "name": "Hochschulnacht",
+      "course": null,
+      "startTime": "2026-10-15T22:00:00.000Z",
+      "endTime": "2026-10-16T01:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2326927,
+      "name": " Klausureinsicht   ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-16T05:45:00.000Z",
+      "endTime": "2026-10-16T06:45:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294912,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-16T07:00:00.000Z",
+      "endTime": "2026-10-16T11:00:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294995,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T07:00:00.000Z",
+      "endTime": "2026-10-19T10:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293988,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T07:00:00.000Z",
+      "endTime": "2026-10-19T10:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293994,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T10:45:00.000Z",
+      "endTime": "2026-10-19T14:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2293997,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T10:50:00.000Z",
+      "endTime": "2026-10-19T14:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294007,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T11:00:00.000Z",
+      "endTime": "2026-10-19T14:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294004,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T11:00:00.000Z",
+      "endTime": "2026-10-19T14:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2294001,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T11:00:00.000Z",
+      "endTime": "2026-10-19T14:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294724,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-19T14:30:00.000Z",
+      "endTime": "2026-10-19T17:45:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985295,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-20T06:00:00.000Z",
+      "endTime": "2026-10-20T10:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294730,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-20T11:00:00.000Z",
+      "endTime": "2026-10-20T14:15:00.000Z",
+      "rooms": [
+        "H002 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295002,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-20T12:00:00.000Z",
+      "endTime": "2026-10-20T15:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305686,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-20T13:45:00.000Z",
+      "endTime": "2026-10-20T17:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295004,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-21T06:45:00.000Z",
+      "endTime": "2026-10-21T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2340046,
+      "name": " Vorstellung studentisches Raketenprojekt SeeRoc (freiwillig)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-21T10:40:00.000Z",
+      "endTime": "2026-10-21T11:00:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2328714,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-21T11:00:00.000Z",
+      "endTime": "2026-10-21T14:30:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295006,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-22T06:45:00.000Z",
+      "endTime": "2026-10-22T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295008,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-22T11:00:00.000Z",
+      "endTime": "2026-10-22T14:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294914,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-23T07:00:00.000Z",
+      "endTime": "2026-10-23T10:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295010,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-23T11:00:00.000Z",
+      "endTime": "2026-10-23T14:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294022,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295012,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294016,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294025,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T11:50:00.000Z",
+      "endTime": "2026-10-26T15:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294029,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T12:00:00.000Z",
+      "endTime": "2026-10-26T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294032,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T12:00:00.000Z",
+      "endTime": "2026-10-26T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294035,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T12:00:00.000Z",
+      "endTime": "2026-10-26T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2208449,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh) Ende: 19:30 Uhr ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T15:30:00.000Z",
+      "endTime": "2026-10-26T18:45:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294743,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-26T15:30:00.000Z",
+      "endTime": "2026-10-26T18:45:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985313,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-27T07:00:00.000Z",
+      "endTime": "2026-10-27T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2207486,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-27T08:00:00.000Z",
+      "endTime": "2026-10-27T11:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294749,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-27T12:00:00.000Z",
+      "endTime": "2026-10-27T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295019,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-27T13:00:00.000Z",
+      "endTime": "2026-10-27T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305689,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-27T14:45:00.000Z",
+      "endTime": "2026-10-27T18:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295023,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-28T13:00:00.000Z",
+      "endTime": "2026-10-28T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294916,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-29T12:00:00.000Z",
+      "endTime": "2026-10-29T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294040,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-30T08:00:00.000Z",
+      "endTime": "2026-10-30T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294043,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-10-30T12:00:00.000Z",
+      "endTime": "2026-10-30T15:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "651",
+      "name": "Anmeldeschluss: Steuererklärung für Studierende",
+      "course": null,
+      "startTime": "2026-10-31T23:00:00.000Z",
+      "endTime": "2026-11-01T22:59:59.999Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2294049,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T08:00:00.000Z",
+      "endTime": "2026-11-02T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294052,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T11:45:00.000Z",
+      "endTime": "2026-11-02T15:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294055,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T11:50:00.000Z",
+      "endTime": "2026-11-02T15:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294059,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T12:00:00.000Z",
+      "endTime": "2026-11-02T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294062,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T12:00:00.000Z",
+      "endTime": "2026-11-02T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294762,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-02T15:30:00.000Z",
+      "endTime": "2026-11-02T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985331,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-03T07:00:00.000Z",
+      "endTime": "2026-11-03T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294768,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-03T12:00:00.000Z",
+      "endTime": "2026-11-03T15:15:00.000Z",
+      "rooms": [
+        "H002 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295025,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-03T13:00:00.000Z",
+      "endTime": "2026-11-03T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305692,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-03T14:45:00.000Z",
+      "endTime": "2026-11-03T18:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295027,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-04T07:45:00.000Z",
+      "endTime": "2026-11-04T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2342563,
+      "name": " TWIE-Stammtisch  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-04T17:00:00.000Z",
+      "endTime": "2026-11-04T19:30:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2320581,
+      "name": " Techn. Vertreib.  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-05T08:00:00.000Z",
+      "endTime": "2026-11-05T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294918,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-05T12:00:00.000Z",
+      "endTime": "2026-11-05T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2272874,
+      "name": " Langer Abend des Schreibens  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-05T14:00:00.000Z",
+      "endTime": "2026-11-05T21:00:00.000Z",
+      "rooms": [
+        "H030 Seminarraum",
+        "H031 Seminarraum",
+        "H130 Seminarraum",
+        "H131 Seminarraum",
+        "H203 PC Labor",
+        "H204 PC-Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294920,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-06T08:00:00.000Z",
+      "endTime": "2026-11-06T12:00:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294067,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T08:00:00.000Z",
+      "endTime": "2026-11-09T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294073,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T08:00:00.000Z",
+      "endTime": "2026-11-09T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295032,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T08:00:00.000Z",
+      "endTime": "2026-11-09T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294085,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T12:00:00.000Z",
+      "endTime": "2026-11-09T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294079,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T12:00:00.000Z",
+      "endTime": "2026-11-09T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294082,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T12:00:00.000Z",
+      "endTime": "2026-11-09T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2207490,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T15:30:00.000Z",
+      "endTime": "2026-11-09T18:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294777,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-09T15:30:00.000Z",
+      "endTime": "2026-11-09T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985349,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-10T07:00:00.000Z",
+      "endTime": "2026-11-10T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2207493,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-10T08:00:00.000Z",
+      "endTime": "2026-11-10T11:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294783,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-10T12:00:00.000Z",
+      "endTime": "2026-11-10T15:15:00.000Z",
+      "rooms": [
+        "H130 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295039,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-10T13:00:00.000Z",
+      "endTime": "2026-11-10T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305695,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-10T14:45:00.000Z",
+      "endTime": "2026-11-10T18:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295041,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-11T07:45:00.000Z",
+      "endTime": "2026-11-11T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295043,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-12T07:45:00.000Z",
+      "endTime": "2026-11-12T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295045,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-12T12:00:00.000Z",
+      "endTime": "2026-11-12T15:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294922,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-13T08:00:00.000Z",
+      "endTime": "2026-11-13T12:00:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294096,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T08:00:00.000Z",
+      "endTime": "2026-11-16T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294099,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T08:00:00.000Z",
+      "endTime": "2026-11-16T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295047,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T08:00:00.000Z",
+      "endTime": "2026-11-16T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294102,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T11:45:00.000Z",
+      "endTime": "2026-11-16T15:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294105,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T11:50:00.000Z",
+      "endTime": "2026-11-16T15:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294109,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T12:00:00.000Z",
+      "endTime": "2026-11-16T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294115,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T12:00:00.000Z",
+      "endTime": "2026-11-16T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294112,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T12:00:00.000Z",
+      "endTime": "2026-11-16T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2294796,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-16T15:30:00.000Z",
+      "endTime": "2026-11-16T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985367,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-17T07:00:00.000Z",
+      "endTime": "2026-11-17T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294809,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-17T12:00:00.000Z",
+      "endTime": "2026-11-17T15:15:00.000Z",
+      "rooms": [
+        "H002 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305698,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-17T14:45:00.000Z",
+      "endTime": "2026-11-17T18:00:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295054,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-18T07:45:00.000Z",
+      "endTime": "2026-11-18T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295056,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-19T08:00:00.000Z",
+      "endTime": "2026-11-19T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294924,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-19T12:00:00.000Z",
+      "endTime": "2026-11-19T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294926,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-20T08:00:00.000Z",
+      "endTime": "2026-11-20T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295058,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T08:00:00.000Z",
+      "endTime": "2026-11-23T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294123,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T08:00:00.000Z",
+      "endTime": "2026-11-23T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294120,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T08:00:00.000Z",
+      "endTime": "2026-11-23T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294129,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T11:50:00.000Z",
+      "endTime": "2026-11-23T15:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294133,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T12:00:00.000Z",
+      "endTime": "2026-11-23T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2324421,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T12:00:00.000Z",
+      "endTime": "2026-11-23T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294136,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T12:00:00.000Z",
+      "endTime": "2026-11-23T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2207496,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T15:30:00.000Z",
+      "endTime": "2026-11-23T18:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294815,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-23T15:30:00.000Z",
+      "endTime": "2026-11-23T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985387,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-24T07:00:00.000Z",
+      "endTime": "2026-11-24T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2207499,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-24T08:00:00.000Z",
+      "endTime": "2026-11-24T11:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295065,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-24T13:00:00.000Z",
+      "endTime": "2026-11-24T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305702,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-24T14:45:00.000Z",
+      "endTime": "2026-11-24T17:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294928,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-25T08:00:00.000Z",
+      "endTime": "2026-11-25T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295067,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-26T08:00:00.000Z",
+      "endTime": "2026-11-26T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294930,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-27T08:00:00.000Z",
+      "endTime": "2026-11-27T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295069,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T08:00:00.000Z",
+      "endTime": "2026-11-30T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294147,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T08:00:00.000Z",
+      "endTime": "2026-11-30T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294141,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T08:00:00.000Z",
+      "endTime": "2026-11-30T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294153,
+      "name": " WPM-W: Produktionssysteme (UfP) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T11:45:00.000Z",
+      "endTime": "2026-11-30T15:30:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294156,
+      "name": " WPM-W: International Business (RuF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T11:50:00.000Z",
+      "endTime": "2026-11-30T15:35:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294166,
+      "name": " WPM-W: Produkt- und Systementwicklung - Service Engineering (BeG) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T12:00:00.000Z",
+      "endTime": "2026-11-30T15:15:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294160,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T12:00:00.000Z",
+      "endTime": "2026-11-30T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294163,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T12:00:00.000Z",
+      "endTime": "2026-11-30T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2294825,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-11-30T15:30:00.000Z",
+      "endTime": "2026-11-30T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985403,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-01T07:00:00.000Z",
+      "endTime": "2026-12-01T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294831,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-01T12:00:00.000Z",
+      "endTime": "2026-12-01T15:15:00.000Z",
+      "rooms": [
+        "H002 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305708,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-01T14:45:00.000Z",
+      "endTime": "2026-12-01T17:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294932,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-03T08:00:00.000Z",
+      "endTime": "2026-12-03T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294934,
+      "name": " Techn. Vertrieb (A) (WaB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-03T12:00:00.000Z",
+      "endTime": "2026-12-03T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294936,
+      "name": " Controlling (StJ) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-04T08:00:00.000Z",
+      "endTime": "2026-12-04T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295078,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-04T12:00:00.000Z",
+      "endTime": "2026-12-04T15:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294172,
+      "name": " WPM-T: Life Cycle Management - Safety and Reliability   (StM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T08:00:00.000Z",
+      "endTime": "2026-12-07T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294169,
+      "name": " WPM-T: Steuerungs- und Regelungstechnik (SaS) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T08:00:00.000Z",
+      "endTime": "2026-12-07T11:15:00.000Z",
+      "rooms": [
+        "H318 Vorlesung/PC Labor"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295080,
+      "name": " Industrie 4.0 Grp1 (EhM) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T08:00:00.000Z",
+      "endTime": "2026-12-07T11:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294184,
+      "name": " WPM-W: Business Intelligence (LaF) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T12:00:00.000Z",
+      "endTime": "2026-12-07T15:15:00.000Z",
+      "rooms": [
+        "E108 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294181,
+      "name": " WPM-W: Int. Negotiation and Law (ScC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T12:00:00.000Z",
+      "endTime": "2026-12-07T15:15:00.000Z",
+      "rooms": [
+        "FN Online-Veranstaltung"
+      ],
+      "type": "ONLINE"
+    },
+    {
+      "id": 2207502,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T15:30:00.000Z",
+      "endTime": "2026-12-07T18:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294844,
+      "name": " WPM-T: Nachhaltigkeit  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-07T15:30:00.000Z",
+      "endTime": "2026-12-07T18:00:00.000Z",
+      "rooms": [
+        "E109 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1985419,
+      "name": " WM Kraftfahrzeuge T4MB9115 /55 KL (15 Min.Pause) BaC bis 3.11.26 /UnL ab 10.11.26 ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-08T07:00:00.000Z",
+      "endTime": "2026-12-08T11:00:00.000Z",
+      "rooms": [
+        "H031 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2207505,
+      "name": " Vorlesung Umwelttechnik (Doz: GEh)  ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-08T08:00:00.000Z",
+      "endTime": "2026-12-08T11:30:00.000Z",
+      "rooms": [
+        "H008 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2294850,
+      "name": " WPM-D: IKT (RuW) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-08T12:00:00.000Z",
+      "endTime": "2026-12-08T15:15:00.000Z",
+      "rooms": [
+        "H002 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295087,
+      "name": " Industrie 4.0 Grp2 (ScD) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-08T13:00:00.000Z",
+      "endTime": "2026-12-08T16:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2305712,
+      "name": " WPM-D: AI in Business Management (GrA) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-08T14:45:00.000Z",
+      "endTime": "2026-12-08T17:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295089,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-09T07:45:00.000Z",
+      "endTime": "2026-12-09T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295091,
+      "name": " Qualitätsmanagement (NuC) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-10T07:45:00.000Z",
+      "endTime": "2026-12-10T11:15:00.000Z",
+      "rooms": [
+        "N003 Seminarraum/Veranstaltungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295093,
+      "name": " Techn. Vertrieb (B) (DuB) ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-10T12:00:00.000Z",
+      "endTime": "2026-12-10T15:15:00.000Z",
+      "rooms": [
+        "E101 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295162,
+      "name": "  Klausur Wahlpflichtmodul Industrie 4.0      ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-11T07:00:00.000Z",
+      "endTime": "2026-12-11T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295165,
+      "name": "  Klausur Wahlpflichtmodul Wirtschaft      ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-14T07:00:00.000Z",
+      "endTime": "2026-12-14T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 1967576,
+      "name": "  KLAUSUR WM T4MB9115 Kraftfahrzeuge BaC/UnL ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-15T07:00:00.000Z",
+      "endTime": "2026-12-15T09:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295168,
+      "name": "  Klausur Wahlpflichtmodul Technik      ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-15T07:00:00.000Z",
+      "endTime": "2026-12-15T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295171,
+      "name": "  Klausur Controlling     ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-16T07:00:00.000Z",
+      "endTime": "2026-12-16T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295174,
+      "name": "  Klausur Qualitätsmanagement     ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-17T07:00:00.000Z",
+      "endTime": "2026-12-17T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295177,
+      "name": "  Klausur Technischer Vertrieb   ",
+      "course": "FN-TWI24-1",
+      "startTime": "2026-12-18T07:00:00.000Z",
+      "endTime": "2026-12-18T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    }
+  ],
+  "MA-TCT24": [
+    {
+      "id": 912949,
+      "name": "Konstruktion 1 (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-04-23T06:30:00.000Z",
+      "endTime": "2025-04-23T10:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 949538,
+      "name": "Laborpraxis 1 (TAC)  E.48 als Vorbesprechungs- und Arbeitsraum",
+      "course": "MA-TCT24",
+      "startTime": "2025-04-23T06:30:00.000Z",
+      "endTime": "2025-04-23T12:00:00.000Z",
+      "rooms": [
+        "E.48 VL-Raum Unterrichtsraum",
+        "E.75 Labor Chemische Technik"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 913039,
+      "name": "Konstruktions Entwurf (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-04-23T10:00:00.000Z",
+      "endTime": "2025-04-23T11:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 955050,
+      "name": "Werkstoffkunde-Labor (Gruppe 1)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-04-23T14:00:00.000Z",
+      "endTime": "2025-04-23T15:30:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 955051,
+      "name": "Werkstoffkunde-Labor (Gruppe 2)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-04-23T15:30:00.000Z",
+      "endTime": "2025-04-23T17:00:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 914959,
+      "name": "Konstruktion 1 (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T06:30:00.000Z",
+      "endTime": "2025-05-07T10:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 949541,
+      "name": "Laborpraxis 1 (TAC)  E.48 als Vorbesprechungs- und Arbeitsraum",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T06:30:00.000Z",
+      "endTime": "2025-05-07T12:00:00.000Z",
+      "rooms": [
+        "E.75 Labor Chemische Technik"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 958694,
+      "name": "Laborpraxis 1 (TAC)  Am 5.7.: E.57 als Vorbesprechungs- und Arbeitsraum",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T06:30:00.000Z",
+      "endTime": "2025-05-07T11:30:00.000Z",
+      "rooms": [
+        "E.59 VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 915058,
+      "name": "Konstruktions Entwurf (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T10:00:00.000Z",
+      "endTime": "2025-05-07T11:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 955053,
+      "name": "Werkstoffkunde-Labor (Gruppe 1)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T14:00:00.000Z",
+      "endTime": "2025-05-07T15:30:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 955054,
+      "name": "Werkstoffkunde-Labor (Gruppe 2)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-07T15:30:00.000Z",
+      "endTime": "2025-05-07T17:00:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 916025,
+      "name": "Konstruktion 1 (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-14T06:30:00.000Z",
+      "endTime": "2025-05-14T10:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 949542,
+      "name": "Laborpraxis 1 (TAC)  E.48 als Vorbesprechungs- und Arbeitsraum",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-14T06:30:00.000Z",
+      "endTime": "2025-05-14T12:00:00.000Z",
+      "rooms": [
+        "E.48 VL-Raum Unterrichtsraum",
+        "E.75 Labor Chemische Technik"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 916126,
+      "name": "Konstruktions Entwurf (CBIW)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-14T10:00:00.000Z",
+      "endTime": "2025-05-14T11:00:00.000Z",
+      "rooms": [
+        "238B VL-Raum Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 962959,
+      "name": "Werkstoffkunde-Labor (Gruppe 3)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-14T14:00:00.000Z",
+      "endTime": "2025-05-14T15:30:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 962960,
+      "name": "Werkstoffkunde-Labor (Gruppe 4)  ",
+      "course": "MA-TCT24",
+      "startTime": "2025-05-14T15:30:00.000Z",
+      "endTime": "2025-05-14T17:00:00.000Z",
+      "rooms": [
+        "U23A Labor Unterrichtsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2332431,
+      "name": " Nachholklausur Wärmeübertragung  <Raum 239B>",
+      "course": "MA-TCT24",
+      "startTime": "2026-11-09T12:30:00.000Z",
+      "endTime": "2026-11-09T14:30:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    }
+  ],
+  "MOS-TEIT25-G1": [
+    {
+      "id": 2195699,
+      "name": " Labor Microcontrollertechnik Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-09-16T11:00:00.000Z",
+      "endTime": "2026-09-16T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195701,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-09-23T07:00:00.000Z",
+      "endTime": "2026-09-23T10:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195702,
+      "name": " Mikrocomputertechnik Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-09-23T11:00:00.000Z",
+      "endTime": "2026-09-23T14:15:00.000Z",
+      "rooms": [
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195705,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-06T07:00:00.000Z",
+      "endTime": "2026-10-06T10:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195706,
+      "name": " Labor Microcontrollertechnik Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-07T11:00:00.000Z",
+      "endTime": "2026-10-07T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2231557,
+      "name": " Labor Microcontrollertechnik Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-12T11:00:00.000Z",
+      "endTime": "2026-10-12T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195708,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-13T07:00:00.000Z",
+      "endTime": "2026-10-13T10:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195710,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-21T11:00:00.000Z",
+      "endTime": "2026-10-21T14:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "578",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-21T18:00:00.000Z",
+      "endTime": "2026-10-21T20:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2195713,
+      "name": " Labor Microcontrollertechnik Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-10-28T12:00:00.000Z",
+      "endTime": "2026-10-28T15:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "579",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-28T19:00:00.000Z",
+      "endTime": "2026-10-28T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2199837,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 1 ",
+      "course": "MOS-TEIT25-G1",
+      "startTime": "2026-11-03T08:00:00.000Z",
+      "endTime": "2026-11-03T11:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "580",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-04T19:00:00.000Z",
+      "endTime": "2026-11-04T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "581",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-11T19:00:00.000Z",
+      "endTime": "2026-11-11T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "582",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-18T19:00:00.000Z",
+      "endTime": "2026-11-18T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "583",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-25T19:00:00.000Z",
+      "endTime": "2026-11-25T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    }
+  ],
+  "STG-SO25-A-H-SG+WAHLPFLICHT": [
+    {
+      "id": 2318553,
+      "name": " M15 U1 KJA   <Einführung >",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-10-06T11:30:00.000Z",
+      "endTime": "2026-10-06T15:00:00.000Z",
+      "rooms": [
+        "RB131-2.06 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314985,
+      "name": " M15 KJA Gruppe Zeynep Deniz  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-10-13T11:30:00.000Z",
+      "endTime": "2026-10-13T15:00:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318533,
+      "name": " M15 KJA Gruppe Mütschele/Schmidt  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-10-20T11:30:00.000Z",
+      "endTime": "2026-10-20T15:00:00.000Z",
+      "rooms": [
+        "RB131-2.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318534,
+      "name": " M15 KJA Gruppe Mütschele/Schmidt  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-03T12:30:00.000Z",
+      "endTime": "2026-11-03T16:00:00.000Z",
+      "rooms": [
+        "RB131-2.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2339926,
+      "name": " M15 KJA Gruppe Ralf Kluge  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-03T12:30:00.000Z",
+      "endTime": "2026-11-03T16:00:00.000Z",
+      "rooms": [
+        "RB131-3.05 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318563,
+      "name": " M15 U1 KJA   <Aufsichts- und Verkehrssicherungspflicht>",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-10T12:30:00.000Z",
+      "endTime": "2026-11-10T16:00:00.000Z",
+      "rooms": [
+        "RB131-2.06 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2339928,
+      "name": " M15 KJA Gruppe Ralf Kluge  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-17T12:30:00.000Z",
+      "endTime": "2026-11-17T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2339930,
+      "name": " M15 KJA Gruppe Ralf Kluge  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-24T12:30:00.000Z",
+      "endTime": "2026-11-24T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.06 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314994,
+      "name": " M15 KJA Gruppe Zeynep Deniz  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-24T12:30:00.000Z",
+      "endTime": "2026-11-24T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318535,
+      "name": " M15 KJA Gruppe Mütschele/Schmidt  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-11-24T12:30:00.000Z",
+      "endTime": "2026-11-24T16:00:00.000Z",
+      "rooms": [
+        "RB131-2.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314997,
+      "name": " M15 KJA Gruppe Zeynep Deniz  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-12-01T12:30:00.000Z",
+      "endTime": "2026-12-01T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2339932,
+      "name": " M15 KJA Gruppe Ralf Kluge  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-12-01T12:30:00.000Z",
+      "endTime": "2026-12-01T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318536,
+      "name": " M15 KJA Gruppe Mütschele/Schmidt  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-12-01T12:30:00.000Z",
+      "endTime": "2026-12-01T16:00:00.000Z",
+      "rooms": [
+        "RB131-2.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2314998,
+      "name": " M15 KJA Gruppe Zeynep Deniz  ",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-12-08T12:30:00.000Z",
+      "endTime": "2026-12-08T16:00:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2318569,
+      "name": " M15 U1 KJA   <Abschluss Online>",
+      "course": "STG-SO25-A-H-SG+WAHLPFLICHT",
+      "startTime": "2026-12-08T12:30:00.000Z",
+      "endTime": "2026-12-08T16:00:00.000Z",
+      "rooms": [
+        "STG-Zoom-RB131-2.06"
+      ],
+      "type": "ONLINE"
+    }
+  ],
+  "STG-SO25A": [
+    {
+      "id": 2277132,
+      "name": " M1 Tutorium zur Vorbereitung mündliche Prüfung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-09-15T13:00:00.000Z",
+      "endTime": "2026-09-15T16:30:00.000Z",
+      "rooms": [
+        "RB131-4.15 Seminarrraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299898,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-02T09:00:00.000Z",
+      "endTime": "2026-10-02T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299902,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-05T07:00:00.000Z",
+      "endTime": "2026-10-05T08:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299914,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-05T09:00:00.000Z",
+      "endTime": "2026-10-05T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299948,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-07T07:00:00.000Z",
+      "endTime": "2026-10-07T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2334888,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-08T07:00:00.000Z",
+      "endTime": "2026-10-08T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299989,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-08T11:30:00.000Z",
+      "endTime": "2026-10-08T15:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300019,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-09T09:00:00.000Z",
+      "endTime": "2026-10-09T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300033,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T08:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300040,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-12T09:00:00.000Z",
+      "endTime": "2026-10-12T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300092,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-14T07:00:00.000Z",
+      "endTime": "2026-10-14T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330007,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-14T10:30:00.000Z",
+      "endTime": "2026-10-14T11:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300143,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-15T11:30:00.000Z",
+      "endTime": "2026-10-15T15:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300173,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-16T09:00:00.000Z",
+      "endTime": "2026-10-16T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300208,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-19T07:00:00.000Z",
+      "endTime": "2026-10-19T08:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300215,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-19T09:00:00.000Z",
+      "endTime": "2026-10-19T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300272,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-21T07:00:00.000Z",
+      "endTime": "2026-10-21T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330029,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-21T10:30:00.000Z",
+      "endTime": "2026-10-21T11:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300322,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-22T11:30:00.000Z",
+      "endTime": "2026-10-22T15:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300352,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-23T09:00:00.000Z",
+      "endTime": "2026-10-23T10:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300366,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300373,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-26T10:00:00.000Z",
+      "endTime": "2026-10-26T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300430,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-28T08:00:00.000Z",
+      "endTime": "2026-10-28T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330051,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-28T11:30:00.000Z",
+      "endTime": "2026-10-28T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300476,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-29T12:30:00.000Z",
+      "endTime": "2026-10-29T16:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300506,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-10-30T10:00:00.000Z",
+      "endTime": "2026-10-30T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300520,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-02T08:00:00.000Z",
+      "endTime": "2026-11-02T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300527,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-02T10:00:00.000Z",
+      "endTime": "2026-11-02T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2302645,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  <Raumänderung!>",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-03T08:00:00.000Z",
+      "endTime": "2026-11-03T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.01 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300583,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-04T08:00:00.000Z",
+      "endTime": "2026-11-04T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330073,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-04T11:30:00.000Z",
+      "endTime": "2026-11-04T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300622,
+      "name": " M10 U2 Individualhilfe: Vertiefung I  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-05T08:00:00.000Z",
+      "endTime": "2026-11-05T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300635,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-05T12:30:00.000Z",
+      "endTime": "2026-11-05T16:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300699,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-09T08:00:00.000Z",
+      "endTime": "2026-11-09T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300706,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-09T10:00:00.000Z",
+      "endTime": "2026-11-09T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300764,
+      "name": " M10 U3 Individualhilfe: Vertiefung II  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-11T08:00:00.000Z",
+      "endTime": "2026-11-11T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330095,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-11T11:30:00.000Z",
+      "endTime": "2026-11-11T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300805,
+      "name": " M10 U2 Individualhilfe: Vertiefung I  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-12T08:00:00.000Z",
+      "endTime": "2026-11-12T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300846,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-13T10:00:00.000Z",
+      "endTime": "2026-11-13T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300860,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-16T08:00:00.000Z",
+      "endTime": "2026-11-16T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300867,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-16T10:00:00.000Z",
+      "endTime": "2026-11-16T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2275802,
+      "name": " Studieninformationstag  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-18T07:30:00.000Z",
+      "endTime": "2026-11-18T16:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300931,
+      "name": " M10 U2 Individualhilfe: Vertiefung I  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-19T08:00:00.000Z",
+      "endTime": "2026-11-19T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2300973,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-20T10:00:00.000Z",
+      "endTime": "2026-11-20T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301011,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-23T08:00:00.000Z",
+      "endTime": "2026-11-23T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301017,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-23T10:00:00.000Z",
+      "endTime": "2026-11-23T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330117,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-25T11:30:00.000Z",
+      "endTime": "2026-11-25T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2331084,
+      "name": " M10 U2 Individualhilfe: Vertiefung I  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-26T08:00:00.000Z",
+      "endTime": "2026-11-26T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301152,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-30T08:00:00.000Z",
+      "endTime": "2026-11-30T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301158,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-11-30T10:00:00.000Z",
+      "endTime": "2026-11-30T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2334890,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  <Raumänderung>",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-01T08:00:00.000Z",
+      "endTime": "2026-12-01T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.01 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2334891,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  <Raumänderung>",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-02T08:00:00.000Z",
+      "endTime": "2026-12-02T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.10 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330139,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-02T11:30:00.000Z",
+      "endTime": "2026-12-02T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2302648,
+      "name": " M22 U2 Gemeinwesenarbeit und Sozialraumorientierung  <Sprechstunde M22 Seminararbeit>",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-03T12:30:00.000Z",
+      "endTime": "2026-12-03T14:00:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2303246,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-04T10:00:00.000Z",
+      "endTime": "2026-12-04T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301313,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-07T08:00:00.000Z",
+      "endTime": "2026-12-07T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301317,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-07T10:00:00.000Z",
+      "endTime": "2026-12-07T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330161,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-09T11:30:00.000Z",
+      "endTime": "2026-12-09T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2331089,
+      "name": " M10 U2 Individualhilfe: Vertiefung I  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-10T08:00:00.000Z",
+      "endTime": "2026-12-10T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301432,
+      "name": " M11 U2 Soziale Gruppenarbeit  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-11T10:00:00.000Z",
+      "endTime": "2026-12-11T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.16 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301440,
+      "name": " M5 U1 Grundlagen von Erziehung, Bildung und Sozialisation  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-14T08:00:00.000Z",
+      "endTime": "2026-12-14T09:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2301444,
+      "name": " M16 U1 Forschungsplanung  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-14T10:00:00.000Z",
+      "endTime": "2026-12-14T11:30:00.000Z",
+      "rooms": [
+        "RB131-4.02 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2330183,
+      "name": " Offene Sprechstunde mit den Peer-Mentor*innen  ",
+      "course": "STG-SO25A",
+      "startTime": "2026-12-16T11:30:00.000Z",
+      "endTime": "2026-12-16T12:30:00.000Z",
+      "rooms": [
+        "RB131-1.03 Seminarraum"
+      ],
+      "type": "PRESENCE"
+    }
+  ],
+  "MOS-TEIT25": [
+    {
+      "id": 2183938,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-07T07:00:00.000Z",
+      "endTime": "2026-09-07T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184055,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-07T11:00:00.000Z",
+      "endTime": "2026-09-07T12:30:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184319,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-07T12:45:00.000Z",
+      "endTime": "2026-09-07T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2200963,
+      "name": " Wiederholungsklausur Mathematik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-08T06:00:00.000Z",
+      "endTime": "2026-09-08T08:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2200724,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-08T07:00:00.000Z",
+      "endTime": "2026-09-08T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184435,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-08T11:00:00.000Z",
+      "endTime": "2026-09-08T12:30:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299555,
+      "name": " Semestereinführung Semestereinführung ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-08T12:30:00.000Z",
+      "endTime": "2026-09-08T12:45:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299598,
+      "name": " Klausureinsicht  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-08T12:45:00.000Z",
+      "endTime": "2026-09-08T13:45:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180625,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-09T07:00:00.000Z",
+      "endTime": "2026-09-09T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2242878,
+      "name": " Wiederholungsklausur Grundlagen Elektrotechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-10T06:00:00.000Z",
+      "endTime": "2026-09-10T08:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183939,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-10T07:00:00.000Z",
+      "endTime": "2026-09-10T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184056,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-10T11:00:00.000Z",
+      "endTime": "2026-09-10T12:30:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184321,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-10T12:45:00.000Z",
+      "endTime": "2026-09-10T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184118,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-11T07:00:00.000Z",
+      "endTime": "2026-09-11T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184436,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-11T11:00:00.000Z",
+      "endTime": "2026-09-11T12:30:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2271165,
+      "name": "  Wiederholungsklausur Elektronik I und Messtechnik I ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-14T06:00:00.000Z",
+      "endTime": "2026-09-14T08:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184057,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-14T07:00:00.000Z",
+      "endTime": "2026-09-14T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184323,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-14T11:00:00.000Z",
+      "endTime": "2026-09-14T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2198084,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-15T07:00:00.000Z",
+      "endTime": "2026-09-15T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184324,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-15T11:00:00.000Z",
+      "endTime": "2026-09-15T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2271233,
+      "name": "  Wiederholungsklausur Digitaltechnik ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-16T06:00:00.000Z",
+      "endTime": "2026-09-16T08:00:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183940,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-16T07:00:00.000Z",
+      "endTime": "2026-09-16T10:15:00.000Z",
+      "rooms": [
+        "B 0.260 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184325,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-17T07:00:00.000Z",
+      "endTime": "2026-09-17T10:15:00.000Z",
+      "rooms": [
+        "B 0.260 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184326,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-17T11:00:00.000Z",
+      "endTime": "2026-09-17T14:15:00.000Z",
+      "rooms": [
+        "B 0.260 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184119,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-18T07:00:00.000Z",
+      "endTime": "2026-09-18T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2200726,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-18T11:00:00.000Z",
+      "endTime": "2026-09-18T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184058,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-21T07:00:00.000Z",
+      "endTime": "2026-09-21T10:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2273473,
+      "name": "  Wiederholungsklausur Physik ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-21T07:00:00.000Z",
+      "endTime": "2026-09-21T09:00:00.000Z",
+      "rooms": [
+        "B 0.320 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183941,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-21T11:00:00.000Z",
+      "endTime": "2026-09-21T14:15:00.000Z",
+      "rooms": [
+        "B 0.250 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2198085,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-22T07:00:00.000Z",
+      "endTime": "2026-09-22T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184437,
+      "name": " Software-Projekt Phase 1 Kick-off ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-22T11:00:00.000Z",
+      "endTime": "2026-09-22T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180626,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-24T07:00:00.000Z",
+      "endTime": "2026-09-24T10:15:00.000Z",
+      "rooms": [
+        "B 0.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184120,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-24T11:00:00.000Z",
+      "endTime": "2026-09-24T14:15:00.000Z",
+      "rooms": [
+        "B 0.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184061,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-28T07:00:00.000Z",
+      "endTime": "2026-09-28T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184328,
+      "name": " Software-Projekt Phase 1 Betreuungstermin ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-28T11:00:00.000Z",
+      "endTime": "2026-09-28T12:30:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180627,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-29T11:00:00.000Z",
+      "endTime": "2026-09-29T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184329,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-30T07:00:00.000Z",
+      "endTime": "2026-09-30T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184330,
+      "name": " Software Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-09-30T11:00:00.000Z",
+      "endTime": "2026-09-30T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183942,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-01T07:00:00.000Z",
+      "endTime": "2026-10-01T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184062,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-01T11:00:00.000Z",
+      "endTime": "2026-10-01T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180628,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-02T07:00:00.000Z",
+      "endTime": "2026-10-02T10:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184122,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-02T11:00:00.000Z",
+      "endTime": "2026-10-02T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2089560,
+      "name": " Tag der Deutschen Einheit -  Day of German Unity -  la journée de la réunification  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-03T06:00:00.000Z",
+      "endTime": "2026-10-03T16:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184063,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-05T07:00:00.000Z",
+      "endTime": "2026-10-05T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180629,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-05T11:00:00.000Z",
+      "endTime": "2026-10-05T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180630,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-06T11:00:00.000Z",
+      "endTime": "2026-10-06T14:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183944,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-07T07:00:00.000Z",
+      "endTime": "2026-10-07T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183993,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-08T07:00:00.000Z",
+      "endTime": "2026-10-08T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183946,
+      "name": " Mathematische Anwendungen  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-08T11:00:00.000Z",
+      "endTime": "2026-10-08T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184123,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-09T07:00:00.000Z",
+      "endTime": "2026-10-09T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184064,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-12T07:00:00.000Z",
+      "endTime": "2026-10-12T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183948,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-14T07:00:00.000Z",
+      "endTime": "2026-10-14T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184065,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-14T11:00:00.000Z",
+      "endTime": "2026-10-14T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180632,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-15T07:00:00.000Z",
+      "endTime": "2026-10-15T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184124,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-15T11:00:00.000Z",
+      "endTime": "2026-10-15T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184066,
+      "name": " Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-19T07:00:00.000Z",
+      "endTime": "2026-10-19T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2180633,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-19T11:00:00.000Z",
+      "endTime": "2026-10-19T14:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2198087,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-20T07:00:00.000Z",
+      "endTime": "2026-10-20T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195530,
+      "name": " Mathematische Anwendungen  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-20T11:00:00.000Z",
+      "endTime": "2026-10-20T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "578",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-21T18:00:00.000Z",
+      "endTime": "2026-10-21T20:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2183949,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-22T07:00:00.000Z",
+      "endTime": "2026-10-22T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184067,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-22T11:00:00.000Z",
+      "endTime": "2026-10-22T14:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2331716,
+      "name": " Studium Generale im Audimax (E-Gebäude) Wie Software die Produktion verändert - Smart Factory zum Anfassen ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-22T14:30:00.000Z",
+      "endTime": "2026-10-22T16:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2184125,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-23T07:00:00.000Z",
+      "endTime": "2026-10-23T10:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2183950,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2182713,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-27T12:00:00.000Z",
+      "endTime": "2026-10-27T15:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2336921,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-28T08:00:00.000Z",
+      "endTime": "2026-10-28T11:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "579",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-28T19:00:00.000Z",
+      "endTime": "2026-10-28T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2188316,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-29T08:00:00.000Z",
+      "endTime": "2026-10-29T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2188348,
+      "name": " Software-Projekt Phase 1 Betreuungstermin ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-29T12:00:00.000Z",
+      "endTime": "2026-10-29T13:30:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2190092,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-10-30T08:00:00.000Z",
+      "endTime": "2026-10-30T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2194222,
+      "name": " Allerheiligen - All Saints' Day - Toussaint  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-01T07:00:00.000Z",
+      "endTime": "2026-11-01T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2196802,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-02T08:00:00.000Z",
+      "endTime": "2026-11-02T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2196838,
+      "name": " Mikrocomputertechnik  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-02T12:00:00.000Z",
+      "endTime": "2026-11-02T15:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2199873,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-03T12:00:00.000Z",
+      "endTime": "2026-11-03T15:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2203252,
+      "name": " Elektronik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-04T08:00:00.000Z",
+      "endTime": "2026-11-04T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "580",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-04T19:00:00.000Z",
+      "endTime": "2026-11-04T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2205945,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-05T08:00:00.000Z",
+      "endTime": "2026-11-05T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2205957,
+      "name": " Mathematische Anwendungen  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-05T12:00:00.000Z",
+      "endTime": "2026-11-05T15:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2207055,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-06T08:00:00.000Z",
+      "endTime": "2026-11-06T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2212680,
+      "name": " Grundlagen Elektrotechnik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-09T08:00:00.000Z",
+      "endTime": "2026-11-09T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2216051,
+      "name": " Mathematik 3  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-10T12:00:00.000Z",
+      "endTime": "2026-11-10T15:00:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "581",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-11T19:00:00.000Z",
+      "endTime": "2026-11-11T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2220557,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-13T08:00:00.000Z",
+      "endTime": "2026-11-13T11:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2297761,
+      "name": " Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-13T12:00:00.000Z",
+      "endTime": "2026-11-13T15:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2225506,
+      "name": " Software-Projekt Phase 2 Kick-off ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-16T12:00:00.000Z",
+      "endTime": "2026-11-16T15:15:00.000Z",
+      "rooms": [
+        "B U1.220 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "582",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-18T19:00:00.000Z",
+      "endTime": "2026-11-18T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2234586,
+      "name": " Klausur Messtechnik II  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-20T08:00:00.000Z",
+      "endTime": "2026-11-20T08:40:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum",
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2347270,
+      "name": " Klausur Mathematik III  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-23T09:30:00.000Z",
+      "endTime": "2026-11-23T11:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum",
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2244580,
+      "name": " Klausur Grundlagen Elektrotechnik III  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-24T08:00:00.000Z",
+      "endTime": "2026-11-24T10:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum",
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "583",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-25T19:00:00.000Z",
+      "endTime": "2026-11-25T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2251416,
+      "name": " Klausur Software-Engineering  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-26T09:30:00.000Z",
+      "endTime": "2026-11-26T11:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum",
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2252669,
+      "name": " Klausur Signale und Systeme  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-11-27T08:00:00.000Z",
+      "endTime": "2026-11-27T10:00:00.000Z",
+      "rooms": [
+        "E 0.170 Vorlesungsraum",
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295731,
+      "name": " Heiliger Abend - Christmas Eve - la veille de Noël  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-12-24T07:00:00.000Z",
+      "endTime": "2026-12-24T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295770,
+      "name": " Weihnachtstag - Christmas Day  -  le jour de Noël  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-12-25T07:00:00.000Z",
+      "endTime": "2026-12-25T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2295953,
+      "name": " 2. Weihnachtsfeiertag -  Boxing Day - le lendemain de Noël  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-12-26T07:00:00.000Z",
+      "endTime": "2026-12-26T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2304690,
+      "name": " Sylvester -  New Year's Eve - Saint-Sylvestre  ",
+      "course": "MOS-TEIT25",
+      "startTime": "2026-12-31T07:00:00.000Z",
+      "endTime": "2026-12-31T17:00:00.000Z",
+      "rooms": [],
+      "type": "PRESENCE"
+    }
+  ],
+  "MOS-TEIT25-G2": [
+    {
+      "id": 2195698,
+      "name": " Labor Microcontrollertechnik Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-09-09T11:00:00.000Z",
+      "endTime": "2026-09-09T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195700,
+      "name": " Mikrocomputertechnik Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-09-23T07:00:00.000Z",
+      "endTime": "2026-09-23T10:15:00.000Z",
+      "rooms": [
+        "E 0.180 Vorlesungsraum"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195703,
+      "name": " Labor Microcontrollertechnik Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-09-23T11:00:00.000Z",
+      "endTime": "2026-09-23T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195704,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-09-29T07:00:00.000Z",
+      "endTime": "2026-09-29T10:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195707,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-10-07T11:00:00.000Z",
+      "endTime": "2026-10-07T14:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195709,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-10-16T07:00:00.000Z",
+      "endTime": "2026-10-16T10:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2195711,
+      "name": " Labor Microcontrollertechnik Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-10-21T11:00:00.000Z",
+      "endTime": "2026-10-21T14:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "578",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-21T18:00:00.000Z",
+      "endTime": "2026-10-21T20:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2195712,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-10-28T12:00:00.000Z",
+      "endTime": "2026-10-28T15:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "579",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-10-28T19:00:00.000Z",
+      "endTime": "2026-10-28T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2203286,
+      "name": " Labor Microcontrollertechnik Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-11-04T12:00:00.000Z",
+      "endTime": "2026-11-04T15:15:00.000Z",
+      "rooms": [
+        "A 0.330 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "580",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-04T19:00:00.000Z",
+      "endTime": "2026-11-04T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": 2217840,
+      "name": " Labor zu Grundlagen Elektrotechnik 3 Gruppe 2 ",
+      "course": "MOS-TEIT25-G2",
+      "startTime": "2026-11-11T12:00:00.000Z",
+      "endTime": "2026-11-11T15:15:00.000Z",
+      "rooms": [
+        "A 0.300 Labor ET-Grundlagen"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": "581",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-11T19:00:00.000Z",
+      "endTime": "2026-11-11T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "582",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-18T19:00:00.000Z",
+      "endTime": "2026-11-18T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    },
+    {
+      "id": "583",
+      "name": "Tanzkurs",
+      "course": null,
+      "startTime": "2026-11-25T19:00:00.000Z",
+      "endTime": "2026-11-25T21:00:00.000Z",
+      "rooms": [],
+      "type": null
+    }
+  ],
+  "VS-WCC25-GRUPPE2": [
+    {
+      "id": 2299147,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-06T07:00:00.000Z",
+      "endTime": "2026-10-06T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299157,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-13T11:00:00.000Z",
+      "endTime": "2026-10-13T15:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299165,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-20T07:00:00.000Z",
+      "endTime": "2026-10-20T11:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299172,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-26T08:00:00.000Z",
+      "endTime": "2026-10-26T13:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299175,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-27T12:00:00.000Z",
+      "endTime": "2026-10-27T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299177,
+      "name": "Verkaufstechniken",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-10-28T13:00:00.000Z",
+      "endTime": "2026-10-28T18:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299184,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-11-03T08:00:00.000Z",
+      "endTime": "2026-11-03T12:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    },
+    {
+      "id": 2299194,
+      "name": "Wirtschaftsenglisch III",
+      "course": "VS-WCC25-GRUPPE2",
+      "startTime": "2026-11-10T12:00:00.000Z",
+      "endTime": "2026-11-10T16:00:00.000Z",
+      "rooms": [
+        "D 107 Hörsaal (CC)"
+      ],
+      "type": "PRESENCE"
+    }
+  ]
+}

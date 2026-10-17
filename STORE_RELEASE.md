@@ -10,7 +10,7 @@
 - Current Android versionCode: `14`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
 
-## Version 1.5.2 — Hochgeladen am 17. Oktober 2026
+## Version 1.5.2 — Hochgeladen am 17., zur Prüfung eingereicht am 17./18. Oktober 2026
 
 Wahlkurse, WPS, Schwerpunkte und Gruppen jetzt bei der Einrichtung und in den Einstellungen auswählen – u. a. in Villingen-Schwenningen, Stuttgart, Mannheim, Mosbach, Heidenheim und Friedrichshafen. Gemeinsame und vergangene Termine bleiben enthalten. Bestehende Profile erkennen eine offene Kurswahl. Außerdem verbessert: Module bei überlappenden Terminen und per langem Drücken ausblenden, ohne versehentliche Textmarkierung.
 
@@ -21,7 +21,7 @@ Wahlkurse, WPS, Schwerpunkte und Gruppen jetzt bei der Einrichtung und in den Ei
 - GitHub `web-quality` und `Android main beta` für den Merge-Commit erfolgreich.
 - Android: signiertes APK/AAB erstellt, versionCode 14, minSdk 24 / targetSdk 36. AAB SHA-256: `6368d8e532f39a7e1e2afb82bf2eb2f6655fcde141ed6542936b60f4f7b6a693`. APK-Signatur (v2) geprüft.
 - Google Play: Bundle 14 (1.5.2) verarbeitet, deutsche Versionshinweise gespeichert, Produktionsrelease 1.5.2 in „Veröffentlichungen – Übersicht“. Legacy-Bundle 9 bleibt enthalten; keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen für 9 und 14 (Minifizierung deaktiviert). **Zur Prüfung abgeschickt**, Übersicht zeigt „Änderungen, die überprüft werden“ und „Deine Änderungen werden jetzt überprüft“. Verwaltete Veröffentlichung aus, vollständiger Roll-out nach Freigabe. Versionshinweise nennen sechs belegte Standorte als Beispiele.
-- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. **Noch nicht zur App-Prüfung eingereicht**: Die Browser-Anmeldung an App Store Connect benötigt die lokale Passkey-/Mac-Bestätigung. Deutsche Versionsbeschreibung mit den belegten Standorten ist vorbereitet; weder Speicherung in App Store Connect noch automatische Release-Einstellung sind bestätigt.
+- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. Build verarbeitet und Version 1.5.2 zugeordnet. Am 18. Oktober zur App-Prüfung eingereicht, bestätigter Status **Waiting for Review**. Submission ID: `137c93d2-e881-4394-a598-61649032ca7d`. Automatische Veröffentlichung nach Freigabe für alle Nutzer (kein gestaffelter Roll-out). Deutsche Versionsbeschreibung inklusive der sechs belegten Standorte gespeichert.
 - Web-Assets in APK, AAB und iOS-Archiv bytegleich zum geprüften `dist`-Build.
 
 ## Version 1.5.1 — Update descriptions

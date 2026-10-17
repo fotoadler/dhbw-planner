@@ -10,15 +10,19 @@
 - Current Android versionCode: `14`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
 
-## Version 1.5.2 — Release in Vorbereitung
+## Version 1.5.2 — Hochgeladen am 17. Oktober 2026
 
 Wahlkurse, Seminare, Studienschwerpunkte und Gruppen lassen sich jetzt direkt nach der Kurswahl und später in den Einstellungen konfigurieren. Gemeinsame und vergangene Termine bleiben enthalten. Bereits eingerichtete Profile weisen auf eine offene Auswahl hin. Außerdem wurde das Ausblenden von Modulen bei überlappenden Terminen und per langem Drücken verbessert.
 
-- Geplante Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
-- Veröffentlichung über einen ausdrücklich angeforderten Pull Request nach `main`; Community-/Watch-Branches bleiben außerhalb dieses Releases.
+- Signierte Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
+- [PR #37](https://github.com/fotoadler/dhbw-planner/pull/37) am 17. Oktober in `main` gemergt; Buildquellen: `a92f4e1274cb8c393fe6d86af3d6e06752dd2ec1`. Community-/Watch-Branches bleiben außerhalb dieses Releases.
 - 486 Tests in 49 Dateien, TypeScript/Vite-Build und Capacitor-Sync erfolgreich.
 - iOS-Simulator-Build erfolgreich; native Bedienprüfung mit FN-TIM24/FN-TIM23 auf iPhone 17 Pro / iOS 26.5 ohne beobachteten Absturz. Einzelheiten und Grenzen: [Release-QA](docs/RELEASE_1_5_2_QA.md).
-- Merge und Store-Uploads werden erst nach tatsächlichem Erfolg im Release-Protokoll ergänzt.
+- GitHub `web-quality` und `Android main beta` für den Merge-Commit erfolgreich.
+- Android: signiertes APK/AAB erstellt, versionCode 14, minSdk 24 / targetSdk 36. AAB SHA-256: `6368d8e532f39a7e1e2afb82bf2eb2f6655fcde141ed6542936b60f4f7b6a693`. APK-Signatur (v2) geprüft.
+- Google Play: Bundle 14 (1.5.2) verarbeitet, deutsche Versionshinweise gespeichert, Produktionsrelease 1.5.2 in „Veröffentlichungen – Übersicht“. Legacy-Bundle 9 bleibt enthalten; keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen für 9 und 14 (Minifizierung deaktiviert). **Noch nicht zur Prüfung eingereicht und nicht veröffentlicht**; automatische Vorabprüfungen laufen.
+- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. **Keine abgeschlossene Verarbeitung, App-Review-Einreichung oder öffentliche Verfügbarkeit bestätigt.**
+- Web-Assets in APK, AAB und iOS-Archiv bytegleich zum geprüften `dist`-Build.
 
 ## Version 1.5.1 — Update descriptions
 
@@ -28,7 +32,9 @@ Kursprofile lassen sich jetzt direkt im Kalender speichern, wechseln und lösche
 
 Based on production 1.5.0 (GitHub main `2c05c4f2`), with saved course profiles, Zeppelin menus and the profile focus correction. The separate Community branch is not included. Google Play production 1.5.0 (11, plus retained legacy bundle 9) and iOS 1.5.0 (13) were verified live on 13 October. Android internal-test Community bundle 12 is retained on its existing track; the update uses bundle 13. iOS uses build 14.
 
-### Submission status
+### Submission status (historischer Einreichungsstand vom 13. Oktober)
+
+Google Play 1.5.1 war bei der erneuten Live-Prüfung am 17. Oktober vollständig veröffentlicht. Der folgende Abschnitt dokumentiert den damaligen Einreichungsstand, nicht den aktuellen Status.
 
 - 378 tests (41 files), production web build and Capacitor sync passed on 13 October.
 - Signed Android release APK/AAB: 1.5.1, versionCode 13, API 24 minimum / target API 36. AAB SHA-256: `a8de50dc72fdfb020441b4cf10d008ddb9eabfe9be6cc9f17d1611747dadca0d`.
@@ -113,7 +119,7 @@ Bei Problemen prüfe zuerst, ob die gewählte Kursquelle erreichbar ist. Im manu
 
 ## Android Release Steps
 
-1. Create an upload keystore outside the repository.
+1. Reuse the existing upload keystore and signing configuration for updates. Only create a key for a genuinely new app; never replace the existing upload identity as a routine release step.
 2. Copy `android/release-signing.example.properties` to `android/release-signing.properties`.
 3. Fill in the keystore path and passwords. The file is git-ignored; `android/app/build.gradle` already reads it and applies the release signing config when it exists.
 4. Bump `versionCode` and `versionName` in `android/app/build.gradle`, plus `package.json`, the iOS project and this file.
@@ -123,13 +129,13 @@ Bei Problemen prüfe zuerst, ob die gewählte Kursquelle erreichbar ist. Im manu
 JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradlew bundleRelease
 ```
 
-6. Upload the signed `.aab` to a new Play Console app entry for `de.dhbw.raplaplan`.
+6. Upload the signed `.aab` to a new release in the existing Play Console app `de.dhbw.raplaplan`. Save and verify the build/version, release notes and device compatibility. Review submission and public rollout are separate from upload.
 
 ## iOS Release Steps
 
 1. Open `ios/App/App.xcworkspace` in Xcode.
 2. Select the appropriate Apple Developer Team locally in Xcode.
 3. Confirm bundle ID `de.dhbw.raplaplan`.
-4. Set a unique App Store Connect app record with that bundle ID.
+4. Use the existing App Store Connect app record for that bundle ID and an unused build number.
 5. Product > Archive.
-6. Distribute App > App Store Connect.
+6. Distribute App > App Store Connect (or `xcodebuild -exportArchive` with destination `upload`). Confirm upload success; processing and App Review are separate steps.

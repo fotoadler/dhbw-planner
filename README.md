@@ -69,7 +69,7 @@ https://rapla.dhbw.de/rapla/internal_calendar?user=max.muster@dhbw.example&file=
 
 Der Parser übernimmt `user` und `file`, normalisiert `internal_calendar` auf `calendar` und lädt die Kalenderwochen direkt vom Rapla-System.
 
-Zusätzlich werden öffentliche Rapla-Freigabelinks mit den Parametern `key` und `salt` unterstützt. Aus Sicherheitsgründen akzeptiert die App nur Rapla-Links von `rapla.dhbw.de` mit dem Pfad `/rapla/calendar` oder `/rapla/internal_calendar`.
+Zusätzlich werden öffentliche Rapla-Freigabelinks mit dem Parameter `key` (ältere Variante zusätzlich mit `salt`, neuere `key=v2:…` ohne `salt`) unterstützt. Aus Sicherheitsgründen akzeptiert die App nur Rapla-Links von `rapla.dhbw.de` mit dem Pfad `/rapla/calendar` oder `/rapla/internal_calendar`.
 
 ## Geführter Modus und DHBW-API
 

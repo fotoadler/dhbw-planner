@@ -50,6 +50,18 @@ describe('rapla client URLs', () => {
     );
   });
 
+  it('unterstützt neue Rapla-Freigabelinks mit key=v2:… ohne salt', () => {
+    const cfg = parseRaplaLink('https://rapla.dhbw.de/rapla/calendar?key=v2:public-key_123-abc');
+
+    expect(cfg).toEqual({
+      key: 'v2:public-key_123-abc',
+      baseUrl: 'https://rapla.dhbw.de/rapla/calendar',
+    });
+    expect(buildWeekUrl(cfg!, { y: 2026, m: 10, d: 26 })).toBe(
+      'https://rapla.dhbw.de/rapla/calendar?day=26&month=10&year=2026&key=v2%3Apublic-key_123-abc',
+    );
+  });
+
   it('lehnt Links von fremden Hosts und Pfaden ab', () => {
     expect(parseRaplaLink('https://example.com/rapla/calendar?user=test&file=plan')).toBeNull();
     expect(parseRaplaLink('https://rapla.dhbw.de/other?user=test&file=plan')).toBeNull();

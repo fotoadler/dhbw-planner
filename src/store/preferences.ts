@@ -114,11 +114,11 @@ function parseRaplaConfig(value: unknown): RaplaConfig | null {
     }
 
     const hasUserLink = typeof value.user === 'string' && typeof value.file === 'string';
-    const hasShareLink = typeof value.key === 'string' && typeof value.salt === 'string';
+    const hasShareLink = typeof value.key === 'string' && (value.salt === undefined || typeof value.salt === 'string');
     if (!hasUserLink && !hasShareLink) return null;
     return {
       ...(hasUserLink ? { user: value.user as string, file: value.file as string } : {}),
-      ...(hasShareLink ? { key: value.key as string, salt: value.salt as string } : {}),
+      ...(hasShareLink ? { key: value.key as string, ...(typeof value.salt === 'string' ? { salt: value.salt } : {}) } : {}),
       baseUrl: value.baseUrl,
     };
   } catch {

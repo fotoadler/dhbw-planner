@@ -54,6 +54,12 @@ describe('Kalender-Standardansicht in den Preferences', () => {
   });
 });
 
+it('behält gespeicherte Rapla-Freigabelinks mit key ohne salt', async () => {
+  const rapla = { key: 'v2:public-key', baseUrl: 'https://rapla.dhbw.de/rapla/calendar' };
+  preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: { scheduleSource: 'rapla', rapla } }) });
+  await expect(loadSettings()).resolves.toMatchObject({ rapla });
+});
+
 it('validiert gespeicherte Profile und stellt einen ungültigen aktiven Kurs auf den Hauptkurs zurück', async () => {
   preferencesGet.mockResolvedValue({ value: JSON.stringify({ version: 4, data: {
     scheduleSource: 'dhbw-api', apiSelection: { site: 'RV', degree: 'QA', course: 'QA-A' }, hiddenModules: ['hidden'],

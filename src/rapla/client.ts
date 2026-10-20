@@ -42,12 +42,13 @@ export function parseRaplaLink(link: string): RaplaConfig | null {
     const key = url.searchParams.get('key');
     const salt = url.searchParams.get('salt');
     const hasUserLink = Boolean(user && file);
-    const hasShareLink = Boolean(key && salt);
+    // Neuere Rapla-Freigabelinks (key=v2:…) kommen ohne salt aus.
+    const hasShareLink = Boolean(key);
     if (!hasUserLink && !hasShareLink) return null;
 
     return {
       ...(hasUserLink ? { user: user!, file: file! } : {}),
-      ...(hasShareLink ? { key: key!, salt: salt! } : {}),
+      ...(hasShareLink ? { key: key!, ...(salt ? { salt } : {}) } : {}),
       baseUrl: isReviewDemo ? DEFAULT_BASE_URL : normalizeBaseUrl(`${url.origin}${normalizedPath}`),
     };
   } catch {
@@ -71,8 +72,8 @@ export function buildWeekUrl(cfg: RaplaConfig, date: Ymd): string {
     year: String(date.y),
   };
   let params: URLSearchParams;
-  if (cfg.key && cfg.salt) {
-    params = new URLSearchParams({ ...dateParams, key: cfg.key, salt: cfg.salt });
+  if (cfg.key) {
+    params = new URLSearchParams({ ...dateParams, key: cfg.key, ...(cfg.salt ? { salt: cfg.salt } : {}) });
   } else if (cfg.user && cfg.file) {
     params = new URLSearchParams({ user: cfg.user, file: cfg.file, ...dateParams });
   } else {

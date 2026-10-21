@@ -634,7 +634,7 @@ export function App() {
           onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
 
-      {support.open && <SupportDialog automatic={support.automatic} products={support.products} busy={support.busy}
+      {support.open && <SupportDialog automatic={support.automatic} storePending={support.pending} products={support.products} busy={support.busy}
         onBusy={support.setBusy} onProducts={support.setProducts} onClose={support.close}
         onSupported={support.supported} />}
 

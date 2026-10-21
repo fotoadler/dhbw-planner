@@ -86,11 +86,16 @@ public class ScheduleWidgetProvider extends AppWidgetProvider {
         if(size==3)views.setTextViewText(R.id.widget_weekday,format(now,"EEEE"));
         views.setTextViewText(R.id.widget_status,status);
         views.removeAllViews(R.id.widget_events);
-        List<JSONObject> shown=size==3?all:remaining;
+        List<JSONObject> shown=size>=2?all:remaining;
         boolean showEvents=unlocked&&known&&!shown.isEmpty();
         views.setViewVisibility(R.id.widget_status,showEvents?View.VISIBLE:View.GONE);
         views.setViewVisibility(R.id.widget_events,showEvents?View.VISIBLE:View.GONE);
-        int limit=size==1?1:size==2?2:5;
+        boolean hasUpcoming=false;
+        if(days!=null)for(int i=0;i<days.length();i++){
+            JSONObject later=days.optJSONObject(i);
+            if(later!=null&&later.optBoolean("known")&&later.optString("date").compareTo(today)>0&&later.optJSONArray("events")!=null&&later.optJSONArray("events").length()>0){hasUpcoming=true;break;}
+        }
+        int limit=size==1?1:size==2?2:hasUpcoming?3:5;
         for(int i=0;i<Math.min(limit,shown.size());i++) {
             JSONObject event=shown.get(i); RemoteViews row=new RemoteViews(context.getPackageName(),size==1?R.layout.schedule_widget_event_small:R.layout.schedule_widget_event);
             row.setTextViewText(R.id.widget_event_time,format(event.optLong("start"),"HH:mm")+(size==1?" – ":"\n")+format(event.optLong("end"),"HH:mm"));
@@ -104,7 +109,7 @@ public class ScheduleWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_empty_title,title);views.setTextViewText(R.id.widget_empty_subtitle,subtitle);
         views.setTextViewTextSize(R.id.widget_empty_title,android.util.TypedValue.COMPLEX_UNIT_SP,size==1?21:size==2?23:27);
         views.setViewVisibility(R.id.widget_empty_title,showEvents?View.GONE:View.VISIBLE);views.setViewVisibility(R.id.widget_empty_subtitle,showEvents?View.GONE:View.VISIBLE);
-        String hint=showEvents?(size==3&&all.size()>5?"+ "+(all.size()-5)+" weitere in der App":""):unlocked&&known?"Tagesansicht öffnen ↗":"App öffnen ↗";
+        String hint=showEvents?(size==3&&all.size()>limit?"+ "+(all.size()-limit)+" weitere in der App":""):unlocked&&known?"Tagesansicht öffnen ↗":"App öffnen ↗";
         if(size==1)hint="";
         if(size==3){
             views.setViewVisibility(R.id.widget_empty_hero,showEvents?View.GONE:View.VISIBLE);
@@ -130,7 +135,29 @@ public class ScheduleWidgetProvider extends AppWidgetProvider {
                 if(i==0){cell.setInt(R.id.widget_week_day_root,"setBackgroundResource",R.drawable.widget_soft_tile);cell.setTextColor(R.id.widget_week_number,context.getColor(R.color.widget_accent));}
                 views.addView(R.id.widget_week,cell);cellDate.add(Calendar.DATE,1);
             }
-            boolean showNext=!showEvents&&unlocked&&known&&next!=null;
+            views.removeAllViews(R.id.widget_upcoming);
+            int availableHeight=AppWidgetManager.getInstance(context).getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,380);
+            float fontScale=context.getResources().getConfiguration().fontScale;
+            int usedHeight=showEvents?110+(int)(Math.min(limit,shown.size())*60*fontScale):165;
+            int upcomingLimit=Math.max(0,Math.min(3,(int)((availableHeight-usedHeight)/(70*fontScale))));
+            int upcomingCount=0;
+            if(unlocked&&known&&days!=null)for(int i=0;i<days.length()&&upcomingCount<upcomingLimit;i++){
+                JSONObject candidate=days.optJSONObject(i);if(candidate==null||!candidate.optBoolean("known")||candidate.optString("date").compareTo(today)<=0)continue;
+                JSONArray lectures=candidate.optJSONArray("events");if(lectures==null||lectures.length()==0)continue;
+                JSONObject first=lectures.optJSONObject(0),last=lectures.optJSONObject(lectures.length()-1);if(first==null||last==null)continue;
+                RemoteViews upcoming=new RemoteViews(context.getPackageName(),R.layout.schedule_widget_upcoming_day);
+                upcoming.setTextViewText(R.id.widget_upcoming_date,format(first.optLong("start"),"EE, dd. MMM")+" · "+format(first.optLong("start"),"HH:mm")+"–"+format(last.optLong("end"),"HH:mm"));
+                String label=first.optString("title")+(lectures.length()>1?" · +"+(lectures.length()-1)+" weitere":"");
+                upcoming.setTextViewText(R.id.widget_upcoming_title,label);
+                Uri upcomingLink=new Uri.Builder().scheme("dhbwplanner").authority("day").appendQueryParameter("date",candidate.optString("date")).appendQueryParameter("profile",data.optString("profileId")).build();
+                Intent upcomingOpen=new Intent(context,MainActivity.class).setAction(Intent.ACTION_VIEW).setData(upcomingLink).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                upcoming.setOnClickPendingIntent(R.id.widget_upcoming_day,PendingIntent.getActivity(context,id,upcomingOpen,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE));
+                views.addView(R.id.widget_upcoming,upcoming);upcomingCount++;
+            }
+            views.setViewVisibility(R.id.widget_upcoming,upcomingCount>0?View.VISIBLE:View.GONE);
+            // Upcoming lecture days replace the old single next-event card and empty-day strip.
+            views.setViewVisibility(R.id.widget_week,View.GONE);
+            boolean showNext=false;
             views.setViewVisibility(R.id.widget_next,showNext?View.VISIBLE:View.GONE);
             if(showNext){views.setTextViewText(R.id.widget_next_time,format(next.optLong("start"),"EE, dd.MM. · HH:mm"));views.setTextViewText(R.id.widget_next_title,next.optString("title"));hint="";
                 Uri nextLink=new Uri.Builder().scheme("dhbwplanner").authority("day").appendQueryParameter("date",format(next.optLong("start"),"yyyy-MM-dd")).appendQueryParameter("profile",data.optString("profileId")).build();

@@ -224,3 +224,9 @@ it('migrates the former quarterly-only schedule and preserves previous explicit 
  mocks.storage.set(SUPPORT_STATE_KEY,JSON.stringify({...old,dismissed:true}));
  expect(shouldPrompt(await updateSupportState(s=>s),200*DAY)).toBe(false);
 });
+
+it('blocks another store checkout while a purchase is pending, including after reopening', async () => {
+  await updateSupportState(s => ({ ...s, pending: true }));
+  expect(await purchaseSupport('support_gold_3')).toBe('pending');
+  expect(mocks.purchaseProduct).not.toHaveBeenCalled();
+});

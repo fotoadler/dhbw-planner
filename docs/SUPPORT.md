@@ -99,13 +99,13 @@ Offizielle Anleitungen: [Apple: In-App-Käufe einreichen](https://developer.appl
 
 
 
-Google: Alle vier `support_gold_1/3/5/10` sind mit je einer aktiven, abwärtskompatiblen Buy-Kaufoption `standard` für 174 Länder/Regionen eingerichtet. Deutsche Endpreise explizit auf 1,00/3,00/5,00/10,00 EUR gesetzt (nach der automatischen regionalen Preisberechnung kontrolliert und korrigiert). Die alten `support_1/3/5/10` bleiben aktiv; `support_2` bleibt inaktiv. Kein neues AAB für den Gold-Stand hochgeladen.
 
 
 
 - iOS: WidgetKit, klein/mittel/groß; verwendet die bestehende Erweiterung zusammen mit der Live-Aktivität. App und Erweiterung teilen ausschließlich einen reduzierten Stundenplan-Snapshot über `group.de.dhbw.raplaplan.widgets`.
 - Android: drei AppWidget-Anbieter mit anpassbarer Größe. Aktualisierungen an Vorlesungsgrenzen/Mitternacht sowie periodisch; Android kann diese zur Schonung des Akkus verzögern. Keine zusätzliche Berechtigung für exakte Alarme.
 - Hauptkurs und aktuelle Modulfilter; maximal 14 Tage aus dem letzten App-Abruf, mit Titel, Zeit und Raum. Kein selbstständiger Netzwerkabruf, keine Anmeldedaten oder Dozentennamen im Snapshot. Datenstand sichtbar. Fehlende Daten werden nicht als freier Tag dargestellt.
+- Mittel und groß zeigen auch vergangene Vorlesungen des heutigen Tages. Groß zeigt unten je nach Platz bis zu drei kommende geladene Vorlesungstage; vorlesungsfreie und unbekannte Tage werden ausgelassen.
 - Antippen öffnet die Tagesansicht mit Datum und Hauptkurs. Ein gesperrtes Widget führt zu den Unterstützungseinstellungen. Widgets werden durch Nutzer selbst auf dem Home-Bildschirm hinzugefügt.
 - Alle Beträge und bestehende lokal nachweisbare Unterstützungen schalten alle drei Größen frei. Wiederholte Unterstützungen bleiben möglich. Ein lokal bekannter Status funktioniert auch ohne erreichbaren Store.
 
@@ -123,3 +123,5 @@ Der Einstellungsbereich besteht aus einem kurzen Kostenhinweis, zwei anklickbare
 
 
 Quellen: [Apple UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults), [Apple Required Reason APIs](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype), [Google Billing-Versionen](https://developer.android.com/google/play/billing/deprecation-faq), [Google Zahlungen](https://support.google.com/googleplay/android-developer/answer/9858738?hl=en), [Google Datenschutz](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en), [Apple erste In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/).
+
+

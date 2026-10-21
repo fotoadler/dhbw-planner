@@ -95,7 +95,7 @@ struct PlannerWidgetContent: View {
     private var small: Bool { family == .systemSmall }
     private var large: Bool { family == .systemLarge }
     private var known: Bool { entry.snapshot.unlocked && entry.day?.known == true }
-    private var events: [PlannerEvent] { large ? (entry.day?.events ?? []) : entry.remaining }
+    private var events: [PlannerEvent] { small ? entry.remaining : (entry.day?.events ?? []) }
     private var showEvents: Bool { known && !events.isEmpty }
     private var emptyTitle: String {
         if !entry.snapshot.unlocked { return "Ein kleines Danke." }
@@ -163,7 +163,7 @@ struct PlannerWidgetContent: View {
                         ForEach(Array(events.prefix(2).enumerated()), id: \.offset) { index, event in
                             HStack(alignment: .firstTextBaseline, spacing: 7) {
                                 Text(event.startDate, style: .time).plannerFont(12, weight: .semibold).monospacedDigit().lineLimit(1).minimumScaleFactor(0.7).frame(width: 42, alignment: .leading)
-                                Text(event.title).plannerFont(13, weight: index == 0 ? .semibold : .regular).lineLimit(1)
+                                Text(event.title).plannerFont(13, weight: index == 0 ? .semibold : .regular).lineLimit(2)
                             }
                             if index == 0 && !event.room.isEmpty { Label(event.room, systemImage: "mappin").plannerFont(10).foregroundStyle(.secondary).lineLimit(1) }
                         }
@@ -177,8 +177,13 @@ struct PlannerWidgetContent: View {
             footer
         }
     }
+    private var upcomingDays: [PlannerDay] {
+        guard known else { return [] }
+        return entry.snapshot.days.filter { $0.known && $0.date > plannerDayKey(entry.date) && !$0.events.isEmpty }.sorted { $0.date < $1.date }
+    }
     private func largeBody(height: CGFloat) -> some View {
-        let eventLimit = max(1, min(5, Int((height - 142) / 38)))
+        let eventLimit = max(1, min(upcomingDays.isEmpty ? 5 : 3, Int((height - 142 - (upcomingDays.isEmpty ? 0 : 64)) / 52)))
+        let futureLimit = max(0, min(3, Int((height - (showEvents ? 142 + CGFloat(min(eventLimit, events.count)) * 52 : 180)) / 64)))
         let illustrationSize: CGFloat = height < 320 ? 64 : 90
         return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
@@ -207,7 +212,7 @@ struct PlannerWidgetContent: View {
                             }.monospacedDigit().lineLimit(1).minimumScaleFactor(0.7).frame(width: 43, alignment: .leading)
                             RoundedRectangle(cornerRadius: 2).fill(event.endDate <= entry.date ? Color.secondary.opacity(0.2) : plannerRed).frame(width: 3, height: 29)
                             VStack(alignment: .leading, spacing: 3) {
-                                Text(event.title).plannerFont(13, weight: .semibold).lineLimit(1)
+                                Text(event.title).plannerFont(13, weight: .semibold).lineLimit(2)
                                 if !event.room.isEmpty { Text(event.room).plannerFont(10).foregroundStyle(.secondary).lineLimit(1) }
                             }
                             Spacer(minLength: 0)
@@ -225,24 +230,29 @@ struct PlannerWidgetContent: View {
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 Spacer(minLength: 0)
-                if known && (height >= 320 || nextEvent == nil) { weekStrip }
-                if known, let event = nextEvent {
-                    Link(destination: plannerEventLink(event)) {
-                    HStack(spacing: 10) {
-                        RoundedRectangle(cornerRadius: 2).fill(plannerRed).frame(width: 3)
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(event.startDate, format: .dateTime.weekday(.abbreviated).day().month().hour().minute()).plannerFont(10, weight: .medium).foregroundStyle(plannerRed)
-                            Text(event.title).plannerFont(13, weight: .semibold).lineLimit(1)
-                        }
-                        Spacer(minLength: 0)
-                        Image(systemName: "arrow.up.right").plannerFont(12, weight: .semibold).foregroundStyle(plannerRed)
-                    }.padding(10).frame(height: 51).background(plannerRed.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
-                    }.buttonStyle(.plain)
-                } else {
+                if upcomingDays.isEmpty {
                     Label("Tagesansicht öffnen", systemImage: "arrow.up.right").plannerFont(11, weight: .semibold).foregroundStyle(plannerRed)
                 }
             }
             Spacer(minLength: 0)
+            ForEach(Array(upcomingDays.prefix(futureLimit)), id: \.date) { day in
+                if let first = day.events.first, let last = day.events.last {
+                    Link(destination: plannerEventLink(first)) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            HStack(spacing: 4) {
+                                Text(first.startDate, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))
+                                Text("·")
+                                Text(first.startDate, style: .time)
+                                Text("–")
+                                Text(last.endDate, style: .time)
+                            }.plannerFont(10, weight: .semibold).foregroundStyle(plannerRed).monospacedDigit().lineLimit(1).minimumScaleFactor(0.75)
+                            Text(first.title + (day.events.count > 1 ? " · +\(day.events.count - 1) weitere" : ""))
+                                .plannerFont(12, weight: .medium).foregroundStyle(.primary).lineLimit(2)
+                        }.frame(maxWidth: .infinity, alignment: .leading).padding(8)
+                            .background(plannerRed.opacity(0.055), in: RoundedRectangle(cornerRadius: 10))
+                    }.buttonStyle(.plain)
+                }
+            }
             updated
         }
     }
@@ -326,7 +336,7 @@ private struct PlannerReadableWidget: View {
     @ScaledMetric(relativeTo: .caption) private var detailSize: CGFloat = 11
     private var small: Bool { family == .systemSmall }
     private var known: Bool { entry.snapshot.unlocked && entry.day?.known == true }
-    private var events: [PlannerEvent] { known ? entry.remaining : [] }
+    private var events: [PlannerEvent] { known ? (small ? entry.remaining : (entry.day?.events ?? [])) : [] }
     private var title: String {
         !entry.snapshot.unlocked ? "Danke!" : !known ? "App öffnen" : entry.day?.events.isEmpty == false ? "Geschafft!" : "Heute frei."
     }

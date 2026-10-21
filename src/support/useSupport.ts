@@ -68,6 +68,25 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
   }, [enabled]); // Capture whether a course already exists before first-time setup writes.
 
   useEffect(() => {
+    if (!enabled || !foreground || !state?.pending || busy) return;
+    let active = true, checking = false;
+    const timer = window.setInterval(() => {
+      if (checking || isBusy.current || !appActive.current) return;
+      checking = true;
+      void (async () => {
+        try {
+          await recoverSupportPurchases();
+          const next = await updateSupportState(s => s);
+          const catalog = await loadSupportProducts();
+          if (active) { setState(next); setProducts(catalog); }
+        } catch { /* Keep pending until the store confirms its final state. */ }
+        finally { checking = false; }
+      })();
+    }, 15000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, [enabled, foreground, state?.pending, busy]);
+
+  useEffect(() => {
     if (!promptReady || !state || !shouldPrompt(state, Date.now()) || products.length !== SUPPORT_PRODUCTS.length || open || attempted.current) return;
     let current = true;
     const timer = window.setTimeout(() => {
@@ -106,7 +125,7 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
     if (automatic) void updateSupportState(s => snoozeSupportOffer(s, Date.now())).then(setState).catch(() => undefined);
   };
   return { open, automatic, busy, products, setProducts, setBusy: setPurchaseBusy, close, promptReady, loaded: state !== null,
-    goldUnlocked: Boolean(state?.goldUnlocked || state?.legacySupported),
+    goldUnlocked: Boolean(state?.goldUnlocked || state?.legacySupported), pending: Boolean(state?.pending),
     show: () => {
       supportActivity();
       attempted.current = true; setAutomatic(false); setOpen(true);

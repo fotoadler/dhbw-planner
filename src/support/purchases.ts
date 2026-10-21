@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { NativePurchases, PURCHASE_TYPE, type Product, type Transaction } from '@capgo/native-purchases';
-import { markSupported, updateSupportState } from './state';
+import { markSupported, readSupportState, updateSupportState } from './state';
 
 import { SUPPORT_PRODUCTS, GOLD_SUPPORT_PRODUCTS, RECOVERABLE_SUPPORT_PRODUCTS, type SupportProductId, type PurchaseResult } from './products';
 export { SUPPORT_PRODUCTS, GOLD_SUPPORT_PRODUCTS, SUPPORT_COPY, type SupportProductId, type PurchaseResult } from './products';
@@ -75,6 +75,7 @@ export function purchaseSupport(product: SupportProductId, onConfirmed?: () => v
     if (!nativeSupportAvailable() || !(RECOVERABLE_SUPPORT_PRODUCTS.filter(id => id !== 'support_2')).includes(product)) {
       throw new Error('Käufe sind nur in der installierten App verfügbar.');
     }
+    if ((await readSupportState()).pending) return 'pending';
     let confirmed = false;
     try {
       const transaction = await NativePurchases.purchaseProduct({ productIdentifier: product,

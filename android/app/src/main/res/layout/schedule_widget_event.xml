@@ -3,7 +3,7 @@
     <TextView android:id="@+id/widget_event_time" android:layout_width="43dp" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/widget_primary" android:ellipsize="end" android:fontFamily="sans-serif-medium" android:textStyle="bold" android:maxLines="2" android:text="" />
     <ImageView android:layout_width="3dp" android:layout_height="29dp" android:layout_marginStart="6dp" android:src="@drawable/widget_event_accent" android:importantForAccessibility="no" />
     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginStart="10dp" android:layout_weight="1">
-        <TextView android:id="@+id/widget_event_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="@color/widget_primary" android:maxLines="1" android:ellipsize="end" android:textStyle="bold" android:text="" />
+        <TextView android:id="@+id/widget_event_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="@color/widget_primary" android:maxLines="2" android:ellipsize="end" android:breakStrategy="balanced" android:hyphenationFrequency="none" android:textStyle="bold" android:text="" />
         <TextView android:id="@+id/widget_event_room" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="2dp" android:text="" />
     </LinearLayout>
 </LinearLayout>

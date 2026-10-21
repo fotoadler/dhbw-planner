@@ -12,15 +12,16 @@ import { SupportDialog } from '../../src/support/ui/SupportDialog';
 const products = [1, 3, 5, 10].map(n => ({ identifier: `support_gold_${n}`, priceString: `${n},00 €`, price: n })) as Product[];
 let root: Root, container: HTMLDivElement;
 let busy: boolean;
+let storePending = false;
 let onClose: ReturnType<typeof vi.fn>;
 const render = () => root.render(createElement(SupportDialog, {
-  automatic: true, products, busy, onBusy: value => { busy = value; render(); },
+  automatic: true, storePending, products, busy, onBusy: value => { busy = value; render(); },
   onProducts: () => {}, onClose, onSupported: async () => {},
 }));
 const buy = () => container.querySelector<HTMLButtonElement>('[aria-label="Mit 3,00 € unterstützen"]')!;
 beforeEach(async () => {
   (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-  vi.clearAllMocks(); mocks.load.mockResolvedValue(products); busy = false;
+  vi.clearAllMocks(); mocks.load.mockResolvedValue(products); busy = false; storePending = false;
   onClose = vi.fn();
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
   await act(async () => { render(); });
@@ -111,4 +112,15 @@ it('clearly identifies repeat tips without implying another feature unlock',asyn
  expect(container.textContent).toContain('Erneut unterstützen');expect(container.textContent).toContain('Deine Extras bleiben freigeschaltet.');
  expect(container.querySelector('.support-gold-benefits h4')?.textContent).toBe('Bereits für dich freigeschaltet:');
  expect(container.textContent).not.toContain('Als Dankeschön erhältst du:');
+});
+
+it('blocks checkout for persisted pending purchases after remount and updates after settlement', async () => {
+  storePending = true;
+  await act(async () => { render(); });
+  expect(buy().disabled).toBe(true);
+  expect(container.textContent).toContain('wartet noch auf Bestätigung');
+  expect(mocks.purchase).not.toHaveBeenCalled();
+  storePending = false;
+  await act(async () => { render(); });
+  expect(buy().disabled).toBe(false);
 });

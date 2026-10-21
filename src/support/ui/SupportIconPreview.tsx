@@ -28,7 +28,7 @@ export function SupportIconPreview({ unlocked, onClose, chooseInitially = false 
     finally { setBusy(false); }
   };
   return <SupportPreviewDialog title={choosing ? 'App-Symbol ändern' : 'Dein App-Symbol in Gold'} onClose={onClose} busy={busy}>
-    <p className="support-preview-copy">{choosing ? 'Welches Symbol möchtest du verwenden?' : 'Ein goldener Look als Dankeschön – bei jedem Betrag.'}</p>
+    <p className="support-preview-copy">{choosing ? 'Welches Symbol möchtest du verwenden?' : 'Ein goldener Look als Dankeschön.'}</p>
     <div className={`support-icon-showcase${choosing ? ' is-choosing' : ''}`} role={choosing ? 'group' : undefined} aria-label={choosing ? 'App-Symbol auswählen' : undefined}>
       {[false, true].map(next => choosing ? <button type="button" className="support-icon-choice" key={String(next)} aria-pressed={gold === next}
         disabled={busy || !available || !loaded} onClick={() => void choose(next)}>

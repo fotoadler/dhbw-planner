@@ -76,6 +76,9 @@ async function read(existing: boolean, now: number): Promise<SupportState> {
   }
   return initialSupportState(existing, now);
 }
+export function readSupportState(): Promise<SupportState> {
+  return serial(() => read(false, Date.now()));
+}
 export function updateSupportState(
   change: (state: SupportState) => SupportState, existing = false, now = Date.now(),
 ): Promise<SupportState> {

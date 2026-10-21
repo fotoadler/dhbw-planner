@@ -87,3 +87,18 @@ it('does not prompt when launched in background or close an ongoing purchase on 
  await act(async()=>mocks.activity!({isActive:true}));await advance(1500);expect(result.open).toBe(true);
  await act(async()=>result.setBusy(true));await act(async()=>mocks.activity!({isActive:false}));expect(result.open).toBe(true);
 });
+
+it('refreshes pending purchases while remaining in the foreground and stops after settlement', async () => {
+  mocks.state = { ...mocks.state!, pending: true };
+  await render();
+  const initial = mocks.recover.mock.calls.length;
+  await advance(15000);
+  expect(mocks.recover.mock.calls.length).toBeGreaterThan(initial);
+  mocks.recover.mockImplementation(async () => { mocks.state = { ...mocks.state!, pending: false, goldUnlocked: true, hasSupported: true }; return true; });
+  await advance(15000);
+  expect(result.pending).toBe(false);
+  expect(result.goldUnlocked).toBe(true);
+  const settled = mocks.recover.mock.calls.length;
+  await advance(60000);
+  expect(mocks.recover).toHaveBeenCalledTimes(settled);
+});

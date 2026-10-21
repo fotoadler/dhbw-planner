@@ -8,6 +8,7 @@ import { SupportBenefits } from './SupportBenefits';
 
 interface Props {
   automatic: boolean;
+  storePending?: boolean;
   products: Product[];
   busy: boolean;
   onBusy: (busy: boolean) => void;
@@ -16,7 +17,7 @@ interface Props {
   onSupported: () => Promise<void>;
 }
 
-export function SupportDialog({ automatic, products, busy, onBusy, onProducts, onClose, onSupported }: Props) {
+export function SupportDialog({ automatic, storePending = false, products, busy, onBusy, onProducts, onClose, onSupported }: Props) {
   const titleId = useId();
   const descriptionId = useId();
   const card = useRef<HTMLDivElement>(null);
@@ -31,6 +32,8 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
   const [iconBusy, setIconBusy] = useState(false);
   const repeatSupport = products.length > 0 && products.every(product => !isGoldProduct(product.identifier));
   const [iconMessage, setIconMessage] = useState('');
+
+  useEffect(() => { setPending(storePending); }, [storePending]);
 
   useEffect(() => { if (success) card.current?.focus(); }, [success]);
 
@@ -59,7 +62,7 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
   }, []);
 
   const purchase = async (id: SupportProductId) => {
-    if (locked.current || busy || loading) return;
+    if (locked.current || busy || loading || pending || storePending) return;
     locked.current = true; onBusy(true); setMessage('');
     try {
       const result = await purchaseSupport(id, () => { setSuccess(true); setMessage(''); setGoldUnlocked(isGoldProduct(id)); });
@@ -90,7 +93,7 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
       {!success && !busy && <SupportBenefits gold unlocked={repeatSupport} heading={repeatSupport ? 'Bereits für dich freigeschaltet:' : undefined} />}
       {!success && !busy && <div className="support-prices" aria-label="Betrag auswählen" aria-busy={loading}>
         {products.map(product => <button type="button" className="dialog-btn dialog-btn--primary"
-          key={product.identifier} disabled={busy || loading || pending}
+          key={product.identifier} disabled={busy || loading || pending || storePending}
           aria-label={`Mit ${product.priceString} unterstützen`}
           onClick={() => void purchase(product.identifier as SupportProductId)}>{product.priceString}</button>)}
       </div>}
@@ -104,7 +107,7 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
           }}>Goldenes Symbol aktivieren</button>
         {iconMessage && <p className="support-status" role="status">{iconMessage}</p>}
       </>}
-      {!success && !busy && <p className="support-status" role="status" aria-live="polite">{message || (loading ? 'Preise werden geladen …' :
+      {!success && !busy && <p className="support-status" role="status" aria-live="polite">{message || (pending || storePending ? 'Die Zahlung wartet noch auf Bestätigung. Bitte nicht erneut kaufen.' : loading ? 'Preise werden geladen …' :
         products.length === 0 ? nativeSupportAvailable() ? 'Die Unterstützung ist gerade nicht verfügbar. Bitte später erneut versuchen.' :
           'Unterstützung ist in der installierten iOS- und Android-App möglich.' : '')}</p>}
       {(!busy || success) && <button type="button" className="dialog-btn dialog-btn--secondary support-close" disabled={busy} onClick={onClose}>

@@ -5,9 +5,12 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current local iOS build: `17`
-- Current local Android versionCode: `17`
+- Current local Android versionCode: `21`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
+
+
+- iOS 1.5.4 (18): signiertes Release-Archiv erstellt, Web-Assets bytegleich zu `dist`; Privacy-Manifeste in App und Widget enthalten. Upload nach App Store Connect gestartet.
+- Android 1.5.4 (21): auf dem Samsung aus Google Play geprüft; derselbe intern getestete Build wird für Produktion vorbereitet.
 
 
 

@@ -29,7 +29,7 @@ Im Android-Manifest sind automatische App-Backups deaktiviert; dies garantiert k
 
 In der installierten iOS- und Android-App sind freiwillige Einmalkäufe über Apple beziehungsweise Google vorgesehen. Produktinformationen und Preise werden aus dem jeweiligen Store geladen; die Zahlung wird durch den Store abgewickelt. Die App erhält Kaufbestätigungen, aber keine Kreditkarten- oder Bankdaten. Es gibt keinen zusätzlichen Zahlungsdienst und kein eigenes Zahlungs-Backend.
 
-Für einen zurückhaltenden Unterstützungshinweis speichert die App lokal den ersten Start seit Einführung der Funktion, den frühesten Hinweiszeitpunkt, Anzahl und Zeitpunkt der Nutzungssitzungen und Hinweise sowie die Entscheidung „Nicht mehr fragen“ und einen erfolgreichen Unterstützungsstatus. Diese Nutzungsdaten werden nicht an den Entwickler übertragen. Nach Neuinstallation oder Gerätewechsel können diese lokalen Entscheidungen verloren gehen.
+Für einen zurückhaltenden Unterstützungshinweis speichert die App lokal den ersten Start seit Einführung der Funktion, den frühesten Hinweiszeitpunkt, Anzahl und Zeitpunkt der Nutzungssitzungen und Hinweise sowie eine gegebenenfalls früher gespeicherte Entscheidung „Nicht mehr fragen“, einen ausstehenden Kauf und den erfolgreichen Unterstützungsstatus. Diese Nutzungsdaten werden nicht an den Entwickler übertragen. Nach Neuinstallation oder Gerätewechsel können diese lokalen Entscheidungen verloren gehen. Dauerhafte Erstkäufe werden mit demselben Store-Konto wiederhergestellt; verbrauchte frühere Unterstützungen sind je nach Store-Historie nicht vollständig wiederherstellbar.
 
 ### Home-Bildschirm-Widgets
 

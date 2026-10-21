@@ -4,4 +4,8 @@
     <string name="title_activity_main">DHBW Planner</string>
     <string name="package_name">de.dhbw.raplaplan</string>
     <string name="custom_url_scheme">de.dhbw.raplaplan</string>
+    <string name="widget_description">Dein Stundenplan auf einen Blick – für alle Unterstützer.</string>
+    <string name="widget_small">Stundenplan · Klein</string>
+    <string name="widget_medium">Stundenplan · Mittel</string>
+    <string name="widget_large">Stundenplan · Groß</string>
 </resources>

@@ -1,7 +1,7 @@
 {
   "name": "dhbw-planner",
   "private": true,
-  "version": "1.5.2",
+  "version": "1.5.4",
   "description": "Schlanke DHBW-App f\u00fcr Rapla-Stundenpl\u00e4ne, Dualis, Ger\u00e4tekalender-Synchronisierung und lokale Benachrichtigungen.",
   "license": "GPL-3.0-or-later",
   "type": "module",
@@ -30,6 +30,7 @@
     "@capacitor/local-notifications": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",
     "@capacitor/status-bar": "^7.0.6",
+    "@capgo/native-purchases": "7.19.3",
     "@dhbw/capacitor-calendar-sync": "file:plugins/capacitor-calendar-sync",
     "@dhbw/capacitor-community-messaging": "file:plugins/capacitor-community-messaging",
     "@dhbw/capacitor-course-live-activity": "file:plugins/capacitor-course-live-activity",

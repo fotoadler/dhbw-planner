@@ -5,10 +5,29 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
-- Current app version: `1.5.2` (`package.json`: `1.5.2`)
-- Current iOS build: `15`
-- Current Android versionCode: `14`
+- Current local iOS build: `17`
+- Current local Android versionCode: `17`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
+
+
+
+
+
+
+
+
+
+
+## Version 1.5.3 — Rapla-Fix, 20. Oktober 2026
+
+Neue Rapla-Freigabelinks werden jetzt unterstützt, auch ohne salt-Parameter – unter anderem am Campus Friedrichshafen. Der Link bleibt nach einem Neustart gespeichert, und weitere Kalenderwochen werden korrekt geladen.
+
+- Grundlage: [PR #39](https://github.com/fotoadler/dhbw-planner/pull/39), Merge-Commit `13dfa7e65ae297f906f2d1df9a262b8795992bb4`, mit lokalen Versionsanpassungen auf 1.5.3. Keine weiteren Produktivänderungen.
+- Android 1.5.3 (15), iOS 1.5.3 (16), einschließlich Widget-Erweiterung. Bestehende Signieridentitäten und Mindestversionen unverändert (Android API 24 / iOS 15).
+- TypeScript/Vite-Build, Capacitor-Sync, signierter Android-APK-/AAB-Build und signiertes iOS-Archiv erfolgreich. APK-Signatur und iOS-Codesign einschließlich eingebetteter Komponenten geprüft. Alle acht Web-Dateien in APK, AAB und iOS-Archiv stimmen bytegenau mit `dist` überein.
+- iOS-Upload am 20. Oktober erfolgreich (`Upload succeeded` / `EXPORT SUCCEEDED`), Build verarbeitet und Version 1.5.3 zugeordnet. **Zur Prüfung eingereicht**, bestätigter Status `Waiting for Review`, Build 16. Submission ID: `0c84b675-e277-4357-be08-995b342873dd`, Einreichung 20. Oktober um 15:07 MESZ. Deutsche Versionshinweise gespeichert; automatische Veröffentlichung nach Freigabe für alle Nutzer, kein gestaffelter Roll-out.
+- Google Play: Bundle 15 (1.5.3) verarbeitet, deutsche Versionshinweise gespeichert. Bundle 9 bleibt für ältere Geräte enthalten, Bundle 14 wird ersetzt. Keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen bei deaktivierter Minifizierung. **Zur Prüfung gesendet**: Die Übersicht zeigt „Änderungen, die überprüft werden“ für Produktion 1.5.3. Automatische Vorabprüfungen laufen noch; danach erfolgt die Prüfung. Vollständiger Roll-out nach Freigabe, verwaltete Veröffentlichung aus.
+- Die bisherigen Releases 1.5.2 sind am 20. Oktober in beiden Store-Konsolen als veröffentlicht bestätigt (Google Play 100 %, App Store `Ready for Distribution`). Das ist keine native Geräteabnahme von 1.5.3; neue Store-Freigabe und öffentliche Verfügbarkeit von 1.5.3 stehen aus.
 
 ## Version 1.5.2 — Hochgeladen am 17., zur Prüfung eingereicht am 17./18. Oktober 2026
 
@@ -139,3 +158,25 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradl
 4. Use the existing App Store Connect app record for that bundle ID and an unused build number.
 5. Product > Archive.
 6. Distribute App > App Store Connect (or `xcodebuild -exportArchive` with destination `upload`). Confirm upload success; processing and App Review are separate steps.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

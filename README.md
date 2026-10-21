@@ -159,6 +159,16 @@ Das Repository ist für eine öffentliche Veröffentlichung vorbereitet:
 - Beitragsleitfaden: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Release-/Store-Checkliste: [STORE_RELEASE.md](STORE_RELEASE.md)
 
+## Finanzierung und Unterstützung
+
+Die App wird um Unterstützungsmöglichkeiten per In-App-Kauf erweitert, um einen Teil der jährlichen Betriebskosten zu refinanzieren. In der iOS- und Android-App sind dafür freiwillige, einmalige Beiträge von 1, 3, 5 und 10 € vorgesehen, sobald die Kaufprodukte in den Stores freigeschaltet sind.
+
+Die Grundfunktionen der App bleiben kostenlos und werbefrei. Als Dankeschön erhalten alle Unterstützer unabhängig vom Betrag Widgets für iOS und Android sowie ein optionales goldenes App-Symbol. Auch bestehende lokal gespeicherte Unterstützungen werden berücksichtigt. Neue dauerhafte Käufe lassen sich mit demselben Store-Konto nach Neuinstallation oder Gerätewechsel wiederherstellen; für frühere Verbrauchskäufe gelten die [Grenzen der Store-Historie](docs/SUPPORT.md#dauerhafte-freischaltung-und-weitere-unterstützung). Weitere Unterstützungen bleiben beliebig oft möglich.
+
+Die Widgets gibt es in klein (laufende/nächste Vorlesung), mittel (nächste Termine) und groß (Tagesübersicht). Ein Tippen öffnet die passende Tagesansicht des Hauptkurses. Sie beachten deine Modulfilter und unterscheiden „Heute keine Vorlesung“, „Für heute geschafft“ und fehlende Daten. Grundlage ist der zuletzt in der App geladene Stundenplan; der Datenstand wird bei ausreichendem Platz angezeigt. Widgets laden selbst keine neuen Stundenplandaten aus dem Netz. Auf dem iPhone lässt sich die Größe über langes Drücken auf das Widget ändern. Die Darstellung passt sich der Größe und der Systemschrift an; bei großer Schrift werden weniger Details angezeigt.
+
+Die Umsetzung und Store-Einrichtung sind in [docs/SUPPORT.md](docs/SUPPORT.md) beschrieben.
+
 ## Mitwirken
 
 Feature-Vorschläge, Bugs und Pull Requests sind willkommen. Vor einem Pull Request bitte [CONTRIBUTING.md](CONTRIBUTING.md) lesen und `npm test` sowie `npm run build` ausführen.

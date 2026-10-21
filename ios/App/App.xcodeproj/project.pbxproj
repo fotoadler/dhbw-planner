@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A11C0DE02110202600000021 /* Schedule/ScheduleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */; };
+		A11C0DE02110202600000011 /* ScheduleWidgetsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000012 /* ScheduleWidgetsPlugin.swift */; };
+		A11C0DE02110202600000001 /* SupporterIconPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000002 /* SupporterIconPlugin.swift */; };
 		152A65F458D73D58D7E81C16 /* CourseLiveActivityWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BA717A1B3F4AEAA63E544A8E /* CourseLiveActivityWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		4B8C44262FC8769C516D633C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 750CA0B69971073B090B635A /* Foundation.framework */; };
@@ -47,6 +50,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule/ScheduleWidget.swift; sourceTree = "<group>"; };
+		A11C0DE02110202600000012 /* ScheduleWidgetsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleWidgetsPlugin.swift; sourceTree = "<group>"; };
+		A11C0DE02110202600000002 /* SupporterIconPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupporterIconPlugin.swift; sourceTree = "<group>"; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		487F41680C8BDD376DDB1463 /* CourseLectureAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CourseLectureAttributes.swift; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
@@ -134,6 +140,8 @@
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				A11C0DE01707202600000002 /* ViewController.swift */,
+				A11C0DE02110202600000002 /* SupporterIconPlugin.swift */,
+				A11C0DE02110202600000012 /* ScheduleWidgetsPlugin.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
@@ -159,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				527E23C2E5D38C50B5AABFB1 /* CourseLiveActivityWidget.swift */,
+				A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */,
 				634BEA155EC495277670AD90 /* Info.plist */,
 				487F41680C8BDD376DDB1463 /* CourseLectureAttributes.swift */,
 			);
@@ -220,6 +229,11 @@
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					C9E47946192573CA7378F1C5 = {
 						CreatedOnToolsVersion = 16.0;
@@ -313,6 +327,8 @@
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				A11C0DE01707202600000001 /* ViewController.swift in Sources */,
+				A11C0DE02110202600000001 /* SupporterIconPlugin.swift in Sources */,
+				A11C0DE02110202600000011 /* ScheduleWidgetsPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A8E86DA3EC3BCDF71B9B050 /* CourseLiveActivityWidget.swift in Sources */,
+				A11C0DE02110202600000021 /* Schedule/ScheduleWidget.swift in Sources */,
 				4F123B2BB4170F1A49A4DFD1 /* CourseLectureAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,17 +379,18 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CourseLiveActivityWidget/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = CourseLiveActivityWidget/Widget.entitlements;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan.CourseLiveActivityWidgetExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -501,9 +519,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = SupporterGold;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -511,7 +531,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -525,9 +545,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = SupporterGold;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -535,7 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
@@ -550,17 +572,18 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = TBQ83P5XKH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CourseLiveActivityWidget/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = CourseLiveActivityWidget/Widget.entitlements;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.raplaplan.CourseLiveActivityWidgetExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

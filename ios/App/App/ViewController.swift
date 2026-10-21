@@ -7,6 +7,10 @@ import UIKit
  * auf allen iPhone-Größen nicht unter ihnen verschwinden.
  */
 final class ViewController: CAPBridgeViewController {
+    override func capacitorDidLoad() {
+        bridge?.registerPluginInstance(SupporterIconPlugin())
+        bridge?.registerPluginInstance(ScheduleWidgetsPlugin())
+    }
     override var prefersStatusBarHidden: Bool { false }
 
     // .default follows the current iOS interface style: dark content on a

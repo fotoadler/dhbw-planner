@@ -27,6 +27,8 @@ import { DualisView } from './DualisView';
 import { MailView } from './MailView';
 import { ConfirmDialog } from './ConfirmDialog';
 import { CalendarShareDialog } from './CalendarShareDialog';
+import { SupportDialog, useSupport, closeSupportPreview } from '../support';
+import { useWidgets, widgetSnapshot, widgetCourseLabel } from '../widgets';
 import { mailProviderForSite } from '../mail/providers';
 import { siteConfigurationFor } from '../dhbw/siteConfiguration';
 import { blockKey } from './courseBlocks';
@@ -111,6 +113,27 @@ export function App() {
   const inCalendar = section === 'calendar' && !inSettings;
   const inDualis = section === 'dualis' && !inSettings;
   const inMail = section === 'mail' && !inSettings;
+  const support = useSupport(Boolean(settings) && !demoScreen && !isReviewDemo,
+    Boolean(settings?.rapla || settings?.apiSelection),
+    inCalendar && Boolean(updatedAt) && !refreshing && !offline && !addingCourse && !pendingCourse &&
+    !managingCourses && !calendarShareOpen && !studyNotice && !calendarDetails && !selectedBlockKey && !confirmModuleKey &&
+    !(hasStudyOptions && settings?.apiSelection?.optionsConfiguredKey !== hasStudyOptions && settings?.apiSelection?.optionsNoticeKey !== hasStudyOptions));
+
+  useWidgets(primarySettings && support.loaded && !demoScreen && !isReviewDemo ? widgetSnapshot({
+    unlocked: support.goldUnlocked, entries: mainSchedule.entries, updatedAt: mainSchedule.updatedAt,
+    loadedWeeks: mainSchedule.loadedWeeks, fullCourse: primarySettings.scheduleSource === 'dhbw-api',
+    profileId: primarySettings.primaryProfileId ?? 'primary',
+    course: widgetCourseLabel(primarySettings),
+    now,
+  }) : null, link => {
+    if (!primarySettings) return;
+    setSection('calendar'); setShowSettings(false); setAddingCourse(false); setManagingCourses(false);
+    setCalendarShareOpen(false); setCalendarDetails(null); setSelectedBlockKey(null); setStudyNotice(null);
+    if (link === 'support') { setShowSettings(true); return; }
+    const target = primarySettings.courseProfiles?.find(p => p.id === link.profileId) ?? primarySettings.courseProfiles?.find(p => p.id === primarySettings.primaryProfileId);
+    if (target && target.id !== primarySettings.viewedProfileId) void mainSchedule.applySettings({ ...primarySettings, viewedProfileId: target.id });
+    setSelectedDay(link.date); setCalendarView('day'); void mainSchedule.ensureWeek(ymdKey(mondayOfYmd(parseYmdKey(link.date))));
+  });
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -131,7 +154,7 @@ export function App() {
   useEffect(() => {
     const selection = settings?.scheduleSource === 'dhbw-api' ? settings.apiSelection : null;
     if (!settings || !selection || !hasStudyOptions || selection.optionsConfiguredKey === hasStudyOptions || selection.optionsNoticeKey === hasStudyOptions || offline || !updatedAt ||
-        demoScreen || isReviewDemo || addingCourse || managingCourses || calendarShareOpen ||
+        demoScreen || isReviewDemo || addingCourse || managingCourses || calendarShareOpen || support.open ||
         inSettings || calendarDetails || selectedBlockKey || section !== 'calendar') return;
     const fresh = newCourseForOptions.current === selection.course;
     newCourseForOptions.current = null;
@@ -140,10 +163,12 @@ export function App() {
     else setStudyNotice(selection.course);
   }, [settings?.apiSelection?.course, settings?.apiSelection?.optionsConfiguredKey, settings?.apiSelection?.optionsNoticeKey, hasStudyOptions,
     offline, updatedAt, demoScreen, isReviewDemo, addingCourse, managingCourses, calendarShareOpen,
-    inSettings, calendarDetails, selectedBlockKey, section, browsing]);
+    inSettings, calendarDetails, selectedBlockKey, section, browsing, support.open]);
 
   // Zurück-Button: eine Ebene abbauen (Entscheidung in backNavigation.ts).
   useBackButton(() => {
+    if (closeSupportPreview()) return true;
+    if (support.open) { support.close(); return true; }
     if (pendingCourse) { setPendingCourse(null); return true; }
     if (studyNotice) { setStudyNotice(null); return true; }
     if (addingCourse) { setAddingCourse(false); return true; }
@@ -508,6 +533,9 @@ export function App() {
       {/* Inhalt */}
       {inSettings ? (
         <SettingsView
+          onSupport={support.show}
+          goldUnlocked={support.goldUnlocked}
+          onSupportRestored={support.supported}
           settings={settings}
           availableModules={availableModules}
           scheduleEntries={allEntries}
@@ -601,6 +629,10 @@ export function App() {
           onClose={() => setCalendarDetails(null)}
           onOpenDay={(day) => { setCalendarDetails(null); selectDay(day); setCalendarView('day'); }} />
       )}
+
+      {support.open && <SupportDialog automatic={support.automatic} products={support.products} busy={support.busy}
+        onBusy={support.setBusy} onProducts={support.setProducts} onClose={support.close}
+        onDismiss={support.dismiss} onSupported={support.supported} />}
 
       {studyNotice === settings.apiSelection?.course && <ConfirmDialog title="Wahlkurse & Gruppen auswählen?"
         message="Deine Wahlangebote sind noch nicht vollständig eingerichtet. Wähle deine Seminare, Übungen, Schwerpunkte oder Gruppe."

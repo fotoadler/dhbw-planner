@@ -25,6 +25,18 @@ Im Android-Manifest sind automatische App-Backups deaktiviert; dies garantiert k
 
 ## Netzwerkzugriffe
 
+### Freiwillige Unterstützung
+
+In der installierten iOS- und Android-App sind freiwillige Einmalkäufe über Apple beziehungsweise Google vorgesehen. Produktinformationen und Preise werden aus dem jeweiligen Store geladen; die Zahlung wird durch den Store abgewickelt. Die App erhält Kaufbestätigungen, aber keine Kreditkarten- oder Bankdaten. Es gibt keinen zusätzlichen Zahlungsdienst und kein eigenes Zahlungs-Backend.
+
+Für einen zurückhaltenden Unterstützungshinweis speichert die App lokal den ersten Start seit Einführung der Funktion, den frühesten Hinweiszeitpunkt, Anzahl und Zeitpunkt der Nutzungssitzungen und Hinweise sowie die Entscheidung „Nicht mehr fragen“ und einen erfolgreichen Unterstützungsstatus. Diese Nutzungsdaten werden nicht an den Entwickler übertragen. Nach Neuinstallation oder Gerätewechsel können diese lokalen Entscheidungen verloren gehen.
+
+### Home-Bildschirm-Widgets
+
+Für freigeschaltete Widgets legt die App lokal einen reduzierten Ausschnitt des Hauptkurs-Stundenplans für bis zu 14 Tage ab: Kurs-/Profilbezeichnung, Datum, Titel, Beginn, Ende, Raum, Datenstand und Freischaltungsstatus. Modulfilter werden berücksichtigt. Es werden keine Anmeldedaten, Dozentennamen oder Zahlungsdaten abgelegt. iOS teilt diese Daten nur zwischen App und eigener Widget-Erweiterung über eine App Group; Android verwendet privaten App-Speicher. Widgets laden selbst keine Daten aus dem Netz und übertragen nichts an den Entwickler. Inhalte können auf dem Home-Bildschirm sichtbar sein. Mit der Deinstallation wird der lokale Widget-Speicher entfernt.
+
+### Bestehende Datenquellen
+
 Die installierte App ruft Daten ohne eigenes Zwischen-Backend ab:
 
 - `rapla.dhbw.de`: Stundenpläne über den eingegebenen Rapla-Link

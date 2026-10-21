@@ -2087,6 +2087,43 @@ option {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Consistent grouped settings; controls retain native input behavior. */
+.settings-group { margin-bottom: 24px; }
+.settings-group > h2 { margin: 0 0 9px 4px; color: var(--ink-2); font-size: 13px; font-weight: 650; }
+.settings-group-body { border: 1px solid var(--line); border-radius: 16px; background: var(--bg); overflow: hidden; }
+.settings-block { padding: 0 16px; display: flex; flex-direction: column; gap: 0; }
+.settings-block + .settings-block { border-top: 1px solid var(--line); }
+.settings-block .sheet__row { min-height: 58px; gap: 16px; padding-block: 10px; }
+.settings-block .sheet__row > :first-child { min-width: 0; overflow-wrap: anywhere; }
+.settings-block .sheet__row select { flex: 0 1 55%; min-width: 0; max-width: 55%; font-size: 14px; padding-block: 9px; background-color: var(--bg-soft); border-color: transparent; }
+.settings-block .sheet__row .sheet__value { flex-shrink: 0; font-size: 12px; font-weight: 500; }
+.settings-course { font-weight: 600; }
+.settings-block > .sheet__textbtn { align-self: flex-start; min-height: 44px; margin-top: -8px; margin-bottom: 4px; }
+.settings-block > .sheet__module-picker { margin-block: 12px; border: 0; border-radius: 0; }
+.settings-block .sheet__module-picker > summary { padding-inline: 0; min-height: 32px; color: var(--ink); font-size: 15px; font-weight: 500; }
+.settings-updated { margin: 0; padding: 12px 16px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 11px; line-height: 1.5; }
+.settings-source-details { display: block; }
+.settings-source-details > summary { min-height: 48px; padding-block: 14px; cursor: pointer; color: var(--ink-2); font-size: 14px; }
+.settings-source-details[open] { padding-bottom: 14px; }
+.settings-source-details .sheet__input { margin-top: 8px; }
+.settings-source-details .sheet__save { margin-top: 10px; }
+.settings-block .sheet__row + .sheet__row:not(.sheet__row--sub) { border-top: 1px solid var(--line); }
+.settings-block .sheet__row--sub { min-height: 46px; padding: 0 0 12px 12px; gap: 12px; font-size: 13px; }
+.settings-block .sheet__row input[type='time'], .settings-block .sheet__row input[type='number'] { width: 94px; min-width: 0; min-height: 36px; background: var(--bg-soft); color: var(--ink); border-color: transparent; }
+.settings-block .sheet__row input[role='switch'] { appearance: none; -webkit-appearance: none; position: relative; flex: 0 0 46px; width: 46px; height: 44px; border-radius: 20px; background: transparent; border: 0; cursor: pointer; }
+.settings-block .sheet__row input[role='switch']::before { content: ''; position: absolute; inset: 8px 0; border-radius: 20px; background: var(--ink-3); transition: background 180ms; }
+.settings-block .sheet__row input[role='switch']::after { content: ''; position: absolute; top: 11px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #0002; transition: transform 180ms; }
+.settings-block .sheet__row input[role='switch']:checked::before { background: var(--accent); }
+.settings-block .sheet__row input[role='switch']:checked::after { transform: translateX(18px); }
+.settings-block .sheet__row input[role='switch']:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.settings-page > .support-settings { margin-top: 4px; margin-bottom: 24px; }
+@media (max-width: 360px) {
+  .settings-page { padding-inline: 16px; }
+  .settings-block { padding-inline: 12px; }
+  .settings-block .sheet__row { gap: 10px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .settings-block .sheet__row input[role='switch']::before, .settings-block .sheet__row input[role='switch']::after { transition: none; } }
+
 /* --- Einstellungen (Sheet) --- */
 
 .sheet-backdrop {

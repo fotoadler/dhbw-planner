@@ -27,6 +27,8 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(SupporterIconPlugin.class);
+        registerPlugin(ScheduleWidgetsPlugin.class);
         super.onCreate(savedInstanceState);
         syncSystemBars(getResources().getConfiguration());
         observeSafeAreaInsets();

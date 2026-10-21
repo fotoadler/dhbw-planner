@@ -5,6 +5,7 @@ import WidgetKit
 @main
 struct CourseLiveActivityWidgetBundle: WidgetBundle {
     var body: some Widget {
+        PlannerScheduleWidget()
         CourseLiveActivityWidget()
     }
 }

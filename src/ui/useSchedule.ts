@@ -510,6 +510,7 @@ export function useSchedule() {
     settings,
     entries,
     allEntries,
+    loadedWeeks: Object.keys(weeks),
     availableModules,
     updatedAt,
     refreshing,

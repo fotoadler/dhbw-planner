@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="14dp" android:background="@drawable/schedule_widget_background">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <LinearLayout android:layout_width="51dp" android:layout_height="58dp" android:orientation="vertical" android:gravity="center" android:background="@drawable/widget_date_tile">
+            <TextView android:id="@+id/widget_day" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="30sp" android:textColor="#FFFFFF" android:maxLines="1" android:ellipsize="end" android:gravity="center" android:textStyle="bold" android:fontFamily="sans-serif-rounded" android:text="" />
+            <TextView android:id="@+id/widget_month" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#FFFFFF" android:maxLines="1" android:ellipsize="end" android:gravity="center" android:textStyle="bold" android:text="" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginStart="12dp" android:layout_weight="1">
+            <TextView android:id="@+id/widget_weekday" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:text="" />
+            <TextView android:id="@+id/widget_course" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="15sp" android:textColor="@color/widget_primary" android:maxLines="1" android:ellipsize="end" android:textStyle="bold" android:layout_marginTop="3dp" android:text="" />
+        </LinearLayout>
+        <ImageView android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:src="@drawable/widget_calendar" android:background="@drawable/widget_soft_tile" android:importantForAccessibility="no" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="14dp">
+        <TextView android:id="@+id/widget_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="9sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:textStyle="bold" android:letterSpacing="0.08" android:layout_marginBottom="5dp" android:text="" />
+        <LinearLayout android:id="@+id/widget_events" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/widget_empty_hero" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+        <ImageView android:id="@+id/widget_illustration" android:layout_width="85dp" android:layout_height="90dp" android:src="@drawable/widget_free_illustration" android:importantForAccessibility="no" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginStart="16dp">
+            <TextView android:id="@+id/widget_empty_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="23sp" android:textColor="@color/widget_primary" android:maxLines="1" android:ellipsize="end" android:textStyle="bold" android:fontFamily="sans-serif-rounded" android:maxWidth="250dp" android:text="" />
+            <TextView android:id="@+id/widget_empty_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="4dp" android:text="" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/widget_week" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp" />
+    <LinearLayout android:id="@+id/widget_next" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="10dp" android:background="@drawable/widget_soft_tile" android:layout_marginBottom="9dp">
+        <TextView android:id="@+id/widget_next_time" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/widget_accent" android:maxLines="1" />
+        <TextView android:id="@+id/widget_next_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/widget_primary" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="3dp" />
+    </LinearLayout>
+    <TextView android:id="@+id/widget_hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="9dp" android:textStyle="bold" android:text="" />
+    <LinearLayout android:id="@+id/widget_spacer" android:layout_width="1dp" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" />
+    <TextView android:id="@+id/widget_updated" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="8sp" android:textColor="@color/widget_secondary" android:maxLines="1" android:ellipsize="end" android:text="" />
+</LinearLayout>

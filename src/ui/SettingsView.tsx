@@ -12,7 +12,7 @@ import { parseRaplaLink } from '../rapla/client';
 import { API_MENSA_OPTIONS, Mensa, mensaLabel } from '../seezeit/types';
 import { ScheduleModule } from '../schedule/modules';
 import { isThemeMode, type ThemeMode } from '../lib/theme';
-import { FEEDBACK_EMAIL, PROJECT_REPOSITORY_URL } from '../lib/projectLinks';
+import { FEEDBACK_EMAIL, PROJECT_REPOSITORY_URL, PRIVACY_POLICY_URL } from '../lib/projectLinks';
 import { selectionHaptic } from '../lib/haptics';
 import { SupportSettingsSection, SupporterOptions } from '../support';
 
@@ -289,6 +289,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange, 
             >
               Projekt auf GitHub öffnen <span aria-hidden="true">↗</span>
             </a>
+            <p className="sheet__support"><a href={PRIVACY_POLICY_URL} target="_blank" rel="noreferrer">Datenschutz</a></p>
             <p className="sheet__support">
               Mit freundlicher Unterstützung von{' '}
               <a href="https://dhbw.app/" target="_blank" rel="noreferrer">dhbw.app</a>

@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { WidgetPreview } from './WidgetPreview';
 import { SupportIconPreview } from './SupportIconPreview';
 
-export function SupportBenefits({ unlocked = false, gold = false }: { unlocked?: boolean; gold?: boolean }) {
+export function SupportBenefits({ unlocked = false, gold = false, heading = 'Als Dankeschön erhältst du:' }: { unlocked?: boolean; gold?: boolean; heading?: string }) {
   const [preview, setPreview] = useState<'widgets' | 'icon' | null>(null);
   return <>
-    {gold ? <section className="support-gold-benefits" aria-label="Als Dankeschön erhältst du:">
-      <h4>Als Dankeschön erhältst du:</h4>
+    {gold ? <section className="support-gold-benefits" aria-label={heading}>
+      <h4>{heading}</h4>
       <div className="support-gold-benefits-grid">
         <button type="button" className="support-gold-benefit" onClick={() => setPreview('widgets')}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/></svg>

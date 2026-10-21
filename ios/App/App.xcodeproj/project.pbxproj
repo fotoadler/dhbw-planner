@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A11C0DE02110202600000031 /* App PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000032 /* App PrivacyInfo.xcprivacy */; };
+		A11C0DE02110202600000033 /* Widget PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000034 /* Widget PrivacyInfo.xcprivacy */; };
 		A11C0DE02110202600000021 /* Schedule/ScheduleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */; };
 		A11C0DE02110202600000011 /* ScheduleWidgetsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000012 /* ScheduleWidgetsPlugin.swift */; };
 		A11C0DE02110202600000001 /* SupporterIconPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0DE02110202600000002 /* SupporterIconPlugin.swift */; };
@@ -50,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A11C0DE02110202600000032 /* App PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A11C0DE02110202600000034 /* Widget PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule/ScheduleWidget.swift; sourceTree = "<group>"; };
 		A11C0DE02110202600000012 /* ScheduleWidgetsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleWidgetsPlugin.swift; sourceTree = "<group>"; };
 		A11C0DE02110202600000002 /* SupporterIconPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupporterIconPlugin.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
+				A11C0DE02110202600000032 /* App PrivacyInfo.xcprivacy */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				A11C0DE01707202600000002 /* ViewController.swift */,
@@ -166,6 +171,7 @@
 		C5B32E99FDDBB198D6F5B4DA /* CourseLiveActivityWidget */ = {
 			isa = PBXGroup;
 			children = (
+				A11C0DE02110202600000034 /* Widget PrivacyInfo.xcprivacy */,
 				527E23C2E5D38C50B5AABFB1 /* CourseLiveActivityWidget.swift */,
 				A11C0DE02110202600000022 /* Schedule/ScheduleWidget.swift */,
 				634BEA155EC495277670AD90 /* Info.plist */,
@@ -265,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A11C0DE02110202600000031 /* App PrivacyInfo.xcprivacy in Resources */,
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
@@ -278,6 +285,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A11C0DE02110202600000033 /* Widget PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

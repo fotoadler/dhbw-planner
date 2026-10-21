@@ -4,7 +4,8 @@ import { createRoot } from 'react-dom/client';
 import type { Product } from '@capgo/native-purchases';
 import { SupportDialog, SupportSettingsSection } from '../../src/support';
 import '../../src/styles.css';
-const prices=[1,3,5,10].map(amount=>({identifier:`support_gold_${amount}`,price:amount,priceString:`${amount},00 €`})) as Product[];
+const repeatSupport=new URLSearchParams(window.location.search).get('repeat')==='1';
+const prices=[1,3,5,10].map(amount=>({identifier:`support_${repeatSupport?'':'gold_'}${amount}`,price:amount,priceString:`${amount},00 €`})) as Product[];
 const automatic=new URLSearchParams(window.location.search).get('mode')!=='manual';
 function Preview(){
  const [open,setOpen]=useState(true);

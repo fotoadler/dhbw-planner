@@ -4,7 +4,7 @@ Die native App bietet vier Unterstützungsbeträge ohne Abo. Der erste Kauf scha
 
 ## Dauerhafte Freischaltung und weitere Unterstützung
 
-Für den ersten Kauf verwendet die App `support_gold_1`, `support_gold_3`, `support_gold_5`, `support_gold_10` (Apple: **Non-Consumable**, Google: **Buy**, durch die App nur bestätigen, niemals verbrauchen). Alle vier Produkte schalten dieselben Widgets und das goldene App-Symbol frei. Deutsche Endpreise: 1/3/5/10 EUR. Produktbeschreibung: „Unterstütze DHBW Planner und schalte das goldene App-Symbol dauerhaft frei.“
+Für den ersten Kauf verwendet die App `support_gold_1`, `support_gold_3`, `support_gold_5`, `support_gold_10` (Apple: **Non-Consumable**, Google: **Buy**, durch die App nur bestätigen, niemals verbrauchen). Alle vier Produkte schalten dieselben Widgets und das goldene App-Symbol frei. Deutsche Endpreise: 1/3/5/10 EUR. Produktbeschreibung: „Widgets und goldenes App-Symbol freischalten.“
 
 Nach bestätigter Freischaltung lädt die App die nachfolgenden, bestehenden Consumables für beliebig wiederholbare Unterstützungen. Die dauerhafte Freischaltung bleibt dabei bestehen. Der Wechsel zwischen beiden Produktgruppen erfolgt automatisch; kein zweiter Kauf ist für das Symbol nötig.
 
@@ -24,7 +24,7 @@ Nach bestätigter Freischaltung lädt die App die nachfolgenden, bestehenden Con
 | `support_5` | Großes Dankeschön | 5,00 € |
 | `support_10` | Besonderes Dankeschön | 10,00 € |
 
-Beschreibung: „Unterstütze DHBW Planner erneut. Deine bereits freigeschalteten Widgets und das goldene App-Symbol bleiben erhalten.“ (Zieltext für die nächste Store-Einreichung.)
+Beschreibung bei Apple: „Weitere Unterstützung für die App-Betriebskosten.“ Die Extras bleiben unverändert freigeschaltet; der Dialog kennzeichnet diese Käufe als „Erneut unterstützen“.
 
 ### App Store Connect
 
@@ -114,3 +114,12 @@ Google: Alle vier `support_gold_1/3/5/10` sind mit je einer aktiven, abwärtskom
 ## Vorschauen und kompakte Einstellungen
 
 Der Einstellungsbereich besteht aus einem kurzen Kostenhinweis, zwei anklickbaren Vorteilen und „App unterstützen“. Die Widget-Vorschau zeigt drei native Beispielbilder mit Wischgeste, Pfeilen und Größenauswahl; der Symbol-Vorteil zeigt Rot und Gold nebeneinander. Bereits freigeschaltete Nutzer ändern ihr App-Symbol in einem eigenen Dialog. Auf der Einstellungsseite werden keine Symbolkacheln mehr eingeblendet. Beide Vorschauen sind auch aus dem Kaufdialog erreichbar; das Schließen löst keinen Kauf aus. Wiederherstellung bleibt separat erreichbar.
+
+## Review-Prüfung vom 21. Oktober 2026
+
+- Review-Hinweise erklären den unveränderten kostenlosen Kalender/Dualis/Mail, gleiche Extras bei allen Beträgen, Wiederherstellung und die Teststrecke für Widgets mit öffentlich konfiguriertem Kurs ohne Hochschul-Login. Der lokale Demomodus zeigt den Kaufdialog, schreibt aber keine Widget-Daten.
+- Die App und ihre Widget-Erweiterung enthalten eigene Privacy-Manifeste für UserDefaults. App: `CA92.1` und `1C8F.1`; Widget: `1C8F.1`. Die Dateien müssen in den jeweiligen gebauten Bundles enthalten sein.
+- Der Android-Build enthält Google Play Billing 8.3.0 einschließlich Versions-Metadatum und BILLING-Berechtigung. Version 8 ist laut aktuellem Google-Zeitplan für neue Apps und Updates bis 31. August 2027 unterstützt.
+
+
+Quellen: [Apple UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults), [Apple Required Reason APIs](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype), [Google Billing-Versionen](https://developer.android.com/google/play/billing/deprecation-faq), [Google Zahlungen](https://support.google.com/googleplay/android-developer/answer/9858738?hl=en), [Google Datenschutz](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en), [Apple erste In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/).

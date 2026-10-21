@@ -9,7 +9,7 @@ vi.mock('../../src/support/purchases', () => ({
   isGoldProduct: (id: string) => id.startsWith('support_gold_'),
 }));
 import { SupportDialog } from '../../src/support/ui/SupportDialog';
-const products = [1, 3, 5, 10].map(n => ({ identifier: `support_${n}`, priceString: `${n},00 €`, price: n })) as Product[];
+const products = [1, 3, 5, 10].map(n => ({ identifier: `support_gold_${n}`, priceString: `${n},00 €`, price: n })) as Product[];
 let root: Root, container: HTMLDivElement;
 let busy: boolean;
 let onClose: ReturnType<typeof vi.fn>, onDismiss: ReturnType<typeof vi.fn>;
@@ -102,4 +102,12 @@ it('shows two gold benefit previews without a personal sign-off or external prof
  expect(container.querySelector('.support-gold-benefits h4')?.textContent).toBe('Als Dankeschön erhältst du:');
  expect(container.textContent).not.toContain('Liebe Grüße');
  expect(container.querySelector('a[href*="linkedin"]')).toBeNull();
+});
+
+it('clearly identifies repeat tips without implying another feature unlock',async()=>{
+ const tips=products.map(product=>({...product,identifier:product.identifier.replace('support_gold_','support_')}));
+ await act(async()=>root.render(createElement(SupportDialog,{automatic:false,products:tips,busy:false,onBusy:()=>{},onProducts:()=>{},onClose,onDismiss,onSupported:async()=>{}})));
+ expect(container.textContent).toContain('Erneut unterstützen');expect(container.textContent).toContain('Deine Extras bleiben freigeschaltet.');
+ expect(container.querySelector('.support-gold-benefits h4')?.textContent).toBe('Bereits für dich freigeschaltet:');
+ expect(container.textContent).not.toContain('Als Dankeschön erhältst du:');
 });

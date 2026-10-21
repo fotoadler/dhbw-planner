@@ -30,6 +30,7 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
   const [pending, setPending] = useState(false);
   const [goldUnlocked, setGoldUnlocked] = useState(false);
   const [iconBusy, setIconBusy] = useState(false);
+  const repeatSupport = products.length > 0 && products.every(product => !isGoldProduct(product.identifier));
   const [iconMessage, setIconMessage] = useState('');
 
   useEffect(() => { if (success) card.current?.focus(); }, [success]);
@@ -79,15 +80,15 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
   return <div className="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby={titleId}
     aria-describedby={descriptionId} onClick={onClose}>
     <div className="dialog-card support-dialog" ref={card} tabIndex={-1} onClick={event => event.stopPropagation()}>
-      {success ? <SupportThanks titleId={titleId} descriptionId={descriptionId} /> : busy ? <div className="support-purchasing" role="status" aria-live="polite">
+      {success ? <SupportThanks titleId={titleId} descriptionId={descriptionId} alreadyUnlocked={repeatSupport} /> : busy ? <div className="support-purchasing" role="status" aria-live="polite">
         <span className="support-spinner" aria-hidden="true" />
         <h3 id={titleId} className="dialog-title">Einen Moment …</h3>
         <p id={descriptionId} className="dialog-message">Dein Kauf wird bestätigt.</p>
       </div> : <>
-        <h3 id={titleId} className="dialog-title">DHBW Planner unterstützen</h3>
-        <p id={descriptionId} className="dialog-message support-copy"><SupportCopy /></p>
+        <h3 id={titleId} className="dialog-title">{repeatSupport ? 'Erneut unterstützen' : 'DHBW Planner unterstützen'}</h3>
+        <p id={descriptionId} className="dialog-message support-copy">{repeatSupport ? 'Deine Extras bleiben freigeschaltet. Danke, dass du die App erneut unterstützen möchtest!' : <SupportCopy />}</p>
       </>}
-      {!success && !busy && <SupportBenefits gold />}
+      {!success && !busy && <SupportBenefits gold unlocked={repeatSupport} heading={repeatSupport ? 'Bereits für dich freigeschaltet:' : undefined} />}
       {!success && !busy && <div className="support-prices" aria-label="Betrag auswählen" aria-busy={loading}>
         {products.map(product => <button type="button" className="dialog-btn dialog-btn--primary"
           key={product.identifier} disabled={busy || loading || pending}

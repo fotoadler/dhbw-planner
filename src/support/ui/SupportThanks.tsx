@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 const COLORS = ['#e60028', '#edb94f', '#f7d889', '#ef718c', '#729bca'];
 
 /** A single, decorative burst. No ongoing animation or purchase logic. */
-export function SupportThanks({ titleId, descriptionId }: { titleId: string; descriptionId: string }) {
+export function SupportThanks({ titleId, descriptionId, alreadyUnlocked = false }: { titleId: string; descriptionId: string; alreadyUnlocked?: boolean }) {
   return <div className="support-thanks" role="status" aria-live="polite">
     <div className="support-confetti" aria-hidden="true">
       {Array.from({ length: 44 }, (_, i) => <span key={i} style={{
@@ -21,6 +21,6 @@ export function SupportThanks({ titleId, descriptionId }: { titleId: string; des
     </div>
     <h3 id={titleId} className="dialog-title">Ein großes Dankeschön an dich!</h3>
     <p id={descriptionId} className="dialog-message">Mit deiner Unterstützung hilfst du, die laufenden Kosten der App zu decken. Das bedeutet mir viel!</p>
-    <p className="support-thanks-signature">Deine Widgets und das goldene App-Symbol sind freigeschaltet.<br />Danke! Christian</p>
+    <p className="support-thanks-signature">Deine Widgets und das goldene App-Symbol {alreadyUnlocked ? 'bleiben' : 'sind'} freigeschaltet.<br />Danke! Christian</p>
   </div>;
 }

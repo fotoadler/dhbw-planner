@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { App as CapApp } from '@capacitor/app';
 import { NativePurchases, type Product } from '@capgo/native-purchases';
 import { loadSupportProducts, nativeSupportAvailable, recoverSupportPurchases, SUPPORT_PRODUCTS } from './purchases';
-import { resumeSupportSession, shouldPrompt, startSupportSession, updateSupportState, type SupportState } from './state';
+import { pauseSupportSession, recordSupportOffer, resumeSupportSession, shouldPrompt, startSupportSession, updateSupportState, type SupportState } from './state';
 
 export function useSupport(enabled: boolean, existing: boolean, ready: boolean) {
   const [state, setState] = useState<SupportState | null>(null);
@@ -10,62 +10,98 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
   const [open, setOpen] = useState(false);
   const [automatic, setAutomatic] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [foreground, setForeground] = useState(false);
+  const [storeReady, setStoreReady] = useState(false);
   const attempted = useRef(false);
+  const recorded = useRef(false);
   const isBusy = useRef(false);
-  const canPrompt = useRef(ready);
-  canPrompt.current = ready;
+  const appActive = useRef(false);
+  const promptReady = enabled && ready && foreground && storeReady;
+  const canPrompt = useRef(promptReady);
+  canPrompt.current = promptReady;
   const setPurchaseBusy = (value: boolean) => { isBusy.current = value; setBusy(value); };
 
   useEffect(() => {
     if (!enabled || !nativeSupportAvailable()) return;
-    let active = true;
+    let active = true, generation = 0, receivedActivity = false, started = false;
     const refresh = async (resume: boolean) => {
-      if (isBusy.current) return;
+      if (isBusy.current || !appActive.current) return;
+      const request = ++generation;
+      canPrompt.current = false; setStoreReady(false);
       try {
         await startSupportSession(existing);
+        started = true;
         const local = await updateSupportState(s => s);
         if (active) setState(local);
         if (resume) await resumeSupportSession();
         await recoverSupportPurchases();
         const next = await updateSupportState(s => s);
-        if (active) setState(next);
         const catalog = await loadSupportProducts();
-        if (active) setProducts(catalog);
-      } catch { /* No automatic prompt when the store or local persistence is unavailable. */ }
+        if (active && appActive.current && generation === request) {
+          setState(next); setProducts(catalog); setStoreReady(true);
+        }
+      } catch { /* Store failures suppress automatic prompts; local entitlements remain usable. */ }
     };
-    void refresh(false);
+    const activity = (isActive: boolean, resume: boolean) => {
+      if (!active) return;
+      appActive.current = isActive; setForeground(isActive);
+      if (isActive) void refresh(resume);
+      else {
+        ++generation; canPrompt.current = false; setStoreReady(false);
+        if (started) void pauseSupportSession().catch(() => undefined);
+      }
+    };
     const resume = CapApp.addListener('appStateChange', ({ isActive }) => {
-      if (isActive) void refresh(true);
+      receivedActivity = true; activity(isActive, true);
     });
+    void CapApp.getState().then(({ isActive }) => {
+      // An older getState response must not overwrite a newer background event.
+      if (!receivedActivity) activity(isActive, false);
+    }).catch(() => undefined);
     const updates = NativePurchases.addListener('transactionUpdated', () => { void refresh(false); });
     return () => {
-      active = false;
+      active = false; ++generation; canPrompt.current = false;
       void resume.then(handle => handle.remove()).catch(() => undefined);
       void updates.then(handle => handle.remove()).catch(() => undefined);
     };
-  }, [enabled]); // existing is captured when settings first finish loading, before setup writes.
+  }, [enabled]); // Capture whether a course already exists before first-time setup writes.
 
   useEffect(() => {
-    if (!ready || !state || !shouldPrompt(state, Date.now()) || products.length !== SUPPORT_PRODUCTS.length || open || attempted.current) return;
+    if (!promptReady || !state || !shouldPrompt(state, Date.now()) || products.length !== SUPPORT_PRODUCTS.length || open || attempted.current) return;
+    let current = true;
     const timer = window.setTimeout(() => {
-      attempted.current = true;
-      let show = false;
-      void updateSupportState(s => {
-        if (!shouldPrompt(s, Date.now())) return s;
-        show = true;
-        return { ...s, promptCount: s.promptCount + 1, lastPromptAt: Date.now() };
-      }).then(next => {
-        setState(next);
-        if (show && canPrompt.current) { setAutomatic(true); setOpen(true); }
+      // Re-read after waiting, but do not count a dialog before it is actually rendered.
+      void updateSupportState(s => s).then(next => {
+        if (!current || !canPrompt.current || attempted.current || !shouldPrompt(next, Date.now())) return;
+        attempted.current = true; recorded.current = false;
+        setState(next); setAutomatic(true); setOpen(true);
       }).catch(() => undefined);
     }, 1500);
-    return () => window.clearTimeout(timer);
-  }, [ready, state, products, open]);
+    return () => { current = false; window.clearTimeout(timer); };
+  }, [promptReady, state, products, open]);
+
+  useLayoutEffect(() => {
+    if (!open || !automatic || !promptReady || recorded.current) return;
+    // This runs only after the visible dialog has committed to the DOM.
+    recorded.current = true;
+    let active = true;
+    void updateSupportState(s => recordSupportOffer(s, Date.now(), true))
+      .then(next => { if (active) setState(next); }).catch(() => undefined);
+    return () => { active = false; };
+  }, [open, automatic, promptReady]);
+
+  useEffect(() => {
+    if (open && automatic && !ready && !busy) setOpen(false);
+  }, [open, automatic, ready, busy]);
 
   const close = () => { if (!isBusy.current) setOpen(false); };
   return { open, automatic, busy, products, setProducts, setBusy: setPurchaseBusy, close, loaded: state !== null,
     goldUnlocked: Boolean(state?.goldUnlocked || state?.legacySupported),
-    show: () => { setAutomatic(false); setOpen(true); },
+    show: () => {
+      attempted.current = true; setAutomatic(false); setOpen(true);
+      // Looking at the offer voluntarily also starts the 90-day quiet period.
+      void updateSupportState(s => recordSupportOffer(s, Date.now(), false)).then(setState).catch(() => undefined);
+    },
     dismiss: async () => {
       try { setState(await updateSupportState(s => ({ ...s, dismissed: true }))); setOpen(false); }
       catch { throw new Error('Die Auswahl konnte nicht gespeichert werden. Bitte erneut versuchen.'); }

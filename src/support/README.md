@@ -5,7 +5,7 @@ Dieser optionale Bereich ist unabhängig von Kalender, Dualis, Mail und Kursdate
 - `index.ts`: öffentliche Anbindung für `App` und `SettingsView`.
 - `products.ts`: Produkt-IDs und Texte. `support_gold_*` ist der dauerhaft wiederherstellbare Erstkauf; danach werden wiederholbare `support_*`-Trinkgelder angeboten. Alle Beträge schalten dieselben Widgets und das Gold-Symbol frei.
 - `purchases.ts`: Store-Abfragen, bestätigte Käufe, Wiederherstellung und Abschluss/Verbrauch. Store-Zugriffe sind serialisiert.
-- `state.ts` / `useSupport.ts`: lokaler Berechtigungs-Cache, Übernahme früherer Unterstützungen, dezente Hinweise und React-Anbindung.
+- `state.ts` / `useSupport.ts`: lokaler Berechtigungs-Cache, Übernahme früherer Unterstützungen, Hinweise frühestens alle 90 Tage und React-Anbindung. Nach 30 Tagen Pause gilt eine Rückkehrfrist von 24 Stunden plus einer weiteren Sitzung; manuelles Öffnen startet die Ruhezeit neu. Nur Vordergrund und tatsächlich dargestellte Hinweise zählen.
 - `ui/` / `support.css`: Kaufdialog, Spinner, Danke/Konfetti und kompakte Einstellungen. `SupportBenefits` öffnet die wischbare Widget-Galerie oder den Rot/Gold-Vergleich. Die Symbolauswahl liegt ausschließlich im Pop-up.
 - `previewNavigation.ts`: Android-Zurück schließt zuerst die offene Vorschau.
 - `assets/`: Gold-Symbol als editierbare SVG-Quelle und PNG.

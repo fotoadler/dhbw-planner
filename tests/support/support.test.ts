@@ -14,7 +14,7 @@ vi.mock('@capacitor/core', () => ({ Capacitor: {
 vi.mock('@capgo/native-purchases', () => ({ PURCHASE_TYPE: { INAPP: 'inapp' }, NativePurchases: {
   ...mocks, isBillingSupported: async () => ({ isBillingSupported: true }),
 } }));
-import { DAY, initialSupportState, shouldPrompt, SUPPORT_STATE_KEY, updateSupportState, markSupported, startSupportSession, resumeSupportSession } from '../../src/support/state';
+import { DAY, initialSupportState, shouldPrompt, SUPPORT_STATE_KEY, updateSupportState, markSupported, startSupportSession, resumeSupportSession, nextSupportSession, recordSupportOffer } from '../../src/support/state';
 import { loadSupportProducts, purchaseSupport, recoverSupportPurchases, restoreSupportPurchases } from '../../src/support/purchases';
 
 beforeEach(() => {
@@ -40,12 +40,13 @@ describe('support reminder', () => {
     expect(shouldPrompt({ ...s, sessions: 9 }, 30 * DAY)).toBe(false);
     expect(initialSupportState(true, DAY).eligibleAt).toBe(8 * DAY);
   });
-  it('waits 45 days and stops after two prompts, dismissal, payment or pending payment', () => {
+  it('waits 90 days without a lifetime cap and respects dismissal, payment or pending payment', () => {
     const s = { ...initialSupportState(false, DAY), sessions: 10, promptCount: 1, lastPromptAt: 15 * DAY };
-    expect(shouldPrompt(s, 60 * DAY - 1)).toBe(false);
-    expect(shouldPrompt(s, 60 * DAY)).toBe(true);
-    for (const patch of [{ promptCount: 2 }, { dismissed: true }, { hasSupported: true }, { pending: true }]) {
-      expect(shouldPrompt({ ...s, ...patch }, 100 * DAY)).toBe(false);
+    expect(shouldPrompt(s, 105 * DAY - 1)).toBe(false);
+    expect(shouldPrompt(s, 105 * DAY)).toBe(true);
+    expect(shouldPrompt({ ...s, promptCount: 20 }, 200 * DAY)).toBe(true);
+    for (const patch of [{ dismissed: true }, { hasSupported: true }, { pending: true }]) {
+      expect(shouldPrompt({ ...s, ...patch }, 200 * DAY)).toBe(false);
     }
   });
   it('preserves purchase state when writes overlap', async () => {
@@ -185,4 +186,31 @@ it('grandfathers existing local consumable supporters and keeps them unlocked af
 it('restores legacy iOS support amounts including the retired two-euro purchase',async()=>{
  mocks.platform='ios';mocks.getPurchases.mockResolvedValue({purchases:[{...purchase,productIdentifier:'support_2'}]});
  expect(await restoreSupportPurchases()).toBe(true);expect(state()).toMatchObject({legacySupported:true,hasSupported:true});
+});
+
+it('manual offer views restart the quiet period without consuming an automatic impression',()=>{
+ const s=recordSupportOffer({...initialSupportState(false,0),sessions:10},100*DAY,false);
+ expect(s.promptCount).toBe(0);expect(s.lastPromptAt).toBeNull();
+ expect(shouldPrompt(s,190*DAY-1)).toBe(false);expect(shouldPrompt(s,190*DAY)).toBe(true);
+});
+it('protects the first return after a six-month practice phase, even beyond the quarterly due date',()=>{
+ const before={...initialSupportState(false,0),sessions:20,lastSessionAt:10*DAY,lastUsedAt:10*DAY,lastPromptAt:5*DAY,promptCount:2};
+ const returned=nextSupportSession(before,190*DAY,true);
+ expect(returned.sessions).toBe(21);expect(shouldPrompt(returned,190*DAY)).toBe(false);
+ const sameDay=nextSupportSession(returned,190*DAY+3600000);
+ expect(shouldPrompt(sameDay,190*DAY+3600000)).toBe(false);
+ const tomorrow=nextSupportSession(sameDay,191*DAY);
+ expect(shouldPrompt(tomorrow,191*DAY)).toBe(true);
+});
+it('does not postpone ordinary daily use or reset never-ask-again on a return',()=>{
+ const s={...initialSupportState(false,0),sessions:20,lastSessionAt:99*DAY,lastUsedAt:99*DAY};
+ expect(shouldPrompt(nextSupportSession(s,100*DAY,true),100*DAY)).toBe(true);
+ expect(shouldPrompt(nextSupportSession({...s,dismissed:true},300*DAY,true),302*DAY)).toBe(false);
+});
+it('migrates existing two-prompt state without resetting dismissal, purchase or history',async()=>{
+ const s={...initialSupportState(true,0),sessions:20,promptCount:2,lastPromptAt:20*DAY,dismissed:true,hasSupported:true};
+ for(const key of ['lastOfferAt','lastUsedAt','returnEligibleAt','returnSession'])delete (s as unknown as Record<string,unknown>)[key];
+ mocks.storage.set(SUPPORT_STATE_KEY,JSON.stringify(s));
+ const migrated=await updateSupportState(s=>s);
+ expect(migrated).toMatchObject({promptCount:2,lastOfferAt:20*DAY,returnSession:0,dismissed:true,hasSupported:true});
 });

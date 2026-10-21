@@ -51,16 +51,16 @@ Beschreibung: „Unterstütze DHBW Planner erneut. Deine bereits freigeschaltete
 
 ## Wann welcher Dialog erscheint
 
-Die folgenden Regeln beschreiben den aktuell implementierten Stand. Ein Update setzt vorhandene Werte unter `support.v1` nicht zurück. Es gibt keinen jährlichen Reset.
+Die folgenden Regeln beschreiben den aktuell implementierten Stand. Ein Update setzt vorhandene Werte unter `support.v1` nicht zurück. Es gibt kein Gesamtlimit; automatische Erinnerungen liegen mindestens 90 Tage auseinander.
 
 | Nutzer / Auslöser | Bildschirm | Frühester Zeitpunkt / Häufigkeit |
 | --- | --- | --- |
 | Neuinstallation ohne eingerichteten Kurs beim ersten Laden der Einstellungen | Geladener Kalender (Tag, Woche oder Monat) | 14 Tage nach erster Initialisierung der Unterstützungsfunktion **und** mindestens 10 Sitzungen |
 | Update mit bereits eingerichtetem Kurs, aber noch ohne `support.v1` | Geladener Kalender | 7 Tage nach erster Initialisierung der Unterstützungsfunktion **und** mindestens 10 Sitzungen; frühere App-Nutzung wird nicht nachgezählt |
 | Update mit vorhandenem `support.v1` | Geladener Kalender | Bisherige Frist, Sitzungen, Ablehnung und Anzeigezähler bleiben erhalten |
-| „Vielleicht später“, Zurück, Escape oder Hintergrundfläche des Dialogs | Derselbe automatische Hinweis über dem Kalender | Zweite Anzeige frühestens 45 Tage nach der ersten; insgesamt maximal zwei automatische Anzeigen pro lokal gespeichertem Status |
+| „Vielleicht später“, Zurück, Escape oder Hintergrundfläche des Dialogs | Derselbe automatische Hinweis über dem Kalender | Weitere Anzeige frühestens 90 Tage nach der letzten automatischen oder manuell geöffneten Angebotsansicht; kein Gesamtlimit |
 | „Nicht mehr fragen“, bisherige Unterstützung oder noch ausstehender Kauf | Kein automatischer Hinweis | Manuelles Öffnen bleibt möglich |
-| „App unterstützen“ | Einstellungen | Jederzeit manuell, unabhängig von Frist, Sitzungen und Ablehnung; ohne automatischen Anzeigezähler |
+| „App unterstützen“ | Einstellungen | Jederzeit manuell, unabhängig von Frist, Sitzungen und Ablehnung; ohne automatischen Anzeigezähler, startet aber die 90-tägige Ruhezeit neu |
 | Goldener Vorteilsbutton | Einstellungen oder Kaufdialog | Vorschau auf Widgets oder App-Symbole, ausschließlich nach Antippen |
 | Betrag antippen | Aktueller Kaufdialog | Ladeanzeige; anschließend nativer Apple-/Google-Kaufdialog; nach bestätigtem Kauf Danke/Konfetti im selben App-Dialog |
 
@@ -69,20 +69,20 @@ Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat „Viell
 ### Voraussetzungen und lokale Speicherung
 
 - Speicherung in Capacitor Preferences unter `support.v1`, ohne eigenes Backend oder Übertragung der Nutzungssitzungen an den Entwickler.
-- Ein kalter App-Start zählt einmal. Rückkehr aus dem Hintergrund zählt erst nach mindestens 30 Minuten seit dem letzten gezählten Sitzungsbeginn. StrictMode zählt nicht doppelt. Es müssen nicht zehn zusätzliche Sitzungen zwischen dem ersten und zweiten Hinweis liegen.
-- Wenn sämtliche Voraussetzungen erfüllt sind, wartet die App 1,5 Sekunden. Verlassen des geeigneten Bildschirms während dieser Wartezeit bricht den Timer ab. Je App-Laufzeit wird höchstens ein automatischer Versuch gestartet.
-- Kein automatischer Hinweis in Einstellungen, Dualis, Mail, Einrichtung, Demo-/Reviewmodus, offline oder während des Ladens. Kursauswahl/-verwaltung, Teilen, Modulhinweis und geöffnete Vorlesungsdetails blockieren ihn ebenfalls.
+- Ein kalter App-Start zählt einmal. Rückkehr aus dem Hintergrund zählt erst nach mindestens 30 Minuten seit dem letzten gezählten Sitzungsbeginn. StrictMode zählt nicht doppelt. Die zehn Sitzungen müssen nicht vor jeder Erinnerung erneut gesammelt werden.
+- Wenn sämtliche Voraussetzungen erfüllt sind, wartet die App 1,5 Sekunden. Verlassen des geeigneten Bildschirms während dieser Wartezeit bricht den Timer ab. Je App-Laufzeit wird höchstens ein automatischer Hinweis angezeigt. Der Zähler wird erst nach der sichtbaren Darstellung aktualisiert; ein während der Speicherabfrage verworfener Versuch zählt nicht.
+- Nur im Vordergrund, nach abgeschlossener Store-Abfrage. Kein automatischer Hinweis in Einstellungen, Dualis, Mail, Einrichtung, Demo-/Reviewmodus, offline oder während des Ladens. Kursauswahl/-verwaltung, Teilen, Modulhinweis und geöffnete Vorlesungsdetails blockieren ihn ebenfalls.
 - Alle vier Kaufprodukte müssen geladen sein. Die erste Store-Wiederherstellung erfolgt vor dem Katalogladen; erkannte Unterstützer werden nicht erneut automatisch gefragt.
 - Eine Grenze wird nicht durch einen eigenen täglichen Timer überwacht, sondern bei erneuter Prüfung, beispielsweise nach Start/Resume oder Wechsel zurück in den Kalender.
 - „Nicht mehr fragen“ und Anzeigezähler gelten lokal. Eine echte Neuinstallation ohne wiederhergestellte App-Daten kann sie zurücksetzen. Wiederhergestellte dauerhafte Käufe unterdrücken neue Hinweise; für alte Verbrauchskäufe gelten die oben beschriebenen Store-Grenzen.
 
-### Bei der Prüfung festgestellte Randfälle
+### Rückkehr nach der Praxisphase und behobene Randfälle
 
-Die Geschäftsregeln wurden bei dieser Prüfung nicht geändert:
-
-- Ein manueller Aufruf unterbindet einen späteren automatischen Hinweis nicht von sich aus. Die automatische Frist bleibt bestehen.
-- Der Anzeigezähler wird vor der sichtbaren Darstellung gespeichert. Bei einem Bildschirmwechsel während dieses asynchronen Schreibens kann eine Anzeige gezählt werden, obwohl der Dialog nicht sichtbar wurde.
-- Der automatische Timer hat noch keine eigene Vordergrundprüfung. Die Bereitschaft richtet sich nach dem aktiven App-Bildschirm; der Betriebssystem-Hintergrundstatus wird dafür nicht separat ausgewertet.
+- Nach mindestens 30 Tagen ohne Nutzung bleibt der erste Besuch frei von automatischen Erinnerungen. Die App wartet anschließend mindestens 24 Stunden und mindestens eine weitere gezählte Sitzung. Die übrigen Voraussetzungen gelten zusätzlich.
+- Ein manueller Aufruf setzt die 90-tägige Ruhezeit neu und verhindert einen automatischen Hinweis in derselben App-Laufzeit.
+- Der Timer wird bei einem Bildschirmwechsel oder Wechsel in den Hintergrund verworfen. Nach Rückkehr wird erst nach dem Store-Abgleich und erneut 1,5 Sekunden geprüft.
+- Die letzte Nutzung wird beim Start, bei Rückkehr und beim Wechsel in den Hintergrund lokal gespeichert. Vorhandene Zustände werden ergänzt: Ablehnung, Unterstützerstatus und Historie bleiben erhalten. Die frühere Grenze von zwei Anzeigen entfällt.
+- Ein bereits gestarteter Kaufdialog wird beim Wechsel zur Store-Bestätigung nicht geschlossen; die Lade-/Danke-Ansicht bleibt erhalten.
 
 ## Zahlungsabwicklung und Prüfung
 

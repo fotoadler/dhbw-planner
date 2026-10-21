@@ -7,6 +7,13 @@
 - Android application ID: `de.dhbw.raplaplan`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
 
+## Store-Einreichung 1.5.4 – 21. Oktober 2026
+
+- **Apple:** Version 1.5.4 (18) und alle acht aktuellen In-App-Käufe gemeinsam eingereicht. Bestätigter Status **Waiting for Review**. Submission ID `04492c0a-d0c7-49c8-88bd-2653e16f6417`. Versionsfreigabe **Manually release this version**; nach Genehmigung ist ein manueller Veröffentlichungsschritt nötig.
+- **Google:** Produktionsrelease 1.5.4 mit Bundle **22**, Legacy-Bundle 9 für ältere Geräte beibehalten. Store-Beschreibung aktualisiert. Zwei Änderungen zur Prüfung gesendet; Übersicht bestätigt **Änderungen, die überprüft werden**, automatische Vorabprüfungen laufen. **Verwaltete Veröffentlichung aktiviert**; genehmigte Änderungen werden erst nach manueller Freigabe veröffentlicht.
+- Android 22 unterscheidet sich vom auf dem Samsung getesteten 21 nur im gekürzten Gold-Vorschautext. Beide finalen Store-Builds enthalten bytegleich die aktuellen Web-Assets. Builds und beide GitHub-CI-Workflows erfolgreich. Öffentliche Datenschutzfassung auf `main` bestätigt.
+- Store-Datenschutzangaben überprüft: keine eigene neue Datenerhebung durch Unterstützung/Widgets; Store-Zahlungsdaten verbleiben beim jeweiligen Anbieter. Die verknüpfte öffentliche Datenschutzerklärung erläutert Kaufstatus, lokale Erinnerungsdaten und Widgets.
+
 
 
 

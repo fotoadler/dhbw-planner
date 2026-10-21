@@ -125,3 +125,6 @@ Der Einstellungsbereich besteht aus einem kurzen Kostenhinweis, zwei anklickbare
 Quellen: [Apple UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults), [Apple Required Reason APIs](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype), [Google Billing-Versionen](https://developer.android.com/google/play/billing/deprecation-faq), [Google Zahlungen](https://support.google.com/googleplay/android-developer/answer/9858738?hl=en), [Google Datenschutz](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en), [Apple erste In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/).
 
 
+
+
+Version 1.5.4 wurde am 21.10.2026 eingereicht: Apple-Build 18 mit acht In-App-Käufen, Status „Waiting for Review“, manuelle Versionsfreigabe. Google-Build 22 mit aktualisierter Beschreibung zur Prüfung gesendet, automatische Vorabprüfungen laufen, verwaltete Veröffentlichung aktiviert. Die öffentliche Datenschutzerklärung ist auf `main` aktualisiert. Noch keine Store-Genehmigung und keine öffentliche Freigabe des Updates. Details und Grenzen: [STORE_RELEASE.md](../STORE_RELEASE.md).

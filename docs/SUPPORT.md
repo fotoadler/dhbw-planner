@@ -51,20 +51,20 @@ Beschreibung bei Apple: „Weitere Unterstützung für die App-Betriebskosten.�
 
 ## Wann welcher Dialog erscheint
 
-Die folgenden Regeln beschreiben den aktuell implementierten Stand. Ein Update setzt vorhandene Werte unter `support.v1` nicht zurück. Es gibt kein Gesamtlimit; automatische Erinnerungen liegen mindestens 90 Tage auseinander.
+Die folgenden Regeln beschreiben den aktuell implementierten Stand. Ein Update setzt vorhandene Werte unter `support.v1` nicht zurück. Es gibt kein Gesamtlimit. Auf die erste automatische Anzeige folgt eine Erinnerung frühestens nach 14 Tagen; anschließend beträgt der Abstand mindestens 90 Tage.
 
 | Nutzer / Auslöser | Bildschirm | Frühester Zeitpunkt / Häufigkeit |
 | --- | --- | --- |
 | Neuinstallation ohne eingerichteten Kurs beim ersten Laden der Einstellungen | Geladener Kalender (Tag, Woche oder Monat) | 14 Tage nach erster Initialisierung der Unterstützungsfunktion **und** mindestens 10 Sitzungen |
 | Update mit bereits eingerichtetem Kurs, aber noch ohne `support.v1` | Geladener Kalender | 7 Tage nach erster Initialisierung der Unterstützungsfunktion **und** mindestens 10 Sitzungen; frühere App-Nutzung wird nicht nachgezählt |
 | Update mit vorhandenem `support.v1` | Geladener Kalender | Bisherige Frist, Sitzungen, Ablehnung und Anzeigezähler bleiben erhalten |
-| „Vielleicht später“, Zurück, Escape oder Hintergrundfläche des Dialogs | Derselbe automatische Hinweis über dem Kalender | Weitere Anzeige frühestens 90 Tage nach der letzten automatischen oder manuell geöffneten Angebotsansicht; kein Gesamtlimit |
-| „Nicht mehr fragen“, bisherige Unterstützung oder noch ausstehender Kauf | Kein automatischer Hinweis | Manuelles Öffnen bleibt möglich |
+| „Später erinnern“, Zurück, Escape oder Hintergrundfläche des Dialogs | Derselbe automatische Hinweis über dem Kalender | Nach der ersten Anzeige: frühestens 14 Tage nach dem Schließen. Ab der zweiten Anzeige: jeweils frühestens 90 Tage; kein Gesamtlimit |
+| Bisherige Unterstützung oder noch ausstehender Kauf | Kein automatischer Hinweis | Manuelles Öffnen bleibt möglich |
 | „App unterstützen“ | Einstellungen | Jederzeit manuell, unabhängig von Frist, Sitzungen und Ablehnung; ohne automatischen Anzeigezähler, startet aber die 90-tägige Ruhezeit neu |
 | Goldener Vorteilsbutton | Einstellungen oder Kaufdialog | Vorschau auf Widgets oder App-Symbole, ausschließlich nach Antippen |
 | Betrag antippen | Aktueller Kaufdialog | Ladeanzeige; anschließend nativer Apple-/Google-Kaufdialog; nach bestätigtem Kauf Danke/Konfetti im selben App-Dialog |
 
-Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat „Vielleicht später“ sowie „Nicht mehr fragen“. Der manuell geöffnete Dialog bietet stattdessen „Schließen“. Beide zeigen dieselben Beträge und Vorteilsvorschauen. Wiederherstellen zeigt Statusmeldungen unten in den Einstellungen, keinen automatischen Angebotsdialog.
+Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat nur „Später erinnern“ als Schließaktion. Ein dauerhafter Ablehnungsbutton wird nicht mehr angeboten. Der manuell geöffnete Dialog bietet stattdessen „Schließen“. Beide zeigen dieselben Beträge und Vorteilsvorschauen. Wiederherstellen zeigt Statusmeldungen unten in den Einstellungen, keinen automatischen Angebotsdialog.
 
 ### Voraussetzungen und lokale Speicherung
 
@@ -74,7 +74,7 @@ Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat „Viell
 - Nur im Vordergrund, nach abgeschlossener Store-Abfrage. Kein automatischer Hinweis in Einstellungen, Dualis, Mail, Einrichtung, Demo-/Reviewmodus, offline oder während des Ladens. Kursauswahl/-verwaltung, Teilen, Modulhinweis und geöffnete Vorlesungsdetails blockieren ihn ebenfalls.
 - Alle vier Kaufprodukte müssen geladen sein. Die erste Store-Wiederherstellung erfolgt vor dem Katalogladen; erkannte Unterstützer werden nicht erneut automatisch gefragt.
 - Eine Grenze wird nicht durch einen eigenen täglichen Timer überwacht, sondern bei erneuter Prüfung, beispielsweise nach Start/Resume oder Wechsel zurück in den Kalender.
-- „Nicht mehr fragen“ und Anzeigezähler gelten lokal. Eine echte Neuinstallation ohne wiederhergestellte App-Daten kann sie zurücksetzen. Wiederhergestellte dauerhafte Käufe unterdrücken neue Hinweise; für alte Verbrauchskäufe gelten die oben beschriebenen Store-Grenzen.
+- Anzeigezähler und Fristen gelten lokal. Eine früher bereits ausdrücklich gewählte Abwahl bleibt bei der Migration respektiert; beschädigte Zustände unterdrücken Hinweise weiterhin. Eine echte Neuinstallation ohne wiederhergestellte App-Daten kann sie zurücksetzen. Wiederhergestellte dauerhafte Käufe unterdrücken neue Hinweise; für alte Verbrauchskäufe gelten die oben beschriebenen Store-Grenzen.
 
 ### Rückkehr nach der Praxisphase und behobene Randfälle
 
@@ -92,7 +92,7 @@ Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat „Viell
 - Abbruch ohne Dankesmeldung; ausstehende Zahlung ohne vorzeitige Erfolgsmeldung.
 - Abschluss einer ausstehenden Zahlung und Neustart während des Kaufablaufs.
 - Fehlende Produkte, Offlinebetrieb, Doppeltippen sowie keine simulierten Browser-Käufe.
-- Hinweisfristen, Bestandsnutzer, „Nicht mehr fragen“ und weiterhin kostenlose Funktionen.
+- Hinweisfristen (erste Erinnerung 14 Tage, danach 90 Tage), Bestandsnutzer und weiterhin kostenlose Funktionen.
 
 
 Offizielle Anleitungen: [Apple: In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/), [Google: Einmalprodukte anlegen](https://support.google.com/googleplay/android-developer/answer/16430488?hl=de).

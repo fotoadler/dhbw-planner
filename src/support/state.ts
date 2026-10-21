@@ -4,6 +4,7 @@ export const SUPPORT_STATE_KEY = 'support.v1';
 export const DAY = 86_400_000;
 const SESSION_GAP = 30 * 60_000;
 export const SUPPORT_REMINDER_GAP = 90 * DAY;
+export const FIRST_SUPPORT_SNOOZE = 14 * DAY;
 const INACTIVITY_GAP = 30 * DAY;
 export interface SupportState {
   firstLaunchAt: number;
@@ -14,6 +15,7 @@ export interface SupportState {
   returnEligibleAt: number;
   returnSession: number;
   lastOfferAt: number | null;
+  nextPromptAt: number;
   promptCount: number;
   lastPromptAt: number | null;
   dismissed: boolean;
@@ -25,15 +27,18 @@ export interface SupportState {
 
 export function initialSupportState(existing: boolean, now: number): SupportState {
   return { firstLaunchAt: now, eligibleAt: now + (existing ? 7 : 14) * DAY,
-    sessions: 0, lastSessionAt: 0, lastUsedAt: now, returnEligibleAt: 0, returnSession: 0, lastOfferAt: null, promptCount: 0, lastPromptAt: null,
+    sessions: 0, lastSessionAt: 0, lastUsedAt: now, returnEligibleAt: 0, returnSession: 0, lastOfferAt: null, nextPromptAt: 0, promptCount: 0, lastPromptAt: null,
     dismissed: false, hasSupported: false, pending: false, goldUnlocked: false, legacySupported: false };
 }
 
 export function shouldPrompt(state: SupportState, now: number): boolean {
-  const lastOffer = Math.max(state.lastOfferAt ?? -Infinity, state.lastPromptAt ?? -Infinity);
+  const automaticDue = state.lastPromptAt === null ? 0 : state.lastPromptAt +
+    (state.promptCount === 1 ? FIRST_SUPPORT_SNOOZE : SUPPORT_REMINDER_GAP);
+  const manualDue = state.lastOfferAt !== null && state.lastOfferAt > (state.lastPromptAt ?? -Infinity)
+    ? state.lastOfferAt + SUPPORT_REMINDER_GAP : 0;
   return !state.dismissed && !state.hasSupported && !state.pending && state.sessions >= 10 &&
     now >= state.eligibleAt && now >= state.returnEligibleAt && state.sessions >= state.returnSession &&
-    now - lastOffer >= SUPPORT_REMINDER_GAP;
+    now >= Math.max(state.nextPromptAt ?? 0, automaticDue, manualDue);
 }
 
 function validState(value: unknown): value is SupportState {
@@ -58,6 +63,7 @@ async function read(existing: boolean, now: number): Promise<SupportState> {
     try {
       const state: unknown = JSON.parse(value);
       if (validState(state)) return { ...state,
+        nextPromptAt: Number.isFinite(state.nextPromptAt) ? state.nextPromptAt : 0,
         lastUsedAt: Number.isFinite(state.lastUsedAt) ? state.lastUsedAt : state.lastSessionAt,
         returnEligibleAt: Number.isFinite(state.returnEligibleAt) ? state.returnEligibleAt : 0,
         returnSession: Number.isFinite(state.returnSession) ? state.returnSession : 0,
@@ -101,8 +107,13 @@ export function pauseSupportSession(now = Date.now()): Promise<SupportState> {
   return updateSupportState(s => ({ ...s, lastUsedAt: now }), false, now);
 }
 export function recordSupportOffer(state: SupportState, now: number, automatic: boolean): SupportState {
+  const promptCount = state.promptCount + (automatic ? 1 : 0);
   return { ...state, lastOfferAt: now,
-    ...(automatic ? { promptCount: state.promptCount + 1, lastPromptAt: now } : {}) };
+    nextPromptAt: now + (automatic && promptCount === 1 ? FIRST_SUPPORT_SNOOZE : SUPPORT_REMINDER_GAP),
+    ...(automatic ? { promptCount, lastPromptAt: now } : {}) };
+}
+export function snoozeSupportOffer(state: SupportState, now: number): SupportState {
+  return { ...state, nextPromptAt: now + (state.promptCount === 1 ? FIRST_SUPPORT_SNOOZE : SUPPORT_REMINDER_GAP) };
 }
 export function markSupported(goldUnlocked = false): Promise<SupportState> {
   return updateSupportState(s => ({ ...s, hasSupported: true, pending: false, goldUnlocked: s.goldUnlocked || goldUnlocked,

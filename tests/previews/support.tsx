@@ -14,7 +14,7 @@ function Fixture() {
   <p className="sheet__support">Mit freundlicher Unterstützung von <a href="https://dhbw.app/">dhbw.app</a></p>
   <SupporterOptions onRestored={async()=>{}} />
   <label style={{display:'flex',gap:8,marginTop:32,color:'#777',fontSize:12}}><input type="checkbox" checked={supported} onChange={event=>setSupported(event.target.checked)}/>Vorschau: bereits unterstützt</label>
-  {open&&<SupportDialog automatic={false} products={products} busy={false} onBusy={()=>{}} onProducts={()=>{}} onClose={()=>setOpen(false)} onDismiss={async()=>{}} onSupported={async()=>{}}/>}
+  {open&&<SupportDialog automatic={false} products={products} busy={false} onBusy={()=>{}} onProducts={()=>{}} onClose={()=>setOpen(false)} onSupported={async()=>{}}/>}
  </main>;
 }
 createRoot(document.getElementById('root')!).render(<Fixture/>);

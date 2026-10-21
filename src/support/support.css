@@ -8,7 +8,6 @@
 .support-status { font-size: 14px; line-height: 1.45; color: var(--ink-2); }
 .support-status:empty { display: none; }
 .support-dialog .support-close { margin-top: 16px; }
-.support-dialog .support-dismiss { align-self: center; }
 .support-dialog:focus { outline: none; }
 .support-purchasing { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 28px 0 12px; }
 .support-purchasing .dialog-message { margin: 0; }

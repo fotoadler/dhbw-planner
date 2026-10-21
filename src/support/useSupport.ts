@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { App as CapApp } from '@capacitor/app';
 import { NativePurchases, type Product } from '@capgo/native-purchases';
 import { loadSupportProducts, nativeSupportAvailable, recoverSupportPurchases, SUPPORT_PRODUCTS } from './purchases';
-import { pauseSupportSession, recordSupportOffer, resumeSupportSession, shouldPrompt, startSupportSession, updateSupportState, type SupportState } from './state';
+import { pauseSupportSession, recordSupportOffer, resumeSupportSession, shouldPrompt, snoozeSupportOffer, startSupportSession, updateSupportState, type SupportState } from './state';
 
 export function useSupport(enabled: boolean, existing: boolean, ready: boolean) {
   const [state, setState] = useState<SupportState | null>(null);
@@ -94,17 +94,17 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
     if (open && automatic && !ready && !busy) setOpen(false);
   }, [open, automatic, ready, busy]);
 
-  const close = () => { if (!isBusy.current) setOpen(false); };
+  const close = () => {
+    if (isBusy.current) return;
+    setOpen(false);
+    if (automatic) void updateSupportState(s => snoozeSupportOffer(s, Date.now())).then(setState).catch(() => undefined);
+  };
   return { open, automatic, busy, products, setProducts, setBusy: setPurchaseBusy, close, loaded: state !== null,
     goldUnlocked: Boolean(state?.goldUnlocked || state?.legacySupported),
     show: () => {
       attempted.current = true; setAutomatic(false); setOpen(true);
       // Looking at the offer voluntarily also starts the 90-day quiet period.
       void updateSupportState(s => recordSupportOffer(s, Date.now(), false)).then(setState).catch(() => undefined);
-    },
-    dismiss: async () => {
-      try { setState(await updateSupportState(s => ({ ...s, dismissed: true }))); setOpen(false); }
-      catch { throw new Error('Die Auswahl konnte nicht gespeichert werden. Bitte erneut versuchen.'); }
     },
     supported: async () => setState(await updateSupportState(s => s)),
   };

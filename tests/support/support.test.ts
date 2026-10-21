@@ -14,7 +14,7 @@ vi.mock('@capacitor/core', () => ({ Capacitor: {
 vi.mock('@capgo/native-purchases', () => ({ PURCHASE_TYPE: { INAPP: 'inapp' }, NativePurchases: {
   ...mocks, isBillingSupported: async () => ({ isBillingSupported: true }),
 } }));
-import { DAY, initialSupportState, shouldPrompt, SUPPORT_STATE_KEY, updateSupportState, markSupported, startSupportSession, resumeSupportSession, nextSupportSession, recordSupportOffer } from '../../src/support/state';
+import { DAY, initialSupportState, shouldPrompt, SUPPORT_STATE_KEY, updateSupportState, markSupported, startSupportSession, resumeSupportSession, nextSupportSession, recordSupportOffer, snoozeSupportOffer } from '../../src/support/state';
 import { loadSupportProducts, purchaseSupport, recoverSupportPurchases, restoreSupportPurchases } from '../../src/support/purchases';
 
 beforeEach(() => {
@@ -40,14 +40,14 @@ describe('support reminder', () => {
     expect(shouldPrompt({ ...s, sessions: 9 }, 30 * DAY)).toBe(false);
     expect(initialSupportState(true, DAY).eligibleAt).toBe(8 * DAY);
   });
-  it('waits 90 days without a lifetime cap and respects dismissal, payment or pending payment', () => {
-    const s = { ...initialSupportState(false, DAY), sessions: 10, promptCount: 1, lastPromptAt: 15 * DAY };
-    expect(shouldPrompt(s, 105 * DAY - 1)).toBe(false);
-    expect(shouldPrompt(s, 105 * DAY)).toBe(true);
-    expect(shouldPrompt({ ...s, promptCount: 20 }, 200 * DAY)).toBe(true);
-    for (const patch of [{ dismissed: true }, { hasSupported: true }, { pending: true }]) {
-      expect(shouldPrompt({ ...s, ...patch }, 200 * DAY)).toBe(false);
-    }
+  it('reminds once after 14 days, then quarterly without a lifetime cap', () => {
+    const first = recordSupportOffer({ ...initialSupportState(false, 0), sessions: 10 }, 15*DAY, true);
+    const later=snoozeSupportOffer(first,16*DAY);
+    expect(shouldPrompt(later,30*DAY-1)).toBe(false);expect(shouldPrompt(later,30*DAY)).toBe(true);
+    const second=recordSupportOffer(later,30*DAY,true);
+    expect(shouldPrompt(second,120*DAY-1)).toBe(false);expect(shouldPrompt(second,120*DAY)).toBe(true);
+    expect(shouldPrompt({...second,promptCount:20},200*DAY)).toBe(true);
+    for(const patch of [{dismissed:true},{hasSupported:true},{pending:true}])expect(shouldPrompt({...second,...patch},200*DAY)).toBe(false);
   });
   it('preserves purchase state when writes overlap', async () => {
     await Promise.all([markSupported(), updateSupportState(s => ({ ...s, promptCount: 1 }))]);
@@ -213,4 +213,14 @@ it('migrates existing two-prompt state without resetting dismissal, purchase or 
  mocks.storage.set(SUPPORT_STATE_KEY,JSON.stringify(s));
  const migrated=await updateSupportState(s=>s);
  expect(migrated).toMatchObject({promptCount:2,lastOfferAt:20*DAY,returnSession:0,dismissed:true,hasSupported:true});
+});
+
+it('migrates the former quarterly-only schedule and preserves previous explicit opt-outs',async()=>{
+ const old={...initialSupportState(true,0),sessions:10,promptCount:1,lastPromptAt:20*DAY,lastOfferAt:20*DAY};
+ delete (old as Partial<typeof old>).nextPromptAt;
+ mocks.storage.set(SUPPORT_STATE_KEY,JSON.stringify(old));
+ const migrated=await updateSupportState(s=>s);
+ expect(shouldPrompt(migrated,34*DAY-1)).toBe(false);expect(shouldPrompt(migrated,34*DAY)).toBe(true);
+ mocks.storage.set(SUPPORT_STATE_KEY,JSON.stringify({...old,dismissed:true}));
+ expect(shouldPrompt(await updateSupportState(s=>s),200*DAY)).toBe(false);
 });

@@ -632,7 +632,7 @@ export function App() {
 
       {support.open && <SupportDialog automatic={support.automatic} products={support.products} busy={support.busy}
         onBusy={support.setBusy} onProducts={support.setProducts} onClose={support.close}
-        onDismiss={support.dismiss} onSupported={support.supported} />}
+        onSupported={support.supported} />}
 
       {studyNotice === settings.apiSelection?.course && <ConfirmDialog title="Wahlkurse & Gruppen auswählen?"
         message="Deine Wahlangebote sind noch nicht vollständig eingerichtet. Wähle deine Seminare, Übungen, Schwerpunkte oder Gruppe."

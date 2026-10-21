@@ -13,11 +13,10 @@ interface Props {
   onBusy: (busy: boolean) => void;
   onProducts: (products: Product[]) => void;
   onClose: () => void;
-  onDismiss: () => Promise<void>;
   onSupported: () => Promise<void>;
 }
 
-export function SupportDialog({ automatic, products, busy, onBusy, onProducts, onClose, onDismiss, onSupported }: Props) {
+export function SupportDialog({ automatic, products, busy, onBusy, onProducts, onClose, onSupported }: Props) {
   const titleId = useId();
   const descriptionId = useId();
   const card = useRef<HTMLDivElement>(null);
@@ -109,10 +108,9 @@ export function SupportDialog({ automatic, products, busy, onBusy, onProducts, o
         products.length === 0 ? nativeSupportAvailable() ? 'Die Unterstützung ist gerade nicht verfügbar. Bitte später erneut versuchen.' :
           'Unterstützung ist in der installierten iOS- und Android-App möglich.' : '')}</p>}
       {(!busy || success) && <button type="button" className="dialog-btn dialog-btn--secondary support-close" disabled={busy} onClick={onClose}>
-        {success || !automatic ? 'Schließen' : 'Vielleicht später'}
+        {success || !automatic ? 'Schließen' : 'Später erinnern'}
       </button>}
-      {automatic && !success && !busy && <button type="button" className="sheet__textbtn support-dismiss" disabled={busy}
-        onClick={() => { void onDismiss().catch(() => setMessage('Die Auswahl konnte nicht gespeichert werden. Bitte erneut versuchen.')); }}>Nicht mehr fragen</button>}
+
     </div>
   </div>;
 }

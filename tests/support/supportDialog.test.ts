@@ -12,25 +12,26 @@ import { SupportDialog } from '../../src/support/ui/SupportDialog';
 const products = [1, 3, 5, 10].map(n => ({ identifier: `support_gold_${n}`, priceString: `${n},00 €`, price: n })) as Product[];
 let root: Root, container: HTMLDivElement;
 let busy: boolean;
-let onClose: ReturnType<typeof vi.fn>, onDismiss: ReturnType<typeof vi.fn>;
+let onClose: ReturnType<typeof vi.fn>;
 const render = () => root.render(createElement(SupportDialog, {
   automatic: true, products, busy, onBusy: value => { busy = value; render(); },
-  onProducts: () => {}, onClose, onDismiss, onSupported: async () => {},
+  onProducts: () => {}, onClose, onSupported: async () => {},
 }));
 const buy = () => container.querySelector<HTMLButtonElement>('[aria-label="Mit 3,00 € unterstützen"]')!;
 beforeEach(async () => {
   (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   vi.clearAllMocks(); mocks.load.mockResolvedValue(products); busy = false;
-  onClose = vi.fn(); onDismiss = vi.fn().mockResolvedValue(undefined);
+  onClose = vi.fn();
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
   await act(async () => { render(); });
 });
 afterEach(() => { act(() => root.unmount()); container.remove(); });
-it('offers four store prices and a permanent opt-out', async () => {
+it('offers four store prices and one reminder action without a permanent opt-out', async () => {
   expect(container.querySelectorAll('.support-prices button')).toHaveLength(4);
-  expect(container.textContent).not.toContain('Einmalig · kein Abo');
-  await act(async () => { [...container.querySelectorAll('button')].find(b => b.textContent === 'Nicht mehr fragen')!.click(); });
-  expect(onDismiss).toHaveBeenCalledOnce();
+  expect(container.textContent).not.toContain('Nicht mehr fragen');
+  expect(container.textContent).not.toContain('Nein danke');
+  await act(async () => { [...container.querySelectorAll('button')].find(b => b.textContent === 'Später erinnern')!.click(); });
+  expect(onClose).toHaveBeenCalledOnce();
 });
 it('prevents double purchases and disables dismissal while the payment is running', async () => {
   let finish!: (value: string) => void;
@@ -106,7 +107,7 @@ it('shows two gold benefit previews without a personal sign-off or external prof
 
 it('clearly identifies repeat tips without implying another feature unlock',async()=>{
  const tips=products.map(product=>({...product,identifier:product.identifier.replace('support_gold_','support_')}));
- await act(async()=>root.render(createElement(SupportDialog,{automatic:false,products:tips,busy:false,onBusy:()=>{},onProducts:()=>{},onClose,onDismiss,onSupported:async()=>{}})));
+ await act(async()=>root.render(createElement(SupportDialog,{automatic:false,products:tips,busy:false,onBusy:()=>{},onProducts:()=>{},onClose,onSupported:async()=>{}})));
  expect(container.textContent).toContain('Erneut unterstützen');expect(container.textContent).toContain('Deine Extras bleiben freigeschaltet.');
  expect(container.querySelector('.support-gold-benefits h4')?.textContent).toBe('Bereits für dich freigeschaltet:');
  expect(container.textContent).not.toContain('Als Dankeschön erhältst du:');

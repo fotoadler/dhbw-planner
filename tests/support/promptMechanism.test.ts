@@ -58,11 +58,12 @@ it('waits for purchase recovery and suppresses prompting when a previous purchas
  await render();await advance(2000);expect(result.open).toBe(false);
  await act(async()=>finish());await advance(2000);expect(result.open).toBe(false);expect(mocks.state!.promptCount).toBe(0);
 });
-it('persists never-ask-again and closes the automatic dialog',async()=>{
- await render();await advance(1500);await act(async()=>result.dismiss());
- expect(result.open).toBe(false);expect(mocks.state!.dismissed).toBe(true);
+it('snoozes the first reminder for 14 days from closing it, without counting another view',async()=>{
+ await render();await advance(1500);await advance(1000);const closedAt=Date.now();
+ await act(async()=>result.close());
+ expect(result.open).toBe(false);expect(mocks.state!.promptCount).toBe(1);
+ expect(mocks.state!.nextPromptAt).toBe(closedAt+14*DAY);
 });
-
 it('a manual visit suppresses reminders in this runtime and restarts the quarterly quiet period',async()=>{
  await render(false);await act(async()=>result.show());await act(async()=>result.close());
  await render(true);await advance(2000);

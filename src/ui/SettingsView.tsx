@@ -272,6 +272,7 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange, 
         </section>
 
         {onSupport && <SupportSettingsSection onSupport={onSupport} goldUnlocked={goldUnlocked} />}
+        {onSupportRestored && <SupporterOptions onRestored={onSupportRestored} />}
 
         <section className="sheet__section sheet__feedback">
           <span>App-Feedback</span>
@@ -296,7 +297,6 @@ export function SettingsView({ settings, availableModules, updatedAt, onChange, 
             </p>
           </div>
         </section>
-        {onSupportRestored && <SupporterOptions onRestored={onSupportRestored} />}
     </div>
   );
 }

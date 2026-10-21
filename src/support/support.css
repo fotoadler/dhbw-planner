@@ -64,7 +64,7 @@
 .support-benefits button span { display: inline-block; margin-left: 4px; }
 .support-benefits button:hover { text-decoration: underline; }
 .support-benefits button:focus-visible, .support-carousel-nav button:focus-visible, .support-preview-x:focus-visible, .support-icon-choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 5px; }
-.support-settings-actions { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.support-settings-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; }
 .support-settings-actions .sheet__textbtn { min-height: 44px; padding-block: 10px; }
 .dialog-backdrop.support-preview-backdrop { z-index: 10010; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 .dialog-card.support-preview { max-width: 420px; max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; gap: 12px; }

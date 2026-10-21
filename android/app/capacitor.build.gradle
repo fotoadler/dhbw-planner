@@ -15,6 +15,7 @@ dependencies {
     implementation project(':capacitor-preferences')
     implementation project(':capacitor-status-bar')
     implementation project(':capgo-native-purchases')
+    implementation project(':dhbw-capacitor-app-review')
     implementation project(':dhbw-capacitor-calendar-sync')
     implementation project(':dhbw-capacitor-community-messaging')
     implementation project(':dhbw-capacitor-course-live-activity')

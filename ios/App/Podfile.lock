@@ -14,6 +14,8 @@ PODS:
     - Capacitor
   - CapgoNativePurchases (7.19.3):
     - Capacitor
+  - DhbwCapacitorAppReview (0.1.0):
+    - Capacitor
   - DhbwCapacitorCalendarSync (0.1.0):
     - Capacitor
   - DhbwCapacitorCommunityMessaging (0.1.0):
@@ -89,6 +91,7 @@ DEPENDENCIES:
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapgoNativePurchases (from `../../node_modules/@capgo/native-purchases`)"
+  - DhbwCapacitorAppReview (from `../../plugins/capacitor-app-review`)
   - DhbwCapacitorCalendarSync (from `../../plugins/capacitor-calendar-sync`)
   - DhbwCapacitorCommunityMessaging (from `../../plugins/capacitor-community-messaging`)
   - DhbwCapacitorCourseLiveActivity (from `../../plugins/capacitor-course-live-activity`)
@@ -123,6 +126,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
   CapgoNativePurchases:
     :path: "../../node_modules/@capgo/native-purchases"
+  DhbwCapacitorAppReview:
+    :path: "../../plugins/capacitor-app-review"
   DhbwCapacitorCalendarSync:
     :path: "../../plugins/capacitor-calendar-sync"
   DhbwCapacitorCommunityMessaging:
@@ -143,6 +148,7 @@ SPEC CHECKSUMS:
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
   CapgoNativePurchases: d7414b594b3dd0c5871c165ebcedf59029e383b4
+  DhbwCapacitorAppReview: b3896e4e6ba8817568a07127857ae016eec89b23
   DhbwCapacitorCalendarSync: 16d0759c39a2576ff7d5eb65c74fdafcea4aabed
   DhbwCapacitorCommunityMessaging: ba5f1d98f6423195e583f5b017d93b74248b7bcb
   DhbwCapacitorCourseLiveActivity: 1e8360e163b9ab5c59e95d4c75111c3934c3d3e2
@@ -157,6 +163,6 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
 
-PODFILE CHECKSUM: f458495803f76084bf17e1e7b52ab7c79bb4ab23
+PODFILE CHECKSUM: 6de57b64897ddaa636d29bf3f9c11ce001320e36
 
 COCOAPODS: 1.16.2

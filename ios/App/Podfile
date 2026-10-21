@@ -17,6 +17,7 @@ def capacitor_pods
   pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
   pod 'CapgoNativePurchases', :path => '../../node_modules/@capgo/native-purchases'
+  pod 'DhbwCapacitorAppReview', :path => '../../plugins/capacitor-app-review'
   pod 'DhbwCapacitorCalendarSync', :path => '../../plugins/capacitor-calendar-sync'
   pod 'DhbwCapacitorCommunityMessaging', :path => '../../plugins/capacitor-community-messaging'
   pod 'DhbwCapacitorCourseLiveActivity', :path => '../../plugins/capacitor-course-live-activity'

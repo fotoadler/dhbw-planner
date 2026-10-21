@@ -1,3 +1,4 @@
+import { automaticSupportAllowed, reserveAutomaticSupport, supportActivity } from '../review/policy';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { App as CapApp } from '@capacitor/app';
 import { NativePurchases, type Product } from '@capgo/native-purchases';
@@ -71,8 +72,11 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
     let current = true;
     const timer = window.setTimeout(() => {
       // Re-read after waiting, but do not count a dialog before it is actually rendered.
-      void updateSupportState(s => s).then(next => {
+      void automaticSupportAllowed().then(async allowed => {
+        if (!allowed) return;
+        const next = await updateSupportState(s => s);
         if (!current || !canPrompt.current || attempted.current || !shouldPrompt(next, Date.now())) return;
+        if (!reserveAutomaticSupport()) return;
         attempted.current = true; recorded.current = false;
         setState(next); setAutomatic(true); setOpen(true);
       }).catch(() => undefined);
@@ -84,6 +88,7 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
     if (!open || !automatic || !promptReady || recorded.current) return;
     // This runs only after the visible dialog has committed to the DOM.
     recorded.current = true;
+    supportActivity();
     let active = true;
     void updateSupportState(s => recordSupportOffer(s, Date.now(), true))
       .then(next => { if (active) setState(next); }).catch(() => undefined);
@@ -96,12 +101,14 @@ export function useSupport(enabled: boolean, existing: boolean, ready: boolean) 
 
   const close = () => {
     if (isBusy.current) return;
+    supportActivity();
     setOpen(false);
     if (automatic) void updateSupportState(s => snoozeSupportOffer(s, Date.now())).then(setState).catch(() => undefined);
   };
-  return { open, automatic, busy, products, setProducts, setBusy: setPurchaseBusy, close, loaded: state !== null,
+  return { open, automatic, busy, products, setProducts, setBusy: setPurchaseBusy, close, promptReady, loaded: state !== null,
     goldUnlocked: Boolean(state?.goldUnlocked || state?.legacySupported),
     show: () => {
+      supportActivity();
       attempted.current = true; setAutomatic(false); setOpen(true);
       // Looking at the offer voluntarily also starts the 90-day quiet period.
       void updateSupportState(s => recordSupportOffer(s, Date.now(), false)).then(setState).catch(() => undefined);

@@ -1,3 +1,4 @@
+import { useAppReview } from '../review/useAppReview';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { applyTheme, isThemeMode, readThemeHint, systemTheme, type ResolvedTheme } from '../lib/theme';
@@ -118,6 +119,9 @@ export function App() {
     inCalendar && Boolean(updatedAt) && !refreshing && !offline && !addingCourse && !pendingCourse &&
     !managingCourses && !calendarShareOpen && !studyNotice && !calendarDetails && !selectedBlockKey && !confirmModuleKey &&
     !(hasStudyOptions && settings?.apiSelection?.optionsConfiguredKey !== hasStudyOptions && settings?.apiSelection?.optionsNoticeKey !== hasStudyOptions));
+
+  useAppReview(Boolean(settings) && !demoScreen && !isReviewDemo,
+    support.promptReady && !support.open && !support.busy);
 
   useWidgets(primarySettings && support.loaded && !demoScreen && !isReviewDemo ? widgetSnapshot({
     unlocked: support.goldUnlocked, entries: mainSchedule.entries, updatedAt: mainSchedule.updatedAt,

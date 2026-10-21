@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+android {
+    namespace 'de.dhbw.capacitor.appreview'
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig { minSdkVersion rootProject.ext.minSdkVersion }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+repositories { google(); mavenCentral() }
+dependencies {
+    implementation project(':capacitor-android')
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppCompatVersion"
+    implementation 'com.google.android.play:review:2.0.2'
+}

@@ -20,6 +20,9 @@ project(':capacitor-status-bar').projectDir = new File('../node_modules/@capacit
 include ':capgo-native-purchases'
 project(':capgo-native-purchases').projectDir = new File('../node_modules/@capgo/native-purchases/android')
 
+include ':dhbw-capacitor-app-review'
+project(':dhbw-capacitor-app-review').projectDir = new File('../plugins/capacitor-app-review/android')
+
 include ':dhbw-capacitor-calendar-sync'
 project(':dhbw-capacitor-calendar-sync').projectDir = new File('../plugins/capacitor-calendar-sync/android')
 

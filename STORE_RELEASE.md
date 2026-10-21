@@ -5,6 +5,9 @@
 - App name: DHBW Planner
 - iOS bundle ID: `de.dhbw.raplaplan`
 - Android application ID: `de.dhbw.raplaplan`
+- App version: `1.5.4` (`package.json`: `1.5.4`)
+- iOS build: `18`
+- Android versionCode: `22`
 - Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
 
 ## Store-Einreichung 1.5.4 – 21. Oktober 2026
@@ -13,17 +16,24 @@
 - **Google:** Produktionsrelease 1.5.4 mit Bundle **22**, Legacy-Bundle 9 für ältere Geräte beibehalten. Store-Beschreibung aktualisiert. Zwei Änderungen zur Prüfung gesendet; Übersicht bestätigt **Änderungen, die überprüft werden**, automatische Vorabprüfungen laufen. **Verwaltete Veröffentlichung aktiviert**; genehmigte Änderungen werden erst nach manueller Freigabe veröffentlicht.
 - Android 22 unterscheidet sich vom auf dem Samsung getesteten 21 nur im gekürzten Gold-Vorschautext. Beide finalen Store-Builds enthalten bytegleich die aktuellen Web-Assets. Builds und beide GitHub-CI-Workflows erfolgreich. Öffentliche Datenschutzfassung auf `main` bestätigt.
 - Store-Datenschutzangaben überprüft: keine eigene neue Datenerhebung durch Unterstützung/Widgets; Store-Zahlungsdaten verbleiben beim jeweiligen Anbieter. Die verknüpfte öffentliche Datenschutzerklärung erläutert Kaufstatus, lokale Erinnerungsdaten und Widgets.
+- 578 automatisierte Tests; Gerätetests der aktuellen iPhone-/Android-Fassungen ohne gemeldete Fehler. Wiederherstellung bei leerem lokalem Status automatisiert geprüft. Ein realer Gerätewechsel oder eine Neuinstallation mit Store-Konto wurde nicht separat durchgeführt.
+- Noch **keine Genehmigung oder öffentliche Veröffentlichung** dieses Updates bestätigt.
 
+## Version 1.5.4 — Unterstützung und Widgets
 
+- Freiwillige In-App-Unterstützung zur Refinanzierung der jährlichen Betriebskosten mit 1/3/5/10 EUR. Kalender, Dualis und Mail bleiben kostenlos und werbefrei.
+- Der erste Kauf über `support_gold_1/3/5/10` schaltet Widgets und das optionale Gold-Symbol dauerhaft frei. Danach bleiben `support_1/3/5/10` beliebig wiederholbare Verbrauchskäufe. Alle Beträge gewähren dieselben Extras; `support_2` wird nicht mehr angeboten.
+- Wiederherstellung über dasselbe Store-Konto, ohne eigenes Backend; kein Transfer zwischen Apple und Google. Grenzen früherer Verbrauchskäufe sind in [docs/SUPPORT.md](docs/SUPPORT.md) dokumentiert.
+- Native Widgets in klein, mittel und groß mit Datenstand und Tagesverlinkung. Mittel und groß zeigen auch vergangene Termine des Tages; groß ergänzt geladene kommende Vorlesungstage und lässt freie oder unbekannte Tage aus. Ohne Kursnamen oder Raumangaben entfallen die jeweiligen Felder.
+- Einfarbige Widget-Flächen, helle und dunkle Darstellung, adaptive Schriftgrößen und VoiceOver-Beschriftungen. Native Layoutprüfung über zwölf Dynamic-Type-Stufen, vier iPhone-Abmessungen, drei Größen und sechs Zustände; Prüfumfang unter `tests/widgets/ios/`.
+- Kompakte Einstellungen mit getrennten Gruppen für Stundenplan, allgemeine Optionen und Mitteilungen. Wischbare Widget-Vorschau und Rot/Gold-Vergleich in eigenen Dialogen; Symbolwechsel ist für freigeschaltete Unterstützer verfügbar.
+- Ladeansicht während des Kaufs, Danke/Konfetti nach bestätigter Transaktion. Ausstehende Käufe sperren weitere Checkouts; im Vordergrund erfolgt alle 15 Sekunden ein Store-Abgleich.
+- Automatische Unterstützungshinweise erst nach den Nutzungsfristen: erste Erinnerung nach mindestens 14 Tagen, danach mindestens 90 Tage. Unterstützer und ausstehende Käufe sind ausgenommen. Nach längerer Inaktivität gilt eine zusätzliche Rückkehrfrist. Details: [Dialogregeln](docs/SUPPORT.md#wann-welcher-dialog-erscheint).
+- Unterstützungscode unter `src/support/`, Widget-Daten unter `src/widgets/`, native Implementierungen in den Plattformprojekten. Privacy-Manifeste für App und Widget sind in den iOS-Bundles enthalten.
 
+### Prüfung und bekannte Grenzen
 
-
-
-
-
-
-
-
+578 automatisierte Tests, Web-Build und native Builds erfolgreich. Gerätetests auf iPhone und Android ohne gemeldete Fehler; konkrete Android-Kauf-, Widget- und Symbolprüfungen einschließlich Einschränkungen stehen in [docs/ANDROID_IAP_QA.md](docs/ANDROID_IAP_QA.md). Eine vollständige Wiederholung der Pending-Testfälle nach den letzten Korrekturen sowie ein realer Neuinstallations-/Gerätewechseltest mit Store-Konto sind nicht separat bestätigt. Die Wiederherstellung bei leerem lokalem Status ist automatisiert geprüft.
 
 ## Version 1.5.3 — Rapla-Fix, 20. Oktober 2026
 
@@ -31,9 +41,11 @@ Neue Rapla-Freigabelinks werden jetzt unterstützt, auch ohne salt-Parameter –
 
 - Grundlage: [PR #39](https://github.com/fotoadler/dhbw-planner/pull/39), Merge-Commit `13dfa7e65ae297f906f2d1df9a262b8795992bb4`, mit lokalen Versionsanpassungen auf 1.5.3. Keine weiteren Produktivänderungen.
 - Android 1.5.3 (15), iOS 1.5.3 (16), einschließlich Widget-Erweiterung. Bestehende Signieridentitäten und Mindestversionen unverändert (Android API 24 / iOS 15).
+- 488 Tests des gemergten PR-Standes erfolgreich.
 - TypeScript/Vite-Build, Capacitor-Sync, signierter Android-APK-/AAB-Build und signiertes iOS-Archiv erfolgreich. APK-Signatur und iOS-Codesign einschließlich eingebetteter Komponenten geprüft. Alle acht Web-Dateien in APK, AAB und iOS-Archiv stimmen bytegenau mit `dist` überein.
 - iOS-Upload am 20. Oktober erfolgreich (`Upload succeeded` / `EXPORT SUCCEEDED`), Build verarbeitet und Version 1.5.3 zugeordnet. **Zur Prüfung eingereicht**, bestätigter Status `Waiting for Review`, Build 16. Submission ID: `0c84b675-e277-4357-be08-995b342873dd`, Einreichung 20. Oktober um 15:07 MESZ. Deutsche Versionshinweise gespeichert; automatische Veröffentlichung nach Freigabe für alle Nutzer, kein gestaffelter Roll-out.
 - Google Play: Bundle 15 (1.5.3) verarbeitet, deutsche Versionshinweise gespeichert. Bundle 9 bleibt für ältere Geräte enthalten, Bundle 14 wird ersetzt. Keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen bei deaktivierter Minifizierung. **Zur Prüfung gesendet**: Die Übersicht zeigt „Änderungen, die überprüft werden“ für Produktion 1.5.3. Automatische Vorabprüfungen laufen noch; danach erfolgt die Prüfung. Vollständiger Roll-out nach Freigabe, verwaltete Veröffentlichung aus.
+- AAB SHA-256: `34f17ccfbae74537d0d25e7a59733cdc7a5cdda66c8f15c7c80946e939ae0068`.
 - Die bisherigen Releases 1.5.2 sind am 20. Oktober in beiden Store-Konsolen als veröffentlicht bestätigt (Google Play 100 %, App Store `Ready for Distribution`). Das ist keine native Geräteabnahme von 1.5.3; neue Store-Freigabe und öffentliche Verfügbarkeit von 1.5.3 stehen aus.
 
 ## Version 1.5.2 — Hochgeladen am 17., zur Prüfung eingereicht am 17./18. Oktober 2026
@@ -165,31 +177,3 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradl
 4. Use the existing App Store Connect app record for that bundle ID and an unused build number.
 5. Product > Archive.
 6. Distribute App > App Store Connect (or `xcodebuild -exportArchive` with destination `upload`). Confirm upload success; processing and App Review are separate steps.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

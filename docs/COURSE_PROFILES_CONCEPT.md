@@ -1,5 +1,6 @@
 # Kursprofile
 
+Kursprofile ermöglichen den Wechsel zwischen mehreren Stundenplänen. Ein Hauptprofil steuert Erinnerungen und die weiteren App-Funktionen.
 
 - Einzelnes Symbol im Kalenderkopf links neben Teilen und Einstellungen. Das Pop-up enthält Standort- und Kurskürzel sowie „+ Profil erstellen“. Ein kleiner Stern legt das Hauptprofil fest, daneben lassen sich Ansichtprofile löschen. Das Hauptprofil kann nach Zuordnung eines anderen Hauptprofils gelöscht werden. Keine dauerhafte Kursleiste oder Namenseingabe.
 - Vorhandenen SetupWizard zum Hinzufügen wiederverwenden; Abbrechen kehrt zum aktuellen Kalender zurück.

@@ -20,3 +20,4 @@ Die Widgets sind separat unter `src/widgets/` gekapselt. Dieser Bereich liefert 
 
 Die Widget-Bilder unter `assets/widget-*.png` sind native Beispielansichten ohne Nutzerdaten. Bei einer Designänderung neu rendern. Lokale UI-Prüfung: `tests/previews/support.html`.
 
+Der Kaufdialog verwendet die goldene Variante von `SupportBenefits`. Die Animation läuft einmal und berücksichtigt „Bewegung reduzieren“. Die Widget-Bilder zeigen Beispielvorlesungen.

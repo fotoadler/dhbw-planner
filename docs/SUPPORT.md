@@ -41,13 +41,13 @@ Beschreibung bei Apple: „Weitere Unterstützung für die App-Betriebskosten.�
 3. Neues AAB mit Billing-Anbindung zunächst in einen internen Test hochladen, Tester und Lizenztester eintragen. App aus Google Play installieren und alle vier Käufe, Abbruch, ausstehende Zahlung und Wiederholung prüfen.
 4. Angaben zu In-App-Käufen und Datensicherheit sowie Store-Beschreibung prüfen und mit dem neuen Release zur Prüfung einreichen.
 
+## Produktkonfiguration
 
-
-
-
+Auf beiden Plattformen sind vier dauerhafte Erstkäufe und vier wiederholbare Unterstützungen mit deutschen Endpreisen von 1/3/5/10 EUR eingerichtet. Andere Länder verwenden lokalisierte Store-Preise. Das frühere Produkt `support_2` ist deaktiviert; offene Transaktionen älterer Builds werden weiterhin verarbeitet. Google verwendet aktive, abwärtskompatible Buy-Kaufoptionen `standard`.
 
 ## Kostenlose iPhone-Kaufprüfung
 
+Für Entwicklungsversionen ein Testkonto unter „App Store Connect → Users and Access → Sandbox“ anlegen und auf dem iPhone unter „Einstellungen → Entwickler → Sandbox-Apple-Account“ anmelden. Die normale iCloud-Anmeldung bleibt bestehen. Käufe anschließend unter „Einstellungen → App unterstützen“ testen. Sandbox-Käufe verursachen keine echte Zahlung.
 
 ## Wann welcher Dialog erscheint
 
@@ -86,7 +86,9 @@ Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat nur „S
 
 ## Zahlungsabwicklung und Prüfung
 
+Die App verwendet `@capgo/native-purchases` 7.19.3 mit Capacitor 7. iOS-Käufe werden durch StoreKit geprüft; Android-Zahlungen werden ausschließlich bei `PURCHASED` als Unterstützung markiert. Dauerhafte Erstkäufe werden bestätigt und behalten; nur wiederholbare Unterstützungen werden verbraucht. Nicht verbrauchte Android-Käufe werden beim Start/Resume erneut abgearbeitet. Auf iOS werden verifizierte Transaktionsupdates berücksichtigt. Es gibt keine eigene serverseitige Validierung. Store-Bestätigungen und der lokale Berechtigungs-Cache steuern Widgets, Gold-Symbol und Unterstützungshinweise. Die übrigen App-Funktionen bleiben kostenlos.
 
+Für die Kaufprüfung auf echten Geräten beziehungsweise mit Store-Testkonten sind folgende Fälle relevant:
 
 - Alle vier lokalisierten Preise und wiederholten Käufe.
 - Abbruch ohne Dankesmeldung; ausstehende Zahlung ohne vorzeitige Erfolgsmeldung.
@@ -94,13 +96,11 @@ Der automatische Dialog heißt „DHBW Planner unterstützen“ und hat nur „S
 - Fehlende Produkte, Offlinebetrieb, Doppeltippen sowie keine simulierten Browser-Käufe.
 - Hinweisfristen (erste Erinnerung 14 Tage, danach 90 Tage), Bestandsnutzer und weiterhin kostenlose Funktionen.
 
+Automatisierte Tests und native Builds ersetzen diese Store-Prüfungen nicht. Bisherige Geräteergebnisse und offene Fälle: [ANDROID_IAP_QA.md](ANDROID_IAP_QA.md).
 
 Offizielle Anleitungen: [Apple: In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/), [Google: Einmalprodukte anlegen](https://support.google.com/googleplay/android-developer/answer/16430488?hl=de).
 
-
-
-
-
+## Unterstützer-Widgets
 
 - iOS: WidgetKit, klein/mittel/groß; verwendet die bestehende Erweiterung zusammen mit der Live-Aktivität. App und Erweiterung teilen ausschließlich einen reduzierten Stundenplan-Snapshot über `group.de.dhbw.raplaplan.widgets`.
 - Android: drei AppWidget-Anbieter mit anpassbarer Größe. Aktualisierungen an Vorlesungsgrenzen/Mitternacht sowie periodisch; Android kann diese zur Schonung des Akkus verzögern. Keine zusätzliche Berechtigung für exakte Alarme.
@@ -109,7 +109,7 @@ Offizielle Anleitungen: [Apple: In-App-Käufe einreichen](https://developer.appl
 - Antippen öffnet die Tagesansicht mit Datum und Hauptkurs. Ein gesperrtes Widget führt zu den Unterstützungseinstellungen. Widgets werden durch Nutzer selbst auf dem Home-Bildschirm hinzugefügt.
 - Alle Beträge und bestehende lokal nachweisbare Unterstützungen schalten alle drei Größen frei. Wiederholte Unterstützungen bleiben möglich. Ein lokal bekannter Status funktioniert auch ohne erreichbaren Store.
 
-
+Zur Widget-Prüfung gehören alle Größen auf dem Home-Bildschirm, Kaltstart per Widget, Kurswechsel/Modulfilter, Mitternacht, freie Tage, Offline-Daten und Wiederherstellung mit Store-Testkonten. Native Render-Tests und Builds ersetzen diese Prüfung nicht; dokumentierte Geräteergebnisse stehen in [ANDROID_IAP_QA.md](ANDROID_IAP_QA.md).
 
 ## Vorschauen und kompakte Einstellungen
 
@@ -117,14 +117,16 @@ Der Einstellungsbereich besteht aus einem kurzen Kostenhinweis, zwei anklickbare
 
 ## Review-Prüfung vom 21. Oktober 2026
 
+- Alle acht aktuellen Apple-Kaufprodukte haben aktualisierte deutsche Beschreibungen und Review-Hinweise. Vier Gold-Erstkäufe zeigen die Freischaltung; vier Verbrauchskäufe den Dialog „Erneut unterstützen“. Jeweils ein sauberer aktueller 1170×2532-Screenshot ohne Mauszeiger, nach Reload auf dem Apple-CDN geprüft und fertig verarbeitet. Die acht Produkte wurden gemeinsam mit Version 1.5.4 eingereicht; der alte 2-EUR-Artikel bleibt aus dem Verkauf genommen.
 - Review-Hinweise erklären den unveränderten kostenlosen Kalender/Dualis/Mail, gleiche Extras bei allen Beträgen, Wiederherstellung und die Teststrecke für Widgets mit öffentlich konfiguriertem Kurs ohne Hochschul-Login. Der lokale Demomodus zeigt den Kaufdialog, schreibt aber keine Widget-Daten.
 - Die App und ihre Widget-Erweiterung enthalten eigene Privacy-Manifeste für UserDefaults. App: `CA92.1` und `1C8F.1`; Widget: `1C8F.1`. Die Dateien müssen in den jeweiligen gebauten Bundles enthalten sein.
 - Der Android-Build enthält Google Play Billing 8.3.0 einschließlich Versions-Metadatum und BILLING-Berechtigung. Version 8 ist laut aktuellem Google-Zeitplan für neue Apps und Updates bis 31. August 2027 unterstützt.
-
+- Die in den Einstellungen verlinkte öffentliche Datenschutzerklärung beschreibt Kaufstatus, Unterstützungshinweise und Widget-Daten.
 
 Quellen: [Apple UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults), [Apple Required Reason APIs](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype), [Google Billing-Versionen](https://developer.android.com/google/play/billing/deprecation-faq), [Google Zahlungen](https://support.google.com/googleplay/android-developer/answer/9858738?hl=en), [Google Datenschutz](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en), [Apple erste In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/).
 
+## Einreichungs- und Prüfstand vom 21. Oktober 2026
 
-
+578 automatisierte Tests bestehen, einschließlich Wiederherstellung bei leerem lokalem Unterstützungsstatus. Gerätetests auf iPhone und Android wurden ohne Fehler gemeldet. Eine echte Neuinstallation oder ein Gerätewechsel mit Store-Konto wurde nicht separat geprüft.
 
 Version 1.5.4 wurde am 21.10.2026 eingereicht: Apple-Build 18 mit acht In-App-Käufen, Status „Waiting for Review“, manuelle Versionsfreigabe. Google-Build 22 mit aktualisierter Beschreibung zur Prüfung gesendet, automatische Vorabprüfungen laufen, verwaltete Veröffentlichung aktiviert. Die öffentliche Datenschutzerklärung ist auf `main` aktualisiert. Noch keine Store-Genehmigung und keine öffentliche Freigabe des Updates. Details und Grenzen: [STORE_RELEASE.md](../STORE_RELEASE.md).

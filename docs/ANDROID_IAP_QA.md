@@ -13,13 +13,15 @@ Gerät: Samsung Galaxy Tab A7 Lite (SM-T220), Android 14. Interne Play-Version 1
 | Explizite Wiederherstellung | Store-Abgleich bestätigt Freischaltung auf bestehender Installation |
 | Verzögerte Genehmigung `support_3` | Pending ohne neue Erfolgsansicht; Google danach „Verarbeitet“; expliziter Store-Abgleich verarbeitet den Kauf und gibt weitere Käufe wieder frei |
 | Genehmigung mit späterer Rückbuchung | Noch nicht praktisch geprüft |
+| Neuinstallation/Gerätewechsel | Nicht praktisch geprüft |
 
+## Pending-Korrekturen und bekannte Grenzen
 
 - Ausstehende Käufe müssen auch nach Schließen/Öffnen des Dialogs weitere Checkouts sperren: persistenter Pending-Status wird jetzt in Dialog und Kauf-Funktion geprüft.
 - Verzögerte Zahlungen brauchen im Vordergrund einen erneuten Store-Abgleich: während Pending wird alle 15 Sekunden abgefragt; bei Abschluss, Hintergrundwechsel und Unmount endet die Abfrage.
+- Diese Ergänzungen sind mit 578 Tests (davon 59 Support-Tests), Web-Build und Android-Debug-Build geprüft. Sie sind ab der internen Version 20 enthalten; eine erneute vollständige Pending-Kaufprüfung dieser Fassung steht noch aus.
 - Das native Billing-Plugin liefert bei manuellem Abbruch und anderen Fehlern denselben allgemeinen Fehler. Deshalb ist die Anzeige konservativ, aber noch nicht spezifisch genug.
 - Bereits verbrauchte Google-Verbrauchsprodukte liefern keine vollständige Rückbuchungshistorie über `queryPurchases`. Eine lückenlose serverseitige Rückbuchungsprüfung ist ohne Backend/Voided-Purchases-Abgleich nicht implementiert. Wiederherstellbare Erstkäufe werden beim nächsten erfolgreichen Store-Abgleich abgeglichen; das ist keine sofortige Push-Sperre.
-
 
 ## Widget- und Symbolprüfung auf dem Samsung
 
@@ -29,4 +31,4 @@ Gerät: Samsung Galaxy Tab A7 Lite (SM-T220), Android 14. Interne Play-Version 1
 - Mittleres Widget: zeigt auch bereits vergangene Vorlesungen des heutigen Tages. Antippen öffnet den heutigen Tag.
 - Großes Widget: unten die nächsten drei geladenen Vorlesungstage (22., 23., 26. Oktober); das vorlesungsfreie Wochenende wird ausgelassen. Antippen des 26. Oktober öffnet genau dessen Tagesansicht.
 - Kaltstart über ein Widget wurde auf Version 18 geprüft. Neuinstallation/Gerätewechsel bleiben ungeprüft.
-
+- iOS: entsprechende Anpassungen erfolgreich kompiliert und anschließend auf dem iPhone installiert. Anschließende Gerätetests auf iPhone und Android wurden ohne Fehler gemeldet.

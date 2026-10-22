@@ -65,10 +65,16 @@ export function SupportDialog({ automatic, storePending = false, products, busy,
     if (locked.current || busy || loading || pending || storePending) return;
     locked.current = true; onBusy(true); setMessage('');
     try {
-      const result = await purchaseSupport(id, () => { setSuccess(true); setMessage(''); setGoldUnlocked(isGoldProduct(id)); });
+      let refresh: Promise<void> | undefined;
+      const result = await purchaseSupport(id, () => {
+        setSuccess(true); setMessage(''); setGoldUnlocked(isGoldProduct(id));
+        // Publish the entitlement immediately; store finalization may take longer.
+        refresh = onSupported();
+        void refresh.catch(() => undefined);
+      });
       if (result === 'success') {
         setSuccess(true); setMessage('');
-        await onSupported();
+        await (refresh ?? onSupported());
       } else if (result === 'pending') {
         setPending(true);
         setMessage('Die Zahlung wartet noch auf Bestätigung. Bitte nicht erneut kaufen.');

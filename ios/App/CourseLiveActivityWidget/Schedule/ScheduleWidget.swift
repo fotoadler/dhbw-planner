@@ -98,8 +98,8 @@ struct PlannerWidgetContent: View {
     private var events: [PlannerEvent] { small ? entry.remaining : (entry.day?.events ?? []) }
     private var showEvents: Bool { known && !events.isEmpty }
     private var emptyTitle: String {
-        if !entry.snapshot.unlocked { return "Ein kleines Danke." }
-        if !known { return "Dein Tag wartet." }
+        if !entry.snapshot.unlocked { return "Widgets freischalten" }
+        if !known { return "Stundenplan laden" }
         return entry.day?.events.isEmpty == false ? "Geschafft!" : "Heute frei."
     }
     private var emptySubtitle: String {
@@ -112,7 +112,9 @@ struct PlannerWidgetContent: View {
     }
     var body: some View {
         GeometryReader { bounds in
-            if typeSize > .large || (small && bounds.size.height < 130) {
+            if !entry.snapshot.unlocked {
+                PlannerLockedWidget(family: family, available: bounds.size)
+            } else if typeSize > .large || (small && bounds.size.height < 130) {
                 PlannerReadableWidget(entry: entry, family: family, available: bounds.size)
             } else {
                 Group {
@@ -315,11 +317,59 @@ struct PlannerWidgetContent: View {
         return url.url!
     }
 }
+private struct PlannerLockedWidget: View {
+    let family: WidgetFamily
+    let available: CGSize
+    private var small: Bool { family == .systemSmall }
+    private var large: Bool { family == .systemLarge }
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content(compact: false).fixedSize(horizontal: false, vertical: true)
+            content(compact: true).fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Widgets").font(.system(size: min(26, available.height / 3), weight: .bold, design: .rounded)).lineLimit(1).minimumScaleFactor(0.5)
+                Text("Freischalten ↗").font(.system(size: min(18, available.height / 4), weight: .semibold)).foregroundStyle(plannerRed).lineLimit(1).minimumScaleFactor(0.5)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Widgets freischalten. Werde Unterstützer und erhalte deinen Stundenplan auf dem Home-Bildschirm. Tippe, um die Unterstützung zu öffnen.")
+    }
+    private func content(compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: small || compact ? 8 : 14) {
+            Text("Widgets freischalten").plannerFont(small ? 19 : large ? 29 : 23, weight: .bold, design: .rounded)
+                .fixedSize(horizontal: false, vertical: true)
+            if !small && !compact {
+                Text("Unterstütze die App und nutze deinen Stundenplan als Widget.")
+                    .plannerFont(13).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            if large && !compact {
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("Vorlesungen, Uhrzeiten und Räume", systemImage: "calendar")
+                    Label("Antippen öffnet die Tagesansicht", systemImage: "arrow.up.right")
+                }.plannerFont(13, weight: .medium).padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(plannerRed.opacity(0.05), in: RoundedRectangle(cornerRadius: 15))
+            }
+            action.plannerFont(small ? 11 : 13, weight: .semibold)
+                .padding(.vertical, small ? 8 : 11).padding(.horizontal, small ? 9 : 13)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundStyle(.white).background(plannerBrandRed, in: RoundedRectangle(cornerRadius: 11))
+        }.frame(maxWidth: .infinity, alignment: .leading)
+    }
+    private var action: some View {
+        HStack(spacing: 5) {
+            Text(small ? "Unterstützen" : "Jetzt Unterstützer werden").fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            Image(systemName: "arrow.up.right")
+        }
+    }
+}
+
 struct PlannerScheduleWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "DHBWSchedule", provider: PlannerTimeline()) { PlannerWidgetView(entry: $0) }
             .configurationDisplayName("DHBW Stundenplan")
-            .description("Deine Vorlesungen, dein Tag. Für alle Unterstützer.")
+            .description("Stundenplan-Widgets für Unterstützer.")
             .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
@@ -338,7 +388,7 @@ private struct PlannerReadableWidget: View {
     private var known: Bool { entry.snapshot.unlocked && entry.day?.known == true }
     private var events: [PlannerEvent] { known ? (small ? entry.remaining : (entry.day?.events ?? [])) : [] }
     private var title: String {
-        !entry.snapshot.unlocked ? "Danke!" : !known ? "App öffnen" : entry.day?.events.isEmpty == false ? "Geschafft!" : "Heute frei."
+        !entry.snapshot.unlocked ? "Widgets freischalten" : !known ? "App öffnen" : entry.day?.events.isEmpty == false ? "Geschafft!" : "Heute frei."
     }
     private var subtitle: String {
         !entry.snapshot.unlocked ? "Widgets für Unterstützer" : !known ? "Stundenplan laden" : entry.day?.events.isEmpty == false ? "Für heute vorbei" : "Keine Vorlesungen"
@@ -402,7 +452,7 @@ private struct PlannerReadableWidget: View {
                 time(event, end: false)
                 Text(event.title).plannerFont(15, weight: .semibold).lineLimit(1).minimumScaleFactor(0.85)
             } else {
-                Text(!entry.snapshot.unlocked ? "Danke" : !known ? "App" : entry.day?.events.isEmpty == false ? "Fertig." : "Frei.")
+                Text(!entry.snapshot.unlocked ? "Freischalten" : !known ? "App" : entry.day?.events.isEmpty == false ? "Fertig." : "Frei.")
                     .plannerFont(15, weight: .bold, design: .rounded).lineLimit(2).minimumScaleFactor(0.85)
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

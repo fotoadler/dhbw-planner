@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>de</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>DHBW Planner Live</string>
 	<key>CFBundleExecutable</key>

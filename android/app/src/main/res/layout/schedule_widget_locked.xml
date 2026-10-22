@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center_vertical" android:padding="16dp"
+    android:background="@drawable/schedule_widget_background">
+    <TextView android:id="@+id/widget_locked_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Widgets freischalten" android:textColor="@color/widget_primary" android:textSize="24sp" android:textStyle="bold"
+        android:fontFamily="sans-serif-rounded" android:breakStrategy="balanced" android:hyphenationFrequency="none" />
+    <TextView android:id="@+id/widget_locked_description" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Unterstütze die App und nutze deinen Stundenplan als Widget." android:textColor="@color/widget_secondary"
+        android:textSize="13sp" android:layout_marginTop="8dp" android:breakStrategy="balanced" android:hyphenationFrequency="none" />
+    <TextView android:id="@+id/widget_locked_benefits" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Vorlesungen, Uhrzeiten und Räume\n\nAntippen öffnet die Tagesansicht ↗"
+        android:textColor="@color/widget_primary" android:textSize="14sp" android:padding="14dp" android:layout_marginTop="16dp"
+        android:background="@drawable/widget_soft_tile" android:breakStrategy="balanced" android:hyphenationFrequency="none" />
+    <TextView android:id="@+id/widget_locked_action" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Jetzt Unterstützer werden ↗" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"
+        android:padding="10dp" android:layout_marginTop="12dp" android:background="@drawable/widget_date_tile"
+        android:breakStrategy="balanced" android:hyphenationFrequency="none" />
+    <TextView android:id="@+id/widget_status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" android:text="Widgets für Unterstützer" />
+    <TextView android:id="@+id/widget_updated" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+</LinearLayout>

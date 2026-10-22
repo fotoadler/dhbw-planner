@@ -69,7 +69,22 @@ public class ScheduleWidgetProvider extends AppWidgetProvider {
         // No exact-alarm permission: Android may batch widget updates to conserve battery.
         alarms.setAndAllowWhileIdle(AlarmManager.RTC,Math.max(now+1000,next),alarm);
     }
+    private static RemoteViews renderLocked(Context context,int id,int size) {
+        RemoteViews views=new RemoteViews(context.getPackageName(),R.layout.schedule_widget_locked);
+        float scale=context.getResources().getConfiguration().fontScale;
+        int height=AppWidgetManager.getInstance(context).getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,size==3?380:170);
+        boolean compact=height < 160*scale;
+        views.setViewVisibility(R.id.widget_locked_description,size==1||compact?View.GONE:View.VISIBLE);
+        views.setViewVisibility(R.id.widget_locked_benefits,size==3&&height>310*scale?View.VISIBLE:View.GONE);
+        views.setTextViewTextSize(R.id.widget_locked_title,android.util.TypedValue.COMPLEX_UNIT_SP,size==1?19:size==3?28:22);
+        views.setTextViewText(R.id.widget_locked_action,size==1?"Unterstützen ↗":"Jetzt Unterstützer werden ↗");
+        views.setContentDescription(R.id.widget_root,"Widgets freischalten. Werde Unterstützer und erhalte deinen Stundenplan auf dem Home-Bildschirm. Tippe, um die Unterstützung zu öffnen.");
+        Intent open=new Intent(context,MainActivity.class).setAction(Intent.ACTION_VIEW).setData(Uri.parse("dhbwplanner://support")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        views.setOnClickPendingIntent(R.id.widget_root,PendingIntent.getActivity(context,id,open,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE));
+        return views;
+    }
     static RemoteViews render(Context context,int id,JSONObject data,long now,int size) {
+        if (!data.optBoolean("unlocked")) return renderLocked(context,id,size);
         int layout=size==1?R.layout.schedule_widget_small:size==2?R.layout.schedule_widget_medium:R.layout.schedule_widget;
         RemoteViews views=new RemoteViews(context.getPackageName(),layout);
         String today=format(now,"yyyy-MM-dd"); JSONObject day=null; JSONArray days=data.optJSONArray("days");
@@ -104,7 +119,7 @@ public class ScheduleWidgetProvider extends AppWidgetProvider {
             row.setViewVisibility(R.id.widget_event_room,size==1||event.optString("room").isEmpty()?View.GONE:View.VISIBLE);
             views.addView(R.id.widget_events,row);
         }
-        String title=!unlocked?(size==1?"Danke!":"Ein kleines Danke."):!known?"Dein Tag wartet.":all.isEmpty()?"Heute frei.":"Geschafft!";
+        String title=!known?"Stundenplan laden":all.isEmpty()?"Heute frei.":"Geschafft!";
         String subtitle=!unlocked?"Widgets für Unterstützer":!known?"Stundenplan in der App laden":all.isEmpty()?"Keine Vorlesungen":"Alle Vorlesungen für heute vorbei";
         views.setTextViewText(R.id.widget_empty_title,title);views.setTextViewText(R.id.widget_empty_subtitle,subtitle);
         views.setTextViewTextSize(R.id.widget_empty_title,android.util.TypedValue.COMPLEX_UNIT_SP,size==1?21:size==2?23:27);

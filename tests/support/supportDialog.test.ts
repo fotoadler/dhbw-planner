@@ -124,3 +124,15 @@ it('blocks checkout for persisted pending purchases after remount and updates af
   await act(async () => { render(); });
   expect(buy().disabled).toBe(false);
 });
+
+it('publishes confirmed benefits before delayed store finalization',async()=>{
+ let finish!: (value:string)=>void;
+ const restored=vi.fn().mockResolvedValue(undefined);
+ mocks.purchase.mockImplementation((_id:string,confirmed:()=>void)=>{confirmed();return new Promise(resolve=>{finish=resolve;});});
+ await act(async()=>root.render(createElement(SupportDialog,{automatic:false,products,busy:false,onBusy:()=>{},onProducts:()=>{},onClose,onSupported:restored})));
+ await act(async()=>buy().click());
+ expect(restored).toHaveBeenCalledOnce();
+ expect(container.textContent).toContain('Ein großes Dankeschön an dich!');
+ await act(async()=>finish('success'));
+ expect(restored).toHaveBeenCalledOnce();
+});

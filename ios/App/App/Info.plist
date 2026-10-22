@@ -7,7 +7,11 @@
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>de</string>
+	</array>
 	<key>CFBundleDisplayName</key>
         <string>DHBW Planner</string>
 	<key>CFBundleExecutable</key>

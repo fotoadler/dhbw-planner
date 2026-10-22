@@ -62,6 +62,23 @@ public class ScheduleWidgetRenderTest {
             assertEquals(View.VISIBLE,view.findViewById(R.id.widget_course).getVisibility());
         });
     }
+    @Test public void lockedWidgetsExplainPurchaseAndNeverShowCachedLectures() throws Exception {
+        Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
+        long now=System.currentTimeMillis();
+        JSONObject event=new JSONObject().put("title","Private lecture").put("start",now).put("end",now+3600000);
+        JSONObject data=new JSONObject().put("unlocked",false).put("days",new JSONArray().put(new JSONObject().put("date",ScheduleWidgetProvider.format(now,"yyyy-MM-dd")).put("known",true).put("events",new JSONArray().put(event))));
+        for(int size=1;size<=3;size++) {
+            final int selected=size;
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{
+                View view=ScheduleWidgetProvider.render(context,970+selected,data,now,selected).apply(context,null);
+                assertEquals("Widgets freischalten",((TextView)view.findViewById(R.id.widget_locked_title)).getText().toString());
+                assertTrue(((TextView)view.findViewById(R.id.widget_locked_action)).getText().toString().contains("Unterstütz"));
+                assertNull(view.findViewById(R.id.widget_event_title));
+                assertTrue(view.isClickable());
+            });
+        }
+        renderSizes(context,data,now,"locked");
+    }
     private void renderSizes(Context context,JSONObject data,long now,String state) {
         File output=new File(context.getExternalFilesDir(null),"widget-qa");output.mkdirs();
         for(int night:new int[]{Configuration.UI_MODE_NIGHT_NO,Configuration.UI_MODE_NIGHT_YES}){
@@ -75,6 +92,8 @@ public class ScheduleWidgetRenderTest {
                     int width=(int)((selected==1?170:360)*density),height=(int)((selected==3?380:170)*density);
                     view.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY));view.layout(0,0,width,height);
                     assertTrue("Footer must remain inside the widget",view.findViewById(R.id.widget_updated).getBottom()<=height);
+                    View action=view.findViewById(R.id.widget_locked_action);
+                    if(action!=null) assertTrue("Unlock action must fit inside the widget",action.getBottom()+view.getPaddingBottom()<=height);
                     Bitmap image=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);view.draw(new Canvas(image));
                     try(FileOutputStream stream=new FileOutputStream(new File(output,"android-"+state+"-"+(night==Configuration.UI_MODE_NIGHT_YES?"dark":"light")+"-"+selected+".png"))){image.compress(Bitmap.CompressFormat.PNG,100,stream);}catch(Exception error){throw new RuntimeException(error);}
                 });

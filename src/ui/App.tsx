@@ -133,7 +133,7 @@ export function App() {
     if (!primarySettings) return;
     setSection('calendar'); setShowSettings(false); setAddingCourse(false); setManagingCourses(false);
     setCalendarShareOpen(false); setCalendarDetails(null); setSelectedBlockKey(null); setStudyNotice(null);
-    if (link === 'support') { setShowSettings(true); return; }
+    if (link === 'support') { support.show(); return; }
     const target = primarySettings.courseProfiles?.find(p => p.id === link.profileId) ?? primarySettings.courseProfiles?.find(p => p.id === primarySettings.primaryProfileId);
     if (target && target.id !== primarySettings.viewedProfileId) void mainSchedule.applySettings({ ...primarySettings, viewedProfileId: target.id });
     setSelectedDay(link.date); setCalendarView('day'); void mainSchedule.ensureWeek(ymdKey(mondayOfYmd(parseYmdKey(link.date))));

@@ -35,3 +35,11 @@ it('serializes snapshots so slow old writes cannot overwrite a new course',async
 it('ignores unrelated links and performs no native operations in the browser',async()=>{
  mocks.native=false;await render(snapshot);expect(mocks.addListener).not.toHaveBeenCalled();expect(mocks.update).not.toHaveBeenCalled();
 });
+
+it('opens support from a locked widget and publishes the unlock without restarting',async()=>{
+ mocks.getLaunchUrl.mockResolvedValue({url:'dhbwplanner://support'});
+ await render(null);expect(onOpen).not.toHaveBeenCalled();
+ await render({...snapshot,unlocked:false});expect(onOpen).toHaveBeenCalledExactlyOnceWith('support');
+ await render(snapshot);
+ expect(JSON.parse(mocks.update.mock.calls.at(-1)![0].snapshot).unlocked).toBe(true);
+});

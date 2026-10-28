@@ -1,6 +1,6 @@
 # Release-QA 1.5.2
 
-Prüfung am 17. Oktober 2026, iPhone 17 Pro im eigenen frischen Simulator mit iOS 26.5, Xcode 27 / Device Hub. Build 1.5.2 (15), produktive Web-Assets nach `npm run build` und `npx cap sync`, kein Testdaten- oder Vorschau-Server.
+Prüfung am 17. Oktober 2026, iPhone 17 Pro im frisch eingerichteten Simulator mit iOS 26.5, Xcode 27 / Device Hub. Build 1.5.2 (15), produktive Web-Assets nach `npm run build` und `npx cap sync`, kein Testdaten- oder Vorschau-Server.
 
 ## Durchgeklickte native Abläufe
 
@@ -15,7 +15,7 @@ Prüfung am 17. Oktober 2026, iPhone 17 Pro im eigenen frischen Simulator mit iO
 - Zusätzliches Ansichtprofil FN-TIM23 einrichten; dessen eigene Wahlangebote werden abgefragt. Profilmenü zeigt TIM24 als unverändertes Hauptprofil. Wechsel zurück zu TIM24 lädt den Plan samt seinem Modulfilter.
 - App beenden und neu starten: Hauptprofil und gespeicherter Modulfilter bleiben erhalten, Standardansicht Woche öffnet sich.
 
-Der App-Prozess blieb während der gesamten Bedienprüfung derselbe (PID 10508); kein unbeabsichtigter Prozessneustart. Die gezielte Systemlog-Suche nach unbehandelten Ausnahmen, Fatal Errors und „Terminating app“ ergab keinen App-Absturz. Screenshots und Buildlogs werden lokal im Release-Artefaktordner aufbewahrt.
+Während der Bedienprüfung wurden weder ein unbeabsichtigter Prozessneustart noch ein App-Absturz im Systemprotokoll festgestellt.
 
 ## Automatische Prüfung
 
@@ -29,4 +29,4 @@ Das ist ein gezielter Regressionstest, keine Garantie für jede denkbare Eingabe
 
 [PR #37](https://github.com/fotoadler/dhbw-planner/pull/37), Merge-Commit `a92f4e12`. Beide Store-Pakete wurden anschließend aus diesem Stand gebaut. Android-APK-Signatur erfolgreich geprüft, iOS-Codesign einschließlich eingebetteter Komponenten erfolgreich geprüft. Die Web-Dateien in APK, AAB und iOS-Archiv entsprechen bytegenau dem geprüften Build.
 
-Android 1.5.2 (14) wurde in Google Play als Produktionsupdate hochgeladen und zur Überprüfung abgeschickt. Die Übersicht zeigt nach den Vorabprüfungen „Änderungen, die überprüft werden“ und „Deine Änderungen werden jetzt überprüft“. Verwaltete Veröffentlichung ist aus, vollständiger Roll-out nach Freigabe. iOS 1.5.2 (15) wurde erfolgreich an App Store Connect übertragen, verarbeitet und am 18. Oktober zur Prüfung eingereicht. Bestätigter Status „Waiting for Review“, Submission ID `137c93d2-e881-4394-a598-61649032ca7d`. Die deutsche Versionsbeschreibung mit sechs belegten Standorten ist gespeichert. Automatische Veröffentlichung nach Freigabe für alle Nutzer ist eingestellt. Aktueller Auslieferungsstand und Prüfsummen: [STORE_RELEASE.md](../STORE_RELEASE.md).
+Die Store-Builds dieser Version sind Android 1.5.2 (14) und iOS 1.5.2 (15). Aktuelle Version und Buildnummern: [STORE_RELEASE.md](../STORE_RELEASE.md).

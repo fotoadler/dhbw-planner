@@ -2,6 +2,27 @@
 
 Alle nennenswerten Änderungen werden hier dokumentiert.
 
+## 1.5.5
+
+- Deutsche Sprachangabe für iOS-App und Widget-Erweiterung korrigiert.
+- Widget-Verlinkung und Freischaltung nach bestätigten Käufen korrigiert.
+- Darstellung kleiner Widgets bei großen Schriftgrößen verbessert.
+- Store-Screenshots und Banner mit aktuellen Demoansichten erneuert.
+
+## 1.5.4
+
+- Freiwillige In-App-Käufe zur Refinanzierung der jährlichen Betriebskosten ergänzt: 1, 3, 5 oder 10 €.
+- Unterstützer erhalten unabhängig vom Betrag Stundenplan-Widgets in drei Größen und ein optionales goldenes App-Symbol. Kalender, Dualis und Mail bleiben kostenlos und werbefrei.
+- Dauerhafte Erstkäufe über dasselbe Store-Konto wiederherstellen; weitere Unterstützungen bleiben möglich.
+- Kaufablauf mit Ladeanzeige, Bestätigung und Dankesanimation ergänzt; ausstehende Zahlungen werden gesondert behandelt.
+- Einstellungen neu gegliedert und Vorschauen für Widgets und App-Symbole ergänzt.
+- Unterstützungshinweise mit Nutzungsfristen und Rückkehrfrist nach längerer Inaktivität ergänzt. Unterstützer erhalten keine automatischen Hinweise.
+
+## 1.5.3 - 2026-10-20
+
+- Rapla-Freigabelinks mit `key=v2:…` auch ohne `salt` akzeptieren.
+- Link nach Neustart erhalten und weitere Kalenderwochen laden.
+
 ## 1.5.2 - 2026-10-17
 
 - Persönliche Wahlpflichtseminare, Wahlmodule, Studienschwerpunkte und Gruppen direkt nach der Kurswahl und je Profil in den Einstellungen konfigurieren.

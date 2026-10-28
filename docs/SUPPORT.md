@@ -26,6 +26,10 @@ Nach bestätigter Freischaltung lädt die App die nachfolgenden, bestehenden Con
 
 Beschreibung bei Apple: „Weitere Unterstützung für die App-Betriebskosten.“ Die Extras bleiben unverändert freigeschaltet; der Dialog kennzeichnet diese Käufe als „Erneut unterstützen“.
 
+## Einrichtung für eigene Builds
+
+Die folgenden Schritte beschreiben die Einrichtung in einem eigenen Entwicklerkonto. Die veröffentlichten Apps verwenden bereits konfigurierte Produkte.
+
 ### App Store Connect
 
 1. Unter Geschäftsbereich/Business die Vereinbarung für kostenpflichtige Apps sowie Bank- und Steuerangaben vervollständigen.
@@ -106,7 +110,7 @@ Offizielle Anleitungen: [Apple: In-App-Käufe einreichen](https://developer.appl
 - Android: drei AppWidget-Anbieter mit anpassbarer Größe. Aktualisierungen an Vorlesungsgrenzen/Mitternacht sowie periodisch; Android kann diese zur Schonung des Akkus verzögern. Keine zusätzliche Berechtigung für exakte Alarme.
 - Hauptkurs und aktuelle Modulfilter; maximal 14 Tage aus dem letzten App-Abruf, mit Titel, Zeit und Raum. Kein selbstständiger Netzwerkabruf, keine Anmeldedaten oder Dozentennamen im Snapshot. Datenstand sichtbar. Fehlende Daten werden nicht als freier Tag dargestellt.
 - Mittel und groß zeigen auch vergangene Vorlesungen des heutigen Tages. Groß zeigt unten je nach Platz bis zu drei kommende geladene Vorlesungstage; vorlesungsfreie und unbekannte Tage werden ausgelassen.
-- Antippen öffnet die Tagesansicht mit Datum und Hauptkurs. Ein gesperrtes Widget führt zu den Unterstützungseinstellungen. Widgets werden durch Nutzer selbst auf dem Home-Bildschirm hinzugefügt.
+- Antippen öffnet die Tagesansicht mit Datum und Hauptkurs. Ein gesperrtes Widget öffnet direkt den Unterstützungsdialog. Nach bestätigtem Erstkauf werden die Widgets aktualisiert. Widgets werden durch Nutzer selbst auf dem Home-Bildschirm hinzugefügt.
 - Alle Beträge und bestehende lokal nachweisbare Unterstützungen schalten alle drei Größen frei. Wiederholte Unterstützungen bleiben möglich. Ein lokal bekannter Status funktioniert auch ohne erreichbaren Store.
 
 Zur Widget-Prüfung gehören alle Größen auf dem Home-Bildschirm, Kaltstart per Widget, Kurswechsel/Modulfilter, Mitternacht, freie Tage, Offline-Daten und Wiederherstellung mit Store-Testkonten. Native Render-Tests und Builds ersetzen diese Prüfung nicht; dokumentierte Geräteergebnisse stehen in [ANDROID_IAP_QA.md](ANDROID_IAP_QA.md).
@@ -115,18 +119,16 @@ Zur Widget-Prüfung gehören alle Größen auf dem Home-Bildschirm, Kaltstart pe
 
 Der Einstellungsbereich besteht aus einem kurzen Kostenhinweis, zwei anklickbaren Vorteilen und „App unterstützen“. Die Widget-Vorschau zeigt drei native Beispielbilder mit Wischgeste, Pfeilen und Größenauswahl; der Symbol-Vorteil zeigt Rot und Gold nebeneinander. Bereits freigeschaltete Nutzer ändern ihr App-Symbol in einem eigenen Dialog. Auf der Einstellungsseite werden keine Symbolkacheln mehr eingeblendet. Beide Vorschauen sind auch aus dem Kaufdialog erreichbar; das Schließen löst keinen Kauf aus. Wiederherstellung bleibt separat erreichbar.
 
-## Review-Prüfung vom 21. Oktober 2026
+## Store-Integration
 
-- Alle acht aktuellen Apple-Kaufprodukte haben aktualisierte deutsche Beschreibungen und Review-Hinweise. Vier Gold-Erstkäufe zeigen die Freischaltung; vier Verbrauchskäufe den Dialog „Erneut unterstützen“. Jeweils ein sauberer aktueller 1170×2532-Screenshot ohne Mauszeiger, nach Reload auf dem Apple-CDN geprüft und fertig verarbeitet. Die acht Produkte wurden gemeinsam mit Version 1.5.4 eingereicht; der alte 2-EUR-Artikel bleibt aus dem Verkauf genommen.
-- Review-Hinweise erklären den unveränderten kostenlosen Kalender/Dualis/Mail, gleiche Extras bei allen Beträgen, Wiederherstellung und die Teststrecke für Widgets mit öffentlich konfiguriertem Kurs ohne Hochschul-Login. Der lokale Demomodus zeigt den Kaufdialog, schreibt aber keine Widget-Daten.
-- Die App und ihre Widget-Erweiterung enthalten eigene Privacy-Manifeste für UserDefaults. App: `CA92.1` und `1C8F.1`; Widget: `1C8F.1`. Die Dateien müssen in den jeweiligen gebauten Bundles enthalten sein.
-- Der Android-Build enthält Google Play Billing 8.3.0 einschließlich Versions-Metadatum und BILLING-Berechtigung. Version 8 ist laut aktuellem Google-Zeitplan für neue Apps und Updates bis 31. August 2027 unterstützt.
-- Die in den Einstellungen verlinkte öffentliche Datenschutzerklärung beschreibt Kaufstatus, Unterstützungshinweise und Widget-Daten.
+- Vier dauerhafte Erstkäufe und vier wiederholbare Unterstützungen verwenden getrennte Produktarten. Review-Texte erläutern die identischen Extras bei allen Beträgen und die Wiederherstellung.
+- Der lokale Demomodus zeigt den Kaufdialog, schreibt aber keine Widget-Daten. Für Widget-Tests wird ein öffentlich konfigurierter Kurs verwendet; ein Hochschul-Login ist dafür nicht erforderlich.
+- App und Widget-Erweiterung enthalten Privacy-Manifeste für UserDefaults. App: `CA92.1` und `1C8F.1`; Widget: `1C8F.1`. Diese Dateien müssen in den jeweiligen gebauten Bundles enthalten sein.
+- Android verwendet Google Play Billing 8.3.0 mit Versions-Metadatum und `BILLING`-Berechtigung.
+- Die öffentliche Datenschutzerklärung beschreibt Kaufstatus, Unterstützungshinweise und Widget-Daten.
 
 Quellen: [Apple UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults), [Apple Required Reason APIs](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype), [Google Billing-Versionen](https://developer.android.com/google/play/billing/deprecation-faq), [Google Zahlungen](https://support.google.com/googleplay/android-developer/answer/9858738?hl=en), [Google Datenschutz](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en), [Apple erste In-App-Käufe einreichen](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/).
 
-## Einreichungs- und Prüfstand vom 21. Oktober 2026
+## Veröffentlichter Stand
 
-578 automatisierte Tests bestehen, einschließlich Wiederherstellung bei leerem lokalem Unterstützungsstatus. Gerätetests auf iPhone und Android wurden ohne Fehler gemeldet. Eine echte Neuinstallation oder ein Gerätewechsel mit Store-Konto wurde nicht separat geprüft.
-
-Version 1.5.4 wurde am 21.10.2026 eingereicht: Apple-Build 18 mit acht In-App-Käufen, Status „Waiting for Review“, manuelle Versionsfreigabe. Google-Build 22 mit aktualisierter Beschreibung zur Prüfung gesendet, automatische Vorabprüfungen laufen, verwaltete Veröffentlichung aktiviert. Die öffentliche Datenschutzerklärung ist auf `main` aktualisiert. Noch keine Store-Genehmigung und keine öffentliche Freigabe des Updates. Details und Grenzen: [STORE_RELEASE.md](../STORE_RELEASE.md).
+Unterstützung und Widgets sind seit Version 1.5.4 enthalten. Version 1.5.5 korrigiert die Widget-Verlinkung, die unmittelbare Freischaltung nach bestätigtem Kauf und die deutsche iOS-Sprachangabe. Buildnummern und Versionshinweise stehen in [STORE_RELEASE.md](../STORE_RELEASE.md). Dokumentierte Android-Testfälle und verbleibende Prüfgrenzen stehen in [ANDROID_IAP_QA.md](ANDROID_IAP_QA.md).

@@ -6,6 +6,8 @@ Die App arbeitet ohne eigenes Backend. Rapla- und Dualis-Daten werden direkt vom
 
 ## Status
 
+Aktuelle Store-Version: **1.5.5** für [iOS](https://apps.apple.com/de/app/dhbw-planner/id6791134218) und [Android](https://play.google.com/store/apps/details?id=de.dhbw.raplaplan). Änderungen stehen im [Changelog](CHANGELOG.md), Buildnummern in [STORE_RELEASE.md](STORE_RELEASE.md).
+
 DHBW Planner ist keine offizielle App der DHBW.
 
 ## Features
@@ -152,7 +154,7 @@ plugins/
 
 ## Veröffentlichung
 
-Das Repository ist für eine öffentliche Veröffentlichung vorbereitet:
+Informationen zum Projekt:
 
 - Lizenz: GNU General Public License v3.0 or later
 - Issue- und Security-Hinweise: [SECURITY.md](SECURITY.md)
@@ -161,13 +163,15 @@ Das Repository ist für eine öffentliche Veröffentlichung vorbereitet:
 
 ## Finanzierung und Unterstützung
 
-Die App wird um Unterstützungsmöglichkeiten per In-App-Kauf erweitert, um einen Teil der jährlichen Betriebskosten zu refinanzieren. In der iOS- und Android-App sind dafür freiwillige, einmalige Beiträge von 1, 3, 5 und 10 € vorgesehen, sobald die Kaufprodukte in den Stores freigeschaltet sind.
+Freiwillige In-App-Käufe helfen, einen Teil der jährlichen Betriebskosten zu decken. In der iOS- und Android-App kannst du die App mit 1, 3, 5 oder 10 € unterstützen. Preise und Währung richten sich nach deinem Store-Land.
 
 Die Grundfunktionen der App bleiben kostenlos und werbefrei. Als Dankeschön erhalten alle Unterstützer unabhängig vom Betrag Widgets für iOS und Android sowie ein optionales goldenes App-Symbol. Auch bestehende lokal gespeicherte Unterstützungen werden berücksichtigt. Neue dauerhafte Käufe lassen sich mit demselben Store-Konto nach Neuinstallation oder Gerätewechsel wiederherstellen; für frühere Verbrauchskäufe gelten die [Grenzen der Store-Historie](docs/SUPPORT.md#dauerhafte-freischaltung-und-weitere-unterstützung). Weitere Unterstützungen bleiben beliebig oft möglich.
 
 Die Widgets gibt es in klein (laufende/nächste Vorlesung), mittel (nächste Termine) und groß (Tagesübersicht). Ein Tippen öffnet die passende Tagesansicht des Hauptkurses. Sie beachten deine Modulfilter und unterscheiden „Heute keine Vorlesung“, „Für heute geschafft“ und fehlende Daten. Grundlage ist der zuletzt in der App geladene Stundenplan; der Datenstand wird bei ausreichendem Platz angezeigt. Widgets laden selbst keine neuen Stundenplandaten aus dem Netz. Auf dem iPhone lässt sich die Größe über langes Drücken auf das Widget ändern. Die Darstellung passt sich der Größe und der Systemschrift an; bei großer Schrift werden weniger Details angezeigt.
 
 Die Umsetzung und Store-Einrichtung sind in [docs/SUPPORT.md](docs/SUPPORT.md) beschrieben.
+
+Aktuelle Store-Aufnahmen mit Beispieldaten: [iPhone](app-store-screenshots/iphone/), [iPad](app-store-screenshots/ipad/), [Android](app-store-screenshots/android/) und [Banner](app-store-screenshots/banners/).
 
 ## Mitwirken
 

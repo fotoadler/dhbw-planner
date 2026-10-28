@@ -41,5 +41,5 @@ it('opens support from a locked widget and publishes the unlock without restarti
  await render(null);expect(onOpen).not.toHaveBeenCalled();
  await render({...snapshot,unlocked:false});expect(onOpen).toHaveBeenCalledExactlyOnceWith('support');
  await render(snapshot);
- expect(JSON.parse(mocks.update.mock.calls.at(-1)![0].snapshot).unlocked).toBe(true);
+ expect(JSON.parse(mocks.update.mock.calls[mocks.update.mock.calls.length-1][0].snapshot).unlocked).toBe(true);
 });

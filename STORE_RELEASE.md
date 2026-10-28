@@ -1,187 +1,66 @@
-# DHBW Planner Store Release
+# Store-Versionen und Builds
 
-## App Identity
+## Aktueller Stand
 
-- App name: DHBW Planner
-- iOS bundle ID: `de.dhbw.raplaplan`
-- Android application ID: `de.dhbw.raplaplan`
-- App version: `1.5.5` (`package.json`: `1.5.5`)
-- iOS build: `19`
-- Android versionCode: `23`
-- Android minimum: Android 7 / API 24, required by the existing Google Play automatic protection.
+Version **1.5.5** ist im [App Store](https://apps.apple.com/de/app/dhbw-planner/id6791134218) und bei [Google Play](https://play.google.com/store/apps/details?id=de.dhbw.raplaplan) veröffentlicht. Stand: 28. Oktober 2026.
 
-## Version 1.5.5 — Fehlerbehebungen
+| Plattform | Version | Build | Mindestversion |
+| --- | --- | --- | --- |
+| iOS | 1.5.5 | 19 | iOS 15 |
+| Android | 1.5.5 | 23 | Android 7 / API 24 |
 
-- Deutsche Sprachdeklaration für iOS-App und Widget-Erweiterung korrigiert.
-- Gesperrte Widgets erläutern die Freischaltung und öffnen direkt den Unterstützungsdialog.
-- Bestätigte Käufe aktualisieren den Widget-Status bereits vor Abschluss der Store-Nachbearbeitung.
-- Kompakte Darstellung für kleine Widgets und große Schriftgrößen.
-- Store-Versionshinweise: Fehlerbehebungen.
+App-Name: **DHBW Planner**. Bundle-ID und Android-Application-ID: `de.dhbw.raplaplan`.
 
-## Store-Einreichung 1.5.4 – 21. Oktober 2026 (historischer Stand)
+Versionshinweis in beiden Stores:
 
-- **Apple:** Version 1.5.4 (18) und alle acht aktuellen In-App-Käufe gemeinsam eingereicht. Bestätigter Status **Waiting for Review**. Submission ID `04492c0a-d0c7-49c8-88bd-2653e16f6417`. Versionsfreigabe **Manually release this version**; nach Genehmigung ist ein manueller Veröffentlichungsschritt nötig.
-- **Google:** Produktionsrelease 1.5.4 mit Bundle **22**, Legacy-Bundle 9 für ältere Geräte beibehalten. Store-Beschreibung aktualisiert. Zwei Änderungen zur Prüfung gesendet; Übersicht bestätigt **Änderungen, die überprüft werden**, automatische Vorabprüfungen laufen. **Verwaltete Veröffentlichung aktiviert**; genehmigte Änderungen werden erst nach manueller Freigabe veröffentlicht.
-- Android 22 unterscheidet sich vom auf dem Samsung getesteten 21 nur im gekürzten Gold-Vorschautext. Beide finalen Store-Builds enthalten bytegleich die aktuellen Web-Assets. Builds und beide GitHub-CI-Workflows erfolgreich. Öffentliche Datenschutzfassung auf `main` bestätigt.
-- Store-Datenschutzangaben überprüft: keine eigene neue Datenerhebung durch Unterstützung/Widgets; Store-Zahlungsdaten verbleiben beim jeweiligen Anbieter. Die verknüpfte öffentliche Datenschutzerklärung erläutert Kaufstatus, lokale Erinnerungsdaten und Widgets.
-- 578 automatisierte Tests; Gerätetests der aktuellen iPhone-/Android-Fassungen ohne gemeldete Fehler. Wiederherstellung bei leerem lokalem Status automatisiert geprüft. Ein realer Gerätewechsel oder eine Neuinstallation mit Store-Konto wurde nicht separat durchgeführt.
-- Am 22. Oktober 2026 in beiden Stores veröffentlicht; die folgenden Einreichungsangaben dokumentieren den Stand vom 21. Oktober.
+> Fehlerbehebungen.
 
-## Version 1.5.4 — Unterstützung und Widgets
+Die Änderungen je Version stehen im [Changelog](CHANGELOG.md). Produktarten, Wiederherstellung und Unterstützungshinweise sind in [docs/SUPPORT.md](docs/SUPPORT.md) beschrieben.
 
-- Freiwillige In-App-Unterstützung zur Refinanzierung der jährlichen Betriebskosten mit 1/3/5/10 EUR. Kalender, Dualis und Mail bleiben kostenlos und werbefrei.
-- Der erste Kauf über `support_gold_1/3/5/10` schaltet Widgets und das optionale Gold-Symbol dauerhaft frei. Danach bleiben `support_1/3/5/10` beliebig wiederholbare Verbrauchskäufe. Alle Beträge gewähren dieselben Extras; `support_2` wird nicht mehr angeboten.
-- Wiederherstellung über dasselbe Store-Konto, ohne eigenes Backend; kein Transfer zwischen Apple und Google. Grenzen früherer Verbrauchskäufe sind in [docs/SUPPORT.md](docs/SUPPORT.md) dokumentiert.
-- Native Widgets in klein, mittel und groß mit Datenstand und Tagesverlinkung. Mittel und groß zeigen auch vergangene Termine des Tages; groß ergänzt geladene kommende Vorlesungstage und lässt freie oder unbekannte Tage aus. Ohne Kursnamen oder Raumangaben entfallen die jeweiligen Felder.
-- Einfarbige Widget-Flächen, helle und dunkle Darstellung, adaptive Schriftgrößen und VoiceOver-Beschriftungen. Native Layoutprüfung über zwölf Dynamic-Type-Stufen, vier iPhone-Abmessungen, drei Größen und sechs Zustände; Prüfumfang unter `tests/widgets/ios/`.
-- Kompakte Einstellungen mit getrennten Gruppen für Stundenplan, allgemeine Optionen und Mitteilungen. Wischbare Widget-Vorschau und Rot/Gold-Vergleich in eigenen Dialogen; Symbolwechsel ist für freigeschaltete Unterstützer verfügbar.
-- Ladeansicht während des Kaufs, Danke/Konfetti nach bestätigter Transaktion. Ausstehende Käufe sperren weitere Checkouts; im Vordergrund erfolgt alle 15 Sekunden ein Store-Abgleich.
-- Automatische Unterstützungshinweise erst nach den Nutzungsfristen: erste Erinnerung nach mindestens 14 Tagen, danach mindestens 90 Tage. Unterstützer und ausstehende Käufe sind ausgenommen. Nach längerer Inaktivität gilt eine zusätzliche Rückkehrfrist. Details: [Dialogregeln](docs/SUPPORT.md#wann-welcher-dialog-erscheint).
-- Unterstützungscode unter `src/support/`, Widget-Daten unter `src/widgets/`, native Implementierungen in den Plattformprojekten. Privacy-Manifeste für App und Widget sind in den iOS-Bundles enthalten.
+### Quellstand und Store-Grafiken
 
-### Prüfung und bekannte Grenzen
+- Quellstand von 1.5.5: `5e33d4b5`.
+- Store-Aufnahmen und Banner: `63652612`, unter [app-store-screenshots/](app-store-screenshots/). Alle Aufnahmen verwenden Beispieldaten.
+- Android-AAB SHA-256: `1a69967bb65e1add8aad23782c5202e049bad7d164a28943881c695d40f388d2`.
+- iOS-App und Widget-Erweiterung deklarieren Deutsch als Sprache.
 
-578 automatisierte Tests, Web-Build und native Builds erfolgreich. Gerätetests auf iPhone und Android ohne gemeldete Fehler; konkrete Android-Kauf-, Widget- und Symbolprüfungen einschließlich Einschränkungen stehen in [docs/ANDROID_IAP_QA.md](docs/ANDROID_IAP_QA.md). Eine vollständige Wiederholung der Pending-Testfälle nach den letzten Korrekturen sowie ein realer Neuinstallations-/Gerätewechseltest mit Store-Konto sind nicht separat bestätigt. Die Wiederherstellung bei leerem lokalem Status ist automatisiert geprüft.
+## Frühere Builds
 
-## Version 1.5.3 — Rapla-Fix, 20. Oktober 2026
+| Version | iOS-Build | Android-versionCode |
+| --- | --- | --- |
+| 1.5.4 | 18 | 22 |
+| 1.5.3 | 16 | 15 |
+| 1.5.2 | 15 | 14 |
+| 1.5.1 | 14 | 13 |
+| 1.5.0 | 13 | 11 |
 
-Neue Rapla-Freigabelinks werden jetzt unterstützt, auch ohne salt-Parameter – unter anderem am Campus Friedrichshafen. Der Link bleibt nach einem Neustart gespeichert, und weitere Kalenderwochen werden korrekt geladen.
+## Release vorbereiten
 
-- Grundlage: [PR #39](https://github.com/fotoadler/dhbw-planner/pull/39), Merge-Commit `13dfa7e65ae297f906f2d1df9a262b8795992bb4`, mit lokalen Versionsanpassungen auf 1.5.3. Keine weiteren Produktivänderungen.
-- Android 1.5.3 (15), iOS 1.5.3 (16), einschließlich Widget-Erweiterung. Bestehende Signieridentitäten und Mindestversionen unverändert (Android API 24 / iOS 15).
-- 488 Tests des gemergten PR-Standes erfolgreich.
-- TypeScript/Vite-Build, Capacitor-Sync, signierter Android-APK-/AAB-Build und signiertes iOS-Archiv erfolgreich. APK-Signatur und iOS-Codesign einschließlich eingebetteter Komponenten geprüft. Alle acht Web-Dateien in APK, AAB und iOS-Archiv stimmen bytegenau mit `dist` überein.
-- iOS-Upload am 20. Oktober erfolgreich (`Upload succeeded` / `EXPORT SUCCEEDED`), Build verarbeitet und Version 1.5.3 zugeordnet. **Zur Prüfung eingereicht**, bestätigter Status `Waiting for Review`, Build 16. Submission ID: `0c84b675-e277-4357-be08-995b342873dd`, Einreichung 20. Oktober um 15:07 MESZ. Deutsche Versionshinweise gespeichert; automatische Veröffentlichung nach Freigabe für alle Nutzer, kein gestaffelter Roll-out.
-- Google Play: Bundle 15 (1.5.3) verarbeitet, deutsche Versionshinweise gespeichert. Bundle 9 bleibt für ältere Geräte enthalten, Bundle 14 wird ersetzt. Keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen bei deaktivierter Minifizierung. **Zur Prüfung gesendet**: Die Übersicht zeigt „Änderungen, die überprüft werden“ für Produktion 1.5.3. Automatische Vorabprüfungen laufen noch; danach erfolgt die Prüfung. Vollständiger Roll-out nach Freigabe, verwaltete Veröffentlichung aus.
-- AAB SHA-256: `34f17ccfbae74537d0d25e7a59733cdc7a5cdda66c8f15c7c80946e939ae0068`.
-- Die bisherigen Releases 1.5.2 sind am 20. Oktober in beiden Store-Konsolen als veröffentlicht bestätigt (Google Play 100 %, App Store `Ready for Distribution`). Das ist keine native Geräteabnahme von 1.5.3; neue Store-Freigabe und öffentliche Verfügbarkeit von 1.5.3 stehen aus.
+1. `npm test` und `npm run build` ausführen, anschließend mit `npx cap sync` die nativen Projekte synchronisieren.
+2. Versionsnummer in `package.json`, `package-lock.json` und beiden Plattformprojekten abgleichen. Je Store eine unbenutzte Buildnummer verwenden.
+3. Änderungen und Buildnummern in `CHANGELOG.md` und dieser Datei aktualisieren. Store-Aufnahmen bei sichtbaren UI-Änderungen erneuern; nur Beispieldaten verwenden.
+4. Native Funktionen auf beiden Plattformen prüfen. Für Käufe Store-Testkonten verwenden; insbesondere Erstkauf, Wiederholung, Abbruch, ausstehende Zahlung und Wiederherstellung berücksichtigen. Prüfumfang: [Android-Käufe](docs/ANDROID_IAP_QA.md), [Widgets](src/widgets/README.md).
+5. Signierte Pakete erstellen und Versionsnummern sowie enthaltene Web-Assets prüfen. Signierschlüssel und Zugangsdaten gehören nicht ins Repository.
+6. Pakete in die bestehenden Store-Einträge hochladen. Verarbeitung, Review-Einreichung und Veröffentlichung jeweils separat prüfen. Die gewünschte automatische oder manuelle Veröffentlichung pro Release einstellen.
 
-## Version 1.5.2 — Hochgeladen am 17., zur Prüfung eingereicht am 17./18. Oktober 2026
+### Android
 
-Wahlkurse, WPS, Schwerpunkte und Gruppen jetzt bei der Einrichtung und in den Einstellungen auswählen – u. a. in Villingen-Schwenningen, Stuttgart, Mannheim, Mosbach, Heidenheim und Friedrichshafen. Gemeinsame und vergangene Termine bleiben enthalten. Bestehende Profile erkennen eine offene Kurswahl. Außerdem verbessert: Module bei überlappenden Terminen und per langem Drücken ausblenden, ohne versehentliche Textmarkierung.
+Die bestehende Upload-Signatur weiterverwenden. `android/app/build.gradle` liest die ignorierte Datei `android/release-signing.properties`; die Vorlage liegt daneben. Einen vorhandenen Schlüssel bei Updates nicht ersetzen.
 
-- Signierte Builds: iOS 1.5.2 (15), Android 1.5.2 (14).
-- [PR #37](https://github.com/fotoadler/dhbw-planner/pull/37) am 17. Oktober in `main` gemergt; Buildquellen: `a92f4e1274cb8c393fe6d86af3d6e06752dd2ec1`. Community-/Watch-Branches bleiben außerhalb dieses Releases.
-- 486 Tests in 49 Dateien, TypeScript/Vite-Build und Capacitor-Sync erfolgreich.
-- iOS-Simulator-Build erfolgreich; native Bedienprüfung mit FN-TIM24/FN-TIM23 auf iPhone 17 Pro / iOS 26.5 ohne beobachteten Absturz. Einzelheiten und Grenzen: [Release-QA](docs/RELEASE_1_5_2_QA.md).
-- GitHub `web-quality` und `Android main beta` für den Merge-Commit erfolgreich.
-- Android: signiertes APK/AAB erstellt, versionCode 14, minSdk 24 / targetSdk 36. AAB SHA-256: `6368d8e532f39a7e1e2afb82bf2eb2f6655fcde141ed6542936b60f4f7b6a693`. APK-Signatur (v2) geprüft.
-- Google Play: Bundle 14 (1.5.2) verarbeitet, deutsche Versionshinweise gespeichert, Produktionsrelease 1.5.2 in „Veröffentlichungen – Übersicht“. Legacy-Bundle 9 bleibt enthalten; keine Geräte fallen weg. Nur die bekannten Mapping-Datei-Warnungen für 9 und 14 (Minifizierung deaktiviert). **Zur Prüfung abgeschickt**, Übersicht zeigt „Änderungen, die überprüft werden“ und „Deine Änderungen werden jetzt überprüft“. Verwaltete Veröffentlichung aus, vollständiger Roll-out nach Freigabe. Versionshinweise nennen sechs belegte Standorte als Beispiele.
-- iOS: signiertes Archiv 1.5.2 (15), Mindestversion iOS 15. Xcode meldete am 17. Oktober um 23:35 MESZ `Upload succeeded` / `EXPORT SUCCEEDED`; Paket wurde von App Store Connect zur Verarbeitung angenommen. Build verarbeitet und Version 1.5.2 zugeordnet. Am 18. Oktober zur App-Prüfung eingereicht, bestätigter Status **Waiting for Review**. Submission ID: `137c93d2-e881-4394-a598-61649032ca7d`. Automatische Veröffentlichung nach Freigabe für alle Nutzer (kein gestaffelter Roll-out). Deutsche Versionsbeschreibung inklusive der sechs belegten Standorte gespeichert.
-- Web-Assets in APK, AAB und iOS-Archiv bytegleich zum geprüften `dist`-Build.
-
-## Version 1.5.1 — Update descriptions
-
-Kursprofile lassen sich jetzt direkt im Kalender speichern, wechseln und löschen. Ein Hauptprofil steuert Erinnerungen, Live-Aktivitäten, Kalenderabgleich, Mail und Dualis; zusätzliche Profile dienen nur zur Stundenplanansicht. In Friedrichshafen ist außerdem der Speiseplan der Zeppelin Universität mit DHBW-Preisen verfügbar.
-
-### Scope
-
-Based on production 1.5.0 (GitHub main `2c05c4f2`), with saved course profiles, Zeppelin menus and the profile focus correction. The separate Community branch is not included. Google Play production 1.5.0 (11, plus retained legacy bundle 9) and iOS 1.5.0 (13) were verified live on 13 October. Android internal-test Community bundle 12 is retained on its existing track; the update uses bundle 13. iOS uses build 14.
-
-### Submission status (historischer Einreichungsstand vom 13. Oktober)
-
-Google Play 1.5.1 war bei der erneuten Live-Prüfung am 17. Oktober vollständig veröffentlicht. Der folgende Abschnitt dokumentiert den damaligen Einreichungsstand, nicht den aktuellen Status.
-
-- 378 tests (41 files), production web build and Capacitor sync passed on 13 October.
-- Signed Android release APK/AAB: 1.5.1, versionCode 13, API 24 minimum / target API 36. AAB SHA-256: `a8de50dc72fdfb020441b4cf10d008ddb9eabfe9be6cc9f17d1611747dadca0d`.
-- Google Play: production 1.5.1 (13 plus legacy bundle 9) sent for review, full rollout after approval, managed publishing off. UI shows “Änderungen, die überprüft werden”; automatic prechecks still running. No device-support loss; only existing mapping-file warnings (minification disabled).
-- Signed iOS archive: 1.5.1 (14), minimum iOS 15. App Store Connect upload succeeded; build processed and attached. Version 1.5.1 (14) submitted on 13 October, status **Warten auf Prüfung**, automatic release after approval. Submission ID: `0da958e1-c81e-4248-8099-ce22365c2165`.
-- The web bundle hash matches across `dist`, the Android assets and the iOS archive.
-- Release approval and public 1.5.1 availability are not confirmed.
-
-## Version 1.5.0 — Update descriptions
-
-### Google Play „Was ist neu“ und App Store „Neu in dieser Version“
-
-Neue Monatsansicht mit Wischnavigation und Tagesdetails sowie eine Jetzt-Linie in der Wochenansicht. Dazu kommen die automatische Gerätekalender-Synchronisierung und Verbesserungen bei Wochenenden, Dualis und Stabilität.
-
-## Version 1.4.2 — Previous update descriptions
-
-### Google Play „Was ist neu“
-
-Verbesserte Navigation und Darstellung:
-
-- Horizontale Wischbewegungen wechseln jetzt zuverlässig zwischen Tagen und Wochen.
-- Die Wochenansicht scrollt nicht mehr unbeabsichtigt über den oberen Stundenplanrand.
-- Falsche Dozentenangaben wie „Online“ werden nicht mehr angezeigt.
-- Live Activities bleiben besser lesbar.
-- Einstellungen und Startbildschirm wurden optisch überarbeitet.
-
-### App Store „Neu in dieser Version“
-
-Diese Version verbessert die Navigation zwischen Tagen und Wochen, verhindert unbeabsichtigtes vertikales Scrollen bei horizontalen Wischbewegungen und korrigiert falsche Dozentenanzeigen. Außerdem wurden Live Activities, der Startbildschirm und die Einstellungen weiter überarbeitet.
-
-## Validation — 11 October 2026
-
-- Web production build and all 360 tests (38 files) passed.
-- Capacitor sync passed for Android and iOS; plugin sources are versioned.
-- Signed Android release APK and bundle built with OpenJDK 21: version 1.5.0, versionCode 11, target API 36.
-- Android build 11 installed and launched on a physical Samsung Galaxy Tab A7 Lite (SM-T220). Ravensburg OWA now renders its mobile login view with all form controls visible; horizontal swipe does not shift the page. Authentication and mailbox contents were not tested.
-- Four existing embedded-mail native layout regression tests passed after the Android fix.
-- Signed iOS release archive: version 1.5.0, build 13, app minimum iOS 15; App Store Connect upload succeeded.
-- Android 16 back gesture from issue #33 remains unverified on a physical Android 16 device.
-
-## Store submission — 11 October 2026
-
-- App Store Connect: 1.5.0 (13) uploaded and submitted; status **Warten auf Prüfung**. Submission ID: `9ce5aa9c-9b17-4a35-8945-507ee435333d`. Automatic release after approval.
-- Google Play: production release 1.5.0 with bundle 11 sent; status **Änderungen, die überprüft werden** (automated prechecks still running). Full rollout after approval; managed publishing remains off.
-- Bundle 10 was superseded before submission by bundle 11 with the physical-tablet webmail correction. Bundle 9 (1.4.2 / API 23) stays included for older devices; Google reports no loss of available device models. New 1.5.0 updates require API 24.
-- Only Play warnings: missing R8/ProGuard mapping for bundles 9 and 11; release builds do not enable minification, so no mapping file exists.
-- Both stores received the brief German update description above. Approval and live availability are pending.
-
-## Store Listing Draft
-
-Short description:
-
-DHBW Planner zeigt deinen DHBW-Stundenplan kompakt als Tages-, Wochen- und Monatsansicht mit optionaler Gerätekalender-Synchronisierung und lokalen Erinnerungen — geführt über Standort, Studiengang und Kurs oder alternativ über deinen Rapla-Link.
-
-Full description:
-
-DHBW Planner ist eine schlanke App für Studierende der DHBW. Im geführten Modus wählst du Standort, Studiengang und Kurs direkt in der App aus; ein Rapla-Link kann weiterhin als manueller Modus verwendet werden. Der Stundenplan wird lokal auf deinem Gerät gespeichert und in einer schnellen Tages-, Wochen- und Monatsansicht angezeigt. Vergangene Wochen sind verfügbar, soweit die jeweilige Quelle die Termine bereitstellt. Optional können Modulnoten und Prüfungsleistungen direkt aus Dualis angezeigt werden.
-
-Funktionen:
-
-- Tagesansicht mit Wochenleiste
-- Wochenansicht mit vergangenen und kommenden Terminen
-- Geführte DHBW-Kursauswahl ohne Rapla-Link
-- Rapla-Link als alternative manuelle Datenquelle
-- Automatische Mensa passend zum DHBW-Standort mit manueller Auswahlmöglichkeit
-- Suchbare Modulfilter zum Ausblenden einzelner Vorlesungen
-- Offline-Anzeige des zuletzt geladenen Stundenplans
-- Optionale automatische Synchronisierung mit dem Gerätekalender
-- Lokale Erinnerungen vor Uni-Terminen
-- Pull-to-refresh für Aktualisierungen
-- Dualis-Ansicht für Modulnoten und Prüfungen
-- Uni-Mail direkt in der App über den Webmail-Zugang des Standorts
-- Helles und dunkles Design
-
-Privacy summary:
-
-Die App speichert Rapla-Link beziehungsweise API-Kursauswahl, Stundenplan- und Mensa-Cache, ausgeblendete Module, ein lokales Dozenten-Verzeichnis und optionale Dualis-Einstellungen lokal auf dem Gerät. Dualis-Zugangsdaten werden bei ausdrücklich gewähltem „Angemeldet bleiben“ nach erfolgreichem Login auf iOS/Android im nativen Secure Storage gespeichert; ohne diese Option bleibt das Passwort im Arbeitsspeicher. Die Mail-WebView hält Sitzungsdaten persistent. Löschversuche und Implementierungsgrenzen sind in `docs/AUTHENTICATION_PERSISTENCE.md` beschrieben. Es wird kein Tracking eingebaut. Netzwerkzugriffe erfolgen direkt zum Abrufen von Stundenplan-, Mensa- und Dualis-Daten. Die optionale Gerätekalender-Synchronisierung benötigt Kalenderzugriff; je nach Kalenderkonto kann das Betriebssystem übertragene Termine mit dem Kontenanbieter synchronisieren. Lokale Benachrichtigungen werden auf dem Gerät verarbeitet.
-
-Support text:
-
-Bei Problemen prüfe zuerst, ob die gewählte Kursquelle erreichbar ist. Im manuellen Modus muss der Rapla-Link in den Einstellungen korrekt hinterlegt und Rapla erreichbar sein; im geführten Modus kann die Kursauswahl erneut durchgeführt werden.
-
-## Android Release Steps
-
-1. Reuse the existing upload keystore and signing configuration for updates. Only create a key for a genuinely new app; never replace the existing upload identity as a routine release step.
-2. Copy `android/release-signing.example.properties` to `android/release-signing.properties`.
-3. Fill in the keystore path and passwords. The file is git-ignored; `android/app/build.gradle` already reads it and applies the release signing config when it exists.
-4. Bump `versionCode` and `versionName` in `android/app/build.gradle`, plus `package.json`, the iOS project and this file.
-5. Build the release app bundle:
+Im Verzeichnis `android/`:
 
 ```sh
 JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ./gradlew bundleRelease
 ```
 
-6. Upload the signed `.aab` to a new release in the existing Play Console app `de.dhbw.raplaplan`. Save and verify the build/version, release notes and device compatibility. Review submission and public rollout are separate from upload.
+Das signierte AAB in Google Play hochladen und Buildnummer, Versionshinweise sowie Gerätekompatibilität kontrollieren. Legacy-Bundle 9 kann für ältere Geräte enthalten bleiben. Ohne Minifizierung wird keine R8-/ProGuard-Mappingdatei erzeugt.
 
-## iOS Release Steps
+### iOS
 
-1. Open `ios/App/App.xcworkspace` in Xcode.
-2. Select the appropriate Apple Developer Team locally in Xcode.
-3. Confirm bundle ID `de.dhbw.raplaplan`.
-4. Use the existing App Store Connect app record for that bundle ID and an unused build number.
-5. Product > Archive.
-6. Distribute App > App Store Connect (or `xcodebuild -exportArchive` with destination `upload`). Confirm upload success; processing and App Review are separate steps.
+`ios/App/App.xcworkspace` in Xcode öffnen, Entwicklerteam und Bundle-ID prüfen und über **Product → Archive** archivieren. Anschließend über **Distribute App → App Store Connect** hochladen. Nach der Verarbeitung das Build der Version zuordnen, Exportangaben prüfen und zur App-Prüfung einreichen.
+
+### Store-Texte und Datenschutz
+
+Beschreibungen müssen die verfügbaren Funktionen und die optionalen In-App-Käufe korrekt benennen. Kalender, Dualis und Mail bleiben kostenlos; Widgets und Gold-Symbol sind die Extras für Unterstützer. Preise werden vom jeweiligen Store lokalisiert.
+
+Die öffentliche Datenschutzerklärung liegt unter [docs/PRIVACY.md](docs/PRIVACY.md). Änderungen an Datenverarbeitung, Berechtigungen oder eingebundenen Diensten müssen dort und in den Store-Angaben berücksichtigt werden.
